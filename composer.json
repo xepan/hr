@@ -19,7 +19,7 @@
     },
     "require": {
         "atk4/atk4": "master-dev",
-        "xepan/base":"master-dev",
+        "xepan/base":"dev-master",
         "php": ">=5.3"
     },
     "autoload": {
