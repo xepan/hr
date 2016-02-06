@@ -5,6 +5,7 @@
     "homepage": "https://github.com/xepan/hr",
     "keywords": ["xEpan","SaaS","ERP","HR", "Human Resource"],
     "license": "MIT",
+    "minimum-stability" : "dev",
     "authors": [
         {
             "name": "Xavoc Technocrats Pvt. Ltd.",
