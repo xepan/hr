@@ -1,6 +1,8 @@
 <?php
+
 namespace xepan\hr;
-class Post extends \Model_Table{
+
+class Post extends xepan\base\Model_Table{
 	public $table="post";
 	function init(){
 		parent::init();
