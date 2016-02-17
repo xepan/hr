@@ -10,7 +10,7 @@ class Employee extends xepan\base\Contact{
 		$emp_j = $this->join('employee.contact_id');
 
 		$emp_j->hasOne('xepan\base\Post');
-		$this->addField('status')->enum(['Active','Left']);
+		$emp_j->addField('status')->enum(['Active','Left']);
 
 	}
 }
