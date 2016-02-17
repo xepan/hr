@@ -2,8 +2,9 @@
 
 namespace xepan\hr;
 
-class Post extends xepan\base\Model_Table{
+class Model_Post extends \xepan\base\Model_Table{
 	public $table="post";
+	
 	function init(){
 		parent::init();
 

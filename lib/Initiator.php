@@ -9,7 +9,8 @@ class Initiator extends \Controller_Addon {
 		parent::init();
 		$this->routePages('xepan_hr');
 
-		
+		$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('username',$this->app->model['username']);
+
 		$m = $this->app->top_menu->addMenu('HR');
 		$m->addItem('Department','xepan_hr_department');
 		$m->addItem('Post','xepan_hr_post');

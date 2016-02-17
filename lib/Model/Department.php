@@ -1,7 +1,11 @@
 <?php
+
 namespace xepan\hr;
+
 class Model_Department extends \Model_Table{
+
 	public $table="department";
+
 	function init(){
 		parent::init();
 
