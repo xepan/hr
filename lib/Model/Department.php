@@ -1,6 +1,6 @@
 <?php
 namespace xepan\hr;
-class Department extends \Model_Table{
+class Model_Department extends \Model_Table{
 	public $table="department";
 	function init(){
 		parent::init();
@@ -8,8 +8,13 @@ class Department extends \Model_Table{
 		$this->hasOne('xepan\base\Epan');
 		$this->addField('name');
 		$this->addField('production_level');
-		$this->addField('status')->enum(['Active','DeActive']);
+		$this->addField('status')->enum(['Active','Inactive']);
 
-		$this->hasMany('xepan\hr\Post',null,null,'Posts');
+		$this->hasMany('xepan\hr\Post',null,null,'Post');
+
+		$this->addExpression('posts')->set(function($m,$q){
+			return '3';
+		// 	return $m->refSQL('xepan\hr\Post')->addCondition('department_id',$this->id)->count('id');
+		});
 	}
 }

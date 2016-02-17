@@ -1,6 +1,6 @@
 <?php
 namespace xepan\hr;
-class Employee extends \Model_Table{
+class Model_Employee extends \Model_Table{
 	public $table="employee";
 	function init(){
 		parent::init();

@@ -18,10 +18,11 @@ class page_department extends \Page {
 		parent::init();
 
 		
-
+		$department=$this->add('xepan\hr\Model_Department');
+		$department->tryLoadAny();
 		$form = $this->add('Form');
 		$form->setLayout(['page/xhr/department']);
-		$form->setModel($this->api->auth->model->reload(),['department_name']);
+		$form->setModel($department,['name','production_level','status','posts']);
 
 		$form->onSubmit(function($f){
 			// return $f->displayError('first_name','HELLO');
