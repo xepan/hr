@@ -9,7 +9,7 @@ class Model_Employee extends \Model_Table{
 		$this->hasOne('xepan\base\Post');
 		$this->addField('name');
 		$this->addField('created_at')->type('date');
-		$this->addField('status')->enum(['Active','DeActive']);
+		$this->addField('status')->enum(['Active','Inactive']);
 		$this->addField('email');
 		$this->addField('contact_no');
 

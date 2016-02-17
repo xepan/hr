@@ -23,7 +23,7 @@ class page_department extends \Page {
 		$form = $this->add('Form');
 		$form->setLayout(['page/xhr/department']);
 		$form->setModel($department,['name','production_level','status','posts']);
-
+		$this->add('CRUD')->setModel($department);
 		$form->onSubmit(function($f){
 			// return $f->displayError('first_name','HELLO');
 			$f->save();
