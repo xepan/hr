@@ -11,8 +11,8 @@
 
 namespace xepan\hr;
 
-class page_department extends \Page {
-	public $title='Department';
+class page_employee extends \Page {
+	public $title='Employee';
 
 	function init(){
 		parent::init();
@@ -20,7 +20,7 @@ class page_department extends \Page {
 		
 
 		$form = $this->add('Form');
-		$form->setLayout(['page/xhr/department']);
+		$form->setLayout(['page/xhr/employee']);
 		$form->setModel($this->api->auth->model->reload(),['department_name']);
 
 		$form->onSubmit(function($f){
