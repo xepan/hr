@@ -16,7 +16,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$this->addCondition('type','employee');
 
-		$this->debug();
 
 	}
 }
