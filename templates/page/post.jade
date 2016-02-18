@@ -1,0 +1,210 @@
+.main-box.clearfix
+  header.main-box-header.clearfix
+    h2.pull-left Post
+    .filter-block.pull-right
+      .form-group.pull-left
+        select.form-control.xepan-dropdown-micro
+          option Deapartment
+          option HR
+          option MARKETING
+          option COMMERCE
+          option PRODUCTION
+          option CRM
+          option INVENTORY
+          option PROJECT MANAGEMENT
+      .form-group.pull-left
+        input.form-control(type='text', placeholder='Search...')
+        i.fa.fa-search.search-icon
+      a.btn.btn-primary.pull-right(href='#')
+        i.fa.fa-plus-circle.fa-lg
+        |  Add Post
+  .main-box-body.clearfix
+    .table-responsive
+      table.table
+        thead
+          tr
+            th
+              a(href='#')
+                span Department
+            th
+              a(href='#')
+                span Post
+            th.text-left
+              a.desc(href='#')
+                span E-mail
+            th.text-left
+              span Status
+            th.text-left
+              a.asc(href='#')
+                span Employee
+            th  
+        tbody
+          tr
+            td
+              |HR
+            td
+              | Manager
+              .atk-label
+                small|company\manager
+            td.text-left
+              | ms@gmail.com
+            td.text-center
+              span.label.label-warning Inactive
+            td.text-center
+              a(href='index.php?page=xepan_hr_employee')
+                | 10
+            td(style='width: 15%;')
+              a.table-link(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
+              a.table-link.danger(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+          tr
+            td
+              |HR
+            td
+              | jr developer
+              .atk-label
+                small|teamleader/sr. developer/jr. developer
+            td.text-left
+              | ms@gmail.com
+              .atk-label
+                |mikysushil@gmail.com
+            td.text-center
+              span.label.label-success Active
+            td.text-center
+              a(href='index.php?page=xhr_employee')
+                | 5
+            td(style='width: 15%;')
+              a.table-link(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
+              a.table-link.danger(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+        tr
+            td
+              |HR
+            td
+              | sr. developer
+              .atk-label
+                small|teamleader/sr. developer
+            td.text-left
+              | ms@gmail.com
+              .atk-label
+                |mikysushil@gmail.com
+                .atk-inline.atk-label
+                  |radhas@gamil.com
+                  .atk-swatch-navy.atk-button.atk-inline
+                    | More..
+            td.text-center
+              span.label.label-success Active
+            td.text-center
+              a(href='index.php?page=xhr_employee')
+                | 20
+            td(style='width: 15%;')
+              a.table-link(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
+              a.table-link.danger(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+        tr  
+            td
+              |HR
+            td
+              | Trainee
+              .atk-label
+                small|Teamleader/Trainee
+            td.text-left
+              | rakeshsinha@gmail.com
+              .atk-label
+                |Krishna@gmail.com
+                .atk-label
+                |hr@gmail.com
+            td.text-center
+              span.label.label-success Active
+            td.text-center
+              a(href='index.php?page=xhr_employee')
+                | 2
+            td(style='width: 15%;')
+              a.table-link(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
+              a.table-link.danger(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+        tr
+            td
+              |HR
+            td
+              |J.Developer 
+            td.text-left
+              | ms@gmail.com
+              .atk-label
+                |mikysushil@gmail.com
+            td.text-center
+              span.label.label-success Active
+            td.text-center
+              a(href='index.php?page=xhr_employee')
+                | 2
+            td(style='width: 15%;')
+              a.table-link(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
+              a.table-link.danger(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+        tr
+            td
+              | HR
+            td
+              |Manager  
+              .atk-label
+                small|teamleader/Technical helper
+            td.text-left
+              | guru@gmail.com
+              .atk-label
+                |hello@gmail.com
+            td.text-center
+              span.label.label-success Active
+            td.text-center
+              a(href='index.php?page=xhr_employee')
+                | 2
+            td(style='width: 15%;')
+              a.table-link(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
+              a.table-link.danger(href='#')
+                span.fa-stack
+                  i.fa.fa-square.fa-stack-2x
+                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+    ul.pagination.pull-right
+      li
+        a(href='#')
+          i.fa.fa-chevron-left
+      li
+        a(href='#') 1
+      li
+        a(href='#') 2
+      li
+        a(href='#') 3
+      li
+        a(href='#') 4
+      li
+        a(href='#') 5
+      li
+        a(href='#')
+          i.fa.fa-chevron-right

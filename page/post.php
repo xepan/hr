@@ -20,7 +20,7 @@ class page_post extends \Page {
 		
 
 		$form = $this->add('Form');
-		$form->setLayout(['page/xhr/post']);
+		$form->setLayout(['page/post']);
 		$form->setModel($this->api->auth->model->reload(),['department_name']);
 
 		$form->onSubmit(function($f){

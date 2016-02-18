@@ -1,0 +1,290 @@
+.row(style='opacity: 1;')
+  .col-lg-12
+    .row
+      .col-lg-12
+        .main-box.no-header.clearfix
+
+          header.main-box-header.clearfix
+            h2.pull-left Employee
+            .filter-block.pull-right
+              .form-group.pull-left
+                select.form-control.xepan-dropdown-micro
+                  option Deapartment
+                  option HR
+                  option MARKETING
+                  option COMMERCE
+                  option PRODUCTION
+                  option CRM
+                  option INVENTORY
+                  option PROJECT MANAGEMENT
+              .form-group.pull-left
+                select.form-control.xepan-dropdown-micro
+                  option POST
+                  option CEO
+                  option SR.DEVELOPER
+                  option PROJECT LEADER
+                  option JR.DEVELOER
+                  option TECHNICAL HELPER
+                  option TEAM LEADER
+                  option PROJECT MANAGER
+              .form-group.pull-left
+                input.form-control(type='text', placeholder='Search...')
+                i.fa.fa-search.search-icon
+              a.btn.btn-primary.pull-right(href='#')
+                i.fa.fa-plus-circle.fa-lg
+                |  Add Employee
+          .main-box-body.clearfix
+            .table-responsive
+              table.table.user-list.table-hover
+                thead
+                  tr
+                    th
+                      span User
+                    th
+                      span Date Of Joining
+                    th.text-center
+                      span Status
+                    th
+                      span Email
+                    th  
+                tbody
+                  tr
+                    td
+                      img(alt='', src='img/samples/scarlet-159.png')
+                      a.user-link(href='{url}index.php?page=contactprofile{/}') Scarlett Johansson
+                      span.user-subhead Admin
+                    td
+                      | 2013/08/08
+                    td.text-center
+                      span.label.label-default Inactive
+                    td
+                      a(href='#') mila@kunis.com
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/robert-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Robert Downey Jr.
+                      span.user-subhead Member
+                    td
+                      | 2013/08/12
+                    td.text-center
+                      span.label.label-success Active
+                    td
+                      a(href='#') marlon@brando.com
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/ryan-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Ryan Gossling
+                      span.user-subhead Registered
+                    td
+                      | 2013/03/03
+                    td.text-center
+                      span.label.label-danger Banned
+                    td
+                      a(href='#') jack@nicholson
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/emma-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Emma Watson
+                      span.user-subhead Registered
+                    td
+                      | 2004/01/24
+                    td.text-center
+                      span.label.label-warning Pending
+                    td
+                      a(href='#') humphrey@bogart.com
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/robert-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Robert Downey Jr.
+                      span.user-subhead Admin
+                    td
+                      | 2013/12/31
+                    td.text-center
+                      span.label.label-success Active
+                    td
+                      a(href='#') spencer@tracy
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/kunis-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Mila Kunis
+                      span.user-subhead Admin
+                    td
+                      | 2013/08/08
+                    td.text-center
+                      span.label.label-default Inactive
+                    td
+                      a(href='#') mila@kunis.com
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/lima-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') George Clooney
+                      span.user-subhead Member
+                    td
+                      | 2013/08/12
+                    td.text-center
+                      span.label.label-success Active
+                    td
+                      a(href='#') marlon@brando.com
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/ryan-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Ryan Gossling
+                      span.user-subhead Registered
+                    td
+                      | 2013/03/03
+                    td.text-center
+                      span.label.label-danger Banned
+                    td
+                      a(href='#') jack@nicholson
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/emma-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Emma Watson
+                      span.user-subhead Registered
+                    td
+                      | 2004/01/24
+                    td.text-center
+                      span.label.label-warning Pending
+                    td
+                      a(href='#') humphrey@bogart.com
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                  tr
+                    td
+                      img(alt='', src='img/samples/robert-300.jpg')
+                      a.user-link(href='{url}?page=xhr_employee-profile{/}') Robert Downey Jr.
+                      span.user-subhead Admin
+                    td
+                      | 2013/12/31
+                    td.text-center
+                      span.label.label-success Active
+                    td
+                      a(href='#') spencer@tracy
+                    td(style='width: 20%;')
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-search-plus.fa-stack-1x.fa-inverse
+                      a.table-link(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                      a.table-link.danger(href='#')
+                        span.fa-stack
+                          i.fa.fa-square.fa-stack-2x
+                          i.fa.fa-trash-o.fa-stack-1x.fa-inverse

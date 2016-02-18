@@ -20,7 +20,7 @@ class page_employee extends \Page {
 		
 
 		$form = $this->add('Form');
-		$form->setLayout(['page/xhr/employee']);
+		$form->setLayout(['page/employee']);
 		$form->setModel($this->api->auth->model->reload(),['department_name']);
 
 		$form->onSubmit(function($f){
