@@ -10,6 +10,7 @@ class Initiator extends \Controller_Addon {
 		parent::init();
 		
 		$this->routePages('xepan_hr');
+		$this->addLocation(array('template'=>'templates'));
 
 		$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
 
