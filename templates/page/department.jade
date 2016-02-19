@@ -10,7 +10,10 @@
         |  Add Department
   .main-box-body.clearfix
     .table-responsive
-      table.table
+      {$Content}
+    {DepartmentList}{DepartmentListTemplate}
+    .table-responsive(id="{$_name}")
+      table.table.user-list.table-hover
         thead
           tr
             th
@@ -26,6 +29,7 @@
                 span Post
             th  
         tbody
+          {rows}{row}
           tr
             td
               | {$name}
@@ -35,7 +39,8 @@
               span.label.label-success {$status}
             td.text-center
               a(href='index.php?page=xepan_hr_post')
-                | {$posts}2 Edit
+                | {$posts}
+                //- |2 Edit
             td(style='width: 15%;')
               a.table-link(href='#')
                 span.fa-stack
@@ -45,101 +50,7 @@
                 span.fa-stack
                   i.fa.fa-square.fa-stack-2x
                   i.fa.fa-trash-o.fa-stack-1x.fa-inverse
-          tr
-            td
-              | MacBook Air 11"
-            td.text-right
-              | $ 999.00
-            td.text-center
-              span.label.label-success Active
-            td.text-center
-              a(href='index.php?page=xhr_post')
-                | 2 Edit
-            td(style='width: 15%;')
-              a.table-link(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
-              a.table-link.danger(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
-          tr
-            td
-              | iPad 128GB Wifi+3G
-            td.text-right
-              | $ 1825.00
-            td.text-center
-              span.label.label-success Active
-            td.text-center
-              a(href='index.php?page=xhr_post')
-                | 2 Edit
-            td(style='width: 15%;')
-              a.table-link(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
-              a.table-link.danger(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
-          tr
-            td
-              | iMac 27" Quad Core i5 3.2GHz
-            td.text-right
-              | $ 1.920.50
-            td.text-center
-              span.label.label-success Active
-            td.text-center
-              a(href='index.php?page=xhr_post')
-                | 2 Edit
-            td(style='width: 15%;')
-              a.table-link(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
-              a.table-link.danger(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
-          tr
-            td
-              | Mac Pro 2.8GHz 4-Core Intel Xeon
-            td.text-right
-              | $ 4.625.50
-            td.text-center
-              span.label.label-warning Inactive
-            td.text-center
-              a(hred='index.php?page=xhr_post')
-                | 2 Edit
-            td(style='width: 15%;')
-              a.table-link(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
-              a.table-link.danger(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
-          tr
-            td
-              | MacBook Pro 15" Retina Core i7 2.7GHz
-            td.text-right
-              | $ 1.435.50
-            td.text-center
-              span.label.label-success Active
-            td.text-center
-              a(href='index.php?page=xhr_post')
-                | 2 Edit
-            td(style='width: 15%;')
-              a.table-link(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-pencil.fa-stack-1x.fa-inverse
-              a.table-link.danger(href='#')
-                span.fa-stack
-                  i.fa.fa-square.fa-stack-2x
-                  i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+          {/row}{/rows}{$Paginator}{/DepartmentListTemplate}
     ul.pagination.pull-right
       li
         a(href='#')
