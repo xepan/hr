@@ -21,12 +21,13 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><a href="index.php?page=xepan_hr_employeedetail" class="user-link">
-                                      
-              {$first_name}&nbsp;{$last_name} <br/><small>{$post}</small></a></td>
-          <td>{$is_active}</td>
-          <td>{$user}</td>
-          <td style="width: 15%;">{$edit}{$delete}
+          <td><img alt="" src="{image}img/samples/scarlet-159.png{/}"/><a href="{url}index.php?page=xepan_hr_employeedetail{/}" class="user-link">{first_name}Scarlett{/} {last_name}Johansson{/}</a><span class="user-subhead">{post}Admin{/}</span></td>
+          <td>2013/08/08</td>
+          <td class="text-center"><span class="label label-default">{status}Inactive{/}</span></td>
+          <td><a href="#">mila@kunis.com</a></td>
+          <td style="width: 15%;">
+            {$edit}
+            {$delete}
             {/}
           </td>
         </tr>{/}{/}

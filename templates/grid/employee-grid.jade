@@ -15,11 +15,6 @@
             {header}
             thead
                 {cols}{col}
-                //- th(id="{$sortid}")
-                //-     a(href="javascript:void(0)")
-                        //- {$descr}
-                        //- {sort}
-                        //- span(class="{$sorticon}")
                 th
                     a
                     | Name
@@ -43,26 +38,18 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td                            
-                        {$first_name}&nbsp;{$last_name} 
-                        br
-                        small
-                            {$post}
                     td
-                        {$is_active}
+                      img(alt='', src='{image}img/samples/scarlet-159.png{/}')
+                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
+                      span.user-subhead {post}Admin{/}
                     td
-                        {$user}
-                    //- td.btn.btn-info
+                      | 2013/08/08
+                    td.text-center
+                      span.label.label-default {status}Inactive{/}
+                    td
+                      a(href='#') mila@kunis.com
                     td(style="width: 15%;")
-                        //- a(class="table-link" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-pencil fa-stack-1x fa-inverse")
                         {$edit}
-                        //- a(class="table-link danger" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-trash-o fa-stack-1x fa-inverse")
                         {$delete}
                         {/}
                 {/}{/}

@@ -21,7 +21,6 @@ class page_employee extends \Page {
 
 		$crud=$this->add('xepan\base\CRUD',
 						array(
-							'grid_class'=>'xepan\base\Grid',
 							'grid_options'=>array(
 											'defaultTemplate'=>['grid/employee-grid']
 											)
