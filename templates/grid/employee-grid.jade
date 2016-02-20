@@ -14,23 +14,18 @@
         table.table.user-list.table-hover(style="width:100%")
             {header}
             thead
-                {cols}{col}
-                th
-                    a
-                    | Name
-                th
-                    a
-                    | Status
-                th
-                    a
-                    | User
-                th
-                    a
-                    | Post
-                    
-                th
-                //- {/}
-                {/}{/}
+                tr
+                    {cols}
+                    th
+                      span User
+                    th
+                      span Date Of Joining
+                    th.text-center
+                      span Status
+                    th
+                      span Email
+                    th  
+                    {/}
             {/}
             {$subheader}
 
@@ -40,14 +35,14 @@
                     {cols}
                     td
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
-                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
+                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$id}{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
                       span.user-subhead {post}Admin{/}
                     td
-                      | 2013/08/08
+                      | {created_at}2013/08/08{/}
                     td.text-center
                       span.label.label-default {status}Inactive{/}
                     td
-                      a(href='#') mila@kunis.com
+                      a(href='#') {email}mila@kunis.com{/}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}
