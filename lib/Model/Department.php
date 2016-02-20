@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class Model_Department extends \Model_Table{
+class Model_Department extends \xepan\base\Model_Document{
 
 	public $table="department";
 

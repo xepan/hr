@@ -17,17 +17,18 @@ class page_employee extends \Page {
 	function init(){
 		parent::init();
 
-		
+		$employee=$this->add('xepan\hr\Model_Employee');
 
-		$form = $this->add('Form');
-		$form->setLayout(['page/employee']);
-		$form->setModel($this->api->auth->model->reload(),['department_name']);
+		$crud=$this->add('xepan\base\CRUD',
+						array(
+							'grid_class'=>'xepan\base\Grid',
+							'grid_options'=>array(
+											'defaultTemplate'=>['grid/employee-grid']
+											)
+						));
 
-		$form->onSubmit(function($f){
-			// return $f->displayError('first_name','HELLO');
-			$f->save();
-			return $f->js()->reload();
-		});
+		$crud->setModel($employee);
+		$crud->grid->addQuickSearch(['name']);
 		
 	}
 }

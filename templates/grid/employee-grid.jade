@@ -21,14 +21,19 @@
                         //- {sort}
                         //- span(class="{$sorticon}")
                 th
-                    | Department
-                th.text-right
-                    | Production Level
-                th.text-center
+                    a
+                    | Name
+                th
+                    a
                     | Status
-                th.text-center
+                th
+                    a
+                    | User
+                th
+                    a
                     | Post
-                th 
+                    
+                th
                 //- {/}
                 {/}{/}
             {/}
@@ -38,15 +43,15 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td                            
+                        {$first_name}&nbsp;{$last_name} 
+                        br
+                        small
+                            {$post}
                     td
-                      | {$name}
-                    td.text-right
-                      | {$production_level}
-                    td.text-center
-                      span.label.label-success {$status}
-                    td.text-center
-                      a(href='index.php?page=xepan_hr_post')
-                        | {$posts}
+                        {$is_active}
+                    td
+                        {$user}
                     //- td.btn.btn-info
                     td(style="width: 15%;")
                         //- a(class="table-link" href="#")

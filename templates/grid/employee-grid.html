@@ -12,19 +12,20 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th>Department</th>
-        <th class="text-right">Production Level</th>
-        <th class="text-center">Status</th>
-        <th class="text-center">Post</th>
-        <th> </th>{/}{/}
+        <th><a></a>Name</th>
+        <th><a></a>Status</th>
+        <th><a></a>User</th>
+        <th><a></a>Post</th>
+        <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$name}</td>
-          <td class="text-right">{$production_level}</td>
-          <td class="text-center"><span class="label label-success">{$status}</span></td>
-          <td class="text-center"><a href="index.php?page=xepan_hr_post">{$posts}</a></td>
+          <td><a href="index.php?page=xepan_hr_employeedetail" class="user-link">
+                                      
+              {$first_name}&nbsp;{$last_name} <br/><small>{$post}</small></a></td>
+          <td>{$is_active}</td>
+          <td>{$user}</td>
           <td style="width: 15%;">{$edit}{$delete}
             {/}
           </td>
