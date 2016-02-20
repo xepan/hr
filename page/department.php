@@ -25,7 +25,14 @@ class page_department extends \Page {
 
 		$userlist->on('click','.post-link',$this->js()->univ()->location([$this->api->url('xepan_hr_contact_post'),'id'=>$this->js()->_selectorThis()->closest('tr')->data('id')]));
 
-		$crud=$this->add('xepan\base\CRUD',array('grid_class'=>'xepan\hr\Grid_Department','grid_options'=>array('grid_template'=>'grid/department-grid')));
+		$crud=$this->add('xepan\base\CRUD',
+						array(
+							'grid_class'=>'xepan\base\Grid',
+							'grid_options'=>array(
+											'grid_template'=>'grid/department-grid'
+											)
+						));
+
 		$crud->setModel($department);
 		$crud->grid->addQuickSearch(['name']);
 		
