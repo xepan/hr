@@ -17,17 +17,18 @@ class page_post extends \Page {
 	function init(){
 		parent::init();
 
-		
+		$post=$this->add('xepan\hr\Model_Post');
 
-		$form = $this->add('Form');
-		$form->setLayout(['page/post']);
-		$form->setModel($this->api->auth->model->reload(),['department_name']);
+		$crud=$this->add('xepan\base\CRUD',
+						array(
+							'grid_class'=>'xepan\base\Grid',
+							'grid_options'=>array(
+											'defaultTemplate'=>['grid/post-grid']
+											)
+						));
 
-		$form->onSubmit(function($f){
-			// return $f->displayError('first_name','HELLO');
-			$f->save();
-			return $f->js()->reload();
-		});
+		$crud->setModel($post);
+		$crud->grid->addQuickSearch(['name']);
 		
 	}
 }

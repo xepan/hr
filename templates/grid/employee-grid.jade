@@ -14,23 +14,18 @@
         table.table.user-list.table-hover(style="width:100%")
             {header}
             thead
-                {cols}{col}
-                //- th(id="{$sortid}")
-                //-     a(href="javascript:void(0)")
-                        //- {$descr}
-                        //- {sort}
-                        //- span(class="{$sorticon}")
-                th
-                    | Department
-                th.text-right
-                    | Production Level
-                th.text-center
-                    | Status
-                th.text-center
-                    | Post
-                th 
-                //- {/}
-                {/}{/}
+                tr
+                    {cols}
+                    th
+                      span User
+                    th
+                      span Date Of Joining
+                    th.text-center
+                      span Status
+                    th
+                      span Email
+                    th  
+                    {/}
             {/}
             {$subheader}
 
@@ -39,25 +34,17 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                      | {$name}
-                    td.text-right
-                      | {$production_level}
+                      img(alt='', src='{image}img/samples/scarlet-159.png{/}')
+                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$id}{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
+                      span.user-subhead {post}Admin{/}
+                    td
+                      | {created_at}2013/08/08{/}
                     td.text-center
-                      span.label.label-success {$status}
-                    td.text-center
-                      a(href='index.php?page=xepan_hr_post')
-                        | {$posts}
-                    //- td.btn.btn-info
+                      span.label.label-default {status}Inactive{/}
+                    td
+                      a(href='#') {email}mila@kunis.com{/}
                     td(style="width: 15%;")
-                        //- a(class="table-link" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-pencil fa-stack-1x fa-inverse")
                         {$edit}
-                        //- a(class="table-link danger" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-trash-o fa-stack-1x fa-inverse")
                         {$delete}
                         {/}
                 {/}{/}

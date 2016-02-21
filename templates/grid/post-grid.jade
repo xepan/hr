@@ -21,14 +21,21 @@
                         //- {sort}
                         //- span(class="{$sorticon}")
                 th
+                    a
                     | Department
-                th.text-right
-                    | Production Level
+                th
+                    a
+                    | Post
+                th.text-left
+                    a
+                    | E-Mail
                 th.text-center
+                    a
                     | Status
                 th.text-center
-                    | Post
-                th 
+                    a
+                    |Employee  
+                th
                 //- {/}
                 {/}{/}
             {/}
@@ -38,15 +45,18 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td                            
+                        {$department}
                     td
-                      | {$name}
-                    td.text-right
-                      | {$production_level}
+                        {$name}
+                    td.text-left
+                        a(class="" href="#")
+                            {email}info@xavoc.com{/email}
                     td.text-center
-                      span.label.label-success {$status}
+                        span.label.label-success {$status}Active
                     td.text-center
-                      a(href='index.php?page=xepan_hr_post')
-                        | {$posts}
+                        a(href='index.php?page=xepan_hr_employee')
+                            {$employee}
                     //- td.btn.btn-info
                     td(style="width: 15%;")
                         //- a(class="table-link" href="#")

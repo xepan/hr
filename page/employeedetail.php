@@ -17,17 +17,25 @@ class page_employeedetail extends \Page {
 	function init(){
 		parent::init();
 
-		
+		$employee= $this->add('xepan\base\Model_Contact')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
+		$d = $this->add('xepan\base\View_Document',
+				[
+					'action'=>$this->api->stickyGET('action')?:'view', // add/edit
+					'id_fields_in_view'=>'["all"]/["post_id","field2_id"]',
+					'allow_many_on_add' => false, // Only visible if editinng,
+					'view_template' => ['view/profile']
+				],
+				'contact_view'
+			);
+		$d->setModel($employee,null,['first_name','last_name','type']);	
+		$d->addMany(
+			$employee->ref('Emails'),
+			$view_class='xepan\base\Grid',$view_options=null,$view_spot='Emails',$view_defaultTemplate=['view/profile','Emails'],$view_fields=null,
+			$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['view/profile','Emails']]],$spot='Emails',$defaultTemplate=null,$fields=null
+			);
+	}
 
-		$form = $this->add('Form');
-		$form->setLayout(['page/employee-profile']);
-		$form->setModel($this->api->auth->model->reload(),['department_name']);
-
-		$form->onSubmit(function($f){
-			// return $f->displayError('first_name','HELLO');
-			$f->save();
-			return $f->js()->reload();
-		});
-		
+	function defaultTemplate(){
+		return ['page/employee-profile'];
 	}
 }

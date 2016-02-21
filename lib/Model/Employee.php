@@ -11,8 +11,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$emp_j->hasOne('xepan\base\User');
 		$emp_j->hasOne('xepan\hr\Post');
-		$emp_j->addField('is_active')->type('boolean')->defaultValue(true);
-
 
 		$this->addCondition('type','employee');
 
