@@ -16,9 +16,6 @@ class Model_Department extends \xepan\base\Model_Table{
 
 		$this->hasMany('xepan\hr\Post',null,null,'Post');
 
-		$this->addExpression('posts')->set(function($m,$q){
-			return '3';
-		// 	return $m->refSQL('xepan\hr\Post')->addCondition('department_id',$this->id)->count('id');
-		});
+		$this->addExpression('posts')->set($this->refSQL('Post')->count());
 	}
 }
