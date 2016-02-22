@@ -12,25 +12,26 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th><a></a>Department</th>
-        <th><a></a>Post</th>
-        <th class="text-left"><a></a>E-Mail</th>
-        <th class="text-center"><a></a>Status</th>
-        <th class="text-center"><a></a>Employee  </th>
+        <th><a href="#"><span>Department</span></a></th>
+        <th><a href="#"><span>Post</span></a></th>
+        <th class="text-left"><a href="#" class="desc"><span>E-mail</span></a></th>
+        <th class="text-left"><span>Status</span></th>
+        <th class="text-left"><a href="#" class="asc"><span>Employee</span></a></th>
         <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>
-                                       
-            {$department}
+          <td>{$department}</td>
+          <td>{$name}
+            <div class="atk-label"><small>{$department}\{$name}</small></div>
           </td>
-          <td>{$name}</td>
-          <td class="text-left"><a href="#">{email}info@xavoc.com{/email}</a></td>
-          <td class="text-center"><span class="label label-success">{$status}Active</span></td>
-          <td class="text-center"><a href="index.php?page=xepan_hr_employee">{$employee}</a></td>
-          <td style="width: 15%;">{$edit}{$delete}
+          <td class="text-left">{email}info@xavoc.com{/email}</td>
+          <td class="text-center"><span class="label label-success">{$status}</span></td>
+          <td class="text-center"><a href="index.php?page=xepan_hr_employee"> {$employee}</a></td>
+          <td style="width: 15%;">
+            {$edit}
+            {$delete}
             {/}
           </td>
         </tr>{/}{/}

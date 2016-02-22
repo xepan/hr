@@ -15,28 +15,21 @@
             {header}
             thead
                 {cols}{col}
-                //- th(id="{$sortid}")
-                //-     a(href="javascript:void(0)")
-                        //- {$descr}
-                        //- {sort}
-                        //- span(class="{$sorticon}")
                 th
-                    a
-                    | Department
+                  a(href='#')
+                    span Department
                 th
-                    a
-                    | Post
+                  a(href='#')
+                    span Post
                 th.text-left
-                    a
-                    | E-Mail
-                th.text-center
-                    a
-                    | Status
-                th.text-center
-                    a
-                    |Employee  
+                  a.desc(href='#')
+                    span E-mail
+                th.text-left
+                  span Status
+                th.text-left
+                  a.asc(href='#')
+                    span Employee
                 th
-                //- {/}
                 {/}{/}
             {/}
             {$subheader}
@@ -45,29 +38,21 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td                            
+                    td
                         {$department}
                     td
                         {$name}
+                        .atk-label
+                            small|{$department}\{$name}
                     td.text-left
-                        a(class="" href="#")
-                            {email}info@xavoc.com{/email}
+                      | {email}info@xavoc.com{/email}
                     td.text-center
-                        span.label.label-success {$status}Active
+                      span.label.label-success {$status}
                     td.text-center
-                        a(href='index.php?page=xepan_hr_employee')
-                            {$employee}
-                    //- td.btn.btn-info
+                      a(href='index.php?page=xepan_hr_employee')
+                        |  {$employee}
                     td(style="width: 15%;")
-                        //- a(class="table-link" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-pencil fa-stack-1x fa-inverse")
                         {$edit}
-                        //- a(class="table-link danger" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-trash-o fa-stack-1x fa-inverse")
                         {$delete}
                         {/}
                 {/}{/}
