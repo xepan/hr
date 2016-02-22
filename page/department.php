@@ -32,7 +32,7 @@ class page_department extends \Page {
 											)
 						));
 
-		$crud->setModel($department,['name']);
+		$crud->setModel($department);
 		$crud->grid->addQuickSearch(['name']);
 		
 	}
