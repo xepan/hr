@@ -2,19 +2,20 @@
 
 namespace xepan\hr;
 
-class Model_Post extends \xepan\base\Model_Document{
+class Model_Post extends \xepan\base\Model_Table{
+	public $table="post";
 	function init(){
 		parent::init();
-		$post_j = $this->join('post.document_id');
+		// $post_j = $this->join('post.document_id');
 		
-		$post_j->hasOne('xepan\base\Epan');
-		$post_j->hasOne('xepan\hr\Department');
+		$this->hasOne('xepan\base\Epan');
+		$this->hasOne('xepan\hr\Department');
 
-		$post_j->addField('name');
+		$this->addField('name');
 
-		// $post_j->hasMany('xepan\hr\Employee',null,null,'Employees');
+		$this->hasMany('xepan\hr\Employee',null,null,'Employees');
 
-		// $post_j->addExpression('employee')->set($this->refSQL('Employees')->count());
+		$this->addExpression('employee')->set($this->refSQL('Employees')->count());
 
 	}
 }

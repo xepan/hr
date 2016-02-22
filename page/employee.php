@@ -16,9 +16,14 @@ class page_employee extends \Page {
 
 	function init(){
 		parent::init();
+		$this->api->stickyGET('post_id');
 
 		$employee=$this->add('xepan\hr\Model_Employee');
-
+		
+		if($_GET['post_id']){
+			$employee->addCondition('post_id',$_GET['post_id']);
+		}
+		
 		$crud=$this->add('xepan\base\CRUD',
 						[
 							'action_page'=>'xepan_hr_employeedetail',
