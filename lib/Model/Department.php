@@ -2,20 +2,20 @@
 
 namespace xepan\hr;
 
-class Model_Department extends \xepan\base\Model_Table{
-
-	public $table="department";
+class Model_Department extends \xepan\base\Model_Document{
 
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\base\Epan');
-		$this->addField('name');
-		$this->addField('production_level');
-		$this->addField('status')->enum(['Active','Inactive']);
+		$dep_j = $this->join('department.document_id');
+		$dep_j->hasOne('xepan\base\Epan');
+		$dep_j->addField('name');
+		$dep_j->addField('production_level');
 
-		$this->hasMany('xepan\hr\Post',null,null,'Post');
+		$dep_j->hasMany('xepan\hr\Post','department_id',null,'Post');
 
-		$this->addExpression('posts')->set($this->refSQL('Post')->count());
+		$this->addExpression('posts_count')->set($this->refSQL('Post')->count());
+
+		$this->addCondition('type','Department');
 	}
 }

@@ -12,7 +12,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasOne('xepan\base\User');
 		$emp_j->hasOne('xepan\hr\Post','post_id');
 
-		$this->addCondition('type','employee');
+		$this->addCondition('type','Employee');
 
 
 	}
