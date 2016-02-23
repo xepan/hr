@@ -5,8 +5,7 @@
         div.filter-block( style="100%")
             .btnn.btn-primaryy.pull-right{$grid_buttons} 
                 //- i(class="fa fa-plus-circle fa-lg")
-            .form-group(style="width:50%;margin:auto")
-                .pull-right
+            .form-group.xepan-grid-search
                     span(class="form-control pull-left")|{$quick_search}
                         i(class="fa fa-search search-icon")
     {/Pannel}
@@ -15,21 +14,18 @@
             {header}
             thead
                 {cols}{col}
-                //- th(id="{$sortid}")
-                //-     a(href="javascript:void(0)")
-                        //- {$descr}
-                        //- {sort}
-                        //- span(class="{$sorticon}")
                 th
-                    | Department
+                    a(href='#')
+                        span Department
                 th.text-right
-                    | Production Level
+                    a.asc(href='#')
+                        span Production Level
                 th.text-center
-                    | Status
+                    span Status
                 th.text-center
-                    | Post
-                th 
-                //- {/}
+                    a.desc(href='#')
+                        span Post
+                th
                 {/}{/}
             {/}
             {$subheader}
@@ -45,19 +41,10 @@
                     td.text-center
                       span.label.label-success {$status}
                     td.text-center
-                      a(href='index.php?page=xepan_hr_post')
+                      a(href='index.php?page=xepan_hr_post&department_id={$id}')
                         | {$posts}
-                    //- td.btn.btn-info
                     td(style="width: 15%;")
-                        //- a(class="table-link" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-pencil fa-stack-1x fa-inverse")
                         {$edit}
-                        //- a(class="table-link danger" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-trash-o fa-stack-1x fa-inverse")
                         {$delete}
                         {/}
                 {/}{/}

@@ -5,8 +5,7 @@
         div.filter-block( style="100%")
             .btnn.btn-primaryy.pull-right{$grid_buttons} 
                 //- i(class="fa fa-plus-circle fa-lg")
-            .form-group(style="width:50%;margin:auto")
-                .pull-right
+            .form-group.xepan-grid-search
                     span(class="form-control pull-left")|{$quick_search}
                         i(class="fa fa-search search-icon")
     {/Pannel}
@@ -15,28 +14,21 @@
             {header}
             thead
                 {cols}{col}
-                //- th(id="{$sortid}")
-                //-     a(href="javascript:void(0)")
-                        //- {$descr}
-                        //- {sort}
-                        //- span(class="{$sorticon}")
                 th
-                    a
-                    | Department
+                  a(href='#')
+                    span Department
                 th
-                    a
-                    | Post
+                  a(href='#')
+                    span Post
                 th.text-left
-                    a
-                    | E-Mail
+                  a.desc(href='#')
+                    span E-mail
                 th.text-center
-                    a
-                    | Status
+                  span Status
                 th.text-center
-                    a
-                    |Employee  
+                  a.asc(href='#')
+                    span Employee
                 th
-                //- {/}
                 {/}{/}
             {/}
             {$subheader}
@@ -45,29 +37,21 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td                            
+                    td
                         {$department}
                     td
                         {$name}
+                        .atk-label
+                            small|{$department}\{$name}
                     td.text-left
-                        a(class="" href="#")
-                            {email}info@xavoc.com{/email}
+                      | {email}info@xavoc.com{/email}
                     td.text-center
-                        span.label.label-success {$status}Active
+                      span.label.label-success {status}Active{/}
                     td.text-center
-                        a(href='index.php?page=xepan_hr_employee')
-                            {$employee}
-                    //- td.btn.btn-info
+                      a(href='index.php?page=xepan_hr_employee&post_id={$id}')
+                        |  {$employee}
                     td(style="width: 15%;")
-                        //- a(class="table-link" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-pencil fa-stack-1x fa-inverse")
                         {$edit}
-                        //- a(class="table-link danger" href="#")
-                        //-     span(class="fa-stack")
-                        //-         i(class="fa fa-square fa-stack-2x")
-                        //-         i(class="fa fa-trash-o fa-stack-1x fa-inverse")
                         {$delete}
                         {/}
                 {/}{/}

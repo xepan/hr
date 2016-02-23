@@ -2,21 +2,20 @@
 
 namespace xepan\hr;
 
-class Model_Post extends \xepan\base\Model_Table{
+class Model_Post extends \xepan\base\Model_Document{
 	public $table="post";
-	
 	function init(){
 		parent::init();
-
+		// $post_j = $this->join('post.document_id');
+		
 		$this->hasOne('xepan\base\Epan');
-
 		$this->hasOne('xepan\hr\Department');
+
 		$this->addField('name');
 
 		$this->hasMany('xepan\hr\Employee',null,null,'Employees');
 
-		$this->addExpression('employee')->set(function($m,$q){
-			return 5;
-		});
+		$this->addExpression('employee')->set($this->refSQL('Employees')->count());
+
 	}
 }

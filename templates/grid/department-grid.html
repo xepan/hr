@@ -4,19 +4,17 @@
     <div style="100%" class="filter-block">
       <div class="btnn btn-primaryy pull-right">{$grid_buttons} 
       </div>
-      <div style="width:50%;margin:auto" class="form-group">
-        <div class="pull-right"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
-      </div>
+      <div class="form-group xepan-grid-search"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th>Department</th>
-        <th class="text-right">Production Level</th>
-        <th class="text-center">Status</th>
-        <th class="text-center">Post</th>
-        <th> </th>{/}{/}
+        <th><a href="#"><span>Department</span></a></th>
+        <th class="text-right"><a href="#" class="asc"><span>Production Level</span></a></th>
+        <th class="text-center"><span>Status</span></th>
+        <th class="text-center"><a href="#" class="desc"><span>Post</span></a></th>
+        <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -24,8 +22,10 @@
           <td>{$name}</td>
           <td class="text-right">{$production_level}</td>
           <td class="text-center"><span class="label label-success">{$status}</span></td>
-          <td class="text-center"><a href="index.php?page=xepan_hr_post">{$posts}</a></td>
-          <td style="width: 15%;">{$edit}{$delete}
+          <td class="text-center"><a href="index.php?page=xepan_hr_post&amp;department_id={$id}">{$posts}</a></td>
+          <td style="width: 15%;">
+            {$edit}
+            {$delete}
             {/}
           </td>
         </tr>{/}{/}
