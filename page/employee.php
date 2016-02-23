@@ -19,13 +19,16 @@ class page_employee extends \Page {
 
 		$employee=$this->add('xepan\hr\Model_Employee');
 
-		$crud=$this->add('xepan\base\CRUD',
-						[
-							'action_page'=>'xepan_hr_employeedetail',
-							'grid_options'=>[
-											'defaultTemplate'=>['grid/employee-grid']
-											]
-						]);
+		
+		$crud=$this->add('xepan\base\CRUD',array('grid_class'=>'xepan\base\Grid','grid_options'=>array('defaultTemplate'=>['grid/opportunity-grid'])));
+
+		// $crud=$this->add('xepan\base\CRUD',
+		// 				[
+		// 					'action_page'=>'xepan_hr_employeedetail',
+		// 					'grid_options'=>[
+		// 									'defaultTemplate'=>['grid/employee-grid']
+		// 									]
+		// 				]);
 
 		$crud->setModel($employee);
 		$crud->grid->addQuickSearch(['name']);
