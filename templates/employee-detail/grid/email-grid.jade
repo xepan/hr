@@ -13,40 +13,36 @@
         table.table.user-list.table-hover(style="width:100%")
             {header}
             thead
-                tr
-                    {cols}
-                    th
-                      span User
-                    th
-                      span Date Of Joining
-                    th.text-center
-                      span Status
-                    th
-                      span Email
-                    th  
-                    {/}
+                {cols}{col}
+                th
+                    {$sort}{$descr}{$content}
+                th
+                    a(href='#')
+                        span Email
+                th.text-center
+                    span Status
+                th.text-center
+                    a.desc(href='#')
+                        span Valid
+                th
+                {/}{/}
             {/}
             {$subheader}
 
             tbody
                 {rows}{row}
-                tr(class="{$odd_even}" data-id="{$id}")
-                    {cols}
-                    td
-                      img(alt='', src='{image}img/samples/scarlet-159.png{/}')
-                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$id}{/}') {first_name}Scarlett{/} {last_name}Johansson{/}
-                      span.user-subhead {post}Admin{/}
-                    td
-                      | {created_at}2013/08/08{/}
+                tr(class="{$odd_even}" data-id="{$row_id}")
+                    {cols}{col}{$content}
+                    <td {$tdparam}>
+                    | {$email}
+                    td.text-right
+                      | {$is_active}
                     td.text-center
-                      span.label.label-default {status}Inactive{/}
-                    td
-                      a(href='#') 
-                        {email}mila@kunis.com{/}
+                      span.label.label-success {$is_valid}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}
-                        {/}
+                        {/}{/}
                 {/}{/}
                 {not_found}
                 tr

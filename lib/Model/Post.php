@@ -8,7 +8,7 @@ class Model_Post extends \xepan\base\Model_Document{
 
 		$post_j = $this->join('post.document_id');
 		
-		$post_j->hasOne('xepan\base\Epan');
+		// $post_j->hasOne('xepan\base\Epan');
 		$post_j->hasOne('xepan\hr\Department','department_id');
 
 		$post_j->addField('name');

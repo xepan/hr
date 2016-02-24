@@ -1,0 +1,100 @@
+{$Content}
+div
+  .col-lg-12
+    .main-box
+      header.main-box-header.clearfix
+        h2 Change Password
+      .main-box-body.clearfix
+        form.form-inline(role='form')
+          .form-group
+            label.sr-only(for='Password1') Password
+            input#Password1.form-control(type='password', placeholder='Old')
+          .form-group
+            label.sr-only(for='Password2') Password
+            input#Password2.form-control(type='password', placeholder='New')    
+          .form-group
+            label.sr-only(for='Password3') Password
+            input#Password3.form-control(type='password', placeholder='Confirm')
+          button.btn.btn-success(type='submit') Change
+div
+  .col-lg-12
+    .main-box
+      header.main-box-header.clearfix
+        .col-lg-12
+          .col-lg-10
+            h2 Update Email Info
+          .col-lg-2
+            button.btn.btn-success.push-right(type='submit') Add Email    
+      .main-box-body.clearfix
+          {$Emails}
+        .table-responsive
+          table.table
+            thead
+              tr
+                th
+                 span Email
+                th
+                 span Status 
+            tbody
+              tr
+                td
+                  |Vaibhavsharma38@gmail.com
+                td
+                  .dropdown
+                    button.btn.btn-danger.btn-sm.dropdown-toggle(type='button', data-toggle='dropdown')
+                          | Inactive
+                          span.caret
+                        ul.dropdown-menu
+                          li
+                            |Active
+                td(style='width: 20%;')
+                  a.table-link(href='#')
+                    span.fa-stack
+                      i.fa.fa-square.fa-stack-2x
+                      i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                  a.table-link.danger(href='#')
+                    span.fa-stack
+                      i.fa.fa-square.fa-stack-2x
+                      i.fa.fa-trash-o.fa-stack-1x.fa-inverse
+                tr
+                  td
+                    |Vaibhavsharma38@gmail.com
+                  td
+                    .dropdown
+                      button.btn.btn-danger.btn-sm.dropdown-toggle(type='button', data-toggle='dropdown')
+                        | Inactive
+                        span.caret
+                      ul.dropdown-menu
+                        li
+                          |Active
+                         
+                  td(style='width: 20%;')
+                    a.table-link(href='#')
+                      span.fa-stack
+                        i.fa.fa-square.fa-stack-2x
+                        i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                    a.table-link.danger(href='#')
+                      span.fa-stack
+                        i.fa.fa-square.fa-stack-2x
+                        i.fa.fa-trash-o.fa-stack-1x.fa-inverse        
+                tr
+                  td
+                    |Vaibhavsharma38@gmail.com
+                  td
+                    .dropdown
+                      button.btn.btn-success.btn-sm.dropdown-toggle(type='button', data-toggle='dropdown')
+                          | Active
+                          span.caret
+                        ul.dropdown-menu
+                          li
+                            |Inactive
+                          
+                  td(style='width: 20%;')
+                    a.table-link(href='#')
+                      span.fa-stack
+                        i.fa.fa-square.fa-stack-2x
+                        i.fa.fa-pencil.fa-stack-1x.fa-inverse
+                    a.table-link.danger(href='#')
+                      span.fa-stack
+                        i.fa.fa-square.fa-stack-2x
+                        i.fa.fa-trash-o.fa-stack-1x.fa-inverse

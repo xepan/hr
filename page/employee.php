@@ -46,7 +46,7 @@ class page_employee extends \Page {
 						]);
 >>>>>>> e8b4f7329e7ff0ec3b1b8b51caf66a4935438719
 
-		$crud->setModel($employee);
+		$crud->setModel($employee,['first_name','last_name','post','created_at']);
 		$crud->grid->addQuickSearch(['name']);
 		
 	}
