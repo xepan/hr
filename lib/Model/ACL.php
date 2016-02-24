@@ -20,10 +20,10 @@ class Model_ACL extends \xepan\base\Model_Table {
 		$this->hasOne('xepan\base\Epan','epan_id');
 		$this->hasOne('xepan\hr\Post','post_id');
 		$this->addField('document_type');
-		$this->addField('status');
 		$this->addField('action_allowed')->type('text')->defaultValue(json_encode([]));
+		$this->addField('allow_add')->type('boolean')->defaultValue(true);
 
-		$this->addHook('afterLook',function($m){
+		$this->addHook('afterLoad',function($m){
 			$m['action_allowed'] = json_decode($m['action_allowed'],true);
 		});
 	}
