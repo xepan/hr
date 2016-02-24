@@ -18,6 +18,7 @@ class Initiator extends \Controller_Addon {
 		$m->addItem('Department','xepan_hr_department');
 		$m->addItem('Post','xepan_hr_post');
 		$m->addItem('Employee','xepan_hr_employee');
+		$m->addItem('ACL','xepan_hr_aclmanagement');
 		
 	}
 }

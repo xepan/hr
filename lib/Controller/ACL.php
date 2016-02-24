@@ -37,15 +37,15 @@ class Controller_ACL extends \AbstractController {
 
 		// Put Model View Conditions 
 
-		if($model instanceof \xepan\base\Model_Document){
-			$view_array = $this->canView();
+		if($model instanceof \xepan\base\Model_Document){			
+			$view_array = $this->canView();			
 			$q = $this->model->dsql();
 
 			foreach ($view_array as $status => $acl) { // acl can be true(for all, false for none and [] for employee created_by_ids)
 				if($status=='*'){
 					if($acl === true) break;
 					if($acl === false) $acl = -1; // Shuold never be reached
-					$model->addCondition('created_by_id',$ids);
+					$model->addCondition('created_by_id',$acl);
 					break;
 				}else{
 					if($acl === false) continue;
@@ -183,6 +183,7 @@ class Controller_ACL extends \AbstractController {
 			$view_array[$status] = isset($actions['view'])?$actions['view']:false;
 		}
 
+
 		return $view_array;
 	}
 
@@ -218,8 +219,9 @@ class Controller_ACL extends \AbstractController {
 	 * @return ['submit'=>[1],'can_view'=>false/true/[1,2,3]] [description]
 	 */
 	function canDo(){
-
+		$class = new \ReflectionClass($this->model);
 		$this->acl_m = $this->add('xepan\hr\Model_ACL')
+					->addCondition('namespace',$class->getNamespaceName())
 					->addCondition('document_type',$this->model['type'])
 					->addCondition('post_id',$this->app->employee['post_id'])
 					;
@@ -252,6 +254,7 @@ class Controller_ACL extends \AbstractController {
 				}
 			}
 		}
+
 		return $this->action_allowed;
 	}
 

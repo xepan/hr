@@ -19,6 +19,7 @@ class Model_ACL extends \xepan\base\Model_Table {
 		
 		$this->hasOne('xepan\base\Epan','epan_id');
 		$this->hasOne('xepan\hr\Post','post_id');
+		$this->addField('namespace');
 		$this->addField('document_type');
 		$this->addField('action_allowed')->type('text')->defaultValue(json_encode([]));
 		$this->addField('allow_add')->type('boolean')->defaultValue(true);
