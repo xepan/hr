@@ -32,7 +32,7 @@ class page_employee extends \Page {
 											]
 						]);
 
-		$crud->setModel($employee);
+		$crud->setModel($employee,['first_name','last_name','post','created_at']);
 		$crud->grid->addQuickSearch(['name']);
 		
 	}

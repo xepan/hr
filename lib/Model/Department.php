@@ -8,7 +8,7 @@ class Model_Department extends \xepan\base\Model_Document{
 		parent::init();
 
 		$dep_j = $this->join('department.document_id');
-		$dep_j->hasOne('xepan\base\Epan');
+		// $dep_j->hasOne('xepan\base\Epan');
 		$dep_j->addField('name');
 		$dep_j->addField('production_level');
 
