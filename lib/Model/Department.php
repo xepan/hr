@@ -7,8 +7,8 @@ class Model_Department extends \xepan\base\Model_Document{
 	public $status=['Active','InActive'];
 	
 	public $actions = [
-		'Active'=>['view','edit','delete'],
-		'InActive' => ['view','edit','delete']
+		'Active'=>['view','edit','delete','deactivate'],
+		'InActive' => ['view','edit','delete','activate']
 	];
 
 	function init(){
@@ -25,5 +25,20 @@ class Model_Department extends \xepan\base\Model_Document{
 
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
+	}
+
+	function page_activate($p){
+		$p->add('View')->set('Hello');
+		$f = $p->add('Form');
+		$f->addField('name');
+		$f->addField('password');
+		$f->onSubmit(function($f){
+			$f->displayError('name','Oops');
+		});
+
+		$btn = $p->add('Button')->set($this['name']);
+		if($btn->isClicked()){
+			return true;
+		}
 	}
 }
