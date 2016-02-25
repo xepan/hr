@@ -1,12 +1,14 @@
 #portfolio
-  {$Content}
   .col-lg-12
     .panel.panel-default
       .panel-body 
         .col-lg-12
-          .col-lg-10
+          .col-lg-5
+            | {$department}{$department_id}
+          .col-lg-5
+            | {$post}{$post_id}
           .col-lg-2 
-            button.btn.btn-success.push-right(type='submit') Edit Information   
+            | {$FormButtons}
         header.main-box-header.clearfix
             h2 Education Qualificaton 
         .col-lg-12

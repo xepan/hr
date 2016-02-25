@@ -8,7 +8,9 @@ class CRUD extends \xepan\base\CRUD {
 		$m = parent::setModel($model,$grid_fields,$form_fields);
 		
 		if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !$this->pass_acl){
+			echo "acl";
 			$this->add('xepan\hr\Controller_ACL');
+			echo "done";
 		}
 		return $m;
 	}

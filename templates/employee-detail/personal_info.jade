@@ -1,14 +1,11 @@
-{$Content}
 div
   .col-lg-12
     .main-box
       header.main-box-header.clearfix
         h2 Change Password
       .main-box-body.clearfix
-        form.form-inline(role='form')
           .form-group
-            label.sr-only(for='Password1') Password
-            input#Password1.form-control(type='password', placeholder='Old')
+            label.sr-only(for='Password1') {$password}
           .form-group
             label.sr-only(for='Password2') Password
             input#Password2.form-control(type='password', placeholder='New')    
