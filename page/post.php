@@ -24,7 +24,7 @@ class page_post extends \Page {
 			$post->addCondition('department_id',$_GET['department_id']);
 		}
 
-		$crud=$this->add('xepan\base\CRUD',
+		$crud=$this->add('xepan\hr\CRUD',
 						array(
 							'grid_options'=>array(
 											'defaultTemplate'=>['grid/post-grid']
