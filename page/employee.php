@@ -21,7 +21,7 @@ class page_employee extends \Page {
 		$employee=$this->add('xepan\hr\Model_Employee');
 		
 		if($_GET['post_id']){
-			$employee->addCondition('post_document_id',$_GET['post_id']);
+			$employee->addCondition('post_id',$_GET['post_id']);
 		}
 		
 		$crud=$this->add('xepan\hr\CRUD',
