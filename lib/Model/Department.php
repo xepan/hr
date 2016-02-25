@@ -11,8 +11,8 @@ class Model_Department extends \xepan\base\Model_Document{
 		$dep_j->addField('name');
 		$dep_j->addField('production_level');
 
-		$dep_j->hasMany('xepan\hr\Post','department_document_id',null,'Post');
-		$dep_j->hasMany('xepan\hr\Employee','department_document_id',null,'Employees');
+		$dep_j->hasMany('xepan\hr\Post','department_id',null,'Post');
+		$dep_j->hasMany('xepan\hr\Employee','department_id',null,'Employees');
 
 		$this->addExpression('posts_count')->set($this->refSQL('Post')->count());
 

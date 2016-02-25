@@ -25,7 +25,8 @@
                 th.text-center
                     a.desc(href='#')
                         span Post
-                th
+                th 
+                th 
                 {/}{/}
             {/}
             {$subheader}
@@ -43,6 +44,8 @@
                     td.text-center
                       a(href='index.php?page=xepan_hr_post&department_id={$id}')
                         | {$posts}
+                    td
+                        | {action}Action Here{/}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

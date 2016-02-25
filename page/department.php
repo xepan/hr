@@ -19,7 +19,7 @@ class page_department extends \Page {
 		
 		$department=$this->add('xepan\hr\Model_Department');
 
-		$crud=$this->add('xepan\base\CRUD',
+		$crud=$this->add('xepan\hr\CRUD',
 						array(
 							'grid_options'=>array(
 											'defaultTemplate'=>['grid/department-grid']
