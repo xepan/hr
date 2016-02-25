@@ -24,6 +24,9 @@ class Model_ACL extends \xepan\base\Model_Table {
 		$this->addField('action_allowed')->type('text')->defaultValue(json_encode([]));
 		$this->addField('allow_add')->type('boolean')->defaultValue(true);
 
+		$this->addExpression('name')->set("CONCAT(namespace,'/',document_type)");
+		// ->set('CONCATE(namespace,"\",document_type');
+
 		$this->addHook('beforeSave',function($m){
 			if(!$m['epan_id'] || !$m['post_id'] || !$m['document_type'] || !$m['namespace'])
 				throw $this->exception('ACL Model does not have proper informations')
