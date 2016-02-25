@@ -32,13 +32,14 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$f = $p->add('Form');
 		$f->addField('name');
 		$f->addField('password');
-		$f->onSubmit(function($f){
-			$f->displayError('name','Oops');
-		});
+		$f->onSubmit(function($f)use($p){
 
-		$btn = $p->add('Button')->set($this['name']);
-		if($btn->isClicked()){
-			return true;
-		}
+			return $f->js()->univ()->closeDialog();
+		});
+	}
+
+	function deactivate(){
+		$this['status']='InActive';
+		$this->saveAndUnload();
 	}
 }
