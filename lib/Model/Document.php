@@ -18,7 +18,7 @@ class Model_Document extends \xepan\base\Model_Document{
 	function init(){
 		parent::init();
 		
-		$this->getElement('created_by_id')->defaultValue($this->app->employee->id);
-		$this->getElement('updated_by_id')->defaultValue($this->app->employee->id);
+		$this->getElement('created_by_id')->defaultValue(@$this->app->employee->id);
+		$this->getElement('updated_by_id')->defaultValue(@$this->app->employee->id);
 	}
 }
