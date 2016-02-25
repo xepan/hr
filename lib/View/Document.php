@@ -47,18 +47,4 @@ class View_Document extends \xepan\base\View_Document{
 	return $v;
 	}
 
-	function recursiveRender(){
-
-		if($this->action != 'view') {
-			$this->form->onSubmit(function($f){	
-				$f->save();
-				return $this->js(null,$this->js()->univ()->notify('user','Saved','attached','bouncyflip'))->reload(['id'=>$f->model->id,'action'=>($this->action=='add'?'edit':$this->action)]);
-				return $js;
-			});	
-		}
-
-		return parent::recursiveRender();
-	}
-
-
 }
