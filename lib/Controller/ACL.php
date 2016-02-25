@@ -138,9 +138,15 @@ class Controller_ACL extends \AbstractController {
 								$action_btn_list[] = $action;
 						}
 					}
-					$g->current_row_html['action']= print_r($action_btn_list,true);
+					if(empty($action_btn_list))
+						$g->current_row_html['action']='';
+					else
+						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn')->getHTML();
 				});
 				$view->setFormatter('action','action');
+				$view->on('click','.actions',function($js,$data){
+					return $js->successMessage("Hhi");
+				});
 
 			}elseif($view instanceof \xepan\base\View_Document){
 

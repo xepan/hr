@@ -23,7 +23,7 @@ class page_employeedetail extends \Page {
 		$contact_view->setModel($employee);
 
 		if($employee->loaded()){
-			$portfolio_view = $this->add('xepan\base\View_Document',
+			$portfolio_view = $this->add('xepan\hr\View_Document',
 					[
 						'action'=>$this->api->stickyGET('action')?:'view', // add/edit
 						'id_fields_in_view'=>[],
