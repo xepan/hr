@@ -20,22 +20,35 @@ class page_aclmanagement extends \Page {
 		$post = $this->api->stickyGET('post_id');
 		$dt = $this->api->stickyGET('document_type');
 
-		$form = $this->add('Form',null,null,['form/horizontal']);
-		$form->addField('DropDown','post')->setModel('xepan\hr\Post')->set($post);
-		$form->addField('document_type')->set($dt);
-		
+		$form = $this->add('Form',null,null,['form/empty']);
+		$form->setLayout('form/aclpost');
+
+		$form->addField('DropDown','post')->addClass('form-control')->setModel('xepan\hr\Post')->set($post);
+		$form->addField('DropDown','document_type')
+									->addClass('form-control')
+									->setValueList([
+										'xepan\commerce\Model_Item'=>'xepan\commerec\Model_Item',
+										'xepan\commerce\Model_Category'=>'xepan\commerec\Model_Category',
+										'xepan\commerce\Model_Quotation'=>'xepan\commerec\Model_Quotation'
+										])
+									->set($dt);
+
+		$form->addSubmit('Go')->addClass('btn btn-success');
+
 		$af = $this->add('Form');
 
 		if($dt){
 			$m = $this->add($dt);
-			foreach ($m->actions as $status => $actions) {				
+			foreach ($m->actions as $status => $actions) {
+				$greeting_card = $af->add('View', null, null, ['view/acllist']);
 				foreach ($actions as $action) {
-					$af->addField('DropDown',$status.'_'.$action)
-						->setValueList(['Self Only'=>'Self Only','All'=>'All','None'=>'None']);
+					$greeting_card->template->set('action',$status);
+					$greeting_card->addField('DropDown',$status.'_'.$action,$action)
+						->setValueList(['Self Only'=>'Self Only','All'=>'All','None'=>'None'])->addClass('form-control');
 					;
 				}
 			}
-			$af->addSubmit('Update');
+			$af->addSubmit('Update')->addClass('btn btn-success');
 		}
 
 		$af->onSubmit(function($f)use($post,$dt){
@@ -64,5 +77,9 @@ class page_aclmanagement extends \Page {
 			return $af->js()->reload(['post_id'=>$f['post'],'document_type'=>$f['document_type']]);
 		});
 		
+	}
+
+	function defaultTemplate(){
+		return ['page/aclmanagement'];
 	}
 }
