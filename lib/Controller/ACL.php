@@ -63,17 +63,18 @@ class Controller_ACL extends \AbstractController {
 					}
 				}
 			}
-
-			$this->model->addCondition(
-				$q->expr("(".implode(" OR ", $where_condition).")", 
-					[
-						$this->model->getElement('created_by_id'), 	// [0]
-						$this->model->getElement('status'),			// [2]
-					]
+			if(!empty($where_condition)){
+				$this->model->addCondition(
+					$q->expr("(".implode(" OR ", $where_condition).")", 
+						[
+							$this->model->getElement('created_by_id'), 	// [0]
+							$this->model->getElement('status'),			// [2]
+						]
+						)
 					)
-				)
-				// ->debug()
-			;
+					// ->debug()
+				;
+			}
 
 		}
 
@@ -230,7 +231,8 @@ class Controller_ACL extends \AbstractController {
 			});
 			return $js->univ()->frameURL('Action',$this->api->url($p->getURL(),[$this->name.'_id'=>$data['id'],$this->name.'_action'=>$data['action']]));
 		}elseif($this->model->hasMethod($action)){
-
+			$this->model->$action();
+			$this->getView()->js()->reload()->execute();
 		}else{
 			return $js->univ()->errorMessage('Action not defined in Model');
 		}
