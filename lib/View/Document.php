@@ -16,7 +16,7 @@ namespace xepan\hr;
 class View_Document extends \xepan\base\View_Document{
 
 	function setModel($model,$view_fields=null,$form_fields=null){
-		$m = parent::setModel($model,$view_fields);
+		$m = parent::setModel($model,$view_fields,$form_fields);
 
 		if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !$this->pass_acl){
 			$this->add('xepan\hr\Controller_ACL');
