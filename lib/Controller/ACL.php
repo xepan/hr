@@ -139,7 +139,7 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 					if(empty($action_btn_list))
-						$g->current_row_html['action']='';
+						$g->current_row_html['action']='Action Here';
 					else
 						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn')->getHTML();
 				});

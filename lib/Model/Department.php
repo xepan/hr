@@ -2,7 +2,14 @@
 
 namespace xepan\hr;
 
-class Model_Department extends \xepan\base\Model_Document{
+class Model_Department extends \xepan\hr\Model_Document{
+
+	public $status=['Active','InActive'];
+	
+	public $actions = [
+		'Active'=>['view','edit','delete'],
+		'InActive' => ['view','edit','delete']
+	];
 
 	function init(){
 		parent::init();
@@ -16,6 +23,7 @@ class Model_Department extends \xepan\base\Model_Document{
 
 		$this->addExpression('posts_count')->set($this->refSQL('Post')->count());
 
+		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
 	}
 }
