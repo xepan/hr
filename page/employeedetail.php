@@ -72,11 +72,15 @@ class page_employeedetail extends \Page {
 			);
 		$personal_view->setModel($employee,null,['first_name','last_name']);
 		
-		$emails_crud  = $personal_view->addMany(
-			$employee->ref('Emails'),
-			$view_class='xepan\base\Grid',$view_options=null,$view_spot='Emails',$view_defaultTemplate=['employee-detail/grid/email-grid'],$view_fields=null,
-			$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['employee-detail/grid/email-grid']]],$spot='Emails',$defaultTemplate=null,'Emails',$fields=null
-			);
+		if($employee->loaded()){
+			$personal_view->addMany(
+				$employee->ref('Emails'),
+				$view_class='xepan\base\Grid',$view_options=null,$view_spot='Emails',$view_defaultTemplate=['employee-detail/grid/email-grid'],$view_fields=null,
+				$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['view/contact','Emails']]],$spot='Emails',$defaultTemplate=null,$fields=null
+				);
+		}else{
+			$this->document_view->template->set('Emails','No Emails');
+		}
 
 	}
 
