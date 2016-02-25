@@ -8,11 +8,11 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 		$post_j = $this->join('post.document_id');
 		
-		$post_j->hasOne('xepan\hr\Department','department_id');
+		$post_j->hasOne('xepan\hr\Department','department_document_id');
 
 		$post_j->addField('name');
 
-		$post_j->hasMany('xepan\hr\Employee','post_id',null,'Employees');
+		$post_j->hasMany('xepan\hr\Employee','post_document_id',null,'Employees');
 
 		$this->addExpression('employee_count')->set($this->refSQL('Employees')->count());
 

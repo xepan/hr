@@ -34,10 +34,10 @@ class page_employee extends \Page {
 =======
 		
 		if($_GET['post_id']){
-			$employee->addCondition('post_id',$_GET['post_id']);
+			$employee->addCondition('post_document_id',$_GET['post_id']);
 		}
 		
-		$crud=$this->add('xepan\base\CRUD',
+		$crud=$this->add('xepan\hr\CRUD',
 						[
 							'action_page'=>'xepan_hr_employeedetail',
 							'grid_options'=>[
