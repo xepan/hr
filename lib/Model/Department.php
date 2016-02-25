@@ -4,6 +4,12 @@ namespace xepan\hr;
 
 class Model_Department extends \xepan\base\Model_Document{
 
+	public $status=['Active','InActive'];
+	public $actions = [
+		'Active'=>['view','edit','delete'],
+		'InActive' => ['view','edit','delete']
+	];
+
 	function init(){
 		parent::init();
 
