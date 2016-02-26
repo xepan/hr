@@ -2,63 +2,59 @@
     {Pannel}
     //- .atk-box-small(class="{$pannel_class}") 
     header.main-box-header.clearfix(class=" {$class} ")
-        h2 Education Qualificaton 
         div.filter-block( style="100%")
             .btnn.btn-primaryy.pull-right{$grid_buttons} 
                 //- i(class="fa fa-plus-circle fa-lg")
-            .form-group.xepan-grid-search
-                    span(class="form-control pull-left")|{$quick_search}
+            .form-group.xepan-grid-action-search
+                    span(class="form-control")|{$quick_search}
                         i(class="fa fa-search search-icon")
+        h2 Education Qualificaton:
     {/Pannel}
-    .main-box-body.clearfix.table
-        table.table.user-list.table-hover(style="width:100%")
+    .main-box-body.clearfix
+        .dummy
             {header}
-            thead
+            .row
                 {cols}
-                th
-                    span Institute
-                th
-                    a(href='#')
-                        span Qualification:
-                th.text-right
-                    a.asc(href='#')
-                        strong Qualification Level:
-                th.text-center
+                .col-md-5
+                    strong Qualification:
+                .col-md-4
+                    strong Qualification Level:
+                .col-md-3
                     strong Percentage:
-                th 
                 {/}
             {/}
             {$subheader}
-            tbody
+            div
                 {rows}{row}
-                tr(class="{$odd_even}" data-id="{$row_id}")
+                div(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td {name} Institute name here {/name}
-                    td.text-right
-                        {qualificaton_level}Graduation/Post Graduation{/qualificaton_level}  
-                    td.text-center
-                        {percentage}|  7.00{percentage}
-                    td
+                    .col-md-5 {name} Institute name here {/name}
+                    .col-md-4
+                        {qualificaton_level}
+                        |   Graduation/Post Graduation
+                        {/qualificaton_level}  
+                    .col-md-3 {percentage}|  7.00{/percentage}
+                   .row
+                    .col-md-3.pull-right
                         | {action}Action Here{/}
-                    td(style="width: 15%;")
                         {$edit}
                         {$delete}
-                        {/}
+                    {/}
                 {/}{/}
                 {not_found}
-                tr
-                    td.atk-padding-large.atk-align-center
-                        span.atk-label.atk-effect-warning
-                            span.icon-attention &nbsp;{$not_found_message}
+                div
+                    div.atk-padding-large.atk-align-center
+                        div.atk-label.atk-effect-warning
+                            div.icon-attention &nbsp;{$not_found_message}
                 {/}
 
             {totals}
-            tfoot
-                tr(class="totals")
+            div
+                div(class="totals")
                     {cols}{col}
-                    <td {$tdparam}>
+                    <div {$tdparam}>
                     {$content}
-                    </td>
+                    </div>
                     {/}{/}
             {/}
         {$Paginator}                

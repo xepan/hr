@@ -37,11 +37,19 @@ class page_employeedetail extends \Page {
 				);
 			$portfolio_view->setModel($employee,['department','post'],['department_id','post_id']);
 
-			// $portfolio_view->addMany(
-			// 		$employee->ref('Qualificatons'),
-			// 		$view_class='xepan\base\Grid',$view_options=null,$view_spot='Qualificaton',$view_defaultTemplate=['employee-detail/portfolio','Qualificaton'],$view_fields=null,
-			// 		$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['view/contact','Emails']]],$spot='Emails',$defaultTemplate=null,$fields=null
-			// 		);
+			$portfolio_view->addMany(
+					$employee->ref('Qualifications'),
+					$view_class='xepan\base\Grid',$view_options=['defaultTemplate'=>['employee-detail/grid/qualification-grid']],$view_spot='Qualification',$view_defaultTemplate=null,$view_fields=null,
+
+					$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['employee-detail/grid/qualification-grid']]],$spot='Qualification',$defaultTemplate=null,$fields=null
+					);
+			
+			$portfolio_view->addMany(
+					$employee->ref('Experiences'),
+					$view_class='xepan\base\Grid',$view_options=['defaultTemplate'=>['employee-detail/grid/experience-grid']],$view_spot='Experiences',$view_defaultTemplate=null,$view_fields=null,
+
+					$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['employee-detail/grid/experience-grid']]],$spot='Experiences',$defaultTemplate=null,$fields=null
+					);
 
 
 
