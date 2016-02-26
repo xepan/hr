@@ -3,10 +3,7 @@
                  
   {Pannel}
   <header class="main-box-header clearfix  {$class} ">
-    <div style="100%" class="filter-block">
-      <div class="btnn btn-primaryy pull-right">{$grid_buttons} 
-      </div>
-    </div>
+    <div style="100%" class="filter-block">{$grid_buttons}</div>
     <h2>Education Qualificaton:</h2>
   </header>{/Pannel}
   <div class="main-box-body clearfix">
@@ -17,8 +14,8 @@
         <div class="col-md-3"><strong>Percentage:</strong></div>{/}
       </div>{/}
       {$subheader}
-      <div>{rows}{row}
-        <tr data-id="{$row_id}" class="{$odd_even}">{cols}
+      <div class="row">{rows}{row}
+        <div data-id="{$id}" class="{$odd_even}">{cols}
           <div class="col-md-5">{name} Institute name here {/name}</div>
           <div class="col-md-4">
             {qualificaton_level}
@@ -26,7 +23,7 @@
             {/qualificaton_level}  
           </div>
           <div class="col-md-3">{percentage}|  7.00{/percentage}</div>
-        </tr>
+        </div>
         <div class="row">
           <div class="col-md-3 pull-right">
             {action}Action Here{/}
