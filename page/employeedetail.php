@@ -19,7 +19,7 @@ class page_employeedetail extends \Page {
 
 		$action = $this->api->stickyGET('action')?:'view';
 
-		$employee= $this->add('xepan\hr\Model_Employee')->tryLoad($this->api->stickyGET('contact_id'));
+		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 		
 		
 		$contact_view = $this->add('xepan\base\View_Contact',null,'contact_view');
