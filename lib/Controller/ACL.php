@@ -10,32 +10,16 @@
 * 
 */
 
-
-// Model array structure to use
-// public $status=['Draft','Submitted','Canceled','Converted'];
-// 	public $actions=[
-// 			'Draft'=>['submit'],
-// 			'Submitted'=>['email','cancel','convert'],
-// 			'Canceled' =>[],
-// 			// 'Converted'=>[default view,add,edit,delete]
-// 	];
-
-
 namespace xepan\hr;
 
 class Controller_ACL extends \AbstractController {
 	
 	public $acl_m = null;
 	public $action_allowed=[];
-
-	public $virtual_page=null;
-
 	public $permissive_acl=true;
 
 	function init(){
 		parent::init();
-
-		$this->virtual_page = $this->add('VirtualPage');
 	
 		$this->model = $model = $this->getModel();
 
