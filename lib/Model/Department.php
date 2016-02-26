@@ -28,7 +28,6 @@ class Model_Department extends \xepan\hr\Model_Document{
 	}
 
 	function page_activate($p){
-		$p->add('View')->set('Hello');
 		$f = $p->add('Form');
 		$f->addField('name');
 		$f->addField('password');

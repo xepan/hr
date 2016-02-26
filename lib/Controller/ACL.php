@@ -223,7 +223,6 @@ class Controller_ACL extends \AbstractController {
 		if($this->model->hasMethod('page_'.$action)){
 			$p = $this->add('VirtualPage');
 			$p->set(function($p)use($action){
-				$p->add('View')->set($this->owner->name);
 				$page_action_result = $this->model->{"page_".$action}($p);
 				if($page_action_result){
 					$p->js()->univ()->closeDialog()->execute();
@@ -232,7 +231,7 @@ class Controller_ACL extends \AbstractController {
 			return $js->univ()->frameURL('Action',$this->api->url($p->getURL(),[$this->name.'_id'=>$data['id'],$this->name.'_action'=>$data['action']]));
 		}elseif($this->model->hasMethod($action)){
 			$this->model->$action();
-			$this->getView()->js()->reload()->execute();
+			$this->getView()->js()->univ()->location()->execute();
 		}else{
 			return $js->univ()->errorMessage('Action not defined in Model');
 		}
