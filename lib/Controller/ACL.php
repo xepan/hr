@@ -225,7 +225,7 @@ class Controller_ACL extends \AbstractController {
 			$p->set(function($p)use($action){
 				$page_action_result = $this->model->{"page_".$action}($p);
 				if($page_action_result){
-					$p->js()->univ()->closeDialog()->execute();
+					$p->js(true)->univ()->location();
 				}
 			});
 			return $js->univ()->frameURL('Action',$this->api->url($p->getURL(),[$this->name.'_id'=>$data['id'],$this->name.'_action'=>$data['action']]));

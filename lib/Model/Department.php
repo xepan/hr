@@ -27,14 +27,9 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$this->addCondition('type','Department');
 	}
 
-	function page_activate($p){
-		$f = $p->add('Form');
-		$f->addField('name');
-		$f->addField('password');
-		$f->onSubmit(function($f)use($p){
-
-			return $f->js()->univ()->closeDialog();
-		});
+	function activate(){
+		$this['status']='Active';
+		$this->saveAndUnload();
 	}
 
 	function deactivate(){
