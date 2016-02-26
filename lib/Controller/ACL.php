@@ -30,6 +30,8 @@ class Controller_ACL extends \AbstractController {
 
 	public $virtual_page=null;
 
+	public $permissive_acl=true;
+
 	function init(){
 		parent::init();
 
@@ -193,19 +195,19 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function canAdd(){
-		return $this->acl_m['allow_add'];
+		return $this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add'];
 	}
 
 	function canEdit($status=null){
 		if(!$status){
 			$status='*';
 		}
-		return $this->action_allowed[$status]['edit']; // can be true/false/ or []
+		return $this->action_allowed[$status]['edit']===null?$this->permissive_acl:$this->action_allowed[$status]['edit']; // can be true/false/ or []
 	}
 
 	function canDelete($status=null){
 		if(!$status) $status='*';
-		return $this->action_allowed[$status]['delete']; // can be true/false/ or []
+		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl:$this->action_allowed[$status]['edit']; // can be true/false/ or []
 	}
 
 	function getActions($status=null){
@@ -282,7 +284,8 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function textToCode($text){
-		if($text=='' || $text == 'None') return false;
+		if($text =='' || $text === null) return $this->permissive_acl;
+		if($text == 'None') return false;
 		if($text == 'All' || $text === true ) return true;
 		if($text == 'Self Only') return [$this->app->employee->id];
 	}
