@@ -3,7 +3,10 @@
                  
   {Pannel}
   <header class="main-box-header clearfix  {$class} ">
-    <div style="100%" class="filter-block">{$grid_buttons} 
+    <div style="100%" class="filter-block">
+      <div class="btnn btn-primaryy pull-right">{$grid_buttons} 
+      </div>
+      <div class="form-group xepan-grid-action-search"><span class="form-control">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
     <h2>Education Qualificaton:</h2>
   </header>{/Pannel}
@@ -15,7 +18,7 @@
         <div class="col-md-3"><strong>Percentage:</strong></div>{/}
       </div>{/}
       {$subheader}
-      <div>{rows}{row}
+      <div class="row">{rows}{row}
         <div data-id="{$id}" class="{$odd_even}">{cols}
           <div class="col-md-5">{name} Institute name here {/name}</div>
           <div class="col-md-4">
