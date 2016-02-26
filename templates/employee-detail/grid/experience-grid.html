@@ -14,7 +14,7 @@
       </div>{/}
       {$subheader}
       <div>{rows}{row}
-        <tr data-id="{$row_id}" class="{$odd_even}">{cols}
+        <div data-id="{$row_id}" class="{$odd_even}">{cols}
           <div class="col-md-12">
             <div class="col-md-5"><strong>Previous Company:</strong></div>
             <div class="col-md-4"><strong>Branch:</strong></div>
@@ -41,7 +41,7 @@
             {delete}Delete{/}
             {/}
           </div>
-        </tr>{/}{/}        
+        </div>{/}{/}        
         {not_found}
         <div>
           <div class="atk-padding-large atk-align-center">
