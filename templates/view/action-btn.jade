@@ -1,9 +1,11 @@
 .btn-group
-	button.btn.btn-primary(type="button") Action
+	button.btn.btn-primary.acl-action(type="button" data-action="{$action}" data-id="{$id}") {action}Base Action{/}
+	{dropdown}
 	button.btn.btn-primary.dropdown-toggle(type="button" data-toggle="dropdown")
 		span.caret
 	ul.dropdown-menu(role="menu")
 		{rows}{row}
 		li
-			a(href="#") {$action}
+			a.acl-action(href="#" data-action="{$action}" data-id="{$id}") {$action}
 		{/}{/}
+	{/dropdown}

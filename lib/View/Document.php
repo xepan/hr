@@ -18,7 +18,7 @@ class View_Document extends \xepan\base\View_Document{
 	function setModel($model,$view_fields=null,$form_fields=null){
 		$m = parent::setModel($model,$view_fields,$form_fields);
 
-		if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !$this->pass_acl){
+		if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !@$this->pass_acl){
 			$this->add('xepan\hr\Controller_ACL');
 		}
 		return $m;
@@ -38,7 +38,7 @@ class View_Document extends \xepan\base\View_Document{
 			);
 
 	$m = $v->model;
-	if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !$this->pass_acl){
+	if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !@$this->pass_acl){
 			$this->add('xepan\hr\Controller_ACL');
 		}
 		return $m;
@@ -46,19 +46,5 @@ class View_Document extends \xepan\base\View_Document{
 
 	return $v;
 	}
-
-	function recursiveRender(){
-
-		if($this->action != 'view') {
-			$this->form->onSubmit(function($f){	
-				$f->save();
-				return $this->js(null,$this->js()->univ()->notify('user','Saved','attached','bouncyflip'))->reload(['id'=>$f->model->id,'action'=>($this->action=='add'?'edit':$this->action)]);
-				return $js;
-			});	
-		}
-
-		return parent::recursiveRender();
-	}
-
 
 }

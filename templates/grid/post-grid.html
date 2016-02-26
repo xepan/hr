@@ -15,6 +15,7 @@
         <th class="text-left"><a href="#" class="desc"><span>E-mail</span></a></th>
         <th class="text-center"><span>Status</span></th>
         <th class="text-center"><a href="#" class="asc"><span>Employee</span></a></th>
+        <th></th>
         <th></th>{/}{/}
       </thead>{/}
       {$subheader}
@@ -27,6 +28,7 @@
           <td class="text-left">{email}info@xavoc.com{/email}</td>
           <td class="text-center"><span class="label label-success">{status}Active{/}</span></td>
           <td class="text-center"><a href="index.php?page=xepan_hr_employee&amp;post_id={$id}"> {$employee}</a></td>
+          <td>{$action}</td>
           <td style="width: 15%;">
             {$edit}
             {$delete}

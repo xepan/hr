@@ -28,8 +28,14 @@ class Controller_ACL extends \AbstractController {
 	public $acl_m = null;
 	public $action_allowed=[];
 
+	public $virtual_page=null;
+
+	public $permissive_acl=true;
+
 	function init(){
 		parent::init();
+
+		$this->virtual_page = $this->add('VirtualPage');
 	
 		$this->model = $model = $this->getModel();
 
@@ -38,9 +44,11 @@ class Controller_ACL extends \AbstractController {
 		// Put Model View Conditions 
 
 		if($model instanceof \xepan\base\Model_Document){			
-			$view_array = $this->canView();			
-			$q = $this->model->dsql();
+			$view_array = $this->canView();	
 
+			$q= $this->model->dsql();
+
+			$where_condition=[];
 			foreach ($view_array as $status => $acl) { // acl can be true(for all, false for none and [] for employee created_by_ids)
 				if($status=='*'){
 					if($acl === true) break;
@@ -51,21 +59,25 @@ class Controller_ACL extends \AbstractController {
 					if($acl === false) continue;
 					if($acl === true){
 						// No employee condition .. just check status
-						$this->model->_dsql()
-										->orWhere(
-											$q->andExpr()
-												->where($q->expr('[0]=="[1]"',[$this->model->getElement('status'),$status]))
-										);
+						$where_condition[] = "([1] = \"$status\")";
 					}else{
-						$this->model->_dsql()
-										->orWhere(
-											$q->andExpr()
-												->where($q->expr('[0]=="[1]"',[$this->model->getElement('status'),$status]))
-												->where('created_by_id',$acl)
-										);
+						$where_condition[] = "( ([0] in (". implode(",", $acl) .")) AND ([1] = \"$status\") )";
 					}
 				}
 			}
+			if(!empty($where_condition)){
+				$this->model->addCondition(
+					$q->expr("(".implode(" OR ", $where_condition).")", 
+						[
+							$this->model->getElement('created_by_id'), 	// [0]
+							$this->model->getElement('status'),			// [2]
+						]
+						)
+					)
+					// ->debug()
+				;
+			}
+
 		}
 
 		// TODO Cross check hook for add/edit on Model, if trying to hack UI when not permitted
@@ -105,7 +117,10 @@ class Controller_ACL extends \AbstractController {
 						}
 						if(!in_array($g->model['created_by_id'], $ids)){
 							$g->row_delete = false;
+							return;
 						}
+
+						$g->row_delete = true;
 					});
 					$grid->setFormatter('delete','delete2');
 				}
@@ -126,6 +141,11 @@ class Controller_ACL extends \AbstractController {
 				$view->addColumn('template','action');
 				$view->addMethod('format_action',function($g,$f){
 					$actions = $this->getActions($g->model['status']);
+
+					if(isset($actions['edit'])) unset($actions['edit']);
+					if(isset($actions['view'])) unset($actions['view']);
+					if(isset($actions['delete'])) unset($actions['delete']);
+					
 					$action_btn_list = [];
 					foreach ($actions as $action => $acl) {
 						if($acl===false) continue;
@@ -139,37 +159,18 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 					if(empty($action_btn_list))
-						$g->current_row_html['action']='';
+						$g->current_row_html['action']='Action Here';
 					else
-						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn')->getHTML();
+						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id])->getHTML();
 				});
 				$view->setFormatter('action','action');
-				$view->on('click','.actions',function($js,$data){
-					return $js->successMessage("Hhi");
-				});
+				$view->on('click','.acl-action',[$this,'manageAction']);
 
 			}elseif($view instanceof \xepan\base\View_Document){
 
 			}
-
 			// May be you have CRUD form here
-
 		}
-		
-// 		$this->owner->grid->addColumn('template','action')->setTemplate('<div class="btn-group">
-// <button type="button" class="btn btn-primary">Action</button>
-// <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-// <span class="caret"></span>
-// </button>
-// <ul class="dropdown-menu" role="menu">
-// <li><a href="#">Action</a></li>
-// <li><a href="#">Another action</a></li>
-// <li><a href="#">Something else here</a></li>
-// <li class="divider"></li>
-// <li><a href="#">Separated link</a></li>
-// </ul>
-// </div>');
-
 	}
 
 	function getModel(){
@@ -194,19 +195,19 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function canAdd(){
-		return $this->acl_m['allow_add'];
+		return $this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add'];
 	}
 
 	function canEdit($status=null){
 		if(!$status){
 			$status='*';
 		}
-		return $this->action_allowed[$status]['edit']; // can be true/false/ or []
+		return $this->action_allowed[$status]['edit']===null?$this->permissive_acl:$this->action_allowed[$status]['edit']; // can be true/false/ or []
 	}
 
 	function canDelete($status=null){
 		if(!$status) $status='*';
-		return $this->action_allowed[$status]['delete']; // can be true/false/ or []
+		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl:$this->action_allowed[$status]['edit']; // can be true/false/ or []
 	}
 
 	function getActions($status=null){
@@ -216,8 +217,26 @@ class Controller_ACL extends \AbstractController {
 
 	function canDoAction($action,$status=null){
 		if(!$status) $status='*';
+	}
 
-
+	function manageAction($js,$data){		
+		$this->model->load($data['id']?:$this->api->stickyGET($this->name.'_id'));
+		$action=$data['action']?:$this->api->stickyGET($this->name.'_action');
+		if($this->model->hasMethod('page_'.$action)){
+			$p = $this->add('VirtualPage');
+			$p->set(function($p)use($action){
+				$page_action_result = $this->model->{"page_".$action}($p);
+				if($page_action_result){
+					$p->js(true)->univ()->location();
+				}
+			});
+			return $js->univ()->frameURL('Action',$this->api->url($p->getURL(),[$this->name.'_id'=>$data['id'],$this->name.'_action'=>$data['action']]));
+		}elseif($this->model->hasMethod($action)){
+			$this->model->$action();
+			$this->getView()->js()->univ()->location()->execute();
+		}else{
+			return $js->univ()->errorMessage('Action not defined in Model');
+		}
 	}
 
 	/**
@@ -265,7 +284,8 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function textToCode($text){
-		if($text=='' || $text == 'None') return false;
+		if($text =='' || $text === null) return $this->permissive_acl;
+		if($text == 'None') return false;
 		if($text == 'All' || $text === true ) return true;
 		if($text == 'Self Only') return [$this->app->employee->id];
 	}

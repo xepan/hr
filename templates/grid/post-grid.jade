@@ -29,6 +29,7 @@
                   a.asc(href='#')
                     span Employee
                 th
+                th
                 {/}{/}
             {/}
             {$subheader}
@@ -50,6 +51,8 @@
                     td.text-center
                       a(href='index.php?page=xepan_hr_employee&post_id={$id}')
                         |  {$employee}
+                    td
+                        | {$action}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

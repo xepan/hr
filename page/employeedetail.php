@@ -37,6 +37,14 @@ class page_employeedetail extends \Page {
 				);
 			$portfolio_view->setModel($employee,['department','post'],['department_id','post_id']);
 
+			// $portfolio_view->addMany(
+			// 		$employee->ref('Qualificatons'),
+			// 		$view_class='xepan\base\Grid',$view_options=null,$view_spot='Qualificaton',$view_defaultTemplate=['employee-detail/portfolio','Qualificaton'],$view_fields=null,
+			// 		$class='xepan\base\CRUD',$options=['grid_options'=>['defaultTemplate'=>['view/contact','Emails']]],$spot='Emails',$defaultTemplate=null,$fields=null
+			// 		);
+
+
+
 			$form = $this->add('Form',null,'personal_info');
 			$form->addField('Password','old_password');
 			$form->addField('Password','new_password');

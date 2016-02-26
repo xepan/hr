@@ -3,6 +3,13 @@
 namespace xepan\hr;
 
 class Model_Post extends \xepan\hr\Model_Document{
+
+	public $status=['Active','InActive'];
+	public $actions = [
+						'Active'=>['view','edit','deactivate'],
+						'InActive' => ['view','edit','delete','activate']
+					];
+
 	function init(){
 		parent::init();
 
@@ -18,5 +25,10 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 		$this->addCondition('type','Post');
 
+	}
+
+	function deactivate(){
+		$this['status']='InActive';
+		$this->saveAndUnLoad();
 	}
 }
