@@ -1,0 +1,48 @@
+
+<div id="{$_name}" class="panel-body xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">
+                 
+  {Pannel}
+  <header class="main-box-header clearfix  {$class} ">
+    <div style="100%" class="filter-block">{$grid_buttons}  </div>
+  </header>{/Pannel}
+  <div class="main-box-body clearfix">
+    <div class="dummy">{header}
+      <div class="row">
+        {cols}
+        {/}
+      </div>{/}
+      {$subheader}
+      <div>{rows}{row}
+        <div data-id="{$row_id}" class="{$odd_even}">{cols}
+          <li class="col-md-6">
+            <div class="details">
+              <div class="name"><a href="#">{name}Secondary Marksheet{/}</a></div>
+              <div class="type">
+                <div role="group" aria-label="..." class="btn-group"><a class=" btn btn-sm btn-success" href="{$employee_document}" download="{$name}"> Download</a>
+                  <button class="btn-danger">{$delete}    </button>
+                </div>
+              </div>
+            </div>{/}
+          </li>
+        </div>{/}{/}        
+        {not_found}
+        <div>
+          <div class="atk-padding-large atk-align-center">
+            <div class="atk-label atk-effect-warning">
+              <div class="icon-attention">&nbsp;{$not_found_message}</div>
+            </div>
+          </div>
+        </div>{/}
+      </div>{totals}
+      <div>
+        <div class="totals">
+          {cols}{col}
+          <div {$tdparam}>
+          {$content}
+          </div>
+          {/}{/}
+        </div>
+      </div>{/}
+    </div>{$Paginator}                
+  </div>
+</div>
