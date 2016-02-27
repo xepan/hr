@@ -15,6 +15,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
+		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
 		
 		$this->addCondition('type','Employee');
 	}

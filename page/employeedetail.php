@@ -34,6 +34,12 @@ class page_employeedetail extends \Page {
 			$e = $portfolio_view->addMany('Experiences',null,'Experiences',['employee-detail/grid/experience-grid']);
 			$e->setModel($employee->ref('Experiences'));
 
+
+			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['employee-detail/emp-document']);
+			// $document_view->setModel($employee,['department','post'],['department_id','post_id']);
+			$q = $document_view->addMany('EmployeeDocument',null,'Document',['employee-detail/grid/emp-document-grid']);
+			$q->setModel($employee->ref('EmployeeDocuments'));
+
 			$form = $this->add('Form',null,'personal_info');
 			$form->addField('Password','old_password');
 			$form->addField('Password','new_password');
