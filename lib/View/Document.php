@@ -24,27 +24,4 @@ class View_Document extends \xepan\base\View_Document{
 		return $m;
 	}
 
-	function addMany(
-			$model,
-			$view_class='xepan\base\Grid',$view_options=null,$view_spot='Content',$view_defaultTemplate=null,$view_fields=null,
-			$class='xepan\base\CRUD',$options=null,$spot='Content',$defaultTemplate=null,$fields=null
-		)
-	{
-
-	$v = parent::addMany(
-			$model,
-			$view_class,$view_options,$view_spot,$view_defaultTemplate,$view_fields,
-			$class,$options,$spot,$defaultTemplate,$fields
-			);
-
-	$m = $v->model;
-	if((($m instanceof \xepan\base\Model_Document) || ($m instanceof \xepan\base\Model_Contact)) && !@$this->pass_acl){
-			$this->add('xepan\hr\Controller_ACL');
-		}
-		return $m;
-
-
-	return $v;
-	}
-
 }
