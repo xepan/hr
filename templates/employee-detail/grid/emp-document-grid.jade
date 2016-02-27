@@ -1,49 +1,35 @@
-.panel-body.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")                
+.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
     {Pannel}
-    //- .atk-box-small(class="{$pannel_class}") 
-    header.main-box-header.clearfix(class=" {$class} ")
-        div.filter-block( style="100%")
-            {$grid_buttons}  
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                div(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix
-        .dummy
-            {header}
-            .row
+        .row
+            {header}{cols}{col}{/}{/}{/}
+            {rows}{row}
+            div(class="{$odd_even} col-md-{col-width}6{/}" data-id="{$id}")
                 {cols}
-                {/}
+                li.col-md-12
+                    .details
+                        .name
+                            a(href='#') {name}Secondary Marksheet{/}
+                        .type
+                            .btn-group(role='group', aria-label='...')
+                                //- button.btn.btn-sm.btn-success(type='button')|Download
+                                <a class=" btn btn-sm btn-success" href="{$employee_document}" download="{$name}"> Download</a>
+                                //- button.btn.btn-sm.btn-danger(type='button')  
+                                button.btn-danger{$delete}   
             {/}
-            {$subheader}
-            div
-                {rows}{row}
-                div(class="{$odd_even}" data-id="{$row_id}")
-                    {cols}
-                    li.col-md-6
-                        .details
-                            .name
-                                a(href='#') {name}Secondary Marksheet{/}
-                            .type
-                                .btn-group(role='group', aria-label='...')
-                                    //- button.btn.btn-sm.btn-success(type='button')|Download
-                                    <a class=" btn btn-sm btn-success" href="{$employee_document}" download="{$name}"> Download</a>
-                                    //- button.btn.btn-sm.btn-danger(type='button')  
-                                    button.btn-danger{$delete}    
-                    
-                        {/}
-                {/}{/}        
-                {not_found}
-                div
-                    div.atk-padding-large.atk-align-center
-                        div.atk-label.atk-effect-warning
-                            div.icon-attention &nbsp;{$not_found_message}
-                {/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
 
-            {totals}
-            div
-                div(class="totals")
-                    {cols}{col}
-                    <div {$tdparam}>
-                    {$content}
-                    </div>
-                    {/}{/}
-            {/}
-        {$Paginator}                
+            {totals}{cols}{col}{$content}{/}{/}{/}
+        {$Paginator}

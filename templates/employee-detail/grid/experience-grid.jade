@@ -1,68 +1,54 @@
-.panel-body.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")                
+.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
     {Pannel}
-    //- .atk-box-small(class="{$pannel_class}") 
-    header.main-box-header.clearfix(class=" {$class} ")
-        div.filter-block( style="100%")
-            {$grid_buttons} 
-        h2 Previous Work Experience: 
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                div(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix
-        .dummy
-            {header}
-            .row
+        .row
+            {header}{cols}{col}{/}{/}{/}
+            {rows}{row}
+            div(class="{$odd_even} col-md-{col-width}12{/}" data-id="{$id}")
                 {cols}
-                {/}
-            {/}
-            {$subheader}
-            div
-                {rows}{row}
-                div(class="{$odd_even}" data-id="{$row_id}")
-                    {cols}
-                    .col-md-12
-                        .col-md-5
-                            strong Previous Company:
-                        .col-md-4
-                            strong Branch:
-                        .col-md-3
-                        strong Designation:
-                    .col-md-12
-                        .col-md-5 {$name}
-                        .col-md-4 {$company_branch}
-                        .col-md-3 {$designation} 
+                .col-md-12
+                    .col-md-5
+                        strong Previous Company:
+                    .col-md-4
+                        strong Branch:
+                    .col-md-3
+                    strong Designation:
+                .col-md-12
+                    .col-md-5 {$name}
+                    .col-md-4 {$company_branch}
+                    .col-md-3 {$designation} 
 
-                    .col-md-12(style="margin-top:5%")
-                        .col-md-5
-                            strong Department:
-                        .col-md-4
-                            strong Salary:
-                        .col-md-3
-                            strong Duration:
-                    .col-md-12
-                        .col-md-5 {$department}  
-                        .col-md-4 {$salary}
-                        .col-md-3 {$duration}    
-                    
-                    .col-md-12.text-right(style="margin-bottom:3%")
-                        .com-md-3
-                        | {action}Action Here{/}
-                        {edit}Edit{/}
-                        {delete}Delete{/}
-                        {/}
-                {/}{/}        
-                {not_found}
-                div
-                    div.atk-padding-large.atk-align-center
-                        div.atk-label.atk-effect-warning
-                            div.icon-attention &nbsp;{$not_found_message}
-                {/}
-
-            {totals}
-            div
-                div(class="totals")
-                    {cols}{col}
-                    <div {$tdparam}>
-                    {$content}
-                    </div>
-                    {/}{/}
+                .col-md-12(style="margin-top:5%")
+                    .col-md-5
+                        strong Department:
+                    .col-md-4
+                        strong Salary:
+                    .col-md-3
+                        strong Duration:
+                .col-md-12
+                    .col-md-5 {$department}  
+                    .col-md-4 {$salary}
+                    .col-md-3 {$duration}    
+                
+                .col-md-12.text-right(style="margin-bottom:3%")
+                    .com-md-3
+                    | {action}Action Here{/}
+                    {edit}Edit{/}
+                    {delete}Delete{/}
             {/}
-        {$Paginator}                
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
+
+            {totals}{cols}{col}{$content}{/}{/}{/}
+        {$Paginator}

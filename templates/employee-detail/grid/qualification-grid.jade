@@ -1,14 +1,15 @@
-.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")                
+.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
     {Pannel}
-    //- .atk-box-small(class="{$pannel_class}") 
-    header.main-box-header.clearfix(class=" {$class} ")
-        div.filter-block( style="100%")
-            {$grid_buttons}
-        h2 Education Qualificaton:
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                div(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix
-        .dummy
-            {header}
+        .row
+            {header}{cols}{col}
             .row
                 {cols}
                 .col-md-5
@@ -17,40 +18,28 @@
                     strong Qualification Level:
                 .col-md-3
                     strong Percentage:
-                {/}
+            {/}{/}{/}
+            {rows}{row}
+            div(class="{$odd_even} col-md-{col-width}12{/}" data-id="{$id}")
+                {cols}
+                .col-md-5 {name} Institute name here {/name}
+                .col-md-4
+                    {qualificaton_level}
+                    |   Graduation/Post Graduation
+                    {/qualificaton_level}  
+                .col-md-3 {percentage}|  7.00{/percentage}
+               .row
+                .col-md-3.pull-right
+                    | {action}Action Here{/}
+                    {$edit}
+                    {$delete}
             {/}
-            {$subheader}
-            .row
-                {rows}{row}
-                div(class="{$odd_even}" data-id="{$row_id}")
-                    {cols}
-                    .col-md-5 {name} Institute name here {/name}
-                    .col-md-4
-                        {qualificaton_level}
-                        |   Graduation/Post Graduation
-                        {/qualificaton_level}  
-                    .col-md-3 {percentage}|  7.00{/percentage}
-                   .row
-                    .col-md-3.pull-right
-                        | {action}Action Here{/}
-                        {$edit}
-                        {$delete}
-                    {/}
-                {/}{/}
-                {not_found}
-                div
-                    div.atk-padding-large.atk-align-center
-                        div.atk-label.atk-effect-warning
-                            div.icon-attention &nbsp;{$not_found_message}
-                {/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
 
-            {totals}
-            div
-                div(class="totals")
-                    {cols}{col}
-                    <div {$tdparam}>
-                    {$content}
-                    </div>
-                    {/}{/}
-            {/}
-        {$Paginator}                
+            {totals}{cols}{col}{$content}{/}{/}{/}
+        {$Paginator}
