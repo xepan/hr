@@ -24,13 +24,7 @@ class page_employee extends \Page {
 			$employee->addCondition('post_id',$_GET['post_id']);
 		}
 		
-		$crud=$this->add('xepan\hr\CRUD',
-						[
-							'action_page'=>'xepan_hr_employeedetail',
-							'grid_options'=>[
-											'defaultTemplate'=>['grid/employee-grid']
-											]
-						]);
+		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
 
 		$crud->setModel($employee,['first_name','last_name','post','created_at']);
 		$crud->grid->addQuickSearch(['name']);

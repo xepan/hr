@@ -19,12 +19,7 @@ class page_department extends \Page {
 		
 		$department=$this->add('xepan\hr\Model_Department');
 
-		$crud=$this->add('xepan\hr\CRUD',
-						array(
-							'grid_options'=>array(
-											'defaultTemplate'=>['grid/department-grid']
-											)
-						));
+		$crud=$this->add('xepan\hr\CRUD',null,null,['view/department/department-grid']);
 
 		$crud->setModel($department);
 		$crud->grid->addQuickSearch(['name']);

@@ -24,12 +24,7 @@ class page_post extends \Page {
 			$post->addCondition('department_id',$_GET['department_id']);
 		}
 
-		$crud=$this->add('xepan\hr\CRUD',
-						array(
-							'grid_options'=>array(
-											'defaultTemplate'=>['grid/post-grid']
-											)
-						));
+		$crud=$this->add('xepan\hr\CRUD',null,null,['view/post/post-grid']);
 
 		$crud->setModel($post);
 		$crud->grid->addQuickSearch(['name']);

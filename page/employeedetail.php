@@ -26,18 +26,17 @@ class page_employeedetail extends \Page {
 		$contact_view->setModel($employee);
 
 		if($employee->loaded()){
-			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['employee-detail/portfolio']);
+			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['view/employee/employee-details/portfolio']);
 			$portfolio_view->setModel($employee,['department','post'],['department_id','post_id']);
-			$q = $portfolio_view->addMany('Qualification',null,'Qualification',['employee-detail/grid/qualification-grid']);
+			$q = $portfolio_view->addMany('Qualification',null,'Qualification',['view/employee/employee-grid/qualification-grid']);
 			$q->setModel($employee->ref('Qualifications'));
 
-			$e = $portfolio_view->addMany('Experiences',null,'Experiences',['employee-detail/grid/experience-grid']);
+			$e = $portfolio_view->addMany('Experiences',null,'Experiences',['view/employee/employee-grid/experience-grid']);
 			$e->setModel($employee->ref('Experiences'));
 
 
-			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['employee-detail/emp-document']);
-			// $document_view->setModel($employee,['department','post'],['department_id','post_id']);
-			$q = $document_view->addMany('EmployeeDocument',null,'Document',['employee-detail/grid/emp-document-grid']);
+			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['view/employee/employee-details/emp-document']);
+			$q = $document_view->addMany('EmployeeDocument',null,'Document',['view/employee/employee-grid/emp-document-grid']);
 			$q->setModel($employee->ref('EmployeeDocuments'));
 
 			$form = $this->add('Form',null,'personal_info');
