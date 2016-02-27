@@ -4,8 +4,8 @@
         div.filter-block
             .pull-right {$grid_buttons} 
             .form-group.pull-right.xepan-filter-form
-                div(class="form-control pull-left")|{$quick_search}
-                    i(class="fa fa-search search-icon")
+                //- div(class="form-control pull-left")|{$quick_search}
+                //-     i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix
         .row
@@ -39,7 +39,7 @@
                 
                 .col-md-12.text-right(style="margin-bottom:3%")
                     .com-md-3
-                    | {action}Action Here{/}
+                    | {$action}
                     {edit}Edit{/}
                     {delete}Delete{/}
             {/}
