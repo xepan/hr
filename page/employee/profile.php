@@ -9,11 +9,20 @@ class page_employee_profile extends \Page{
 		// $this->app->layout->set('first_name',$this->app->employee['first_name']);
 		$user=$employee->ref('user_id');
 		
+		/*Profile View*/
+		$pf=$this->add('Form',null,'profile_view');
+		$pf->setLayout('form/employee/profile');
+		$pf->setModel($employee,['first_name','last_name']);
+		$pf->addSubmit('Update');
+		if($pf->isSubmitted()){
+			$pf->save();
+			$pf->js()->reload()->execute();
+		}
 		/*Basic Informations*/
 		$b_f=$this->add('Form',null,'basic_view');
 		$b_f->setLayout(['form/employee/basic-info']);
 		$b_f->setModel($employee,['epan_id','address','city','state','is_active','country','pin_code']);
-		$b_f->addSubmit('Update');
+		$b_f->addSubmit('Update')->addClass('btn btn-success');
 		
 		if($b_f->isSubmitted()){
 			$b_f->save();
@@ -26,7 +35,7 @@ class page_employee_profile extends \Page{
 		$f->addField('password','old_password');
 		$f->addField('password','new_password');
 		$f->addField('password','retype_password');
-		$f->addSubmit('Change');
+		$f->addSubmit('Change')->addClass('btn btn-success');
 
 		if($f->isSubmitted()){
 			if($f['old_password']!= $user['password']){
