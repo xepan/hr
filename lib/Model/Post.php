@@ -24,21 +24,15 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasMany('xepan\hr\Employee','post_id',null,'Employees');
 
 		$this->addExpression('employee_count')->set($this->refSQL('Employees')->count());
-
+		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Post');
 
-
-
-		
-		
-
-
-
-
-
-
 	}
-
+	function activate(){
+		$this['status']='Active';
+		$this->saveAndUnLoad();
+		
+	}
 	function deactivate(){
 		$this['status']='InActive';
 		$this->saveAndUnLoad();

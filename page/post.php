@@ -20,6 +20,17 @@ class page_post extends \Page {
 		$this->api->stickyGET('department_id');
 
 		$post=$this->add('xepan\hr\Model_Post');
+		
+		$post->addExpression('parent')->set('"ToDo"');
+		// 	$m->add('xepan\hr\Model_Post',['table_alias'=>'pp']);
+		// 	$p_j=$m->join('post','id');
+		// 	$p_j->addField('xyz','parent_post_id');
+		// 	$m->addCondition('xyz',$q->getField('id'));
+		// 	return $m->fieldQuery('name');
+
+		// });
+
+
 		if($_GET['department_id']){
 			$post->addCondition('department_id',$_GET['department_id']);
 		}
@@ -28,6 +39,7 @@ class page_post extends \Page {
 
 		$crud->setModel($post);
 		$crud->grid->addQuickSearch(['name']);
+
 		
 	}
 }
