@@ -27,7 +27,7 @@ class Controller_ACL extends \AbstractController {
 
 		// Put Model View Conditions 
 
-		if($model instanceof \xepan\base\Model_Document){			
+		if($model instanceof \xepan\base\Model_Document){		
 			$view_array = $this->canView();	
 
 			$q= $this->model->dsql();
@@ -256,11 +256,9 @@ class Controller_ACL extends \AbstractController {
 		 * )
 		 */
 		$this->action_allowed = $this->acl_m['action_allowed'];
-		foreach ($this->acl_m as $acl) {
-			foreach ($acl['action_allowed'] as $status => $actions) {
-				foreach ($actions as $action=>$acl_value) {
-					$this->action_allowed[$status][$action] = $this->textToCode($acl_value);
-				}
+		foreach ($this->acl_m['action_allowed'] as $status => $actions) {
+			foreach ($actions as $action=>$acl_value) {
+				$this->action_allowed[$status][$action] = $this->textToCode($acl_value);
 			}
 		}
 
