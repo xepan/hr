@@ -37,9 +37,13 @@ class page_employee_profile extends \Page{
 		$f->addSubmit('Change')->addClass('btn btn-success');
 
 		if($f->isSubmitted()){
+
 			if($f['old_password']!= $user['password']){
 				$f->displayError($f->getElement('old_password'),'Old Password not Match');
 			}	
+			if($f['new_password']==''){
+				$f->displayError($f->getElement('new_password'),'New Password Required Field');
+			}
 			if($f['new_password']!= $f['retype_password']){
 				$f->displayError($f->getElement('retype_password'),'New Password Not Match');
 			}
