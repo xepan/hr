@@ -12,13 +12,17 @@ class Initiator extends \Controller_Addon {
 		$this->routePages('xepan_hr');
 		$this->addLocation(array('template'=>'templates'));
 
-		$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
+		if($this->app->auth->isLoggedIn())
+			$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
 
-		$m = $this->app->top_menu->addMenu('HR');
-		$m->addItem('Department','xepan_hr_department');
-		$m->addItem('Post','xepan_hr_post');
-		$m->addItem('Employee','xepan_hr_employee');
-		$m->addItem('ACL','xepan_hr_aclmanagement');
+		if($this->app->is_admin){
+
+			$m = $this->app->top_menu->addMenu('HR');
+			$m->addItem('Department','xepan_hr_department');
+			$m->addItem('Post','xepan_hr_post');
+			$m->addItem('Employee','xepan_hr_employee');
+			$m->addItem('ACL','xepan_hr_aclmanagement');
+		}
 		
 	}
 }

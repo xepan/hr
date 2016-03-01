@@ -1,0 +1,13 @@
+#user-profile
+  .col-lg-3.col-md-4.col-sm-4 {$profile_view}
+  .col-lg-9.col-md-8.col-sm-8
+    .main-box.clearfix
+      .tabs-wrapper.profile-tabs
+        ul.nav.nav-tabs
+          li.active
+            a(data-toggle='tab', href='#tab-details') Basic Info
+          li
+            a(data-toggle='tab', href='#tab-password') Password
+        .tab-content
+          #tab-details.tab-pane.fade.in.active {basic_view}Please Save Basic Information First{/basic_view}
+          #tab-password.tab-pane.fade {$password_view}
