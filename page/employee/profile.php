@@ -6,7 +6,6 @@ class page_employee_profile extends \Page{
 		parent::init();
 
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->app->employee['id']);
-		// $this->app->layout->set('first_name',$this->app->employee['first_name']);
 		$user=$employee->ref('user_id');
 		
 		/*Profile View*/
