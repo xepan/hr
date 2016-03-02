@@ -1,6 +1,6 @@
 
 <div class="btn-group">
-  <div class="btn btn-primary">{status}Current Status{/}</div>{dropdown}
+  <div class="btn btn-{status_label}primary{/}">{status}Current Status{/}</div>{dropdown}
   <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
   <ul role="menu" class="dropdown-menu">{rows}{row}
     <li><a href="#" data-action="{$action}" data-id="{$id}" class="acl-action">{$action}</a></li>{/}{/}

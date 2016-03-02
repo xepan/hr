@@ -20,11 +20,25 @@ class View_ActionBtn extends \CompleteLister{
 		$this->SetSource($temp_array);
 		
 		$this->template->set('status',$this->status);
-		
+		$this->template->set('status_label',$this->setLabelColor($this->status));
+			
+
 		if(empty($temp_array)){
 			$this->template->del('dropdown');
 		}
 	}
+
+	function setLabelColor($status){
+
+		$status_color = 
+				[
+					'Active' => 'success',
+					'InActive' => 'danger'
+				];
+
+		return $status_color[$status];
+	}
+
 	function defaultTemplate(){
 		return ['view/action-btn'];
 	}
