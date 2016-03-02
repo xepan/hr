@@ -3,15 +3,14 @@
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block
             .pull-right {$grid_buttons} 
-            .form-group.pull-right.xepan-filter-form
-                //- div(class="form-control pull-left")|{$quick_search}
-                //-     i(class="fa fa-search search-icon")
+            //- .form-group.pull-right.xepan-filter-form
+            //-     div(class="form-control pull-left")|{$quick_search}
+            //-         i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix
         .row
             {header}{cols}{col}
             .row
-                {cols}
                 .col-md-5
                     strong Qualification:
                 .col-md-4
@@ -22,17 +21,19 @@
             {rows}{row}
             div(class="{$odd_even} col-md-{col-width}12{/}" data-id="{$id}")
                 {cols}
-                .col-md-5 {name} Institute name here {/name}
-                .col-md-4
-                    {qualificaton_level}
-                    |   Graduation/Post Graduation
-                    {/qualificaton_level}  
-                .col-md-3 {percentage}|  7.00{/percentage}
-               .row
-                .col-md-3.pull-right
-                    | {$action}
-                    {$edit}
-                    {$delete}
+                .row
+                    .col-md-5 {name} Institute name here {/name}
+                    .col-md-4
+                        {qualificaton_level}
+                        |   Graduation/Post Graduation
+                        {/qualificaton_level}  
+                    .col-md-3 {percentage}|  7.00{/percentage}
+                   .row
+                    .col-md-3.pull-right
+                        | {$action}
+                        {$edit}
+                        {$delete}
+                
             {/}
             {/}{/}
             {not_found}
