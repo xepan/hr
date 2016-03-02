@@ -11,7 +11,6 @@
       <thead>{cols}{col}
         <th><a href="#"><span>Department</span></a></th>
         <th class="text-right"><a href="#" class="asc"><span>Production Level</span></a></th>
-        <th class="text-center"><span>Status</span></th>
         <th class="text-center"><a href="#" class="desc"><span>Post</span></a></th>
         <th> </th>
         <th> </th>{/}{/}
@@ -20,7 +19,6 @@
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{$name}</td>
           <td class="text-right">{$production_level}</td>
-          <td class="text-center"><span class="label label-success">{$status}</span></td>
           <td class="text-center"><a href="index.php?page=xepan_hr_post&amp;department_id={$id}">{$posts}</a></td>
           <td>{action}Action Here{/}</td>
           <td style="width: 15%;">

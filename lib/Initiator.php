@@ -28,8 +28,8 @@ class Initiator extends \Controller_Addon {
 	        $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
 	        $this->app->layout->template->trySet('status',$this->app->employee['status']);
 	        
-	        $this->app->layout->add('xepan\base\View_Notification',null,'notification_view');
-	        $this->app->layout->add('xepan\base\View_Message',null,'message_view');
+	        // $this->app->layout->add('xepan\base\View_Notification',null,'notification_view');
+	        // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 		}
 	}
 }
