@@ -12,20 +12,6 @@
             {header}
             thead
                 {cols}{col}
-                th
-                  a(href='#')
-                    span Department
-                th
-                  a(href='#')
-                    span Post
-                th.text-left
-                  a.desc(href='#')
-                    span E-mail
-                th.text-center
-                  a.asc(href='#')
-                    span Employee
-                th
-                th
                 {/}{/}
             {/}
             {$subheader}
@@ -34,23 +20,17 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td
-                        {$department}
-                    td
-                        {$name}
-                        .atk-label
-                            small|{$parent}\{$parent_post}
-                    td.text-left
-                      | {email}info@xavoc.com{/email}
                     td.text-center
-                      a(href='index.php?page=xepan_hr_employee&post_id={$id}')
-                        |  {$employee_count}
+                     i.fa.fa-comment
                     td
-                        | {$action}
-                    td(style="width: 15%;")
-                        {$edit}
-                        {$delete}
-                    
+                     {contact}Vijay mali{/}&nbsp; {activity}| Scarlett Johansson posted a comment in{/}&nbsp;
+                     a(href='#'){$related_document} 
+                     {related_contact} Avengers Initiative{/}
+                    td
+                     |{created_at} 2014/08/08 12:08{/}
+                    td
+                     {$edit}
+                     {$delete}
                     {/}
                 {/}{/}
                 {not_found}

@@ -19,8 +19,6 @@
                     a.asc(href='#')
                         span Production Level
                 th.text-center
-                    span Status
-                th.text-center
                     a.desc(href='#')
                         span Post
                 th 
@@ -37,10 +35,8 @@
                     td.text-right
                       | {$production_level}
                     td.text-center
-                      span.label.label-success {$status}
-                    td.text-center
                       a(href='index.php?page=xepan_hr_post&department_id={$id}')
-                        | {$posts}
+                        | {$posts_count}
                     td
                         | {action}Action Here{/}
                     td(style="width: 15%;")
