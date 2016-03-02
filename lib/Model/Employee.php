@@ -22,11 +22,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addCondition('type','Employee');
 	}
 
-	function addActivity($activity, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
+	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
 		if(!$contact_id) $contact_id = $this->id;
 		$activity = $this->add('xepan\hr\Model_Activity');
-		$activity['conatc_id'] = $contact_id;
-		$activity['activity'] = $activity;
+		$activity['contact_id'] = $contact_id;
+		$activity['activity'] = $activity_string;
 		$activity['related_contact_id'] = $related_contact_id;
 		$activity['related_document_id'] = $related_document_id;
 		$activity['details'] = $details;
