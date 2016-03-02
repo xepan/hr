@@ -39,6 +39,13 @@ class page_employeedetail extends \Page {
 			$q = $document_view->addMany('EmployeeDocument',null,'Document',['view/employee/emp-document-grid']);
 			$q->setModel($employee->ref('EmployeeDocuments'));
 
+			$activity_view = $this->add('xepan\base\Grid',null,'activity_view',['view/activity/activity-grid']);
+
+			$activity=$this->add('xepan\base\Model_Activity');
+			$activity->addCondition('contact_id',$_GET['contact_id']);
+			$activity->tryLoadAny();
+			$activity_view->setModel($activity);
+
 			$form = $this->add('Form',null,'personal_info');
 			$form->addField('Password','old_password');
 			$form->addField('Password','new_password');
