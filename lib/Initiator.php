@@ -24,7 +24,8 @@ class Initiator extends \Controller_Addon {
 			$m->addItem('ACL','xepan_hr_aclmanagement');
 			
 			$this->app->layout->template->trySet('department',$this->app->employee['department']);
-	        $this->app->layout->template->trySet('post',$this->app->employee['post']);
+			$post=$this->app->employee->ref('post_id');
+	        $this->app->layout->template->trySet('post',$post['name']);
 	        $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
 	        $this->app->layout->template->trySet('status',$this->app->employee['status']);
 	        
