@@ -11,7 +11,7 @@
 
 namespace xepan\hr;
 
-class Model_Activity extends xepan\base\Model_Activity{
+class Model_Activity extends \xepan\base\Model_Activity{
 
 	function notifyWhoCan($list_of_actions,$current_status,$document=null,$notify_self=true){
 		$acl_m = $this->add('xepan\hr\Model_ACL');
