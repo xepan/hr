@@ -27,7 +27,16 @@ class page_employee extends \Page {
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
 
 		$crud->setModel($employee,['first_name','last_name','post','created_at','status','email']);
-		$crud->grid->addQuickSearch(['first_name','last_name']);
+		$f = $crud->grid->addQuickSearch(['first_name','last_name']);
+
+		$d_f =$f->addField('DropDown','department_id')->setEmptyText("All");
+		$d_f->setModel('xepan\hr\Department');
+		$d_f->js('change',$f->js()->submit());
+
+		$f->addHook('appyFilter',function($f,$m){
+			if($f['department_id'])
+				$m->addCondition('department_id',$f['department_id']);
+		});
 		
 	}
 }
