@@ -22,13 +22,14 @@ class Initiator extends \Controller_Addon {
 			$m->addItem('Post','xepan_hr_post');
 			$m->addItem('Employee','xepan_hr_employee');
 			$m->addItem('ACL','xepan_hr_aclmanagement');
+			
+			$this->app->layout->template->trySet('department',$this->app->employee['department']);
+	        $this->app->layout->template->trySet('post',$this->app->employee['post']);
+	        $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
+	        $this->app->layout->template->trySet('status',$this->app->employee['status']);
+	        
+	        // $this->app->layout->add('xepan\base\View_Notification',null,'notification_view');
+	        // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 		}
-		$this->app->layout->template->trySet('department',$this->app->employee['department']);
-        $this->app->layout->template->trySet('post',$this->app->employee['post']);
-        $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
-        $this->app->layout->template->trySet('status',$this->app->employee['status']);
-        
-        $this->app->layout->add('xepan\base\View_Notification',null,'notification_view');
-        $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 	}
 }
