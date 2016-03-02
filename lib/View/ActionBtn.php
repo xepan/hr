@@ -6,6 +6,7 @@ namespace xepan\hr;
 
 class View_ActionBtn extends \CompleteLister{
 	public $actions=[];
+	public $status= 'StatusHERE';
 	public $id;
 
 	function init(){
@@ -15,17 +16,29 @@ class View_ActionBtn extends \CompleteLister{
 		foreach ($this->actions as $value) {
 			$temp_array[] = ['action'=>ucwords($value),'id'=>$this->id];
 		}
-		$first = array_pop($temp_array);
 
 		$this->SetSource($temp_array);
 		
-		$this->template->set('action',$first['action']);
-		$this->template->set('id',$first['id']);
-		
+		$this->template->set('status',$this->status);
+		$this->template->set('status_label',$this->setLabelColor($this->status));
+			
+
 		if(empty($temp_array)){
 			$this->template->del('dropdown');
 		}
 	}
+
+	function setLabelColor($status){
+
+		$status_color = 
+				[
+					'Active' => 'success',
+					'InActive' => 'danger'
+				];
+
+		return $status_color[$status];
+	}
+
 	function defaultTemplate(){
 		return ['view/action-btn'];
 	}
