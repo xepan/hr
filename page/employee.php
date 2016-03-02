@@ -27,7 +27,7 @@ class page_employee extends \Page {
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
 
 		$crud->setModel($employee,['first_name','last_name','post','created_at']);
-		$crud->grid->addQuickSearch(['name']);
+		$crud->grid->addQuickSearch(['first_name']);
 		
 	}
 }
