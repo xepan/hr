@@ -23,6 +23,8 @@ class page_department extends \Page {
 
 		$crud->setModel($department);
 		$crud->grid->addQuickSearch(['name']);
+
+		
 		
 	}
 }
