@@ -33,7 +33,14 @@ class View_ActionBtn extends \CompleteLister{
 		$status_color = 
 				[
 					'Active' => 'success',
-					'InActive' => 'danger'
+					'InActive' => 'danger',
+					'Open'=>'warning',
+					'Converted' =>'success',
+					'Rejected' => 'danger',
+					'Draft'=>'default',
+					'Submitted' => 'warning',
+					'Approved' =>'success',
+					'Rejected' => 'danger'
 				];
 
 		return $status_color[$status];
