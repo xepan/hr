@@ -1,0 +1,20 @@
+a.btn.dropdown-toggle(data-toggle='dropdown')
+    i.fa.fa-bell
+    span.count {notification_count}8{/}
+  ul.dropdown-menu.notifications-list
+    li.pointer
+      .pointer-inner
+        .arrow
+    li.item-header You have {unread_notification}6{/} new notifications
+    {rows}{row}
+    li.item
+        a(href='#')
+          i.fa.fa-{icon}comment{/}
+                span.content {notification}New comment on ‘Awesome P...{/}
+          span.time
+            i.fa.fa-clock-o
+            | {when}13 min.{/}
+    {/}{/}              
+    li.item-footer
+          a(href='#')
+                | View all notifications
