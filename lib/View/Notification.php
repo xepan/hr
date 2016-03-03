@@ -46,8 +46,8 @@ class View_Notification extends \CompleteLister{
 		$this->js(true)
 			->_load('pnotify.custom.min')
 			->_css('pnotify.custom.min');
-		$this->js(true)->_library('PNotify.desktop')->permission();
-		$this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']));
+		// $this->js(true)->_library('PNotify.desktop')->permission();
+		// $this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']));
 		return parent::render();
 	}
 
