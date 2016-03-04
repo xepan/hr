@@ -26,7 +26,7 @@ class page_employee extends \Page {
 						
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
 
-		$crud->setModel($employee,['first_name','last_name','post','created_at','status','email']);
+		$crud->setModel($employee);
 		$f = $crud->grid->addQuickSearch(['first_name','last_name']);
 
 		$d_f =$f->addField('DropDown','department_id')->setEmptyText("Select Department");
@@ -56,6 +56,8 @@ class page_employee extends \Page {
 			}
 
 		});
+
+		$crud->add('xepan\base\Controller_Avatar');
 		
 	}
 }
