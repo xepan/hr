@@ -37,13 +37,20 @@ class page_employee extends \Page {
 		$p_f->setModel('xepan\hr\Post');
 		$p_f->js('change',$f->js()->submit());
 
+		$u_f=$f->addField('DropDown','user_id')->setEmptyText('Select User');
+		$u_f->setModel('xepan\base\User');
+		$u_f->js('change',$f->js()->submit());
+
 		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('Status');
 		$s_f->js('change',$f->js()->submit());
+
 
 		$f->addHook('appyFilter',function($f,$m){
 			if($f['department_id'])
 				$m->addCondition('department_id',$f['department_id']);
 			if($f['post_id'])
+				$m->addCondition('user_id',$f['user_id']);
+			if($f['user_id'])
 				$m->addCondition('post_id',$f['post_id']);
 			
 			if($f['status']='Active'){
