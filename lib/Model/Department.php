@@ -20,6 +20,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 
 		$dep_j->hasMany('xepan\hr\Post','department_id',null,'Post');
 		$dep_j->hasMany('xepan\hr\Employee','department_id',null,'Employees');
+		$dep_j->addField('is_system')->type('boolean')->defaultValue(false)->system(true);
 
 		$this->addExpression('posts_count')->set($this->refSQL('Post')->count());
 
