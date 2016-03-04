@@ -45,9 +45,10 @@ class page_aclmanagement extends \Page {
 								->loadAny();
 
 			foreach ($m->actions as $status => $actions) {
+				$status = $status=='*'?'All':$status;	
 				$greeting_card = $af->add('View', null, null, ['view/acllist']);
 				foreach ($actions as $action) {
-					$greeting_card->template->set('action',$status);
+					$greeting_card->template->set('action',$status);					
 					$greeting_card->addField('DropDown',$status.'_'.$action,$action)
 						->setValueList(['Self Only'=>'Self Only','All'=>'All','None'=>'None'])
 						->addClass('form-control')
@@ -61,7 +62,8 @@ class page_aclmanagement extends \Page {
 		$af->onSubmit(function($f)use($post,$ns,$dt){
 			$m = $this->add($ns.'\\Model_'.$dt);
 			$acl_array=[];
-			foreach ($m->actions as $status => $actions) {				
+			foreach ($m->actions as $status => $actions) {
+				$status = $status=='*'?'All':$status;			
 				foreach ($actions as $action) {
 					$acl_array[$status][$action] = $f[$this->api->normalizeName($status.'_'.$action)];
 				}

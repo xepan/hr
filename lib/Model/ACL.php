@@ -14,6 +14,8 @@ namespace xepan\hr;
 class Model_ACL extends \xepan\base\Model_Table {
 	public $table='acl';
 
+	public $acl=false;
+
 	function init(){
 		parent::init();
 		
@@ -25,7 +27,8 @@ class Model_ACL extends \xepan\base\Model_Table {
 		$this->addField('allow_add')->type('boolean')->defaultValue(true);
 
 		$this->addExpression('name')->set("CONCAT(namespace,'/',document_type)");
-		// ->set('CONCATE(namespace,"\",document_type');
+
+		$this->addExpression('type','"ACL"');
 
 		$this->addHook('beforeSave',function($m){
 			if(!$m['epan_id'] || !$m['post_id'] || !$m['document_type'] || !$m['namespace'])
