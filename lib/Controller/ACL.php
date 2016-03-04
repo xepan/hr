@@ -142,7 +142,8 @@ class Controller_ACL extends \AbstractController {
 								$action_btn_list[] = $action;
 						}
 					}
-					$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status']])->getHTML();
+					if(!isset($g->current_row_html['action']))
+						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status']])->getHTML();
 				});
 				$view->setFormatter('action','action');
 				$view->on('click','.acl-action',[$this,'manageAction']);
@@ -225,6 +226,16 @@ class Controller_ACL extends \AbstractController {
 	 * @return ['submit'=>[1],'can_view'=>false/true/[1,2,3]] [description]
 	 */
 	function canDo(){
+
+		if($this->model->acl === false){
+			$this->permissive_acl = true;
+			return;
+		}
+
+		if(strpos($this->model->acl, 'xepan\\')===0){
+			$this->model = $this->add($this->model->acl);
+		}
+
 		$class = new \ReflectionClass($this->model);
 		$this->acl_m = $this->add('xepan\hr\Model_ACL')
 					->addCondition('namespace',$class->getNamespaceName())
