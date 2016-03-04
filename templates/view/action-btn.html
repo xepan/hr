@@ -1,7 +1,7 @@
 
 <div class="btn-group">
-  <div class="btn btn-{status_label}primary{/}">{status}Current Status{/}</div>{dropdown}
-  <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+  <div class="btn col-sm-9 btn-{status_label}primary{/}">{status}Current Status{/}</div>{dropdown}
+  <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle col-sm-3"><span class="caret"></span></button>
   <ul role="menu" class="dropdown-menu">{rows}{row}
     <li><a href="#" data-action="{$action}" data-id="{$id}" class="acl-action">{$action}</a></li>{/}{/}
   </ul>{/dropdown}
