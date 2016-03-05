@@ -51,6 +51,26 @@ class page_employeedetail extends \Page {
 			$form->addField('Password','new_password');
 			$form->addField('Password','re_password');
 
+			$sf = $this->add('Form',null,'emails');
+			$field = $sf->addField('permissions')->set(json_encode($employee->getPermissionEmail()));
+			$sf->addSubmit('Select');
+			$email=$this->add('xepan\base\Grid',null,'emails',['view/employee/email-grid']);
+			$email->setModel($this->app->epan->ref('EmailSettings'));
+			$email->addSelectable($field);
+
+			if($sf->isSubmitted()){
+				$employee->removePermissionEmail();
+				$emails_permission =$this->add('xepan\hr\Model_Email_Permission'); 
+				$selected_emails=array();
+				$selected_emails = json_decode($sf['permissions'],true);
+				foreach ($selected_emails as $junk_id){
+					$emails_permission['employee_id']=$this->app->employee->id;
+					$emails_permission['emailsetting_id']=$junk_id;
+					$emails_permission->save();
+				}
+				$sf->js(null,$sf->js()->univ()->successMessage('SuccessFully Add Emails '))->reload->execute();
+			}
+
 		}
 
 	}
