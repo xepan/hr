@@ -41,9 +41,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function removePermissionEmail(){
-		$emails= $this->ref('EmailPermissions')->addCondition('employee_id',$this->app->employee->id);
-		$emails->tryLoadAny();
-		if($emails->loaded())
-			$emails->deleteAll();
+		$emails= $this->ref('EmailPermissions');
+		$emails->deleteAll();
 	}
 }
