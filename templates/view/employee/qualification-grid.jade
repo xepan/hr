@@ -28,11 +28,11 @@
                         |   Graduation/Post Graduation
                         {/qualificaton_level}  
                     .col-md-3 {percentage}|  7.00{/percentage}
-                   .row
-                    .col-md-3.pull-right
-                        | {$action}
-                        {$edit}
-                        {$delete}
+                    .col-md-12.text-right(style="margin-bottom:3%")
+                        .col-md-3
+                        //- | {$action}
+                        {edit}Edit{/}
+                        {delete}Delete{/}
                 
             {/}
             {/}{/}

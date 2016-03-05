@@ -45,6 +45,7 @@ class page_employeedetail extends \Page {
 			$activity->addCondition('contact_id',$_GET['contact_id']);
 			$activity->tryLoadAny();
 			$activity_view->setModel($activity);
+			$activity_view->addPaginator(10);
 
 			$form = $this->add('Form',null,'personal_info');
 			$form->addField('Password','old_password');
