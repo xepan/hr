@@ -34,7 +34,7 @@ class Controller_ACL extends \AbstractController {
 
 			$where_condition=[];
 			foreach ($view_array as $status => $acl) { // acl can be true(for all, false for none and [] for employee created_by_ids)
-				if($status=='*'){
+				if($status=='All'){
 					if($acl === true) break;
 					if($acl === false) $acl = -1; // Shuold never be reached
 					$model->addCondition('created_by_id',$acl);
