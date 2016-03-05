@@ -2,6 +2,8 @@
 namespace xepan\hr;
 class Model_Experience extends \xepan\base\Model_Table{
 	public $table="experience";
+
+	public $acl=false;
 	function init(){
 		parent::init();
 		$this->hasOne('xepan\hr\Employee','employee_id');

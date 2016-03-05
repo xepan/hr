@@ -27,6 +27,10 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Post');
 
+		$this->is([
+			'department_id|required'
+			]);
+
 	}
 	function activate(){
 		$this['status']='Active';
