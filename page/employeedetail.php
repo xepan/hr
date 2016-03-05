@@ -55,6 +55,7 @@ class page_employeedetail extends \Page {
 			$field = $sf->addField('Hidden','permissions')->set(json_encode($employee->getPermissionEmail()));
 			$email=$sf->add('xepan\base\Grid',null,null,['view/employee/email-grid']);
 			$email->setModel($this->app->epan->ref('EmailSettings'));
+			$email->template->tryDel('Pannel');
 			$email->addSelectable($field);
 			$sf->addSubmit('Update');
 
