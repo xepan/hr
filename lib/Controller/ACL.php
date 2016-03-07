@@ -231,7 +231,7 @@ class Controller_ACL extends \AbstractController {
 			$this->permissive_acl = true;
 			return;
 		}
-
+				
 		if(strpos($this->model->acl, 'xepan\\')===0){
 			$this->model = $this->add($this->model->acl);
 		}

@@ -4,6 +4,9 @@ namespace xepan\hr;
 
 class Model_EmployeeDocument extends \xepan\base\Model_Table{
 	public $table="employee_documents";
+
+	public $acl=false;
+	
 	function init(){
 		parent::init();
 		$this->hasOne('xepan\hr\Employee','employee_id');

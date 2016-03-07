@@ -18,6 +18,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
 		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
+		$emp_j->hasMany('xepan\hr\Email_Permission','employee_id',null,'EmailPermissions');
 		
 		$this->addCondition('type','Employee');
 	}
@@ -33,5 +34,14 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$activity->save();
 		return $activity;
+	}
+	function getPermissionEmail(){
+		$permission_email = $this->ref('EmailPermissions')->_dsql()->del('fields')->field('emailsetting_id')->getAll();
+		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($permission_email)),false);
+	}
+
+	function removePermissionEmail(){
+		$emails= $this->ref('EmailPermissions');
+		$emails->deleteAll();
 	}
 }
