@@ -1,11 +1,11 @@
 .btn-group
-	.btn.col-sm-9(class="btn-{status_label}primary{/}"){status}Current Status{/}
+	.btn(class="btn-{status_label}primary{/} col-sm-{col_span}9{/}"){status}Current Status{/}
 	{dropdown}
 	button.btn.btn-primary.dropdown-toggle.col-sm-3(type="button" data-toggle="dropdown")
 		span.caret
 	ul.dropdown-menu(role="menu")
 		{rows}{row}
 		li
-			a.acl-action(href="#" data-action="{$action}" data-id="{$id}") {$action}
+			a.acl-action(href="#" data-action="{$action}" data-id="{$id}") {$action_title}
 		{/}{/}
 	{/dropdown}

@@ -21,4 +21,8 @@ class Model_Document extends \xepan\base\Model_Document{
 		$this->getElement('created_by_id')->defaultValue(@$this->app->employee->id);
 		$this->getElement('updated_by_id')->defaultValue(@$this->app->employee->id);
 	}
+
+	function page_manage_attachments($p){
+		$p->add('CRUD')->setModel($this->ref('Attachments'));
+	}
 }
