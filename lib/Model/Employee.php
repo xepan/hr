@@ -4,6 +4,11 @@ namespace xepan\hr;
 
 class Model_Employee extends \xepan\base\Model_Contact{
 	
+	public $actions=[
+		'Active'=>['view','edit','delete'],
+		'InActive'=>['view','edit','delete']
+	];
+
 	function init(){
 		parent::init();
 
@@ -18,8 +23,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
 		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
-		$emp_j->hasMany('xepan\hr\Email_Permission','employee_id',null,'EmailPermissions');
 		
+		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
 	}
 

@@ -19,12 +19,12 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$department}</td>
+          <td><small>{$department}</small></td>
           <td>{$name}
-            <div class="atk-label"><small>{$parent}\{$parent_post}</small></div>
+            <div class="atk-label"><small class="fa fa-level-up">&nbsp;{$parent_post}</small></div>
           </td>
-          <td class="text-left">{email}info@xavoc.com{/email}</td>
-          <td class="text-center"><a href="index.php?page=xepan_hr_employee&amp;post_id={$id}"> {$employee}</a></td>
+          <td class="text-left"><a data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}" class="emails-accesible"></a></td>
+          <td class="text-center"><a href="index.php?page=xepan_hr_employee&amp;post_id={$id}"> {$employee_count}</a></td>
           <td>{$action}</td>
           <td style="width: 15%;">
             {$edit}
