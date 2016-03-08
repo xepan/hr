@@ -182,23 +182,23 @@ class Controller_ACL extends \AbstractController {
 
 	function canEdit($status=null){
 		if(!$status){
-			$status='*';
+			$status='All';
 		}
 		return $this->action_allowed[$status]['edit']===null?$this->permissive_acl:$this->action_allowed[$status]['edit']; // can be true/false/ or []
 	}
 
 	function canDelete($status=null){
-		if(!$status) $status='*';
+		if(!$status) $status='All';
 		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl:$this->action_allowed[$status]['delete']; // can be true/false/ or []
 	}
 
 	function getActions($status=null){
-		if(!$status) $status='*';
+		if(!$status) $status='All';
 		return $this->action_allowed[$status]?:[];
 	}
 
 	function canDoAction($action,$status=null){
-		if(!$status) $status='*';
+		if(!$status) $status='All';
 	}
 
 	function manageAction($js,$data){		
@@ -217,7 +217,7 @@ class Controller_ACL extends \AbstractController {
 			$this->model->$action();
 			$this->getView()->js()->univ()->location()->execute();
 		}else{
-			return $js->univ()->errorMessage('Action not defined in Model');
+			return $js->univ()->errorMessage('Action "'.$action.'" not defined in Model');
 		}
 	}
 

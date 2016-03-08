@@ -14,7 +14,7 @@ class View_ActionBtn extends \CompleteLister{
 		// throw new \Exception(print_r($this->actions,true), 1);
 		$temp_array=[];
 		foreach ($this->actions as $value) {
-			$temp_array[] = ['action'=>ucwords($value),'id'=>$this->id];
+			$temp_array[] = ['action'=>$value,'action_title'=>ucwords(str_replace("_", " ", $value)),'id'=>$this->id];
 		}
 
 		$this->SetSource($temp_array);
@@ -25,6 +25,7 @@ class View_ActionBtn extends \CompleteLister{
 
 		if(empty($temp_array)){
 			$this->template->del('dropdown');
+			$this->template->set('col_span','12');
 		}
 	}
 
@@ -40,7 +41,10 @@ class View_ActionBtn extends \CompleteLister{
 					'Draft'=>'default',
 					'Submitted' => 'warning',
 					'Approved' =>'success',
-					'Rejected' => 'danger'
+					'Rejected' => 'danger',
+					'Pending' => 'warning',
+					'Rejected'=>'danger',
+					'Completed'=>'success'
 				];
 
 		return $status_color[$status];
