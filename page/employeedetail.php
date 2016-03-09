@@ -27,6 +27,7 @@ class page_employeedetail extends \Page {
 
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
+			$portfolio_view->setIdField('contact_id');
 			$portfolio_view->setModel($employee,['department','post'],['department_id','post_id']);
 			$q = $portfolio_view->addMany('Qualification',null,'Qualification',['view/employee/qualification-grid']);
 			$q->setModel($employee->ref('Qualifications'));
@@ -36,6 +37,7 @@ class page_employeedetail extends \Page {
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
+			$document_view->setIdField('contact_id');
 			$q = $document_view->addMany('EmployeeDocument',null,'Document',['view/employee/emp-document-grid']);
 			$q->setModel($employee->ref('EmployeeDocuments'));
 

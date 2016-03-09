@@ -26,6 +26,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
+
+		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeDelete',$this);
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
@@ -48,5 +51,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function removePermissionEmail(){
 		$emails= $this->ref('EmailPermissions');
 		$emails->deleteAll();
+	}
+
+	function beforeSave($m){}
+
+	function beforeDelete($m){
+		$m->ref('Qualifications')->deleteAll();
+		$m->ref('Experiences')->deleteAll();
+		$m->ref('EmployeeDocuments')->deleteAll();
 	}
 }
