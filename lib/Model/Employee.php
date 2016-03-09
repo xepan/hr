@@ -59,5 +59,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$m->ref('Qualifications')->deleteAll();
 		$m->ref('Experiences')->deleteAll();
 		$m->ref('EmployeeDocuments')->deleteAll();
+		$m->ref('Emails')->deleteAll();
+		$m->ref('Phones')->deleteAll();
+		$m->ref('Relations')->deleteAll();
+		$m->ref('IMs')->deleteAll();
+		$m->ref('Events')->deleteAll();
 	}
 }
