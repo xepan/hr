@@ -21,7 +21,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->addField('name');
 
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
-		$post_j->hasMany('xepan\hr\Email_Permission','post_id',null,'EmailPermissions');
+		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
 		$post_j->hasMany('xepan\hr\Employee','post_id',null,'Employees');
 
 		$this->addExpression('employee_count')->set($this->refSQL('Employees')->count());

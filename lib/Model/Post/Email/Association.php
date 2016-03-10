@@ -1,8 +1,8 @@
 <?php
 namespace xepan\hr;
 
-class Model_Email_Permission extends \xepan\base\Model_Table{
-	public $table="hr_email_permission";
+class Model_Post_Email_Association extends \xepan\base\Model_Table{
+	public $table="post_email_association";
 	public $acl=false;
 	
 	function init(){

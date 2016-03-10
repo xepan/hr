@@ -25,7 +25,7 @@ class page_post extends \Page {
 				$post = $this->add('xepan\hr\Model_Post')->load($_POST['pk']);
 				$post->ref('EmailPermissions')->deleteAll();
 				foreach ($_POST['value']?:[] as $emailsetting_id) {
-					$this->add('xepan\hr\Model_Email_Permission')
+					$this->add('xepan\hr\Model_Post_Email_Association')
 						->set('post_id',$_POST['pk'])
 						->set('emailsetting_id',$emailsetting_id)
 						->saveAndUnload();
@@ -40,7 +40,7 @@ class page_post extends \Page {
 
 		$post=$this->add('xepan\hr\Model_Post');
 		$post->addExpression('existing_permitted_emails')->set(function($m,$q){
-			$x = $m->add('xepan\hr\Model_Email_Permission',['table_alias'=>'emails_str']);
+			$x = $m->add('xepan\hr\Model_Post_Email_Association',['table_alias'=>'emails_str']);
 			return $x->addCondition('post_id',$q->getField('id'))->_dsql()->del('fields')->field($q->expr('group_concat([0])',[$x->getElement('emailsetting_id')]));
 		});
 
