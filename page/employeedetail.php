@@ -28,12 +28,16 @@ class page_employeedetail extends \Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['department','post'],['department_id','post_id']);
+			$portfolio_view->setModel($employee,['department','post','user'],['department_id','post_id','user_id']);
 			$q = $portfolio_view->addMany('Qualification',null,'Qualification',['view/employee/qualification-grid']);
 			$q->setModel($employee->ref('Qualifications'));
 
 			$e = $portfolio_view->addMany('Experiences',null,'Experiences',['view/employee/experience-grid']);
 			$e->setModel($employee->ref('Experiences'));
+
+			$official_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info',['view/employee/official-details']);
+			$official_view->setIdField('contact_id');
+			$official_view->setModel($employee,['offer_date','doj','contract_date','leving_date'],['offer_date','doj','contract_date','leving_date']);
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
