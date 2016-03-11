@@ -12,9 +12,9 @@
           li
             a(data-toggle='tab', href='#tab-documents') Documents
           li
-            a(data-toggle='tab', href='#tab-chat') Personal
-          li
-            a(data-toggle='tab', href='#tab-email') Email
+            a(data-toggle='tab', href='#tab-user') User
+          //- li
+          //-   a(data-toggle='tab', href='#tab-email') Email
         .tab-content
           #tab-portfolio.tab-pane.fade.in.active
             {portfolio_view}Please Save Basic Information First{/}
@@ -22,7 +22,7 @@
             {$activity_view}
           #tab-documents.tab-pane.clearfix.fade
             {$document_view}
-          #tab-chat.tab-pane.fade
-            {$personal_info}
-          #tab-email.tab-pane.fade
-            {$emails}                       
+          #tab-user.tab-pane.fade
+            {$user_view}
+          //- #tab-email.tab-pane.fade
+          //-   {$emails}                       

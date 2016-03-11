@@ -48,6 +48,9 @@ class page_employeedetail extends \Page {
 			$activity->tryLoadAny();
 			$activity_view->setModel($activity);
 
+
+			// $this->add('xepan\hr\')
+
 			// $form = $this->add('Form',null,'personal_info');
 			// $form->addField('Password','old_password');
 			// $form->addField('Password','new_password');
