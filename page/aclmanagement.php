@@ -17,6 +17,11 @@ class page_aclmanagement extends \Page {
 	function init(){
 		parent::init();
 
+		if(!$this->api->auth->model->isSuperUser()){
+			$this->add('View_Error')->set('Sorry, you are not permitted to handle acl, Ask respective authority');
+			return;
+		}
+
 		$post = $this->api->stickyGET('post_id');
 		$ns = $this->api->stickyGET('namespace');
 		$dt = $this->api->stickyGET('document_type');
@@ -36,7 +41,9 @@ class page_aclmanagement extends \Page {
 
 		$af = $this->add('Form');
 
+
 		if($dt){
+			$af->addField('Checkbox','allow_add');
 			$m = $this->add($ns.'\\Model_'.$dt);
 			$existing_acl = $this->add('xepan\hr\Model_ACL')
 								->addCondition('post_id',$post)
@@ -44,6 +51,8 @@ class page_aclmanagement extends \Page {
 								->addCondition('document_type',$dt)
 								->loadAny();
 
+			$af->getElement('allow_add')->set($existing_acl['allow_add']);
+			
 			foreach ($m->actions as $status => $actions) {
 				$status = $status=='*'?'All':$status;	
 				$greeting_card = $af->add('View', null, null, ['view/acllist']);
@@ -77,7 +86,7 @@ class page_aclmanagement extends \Page {
 					;
 			$acl_m->tryLoadAny();
 			$acl_m['action_allowed'] = json_encode($acl_array);
-
+			$acl_m['allow_add'] = $f['allow_add'];
 			$acl_m->save();
 
 		});

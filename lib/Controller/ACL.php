@@ -16,11 +16,13 @@ class Controller_ACL extends \AbstractController {
 	
 	public $acl_m = null;
 	public $action_allowed=[];
-	public $permissive_acl=true;
+	public $permissive_acl=false;
 
 	function init(){
 		parent::init();
 	
+		if($this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
+
 		$this->model = $model = $this->getModel();
 
 		$this->canDo();
@@ -177,7 +179,7 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function canAdd(){
-		return $this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add'];
+		return $this->api->auth->model->isSuperUser()?true:($this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add']);
 	}
 
 	function canEdit($status=null){
@@ -250,7 +252,10 @@ class Controller_ACL extends \AbstractController {
 					->addCondition('post_id',$this->app->employee['post_id'])
 					;
 		$this->acl_m->tryLoadAny();
-		if(!$this->acl_m->loaded()) $this->acl_m->save();
+		if(!$this->acl_m->loaded()){
+			$this->acl_m['allow_add'] = $this->permissive_acl;
+			$this->acl_m->save();
+		}
 		
 		/**
 		 * ACL
@@ -273,7 +278,7 @@ class Controller_ACL extends \AbstractController {
 		$this->action_allowed = $this->acl_m['action_allowed'];
 		foreach ($this->acl_m['action_allowed'] as $status => $actions) {
 			foreach ($actions as $action=>$acl_value) {
-				$this->action_allowed[$status][$action] = $this->textToCode($acl_value);
+				$this->action_allowed[$status][$action] = $this->api->auth->model->isSuperUser()?true:$this->textToCode($acl_value);
 			}
 		}
 
