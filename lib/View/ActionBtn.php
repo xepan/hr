@@ -11,14 +11,13 @@ class View_ActionBtn extends \CompleteLister{
 
 	function init(){
 		parent::init();
-		// throw new \Exception(print_r($this->actions,true), 1);
 		$temp_array=[];
 		foreach ($this->actions as $value) {
-			$temp_array[] = ['action'=>$value,'action_title'=>ucwords(str_replace("_", " ", $value)),'id'=>$this->id];
+			$temp_array[] = ['action'=>$value,'action_title'=>ucwords(str_replace("_", " ", $value)),'row_id'=>$this->id];
 		}
 
-		$this->SetSource($temp_array);
-		
+		$this->setSource($temp_array);
+
 		$this->template->set('status',$this->status);
 		$this->template->set('status_label',$this->setLabelColor($this->status));
 			

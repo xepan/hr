@@ -28,9 +28,6 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Post');
 
-		$this->addHook('beforeSave',$this);
-		$this->addHook('beforeDelete',$this);
-
 		$this->is([
 			'department_id|required'
 			]);
@@ -44,15 +41,5 @@ class Model_Post extends \xepan\hr\Model_Document{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->saveAndUnLoad();
-	}
-
-	function beforeSave($m){}
-
-	function beforeDelete($m){
-		$emp_count = $m->ref('Employees')->count()->getOne();
-		if($emp_count){
-			throw $this->exception('Cannot Delete,first delete  Employees ');	
-		}
-		$m->ref('EmailPermissions')->deleteAll();
 	}
 }
