@@ -227,11 +227,18 @@ class Controller_ACL extends \AbstractController {
 	 */
 	function canDo(){
 
+		if(!isset($this->model->acl)){
+			throw $this->exception('ACL property not set')
+						->addMoreInfo('Model',get_class($this->model));
+			
+		}
+
 		if($this->model->acl === false){
+			
 			$this->permissive_acl = true;
 			return;
 		}
-				
+
 		if(strpos($this->model->acl, 'xepan\\')===0){
 			$this->model = $this->add($this->model->acl);
 		}
