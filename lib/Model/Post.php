@@ -28,6 +28,9 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Post');
 
+		$this->addHook('beforeDelete',$this);
+		$this->addHook('beforeDelete',[$this,'deleteEmailAssociation']);
+
 		$this->is([
 			'department_id|required'
 			]);
@@ -41,5 +44,13 @@ class Model_Post extends \xepan\hr\Model_Document{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->saveAndUnLoad();
+	}
+
+	function beforeDelete(){
+		if($this->ref('Employees')->count()->getOne())
+			throw new \Exception("Can not Delete Content First delete Employees", 1);
+	}
+	function deleteEmailAssociation(){
+		$this->ref('EmailPermissions')->deleteAll();
 	}
 }
