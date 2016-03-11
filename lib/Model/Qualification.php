@@ -10,7 +10,7 @@ class Model_Qualification extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\hr\Employee','employee_id');
 		$this->addField('name')->caption('Qualification');
 		$this->addField('qualificaton_level');
-		$this->addField('remarks');
+		$this->addField('remarks')->type('text');
 
 	}
 }
