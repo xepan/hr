@@ -1,12 +1,24 @@
 .col-lg-12
   .panel.panel-default
     .panel-body 
+      .col-lg-12.xepan-push
+        .col-md-12
+          .col-lg-5
+            strong  Department
+          .col-lg-5
+            strong  Post
+          .col-lg-5
+            | {$department}{$department_id}
+          .col-lg-5
+            | {$post}{$post_id}
       .col-lg-12
-        .col-lg-5
-          | {$department}{$department_id}
-        .col-lg-5
-          | {$post}{$post_id}
-        .col-lg-2 
+        .col-md-12
+          .col-lg-5
+            strong  User
+          .col-lg-5
+        .col-md-8
+            | {$user}{$user_id}
+        .col-lg-4.pull-right 
           | {$FormButtons}
 .col-lg-12
   .panel.panel-default

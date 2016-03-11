@@ -8,21 +8,21 @@
           li.active
             a(data-toggle='tab', href='#tab-portfolio') Portfolio
           li
+            a(data-toggle='tab', href='#tab-official') Official
+          li
             a(data-toggle='tab', href='#tab-activity') Activity
           li
             a(data-toggle='tab', href='#tab-documents') Documents
-          li
-            a(data-toggle='tab', href='#tab-user') User
           //- li
           //-   a(data-toggle='tab', href='#tab-email') Email
         .tab-content
           #tab-portfolio.tab-pane.fade.in.active
             {portfolio_view}Please Save Basic Information First{/}
+          #tab-official.tab-pane.fade
+            {$official_info}
            #tab-activity.tab-pane.fade
             {$activity_view}
           #tab-documents.tab-pane.clearfix.fade
             {$document_view}
-          #tab-user.tab-pane.fade
-            {$user_view}
           //- #tab-email.tab-pane.fade
           //-   {$emails}                       
