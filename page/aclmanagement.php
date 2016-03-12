@@ -49,7 +49,10 @@ class page_aclmanagement extends \Page {
 								->addCondition('post_id',$post)
 								->addCondition('namespace',$ns)
 								->addCondition('document_type',$dt)
-								->loadAny();
+								->tryLoadAny();
+
+			if(!$existing_acl->loaded())
+				$existing_acl->save();
 
 			$af->getElement('allow_add')->set($existing_acl['allow_add']);
 			
