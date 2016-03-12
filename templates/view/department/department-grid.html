@@ -7,40 +7,42 @@
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix table">
-    <table style="width:100%" class="table user-list table-hover">{header}
-      <thead>{cols}{col}
-        <th><a href="#"><span>Department</span></a></th>
-        <th class="text-right"><a href="#" class="asc"><span>Production Level</span></a></th>
-        <th class="text-center"><a href="#" class="desc"><span>Post</span></a></th>
-        <th> </th>
-        <th> </th>{/}{/}
-      </thead>{$subheader}
-      <tbody>{rows}{row}
-        <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$name}</td>
-          <td class="text-right">{$production_level}</td>
-          <td class="text-center"><a href="index.php?page=xepan_hr_post&amp;department_id={$id}">{$posts_count}</a></td>
-          <td>{action}Action Here{/}</td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}
-            {/}
-          </td>{/}
-        </tr>{/}{/}
-        {not_found}
-        <div class="row">
-          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
-        </div>{/}
-      </tbody>{totals}
-      <tfoot>
-        <tr class="totals">
-          {cols}{col}
-          <td {$tdparam}>
-          {$content}
-          </td>
-          {/}{/}
-        </tr>
-      </tfoot>{/}
-    </table>{$Paginator}
+    <div class="table-responsive">
+      <table style="width:100%" class="table user-list table-hover">{header}
+        <thead>{cols}{col}
+          <th><a href="#"><span>Department</span></a></th>
+          <th class="text-right"><a href="#" class="asc"><span>Production Level</span></a></th>
+          <th class="text-center"><a href="#" class="desc"><span>Post</span></a></th>
+          <th> </th>
+          <th> </th>{/}{/}
+        </thead>{$subheader}
+        <tbody>{rows}{row}
+          <tr data-id="{$id}" class="{$odd_even}">{cols}
+            <td>{$name}</td>
+            <td class="text-right">{$production_level}</td>
+            <td class="text-center"><a href="index.php?page=xepan_hr_post&amp;department_id={$id}">{$posts_count}</a></td>
+            <td>{action}Action Here{/}</td>
+            <td style="width: 15%;">
+              {$edit}
+              {$delete}
+              {/}
+            </td>{/}
+          </tr>{/}{/}
+          {not_found}
+          <div class="row">
+            <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+          </div>{/}
+        </tbody>{totals}
+        <tfoot>
+          <tr class="totals">
+            {cols}{col}
+            <td {$tdparam}>
+            {$content}
+            </td>
+            {/}{/}
+          </tr>
+        </tfoot>{/}
+      </table>{$Paginator}
+    </div>
   </div>
 </div>
