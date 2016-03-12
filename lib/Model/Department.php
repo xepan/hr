@@ -27,7 +27,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
 
-		$this->addHook('beforeDelete'$this);		
+		$this->addHook('beforeDelete',$this);		
 		$this->is([
 				'production_level|int|>0',
 				'name|unique_in_epan|to_trim|required'
