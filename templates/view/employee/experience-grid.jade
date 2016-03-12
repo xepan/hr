@@ -13,7 +13,7 @@
             {rows}{row}
             div(class="{$odd_even} col-md-{col-width}12{/}" data-id="{$id}")
                 {cols}
-                .col-md-12
+                .col-md-12.xepan-push-small
                     .col-md-5
                         strong Previous Company:
                     .col-md-4
@@ -25,7 +25,7 @@
                     .col-md-4 {$company_branch}
                     .col-md-3 {$designation} 
 
-                .col-md-12(style="margin-top:5%")
+                .col-md-12.xepan-push-small(style="margin-top:5%")
                     .col-md-5
                         strong Department:
                     .col-md-4
@@ -42,6 +42,7 @@
                     //- | {$action}
                     {$edit}
                     {$delete}
+                    
             {/}
             {/}{/}
             {not_found}
