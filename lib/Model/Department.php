@@ -27,8 +27,10 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
 
+		$this->addHook('beforeDelete'$this);		
 		$this->is([
-				'production_level|int|>0'
+				'production_level|int|>0',
+				'name|unique_in_epan|to_trim|required'
 			]);
 	}
 
@@ -40,5 +42,15 @@ class Model_Department extends \xepan\hr\Model_Document{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->saveAndUnload();
+	}
+
+	function beforeDelete(){
+		$posts_count=$this->ref('Post')->count()->getOne();
+		$employee_count=$this->ref('Employees')->count()->getOne();
+
+		if($posts_count or $employee_count){
+			throw new \Exception("Department Can not be deleted its content Post And Employee Delete First", 1);
+		}
+
 	}
 }

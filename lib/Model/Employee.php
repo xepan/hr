@@ -30,6 +30,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
+
+		$this->addHook('beforeDelete',[$this,'deleteQualification']);
+		$this->addHook('beforeDelete',[$this,'deleteExperience']);
+		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
@@ -44,13 +48,15 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$activity->save();
 		return $activity;
 	}
-	function getPermissionEmail(){
-		$permission_email = $this->ref('EmailPermissions')->_dsql()->del('fields')->field('emailsetting_id')->getAll();
-		return iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($permission_email)),false);
-	}
 
-	function removePermissionEmail(){
-		$emails= $this->ref('EmailPermissions');
-		$emails->deleteAll();
+	function deleteQualification(){
+		$this->ref('Qualifications')->deleteAll();	
 	}
+	function deleteExperience(){
+		$this->ref('Experiences')->deleteAll();	
+	}
+	function deleteEmployeeDocument(){
+		$this->ref('EmployeeDocuments')->deleteAll();	
+	}	
+	
 }

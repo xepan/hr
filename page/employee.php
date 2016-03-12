@@ -29,19 +29,19 @@ class page_employee extends \Page {
 		$crud->setModel($employee);
 		$f = $crud->grid->addQuickSearch(['first_name','last_name']);
 
-		$d_f =$f->addField('DropDown','department_id')->setEmptyText("Select Department");
+		$d_f =$f->addField('DropDown','department_id')->setEmptyText("All Department");
 		$d_f->setModel('xepan\hr\Department');
 		$d_f->js('change',$f->js()->submit());
 		
-		$p_f =$f->addField('DropDown','post_id')->setEmptyText("Select Post");
+		$p_f =$f->addField('DropDown','post_id')->setEmptyText("All Post");
 		$p_f->setModel('xepan\hr\Post');
 		$p_f->js('change',$f->js()->submit());
 
-		$u_f=$f->addField('DropDown','user_id')->setEmptyText('Select User');
+		$u_f=$f->addField('DropDown','user_id')->setEmptyText('All User');
 		$u_f->setModel('xepan\base\User');
 		$u_f->js('change',$f->js()->submit());
 
-		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('Status');
+		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
 		$s_f->js('change',$f->js()->submit());
 
 
@@ -54,10 +54,8 @@ class page_employee extends \Page {
 				$m->addCondition('post_id',$f['post_id']);
 			
 			if($f['status']='Active'){
-				throw new \Exception("Active", 1);
 				$m->addCondition('status','Active');
 			}else{
-				throw new \Exception("Inactive", 1);
 				$m->addCondition('status','Inactive');
 
 			}
