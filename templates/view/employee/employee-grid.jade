@@ -12,16 +12,28 @@
             {header}
             thead
                 tr
-                    {cols}
+                    {cols}{col}
+                    th(id="{$sortid}")
+                      a(href="javascript:void(0)")| User
+                        {$descr}
+                        {sort}
+                        span(class="{$sorticon}")
+                        {/}
+                    th(id="{$sortid}")
+                      a(href="javascript:void(0)")| Date Of Joining
+                        {$descr}
+                        {sort}
+                        span(class="{$sorticon}")
+                        {/}
+                    th(id="{$sortid}")
+                      a(href="javascript:void(0)")| Email
+                        {$descr}
+                        {sort}
+                        span(class="{$sorticon}")
+                        {/}
                     th
-                      span User
                     th
-                      span Date Of Joining
-                    th
-                      span Email
-                    th
-                    th
-                    {/}    
+                    {/}{/}    
             {/}
             {$subheader}
 

@@ -9,12 +9,21 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>
-        <tr>{cols}
-          <th><span>User</span></th>
-          <th><span>Date Of Joining</span></th>
-          <th><span>Email</span></th>
+        <tr>{cols}{col}
+          <th id="{$sortid}"><a href="javascript:void(0)">
+              User
+              {$descr}
+              {sort}<span class="{$sorticon}"></span>{/}</a></th>
+          <th id="{$sortid}"><a href="javascript:void(0)">
+              Date Of Joining
+              {$descr}
+              {sort}<span class="{$sorticon}"></span>{/}</a></th>
+          <th id="{$sortid}"><a href="javascript:void(0)">
+              Email
+              {$descr}
+              {sort}<span class="{$sorticon}"></span>{/}</a></th>
           <th></th>
-          <th></th>{/}    
+          <th></th>{/}{/}    
         </tr>
       </thead>{/}
       {$subheader}

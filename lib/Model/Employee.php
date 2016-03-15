@@ -19,7 +19,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasOne('xepan\hr\Post','post_id');
 
 		$emp_j->addField('notified_till')->type('number')->defaultValue(0); // TODO Should be current id of Activity
-		$emp_j->addField('offer_date')->type('date');
+		$emp_j->addField('offer_date')->type('date')->sortable(true);
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date');
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leving_date')->type('date');
