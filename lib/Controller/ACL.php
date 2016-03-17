@@ -276,8 +276,10 @@ class Controller_ACL extends \AbstractController {
 		 * )
 		 */
 		$this->action_allowed = $this->acl_m['action_allowed'];
-		foreach ($this->acl_m['action_allowed'] as $status => $actions) {
-			foreach ($actions as $action=>$acl_value) {
+
+		foreach ($this->model->actions as $status => $actions) {
+			foreach ($actions as $action) {
+				$acl_value = isset($this->action_allowed[$status][$action])?$this->action_allowed[$status][$action]:$this->permissive_acl;
 				$this->action_allowed[$status][$action] = $this->api->auth->model->isSuperUser()?true:$this->textToCode($acl_value);
 			}
 		}
