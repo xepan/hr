@@ -150,6 +150,16 @@ class Controller_ACL extends \AbstractController {
 				$view->setFormatter('action','action');
 				$view->on('click','.acl-action',[$this,'manageAction']);
 
+				$view->addColumn('template','attachment_icon');
+				$view->addMethod('format_attachment_icon',function($g,$f){
+					if($g->model['attachments_count'])
+						$g->current_row_html[$f]='<i class="fa fa-paperclip fa-2x" style="color:green"></i> '.$g->model['attachments_count'];
+					else
+						$g->current_row_html[$f]='<i class="fa fa-paperclip" style="color:grey"></i>';
+				});
+				$view->setFormatter('attachment_icon','attachment_icon');
+
+
 			}elseif($view instanceof \xepan\base\View_Document){
 
 			}
