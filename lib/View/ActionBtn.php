@@ -44,6 +44,7 @@ class View_ActionBtn extends \CompleteLister{
 					'Pending' => 'warning',
 					'Rejected'=>'danger',
 					'Completed'=>'success',
+					'Canceled'=>'info',
 					'Redesign'=>'info',
 					'InProgress'=>'warning',
 					'Due'=>'danger',
