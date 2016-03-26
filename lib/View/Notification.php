@@ -34,7 +34,7 @@ class View_Notification extends \CompleteLister{
 
 			$this->setModel($notifications)->setLimit(3);
 			
-			$this->template->setHTML('icon','user');
+			$this->template->setHTML('icon','envelope-o');
 			$this->template->set('notification_count',rand(1,100));
 			$this->template->set('unread_notification',rand(1,100));
 
