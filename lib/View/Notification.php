@@ -37,7 +37,7 @@ class View_Notification extends \CompleteLister{
 			$this->template->set('notification_count',rand(1,100));
 			$this->template->set('unread_notification',rand(1,100));
 
-			// $this->js(true)->univ()->setTimeout($this->js()->reload()->_enclose(),5000);
+			// $this->js(true)->univ()->setTimeout($this->js()->reload()->_enclose(),15000);
 		}
 
 	}
@@ -46,8 +46,8 @@ class View_Notification extends \CompleteLister{
 		$this->js(true)
 			->_load('pnotify.custom.min')
 			->_css('pnotify.custom.min');
-		// $this->js(true)->_library('PNotify.desktop')->permission();
-		// $this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']));
+		$this->js(true)->_library('PNotify.desktop')->permission();
+		$this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']));
 		return parent::render();
 	}
 

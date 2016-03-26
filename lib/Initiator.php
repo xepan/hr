@@ -11,7 +11,7 @@ class Initiator extends \Controller_Addon {
 		
 		$this->routePages('xepan_hr');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
-		->setBaseURL($this->app->pm->base_url.$this->app->pm->base_path.'../vendor/xepan/hr/');
+		->setBaseURL('../vendor/xepan/hr/');
 
 		if($this->app->auth->isLoggedIn())
 			$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
@@ -31,8 +31,8 @@ class Initiator extends \Controller_Addon {
 	        $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
 	        $this->app->layout->template->trySet('status',$this->app->employee['status']);
 	        
-	        // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
-	        // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
+	        $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
+	        $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 		}
 	}
 }
