@@ -32,8 +32,9 @@ class View_Notification extends \CompleteLister{
 			$notifications->addCondition('id','>',$this->app->employee['notified_till']?:0);
 			// $notifications->addCondition('notify_to','like',','.$this->app->employee->id.',');
 
-			$this->setModel($notifications)->setLimit(2);
+			$this->setModel($notifications)->setLimit(3);
 			
+			$this->template->setHTML('icon','user');
 			$this->template->set('notification_count',rand(1,100));
 			$this->template->set('unread_notification',rand(1,100));
 
