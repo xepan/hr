@@ -49,6 +49,10 @@ class View_ActionBtn extends \CompleteLister{
 					'InProgress'=>'warning',
 					'Due'=>'danger',
 					'Paid'=>'success'
+					'ToReceived'=>'default'
+					'Received'=>'info'
+					'Dispatch'=>'warning'
+					'ReceivedByParty'=>'success'
 				];
 
 		return $status_color[$status];
