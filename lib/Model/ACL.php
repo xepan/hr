@@ -35,7 +35,7 @@ class Model_ACL extends \xepan\base\Model_Table {
 				throw $this->exception('ACL Model does not have proper informations')
 							->addMoreInfo('epan_id',$m['epan_id'])
 							->addMoreInfo('post_id',$m['post_id'])
-							->addMoreInfo('document_type',$m['document_type'])
+							->addMoreInfo('type',$m['document_type'])
 							->addMoreInfo('namespace',$m['namespace']);
 		});
 
