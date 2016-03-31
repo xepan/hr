@@ -51,10 +51,10 @@ class View_ActionBtn extends \CompleteLister{
 					'Redesign'=>'info',
 					'InProgress'=>'warning',
 					'Due'=>'danger',
-					'Paid'=>'success'
-					'ToReceived'=>'default'
-					'Received'=>'info'
-					'Dispatch'=>'warning'
+					'Paid'=>'success',
+					'ToReceived'=>'default',
+					'Received'=>'info',
+					'Dispatch'=>'warning',
 					'ReceivedByParty'=>'success'
 				];
 
