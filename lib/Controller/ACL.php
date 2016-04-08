@@ -19,7 +19,7 @@ class Controller_ACL extends \AbstractController {
 	public $permissive_acl=false;
 
 	function init(){
-		parent::init();
+		parent::init();		
 	
 		if($this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
@@ -219,7 +219,17 @@ class Controller_ACL extends \AbstractController {
 		if($this->model->hasMethod('page_'.$action)){
 			$p = $this->add('VirtualPage');
 			$p->set(function($p)use($action){
-				$page_action_result = $this->model->{"page_".$action}($p);
+				try{
+					$this->api->db->beginTransaction();
+					$page_action_result = $this->model->{"page_".$action}($p);
+					$this->api->db->commit();
+				}catch(\Exception_StopInit $e){
+
+				}catch(\Exception $e){
+					$this->api->db->rollback();
+					throw $e;
+					
+				}
 				if($page_action_result){
 					$p->js(true)->univ()->location();
 				}
