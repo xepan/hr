@@ -55,7 +55,9 @@ class View_ActionBtn extends \CompleteLister{
 					'ToReceived'=>'default',
 					'Received'=>'info',
 					'Dispatch'=>'warning',
-					'ReceivedByParty'=>'success'
+					'ReceivedByParty'=>'success',
+					'Published'=>'success',
+					'UnPublished'=>'danger',
 				];
 
 		return $status_color[$status];
