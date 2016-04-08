@@ -37,7 +37,8 @@ class page_employeedetail extends \Page {
 
 			$official_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info',['view/employee/official-details']);
 			$official_view->setIdField('contact_id');
-			$official_view->setModel($employee,['offer_date','doj','contract_date','leving_date'],['offer_date','doj','contract_date','leving_date']);
+			$official_view->setModel($employee,['offer_date','doj','contract_date','leaving_date','in_time','out_time'],
+											   ['offer_date','doj','contract_date','leaving_date','in_time','out_time']);
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);

@@ -11,6 +11,7 @@
       <thead>{cols}{col}
         <th><a href="#"><span>Department</span></a></th>
         <th><a href="#"><span>Post</span></a></th>
+        <th><span>Schedule Time</span></th>
         <th class="text-left"><a href="#" class="desc"><span>E-mail</span></a></th>
         <th class="text-center"><a href="#" class="asc"><span>Employee</span></a></th>
         <th></th>
@@ -22,6 +23,9 @@
           <td><small>{$department}</small></td>
           <td>{$name}
             <div class="atk-label"><small class="fa fa-level-up user-subhead">&nbsp;{$parent_post}</small></div>
+          </td>
+          <td><small>In_Time : {$in_time}</small>
+            <div class="xepan-push-small"></div><small>Out_Time : {$out_time}</small>
           </td>
           <td class="text-left"><a data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}" class="emails-accesible"></a></td>
           <td class="text-center"><a href="index.php?page=xepan_hr_employee&amp;post_id={$id}"> {$employee_count}</a></td>
