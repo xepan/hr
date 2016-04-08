@@ -22,7 +22,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('offer_date')->type('date')->sortable(true);
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date');
 		$emp_j->addField('contract_date')->type('date');
-		$emp_j->addField('leving_date')->type('date');
+		$emp_j->addField('leaving_date')->type('date');
 
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');

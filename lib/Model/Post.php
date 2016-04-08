@@ -19,6 +19,8 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasOne('xepan\hr\ParentPost','parent_post_id');
 
 		$post_j->addField('name');
+		$post_j->addField('in_time');
+		$post_j->addField('out_time');
 
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
