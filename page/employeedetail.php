@@ -13,6 +13,7 @@ namespace xepan\hr;
 
 class page_employeedetail extends \Page {
 	public $title='Employee Details';
+	public $breadcrumb=['Home'=>'index','Employee'=>'xepan_hr_employee','Detail'=>'#'];
 
 	function init(){
 		parent::init();
@@ -20,7 +21,7 @@ class page_employeedetail extends \Page {
 		$action = $this->api->stickyGET('action')?:'view';
 
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
-		
+
 		
 		$contact_view = $this->add('xepan\base\View_Contact',null,'contact_view');
 		$contact_view->setModel($employee);
@@ -37,7 +38,8 @@ class page_employeedetail extends \Page {
 
 			$official_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info',['view/employee/official-details']);
 			$official_view->setIdField('contact_id');
-			$official_view->setModel($employee,['offer_date','doj','contract_date','leving_date'],['offer_date','doj','contract_date','leving_date']);
+			$official_view->setModel($employee,['offer_date','doj','contract_date','leaving_date','in_time','out_time'],
+											   ['offer_date','doj','contract_date','leaving_date','in_time','out_time']);
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);

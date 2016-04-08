@@ -8,15 +8,20 @@ class page_employee_profile extends \Page{
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->app->employee['id']);
 		$user=$employee->ref('user_id');
 		
+
+		$contact_view = $this->add('xepan\base\View_Contact',null,'profile_view');
+		$contact_view->setModel($employee);
+
 		/*Profile View*/
-		$pf=$this->add('Form',null,'profile_view');
-		$pf->setLayout('form/employee/profile');
-		$pf->setModel($employee,['first_name','last_name']);
-		$pf->addSubmit('Update');
-		if($pf->isSubmitted()){
-			$pf->save();
-			$pf->js()->reload()->execute();
-		}
+		// $pf=$this->add('Form',null,'profile_view');
+		// $pf->setLayout('form/employee/profile');
+		// $pf->setModel($employee,['first_name','last_name']);
+		// $pf->addSubmit('Update');
+		// if($pf->isSubmitted()){
+		// 	$pf->save();
+		// 	$pf->js()->reload()->execute();
+		// }
+
 		/*Basic Informations*/
 		$b_f=$this->add('Form',null,'basic_view');
 		$b_f->setLayout(['form/employee/basic-info']);

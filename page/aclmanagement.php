@@ -17,10 +17,10 @@ class page_aclmanagement extends \Page {
 	function init(){
 		parent::init();
 
-		if(!$this->api->auth->model->isSuperUser()){
-			$this->add('View_Error')->set('Sorry, you are not permitted to handle acl, Ask respective authority');
-			return;
-		}
+		// if(!$this->api->auth->model->isSuperUser()){
+		// 	$this->add('View_Error')->set('Sorry, you are not permitted to handle acl, Ask respective authority');
+		// 	return;
+		// }
 
 		$post = $this->api->stickyGET('post_id');
 		$ns = $this->api->stickyGET('namespace');

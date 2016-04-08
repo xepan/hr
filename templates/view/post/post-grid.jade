@@ -18,6 +18,8 @@
                 th
                   a(href='#')
                     span Post
+                th
+                    span Schedule Time
                 th.text-left
                   a.desc(href='#')
                     span E-mail
@@ -40,6 +42,10 @@
                         {$name}
                         .atk-label
                             small.fa.fa-level-up.user-subhead &nbsp;{$parent_post}
+                    td
+                        small In_Time : {$in_time}
+                        .xepan-push-small
+                        small Out_Time : {$out_time}
                     td.text-left
                       a.emails-accesible(data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}")
                     td.text-center
