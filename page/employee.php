@@ -44,7 +44,6 @@ class page_employee extends \Page {
 		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
 		$s_f->js('change',$f->js()->submit());
 
-
 		$f->addHook('appyFilter',function($f,$m){
 			if($f['department_id'])
 				$m->addCondition('department_id',$f['department_id']);

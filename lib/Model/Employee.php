@@ -17,7 +17,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		// $emp_j->hasOne('xepan\base\User',null,'username');
 		$emp_j->hasOne('xepan\hr\Department','department_id');
 		$emp_j->hasOne('xepan\hr\Post','post_id');
-
+		
 		$emp_j->addField('notified_till')->type('number')->defaultValue(0); // TODO Should be current id of Activity
 		$emp_j->addField('offer_date')->type('date')->sortable(true);
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date');
@@ -28,6 +28,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
 		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
 		
+		$this->addExpression('posts')->set(function($m){
+            return $m->refSQL('post_id')->fieldQuery('name');
+        });
+
 		$this->addExpression('in_time')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('in_time');
         });
