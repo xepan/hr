@@ -58,6 +58,7 @@ class View_ActionBtn extends \CompleteLister{
 					'ReceivedByParty'=>'success',
 					'Published'=>'success',
 					'UnPublished'=>'danger',
+					'OnlineUnpaid'=>'warning'
 				];
 
 		return $status_color[$status];
