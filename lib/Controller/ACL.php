@@ -214,7 +214,7 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function manageAction($js,$data){		
-		$this->model->load($data['id']?:$this->api->stickyGET($this->name.'_id'));
+		$this->model->newInstance()->load($data['id']?:$this->api->stickyGET($this->name.'_id'));
 		$action=$data['action']?:$this->api->stickyGET($this->name.'_action');
 		if($this->model->hasMethod('page_'.$action)){
 			$p = $this->add('VirtualPage');
