@@ -30,6 +30,22 @@ class page_employeedetail extends \Page {
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
 			$portfolio_view->setModel($employee,['department','post','user'],['department_id','post_id','user_id']);
+			$f=$portfolio_view->form;
+
+			if($f->isSubmitted()){
+				$employee=$this->add('xepan\hr\Model_Employee');
+				$employee->addCondition('user_id',$f['user_id']);
+				$employee->tryLoadAny();
+				if($employee->loaded()){
+					// throw new \Exception("Error Processing Request", 1);
+					$f->displayError('user_id','this user allready Assigned');
+				}else{
+					$f->save();
+					$f->js(null,$f->js()->univ()->successMessage('Updated'))->reload()->execute();
+				}
+				
+			}
+
 			$q = $portfolio_view->addMany('Qualification',null,'Qualification',['view/employee/qualification-grid']);
 			$q->setModel($employee->ref('Qualifications'));
 
