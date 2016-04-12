@@ -8,6 +8,7 @@ class View_ActionBtn extends \CompleteLister{
 	public $actions=[];
 	public $status= 'StatusHERE';
 	public $id;
+	public $action_btn_group=null;
 
 	function init(){
 		parent::init();
@@ -20,7 +21,8 @@ class View_ActionBtn extends \CompleteLister{
 
 		$this->template->set('status',$this->status);
 		$this->template->set('status_label',$this->setLabelColor($this->status));
-			
+		if($this->action_btn_group) 
+			$this->template->set('action_btn_group',$this->action_btn_group);
 
 		if(empty($temp_array)){
 			$this->template->del('dropdown');
