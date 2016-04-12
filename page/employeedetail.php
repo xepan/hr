@@ -11,7 +11,7 @@
 
 namespace xepan\hr;
 
-class page_employeedetail extends \Page {
+class page_employeedetail extends \xepan\base\Page {
 	public $title='Employee Details';
 	public $breadcrumb=['Home'=>'index','Employee'=>'xepan_hr_employee','Detail'=>'#'];
 
