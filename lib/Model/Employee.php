@@ -23,10 +23,12 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date');
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
+		$emp_j->addField('mode')->enum(['First_time_login','Mannual']);
 
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
 		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
+		$emp_j->hasMany('xepan\hr\Employee_Movement','employee_id',null,'EmployeeMovements');
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
