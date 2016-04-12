@@ -60,7 +60,13 @@ class View_ActionBtn extends \CompleteLister{
 					'ReceivedByParty'=>'success',
 					'Published'=>'success',
 					'UnPublished'=>'danger',
-					'OnlineUnpaid'=>'warning'
+					'OnlineUnpaid'=>'warning',
+					'Running'=>'info',
+					'Pending'=>'warning',
+					'Assigned'=>'success',
+					'On-Hold'=>'danger',
+					'Onhold'=>'info'
+
 				];
 
 		return $status_color[$status];
