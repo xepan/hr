@@ -21,7 +21,7 @@ class Initiator extends \Controller_Addon {
 			$m = $this->app->top_menu->addMenu('HR');
 			$m->addItem(['Department','icon'=>'fa fa-sliders'],'xepan_hr_department');
 			$m->addItem(['Post','icon'=>'fa fa-sitemap'],'xepan_hr_post');
-			$m->addItem(['Employee','icon'=>'fa fa-users'],'xepan_hr_employee');
+			$m->addItem(['Employee','icon'=>'fa fa-user'],'xepan_hr_employee');
 			$m->addItem(['Employee Movement','icon'=>'fa fa-edit'],'xepan_hr_employeemovement');
 			$m->addItem(['User','icon'=>'fa fa-male'],'xepan_hr_user');
 			$m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
