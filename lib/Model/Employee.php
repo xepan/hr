@@ -72,5 +72,22 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function deleteEmployeeDocument(){
 		$this->ref('EmployeeDocuments')->deleteAll();	
 	}	
-	
+
+	function manageMovement(){
+		if($this->loaded())
+			throw new \Exception("Employee Model Must be Loaded", 1);
+		/*check employee mode == First_time_login */
+			/*if yes*/
+			if($this['mode']=='First_time_login'){
+				$m=$this->add('xepan\hr\Model_Employee_Movement');
+				$m['employee_id']=$this->id;
+				$m['date']=$this->api->today;
+				$m['time']=date('H:i:s');		
+				$m['type']='Attandance';		
+				$m['direction']='In';
+				$m->save();		
+				
+			}
+			/*if No*/
+	}
 }
