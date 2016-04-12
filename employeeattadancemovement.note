@@ -1,0 +1,34 @@
+Employee Attandance Movement 
+
+--------------------Employee Movement--------------------------------------------
+|employee_id|date       |time  | type     |Direction|Hour|
+  
+|1          |12-04-2016 |10-00 |Attandance|In       |1   |
+|2          |12-04-2016 |10-30 |Attandance|In       |2   |
+|3          |12-04-2016 |10-00 |Attandance|In       |3   |
+|3          |12-04-2016 |12-00 |Movement  |Out      |0   |
+|5          |12-04-2016 |10-00 |Attandance|In       |1   |
+
+
+--------------------Employee-------------------------------------------
+|id|contact_id| Mode      |
+|1 |1         |First_time_login |
+|2 |90        |First_time_login |
+|3 |10        |Mannual|
+|3 |23        |mannual   |
+|5 |28        |First_time_login | 
+
+
+<!-- sudo Code -->
+
+employee LoggedIn
+    call Global Hook Event
+    <!-- check employee Mode == First_time -->
+        if Yes
+            mark attandance in employee movement
+        if no
+            create manual entry in employee movement       
+    
+    <!--End Of Office Time  -->
+
+    
