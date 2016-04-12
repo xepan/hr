@@ -17,6 +17,7 @@ class Controller_ACL extends \AbstractController {
 	public $acl_m = null;
 	public $action_allowed=[];
 	public $permissive_acl=false;
+	public $action_btn_group=null;
 
 	function init(){
 		parent::init();		
@@ -145,7 +146,7 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 					if(!isset($g->current_row_html['action']))
-						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status']])->getHTML();
+						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status'],'action_btn_group'=>$this->action_btn_group])->getHTML();
 				});
 				$view->setFormatter('action','action');
 				$view->on('click','.acl-action',[$this,'manageAction']);
@@ -236,7 +237,16 @@ class Controller_ACL extends \AbstractController {
 			});
 			return $js->univ()->frameURL('Action',$this->api->url($p->getURL(),[$this->name.'_id'=>$data['id'],$this->name.'_action'=>$data['action']]));
 		}elseif($this->model->hasMethod($action)){
-			$this->model->$action();
+			try{
+					$this->api->db->beginTransaction();
+					$this->model->$action();
+					$this->api->db->commit();
+				}catch(\Exception_StopInit $e){
+
+				}catch(\Exception $e){
+					$this->api->db->rollback();
+					throw $e;
+				}
 			$this->getView()->js()->univ()->location()->execute();
 		}else{
 			return $js->univ()->errorMessage('Action "'.$action.'" not defined in Model');
