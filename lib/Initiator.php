@@ -34,6 +34,11 @@ class Initiator extends \Controller_Addon {
 	        
 	        // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 	        // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
+
 		}
+		$this->app->auth->addHook('loggedIn',function(){
+			throw new \Exception("Error Processing Request", 1);
+			
+		});
 	}
 }
