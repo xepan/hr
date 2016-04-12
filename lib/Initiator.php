@@ -19,12 +19,12 @@ class Initiator extends \Controller_Addon {
 		if($this->app->is_admin){
 
 			$m = $this->app->top_menu->addMenu('HR');
-			$m->addItem('Department','xepan_hr_department');
-			$m->addItem('Post','xepan_hr_post');
-			$m->addItem('Employee','xepan_hr_employee');
-			$m->addItem('Employee Movement','xepan_hr_employeemovement');
-			$m->addItem('User','xepan_hr_user');
-			$m->addItem('ACL','xepan_hr_aclmanagement');
+			$m->addItem(['Department','icon'=>'fa fa-sliders'],'xepan_hr_department');
+			$m->addItem(['Post','icon'=>'fa fa-sitemap'],'xepan_hr_post');
+			$m->addItem(['Employee','icon'=>'fa fa-users'],'xepan_hr_employee');
+			$m->addItem(['Employee Movement','icon'=>'fa fa-edit'],'xepan_hr_employeemovement');
+			$m->addItem(['User','icon'=>'fa fa-male'],'xepan_hr_user');
+			$m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
 			
 			$this->app->layout->template->trySet('department',$this->app->employee['department']);
 			$post=$this->app->employee->ref('post_id');
