@@ -18,6 +18,7 @@ class Controller_ACL extends \AbstractController {
 	public $action_allowed=[];
 	public $permissive_acl=false;
 	public $action_btn_group=null;
+	public $view_reload_url=null;
 
 	function init(){
 		parent::init();		
@@ -27,6 +28,8 @@ class Controller_ACL extends \AbstractController {
 		$this->model = $model = $this->getModel();
 
 		$this->canDo();
+
+		$this->view_reload_url = $this->app->url(null,['cut_object'=>$this->getView()->name]);
 
 		// Put Model View Conditions 
 
@@ -149,7 +152,10 @@ class Controller_ACL extends \AbstractController {
 						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status'],'action_btn_group'=>$this->action_btn_group])->getHTML();
 				});
 				$view->setFormatter('action','action');
-				$view->on('click','.acl-action',[$this,'manageAction']);
+				if(!isset($this->app->acl_action_added[$view->name])){
+					$view->on('click','.acl-action',[$this,'manageAction']);
+					$this->app->acl_action_added[$view->name] = true;
+				}
 
 				$view->addColumn('template','attachment_icon');
 				$view->addMethod('format_attachment_icon',function($g,$f){
@@ -232,7 +238,8 @@ class Controller_ACL extends \AbstractController {
 					
 				}
 				if($page_action_result){
-					$p->js(true)->univ()->location();
+					$this->getView()->js()->reload(null,null,$this->view_reload_url)->execute();
+					// $p->js(true)->univ()->location();
 				}
 			});
 			return $js->univ()->frameURL('Action',$this->api->url($p->getURL(),[$this->name.'_id'=>$data['id'],$this->name.'_action'=>$data['action']]));
@@ -247,7 +254,8 @@ class Controller_ACL extends \AbstractController {
 					$this->api->db->rollback();
 					throw $e;
 				}
-			$this->getView()->js()->univ()->location()->execute();
+			$this->getView()->js()->reload(null,null,$this->view_reload_url)->execute();
+			// $this->getView()->js()->univ()->location()->execute();
 		}else{
 			return $js->univ()->errorMessage('Action "'.$action.'" not defined in Model');
 		}
