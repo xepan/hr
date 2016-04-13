@@ -43,7 +43,8 @@ class page_employee_profile extends \Page{
 
 		if($f->isSubmitted()){
 
-			if($f['old_password']!= $user['password']){
+
+			if(!$this->app->auth->verifyCredentials($user['username'],$f['old_password'])){
 				$f->displayError($f->getElement('old_password'),'Old Password not Match');
 			}	
 			if($f['new_password']==''){
@@ -52,8 +53,8 @@ class page_employee_profile extends \Page{
 			if($f['new_password']!= $f['retype_password']){
 				$f->displayError($f->getElement('retype_password'),'New Password Not Match');
 			}
-			$user['password']=$f['new_password'];
-			$user->save();
+			$this->app->auth->model['password']=$f['new_password'];
+			$this->app->auth->model->save();
 			$f->js(null,$f->js()->univ()->successMessage('Password Change'))->reload()->execute();
 		}
 	}
