@@ -13,10 +13,11 @@ class Initiator extends \Controller_Addon {
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('../vendor/xepan/hr/');
 
-		if($this->app->auth->isLoggedIn())
-			$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
 
 		if($this->app->is_admin){
+
+			if($this->app->auth->isLoggedIn())
+				$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
 
 			$m = $this->app->top_menu->addMenu('HR');
 			$m->addItem(['Department','icon'=>'fa fa-sliders'],'xepan_hr_department');
@@ -36,9 +37,5 @@ class Initiator extends \Controller_Addon {
 	        // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 
 		}
-		$this->app->auth->addHook('loggedIn',function(){
-			throw new \Exception("Error Processing Request", 1);
-			
-		});
 	}
 }
