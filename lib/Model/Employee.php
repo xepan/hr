@@ -44,10 +44,15 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
-
+		$this->addHook('afterSave',$this);
 		$this->addHook('beforeDelete',[$this,'deleteQualification']);
 		$this->addHook('beforeDelete',[$this,'deleteExperience']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
+		$this->addHook('beforeDelete',[$this,'deleteEmployeeLedger']);
+	}
+
+	function afterSave(){
+		$this->app->hook('employee_update',[$this]);
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
@@ -61,6 +66,15 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$activity->save();
 		return $activity;
+	}
+
+	function deleteEmployeeLedger(){
+		$account=$this->add('xepan\accounts\Model_Ledger');
+		$account->addCondition('contact_id',$this->id);
+		$account->tryLoadAny();
+		if($account->loaded()){
+			$account->delete();
+		}
 	}
 
 	function deleteQualification(){
