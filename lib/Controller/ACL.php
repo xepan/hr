@@ -286,14 +286,14 @@ class Controller_ACL extends \AbstractController {
 
 		$class = new \ReflectionClass($this->model);
 
-		if($this->model->acl !==true && $this->model->acl !==false && $this->model->acl !== null){
-			$ns = $this->model->acl;
-		}else{
-			$ns = $class->getNamespaceName();
-		}
+		// if($this->model->acl !==true && $this->model->acl !==false && $this->model->acl !== null){
+		// 	$ns = $this->model->acl;
+		// }else{
+		// 	$ns = $class->getNamespaceName();
+		// }
 
 		$this->acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',$ns)
+					->addCondition('namespace',$class->getNamespaceName())
 					->addCondition('document_type',$this->model['type'])
 					->addCondition('post_id',$this->app->employee['post_id'])
 					;
