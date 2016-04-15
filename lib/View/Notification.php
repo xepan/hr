@@ -10,13 +10,23 @@ class View_Notification extends \CompleteLister{
 		session_write_close();		
 
 		$this->vp = $this->add('VirtualPage');
-		$this->vp->set(function($p){			
-			sleep(10);
+		$this->vp->set(function($p){
+			$new_notificagions = $this->add('xepan\hr\Model_Activity')
+									->addCondition('id','>',$this->app->employee['notified_till']?:0)
+									->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%')
+									->getRows();
 
-			$js=[
-				$p->js()->univ()->notify('New title', 'My message','warning',true,undefined,true),
-				// $p->js()->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']))
-			];
+			$js=[];
+			if(count($new_notificagions)){
+				foreach ($new_notificagions as $nt) {
+					$js[] = $p->js()->univ()->notify(
+							$nt['details']?$nt['activity']:'',  // title
+							$nt['details']?:($nt['notification']?:$nt['activity']), //message
+							'warning',true,undefined,true);
+				}
+
+				$this->app->employee->set('notified_till',$nt['id'])->save();
+			}
 
 			$p->js(null,$js)->execute();
 			
