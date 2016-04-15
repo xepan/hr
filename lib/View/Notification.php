@@ -6,9 +6,6 @@ class View_Notification extends \CompleteLister{
 
 	function init(){
 		parent::init();
-
-		session_write_close();		
-
 		$this->vp = $this->add('VirtualPage');
 		$this->vp->set(function($p){
 			$new_notificagions = $this->add('xepan\hr\Model_Activity')
