@@ -228,17 +228,25 @@ class Controller_ACL extends \AbstractController {
 			$p->set(function($p)use($action){
 				try{
 					$this->api->db->beginTransaction();
-					$page_action_result = $this->model->{"page_".$action}($p);
+					
+						$page_action_result = $this->model->{"page_".$action}($p);
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
 				}catch(\Exception $e){
 					$this->api->db->rollback();
 					throw $e;
-					
 				}
 				if($page_action_result){
-					$this->getView()->js()->reload(null,null,$this->view_reload_url)->execute();
+					
+					$js=[];
+					if($page_action_result instanceof \jQuery_Chain) {
+						$js[] = $page_action_result;
+					}
+					$js[]=$this->getView()->js()->univ()->closeDialog();
+					$js[]= $this->getView()->js()->reload(null,null,$this->view_reload_url);
+					
+					$this->getView()->js(null,$js)->execute();
 					// $p->js(true)->univ()->location();
 				}
 			});
