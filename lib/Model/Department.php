@@ -23,7 +23,6 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$dep_j->addField('is_system')->type('boolean')->defaultValue(false)->system(true);
 
 		$this->addExpression('posts_count')->set(function($m,$q){
-			// return '"123"';
 			return $this->add('xepan\hr\Model_Post',['table_alias'=>'dept_post_count'])->addCondition('department_id',$m->getElement('id'))->count();
 			
 		});
@@ -31,10 +30,11 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
 
-		$this->addHook('beforeDelete',$this);		
+		$this->addHook('beforeDelete',[$this,'checkForPostsAndEmployees']);		
+		
 		$this->is([
-				'production_level|int|>0',
-				'name|unique_in_epan|to_trim|required'
+				'name|unique_in_epan|to_trim|required',
+				'production_level|int|>0'
 			]);
 	}
 
@@ -48,13 +48,12 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$this->saveAndUnload();
 	}
 
-	function beforeDelete(){
+	function checkForPostsAndEmployees(){
 		$posts_count=$this->ref('Posts')->count()->getOne();
 		$employee_count=$this->ref('Employees')->count()->getOne();
 
 		if($posts_count or $employee_count){
 			throw new \Exception("Department Can not be deleted its content Post And Employee Delete First", 1);
 		}
-
 	}
 }

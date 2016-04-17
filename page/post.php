@@ -60,19 +60,6 @@ class page_post extends \Page {
 		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
 		$s_f->js('change',$f->js()->submit());
 
-		$f->addHook('appyFilter',function($f,$m){
-			if($f['department_id'])
-				$m->addCondition('department_id',$f['department_id']);
-			
-			if($f['status']='Active'){
-				$m->addCondition('status','Active');
-			}else{
-				$m->addCondition('status','Inactive');
-
-			}
-
-		});
-
 		$epan_emails = $this->add('xepan\base\Model_Epan_EmailSetting');
 		$value =[];
 		foreach ($epan_emails as $ee) {
