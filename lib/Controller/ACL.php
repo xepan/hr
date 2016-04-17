@@ -33,7 +33,7 @@ class Controller_ACL extends \AbstractController {
 
 		// Put Model View Conditions 
 
-		if($model instanceof \xepan\base\Model_Document){		
+		if($model instanceof \xepan\base\Model_Table){		
 			$view_array = $this->canView();	
 
 			$q= $this->model->dsql();
@@ -71,11 +71,23 @@ class Controller_ACL extends \AbstractController {
 		}
 
 		// TODO Cross check hook for add/edit on Model, if trying to hack UI when not permitted
-		// 
-		// 
-		// 			TODO
-		// 
-		// 
+		if(!$this->canAdd()){
+			$this->model->addHook('beforeInsert',function($m){
+				throw $this->exception('You are not permitted to add '. ucfirst($this->model->table));
+			});
+		}
+
+		if(!$this->canEdit()){
+			$this->model->addHook('beforeSave',function($m){
+				throw $this->exception('You are not permitted to edit '. ucfirst($this->model->table));
+			});
+		}
+
+		if(!$this->canDelete()){
+			$this->model->addHook('beforeDelete',function($m){
+				throw $this->exception('You are not permitted to delete '. ucfirst($this->model->table));
+			});
+		}
 
 		// Check add/edit/delete if CRUD/Lister
 		
