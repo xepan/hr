@@ -187,7 +187,12 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function getModel(){
-		return $this->owner instanceof \Model_Table ? $this->owner: $this->owner->model;
+		$model =  $this->owner instanceof \Model_Table ? $this->owner: $this->owner->model;
+		if(strpos($model->acl, 'xepan\\')===0){
+			$model = $this->add($model->acl);
+		}
+
+		return $model;
 	}
 
 	
@@ -298,11 +303,6 @@ class Controller_ACL extends \AbstractController {
 			$this->permissive_acl = true;
 			return;
 		}
-
-		if(strpos($this->model->acl, 'xepan\\')===0){
-			$this->model = $this->add($this->model->acl);
-		}
-
 
 		$class = new \ReflectionClass($this->model);
 
