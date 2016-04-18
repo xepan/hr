@@ -12,6 +12,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function init(){
 		parent::init();
 		$this->getElement('post')->destroy();
+		$this->getElement('created_by_id')->defaultValue(@$this->app->employee->id);
 		$emp_j = $this->join('employee.contact_id');
 
 		// $emp_j->hasOne('xepan\base\User',null,'username');
