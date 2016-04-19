@@ -34,7 +34,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		
 		$this->is([
 				'name|unique_in_epan|to_trim|required',
-				'production_level|int|>0'
+				'production_level|required?Production Level must be filled|int|>0'
 			]);
 	}
 
