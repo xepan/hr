@@ -35,7 +35,6 @@ class Controller_ACL extends \AbstractController {
 
 		if($model instanceof \xepan\base\Model_Table){		
 			$view_array = $this->canView();	
-
 			$q= $this->model->dsql();
 
 			$where_condition=[];
@@ -208,7 +207,6 @@ class Controller_ACL extends \AbstractController {
 			$view_array[$status] = isset($actions['view'])?$actions['view']:false;
 		}
 
-
 		return $view_array;
 	}
 
@@ -344,6 +342,7 @@ class Controller_ACL extends \AbstractController {
 		$this->action_allowed = $this->acl_m['action_allowed'];
 
 		foreach ($this->model->actions as $status => $actions) {
+			if($status=='*') $status='All';
 			foreach ($actions as $action) {
 				$acl_value = isset($this->action_allowed[$status][$action])?$this->action_allowed[$status][$action]:$this->permissive_acl;
 				$this->action_allowed[$status][$action] = $this->api->auth->model->isSuperUser()?true:$this->textToCode($acl_value);
