@@ -5,7 +5,7 @@ namespace xepan\hr;
 class Model_EmployeeDocument extends \xepan\base\Model_Table{
 	public $table="employee_documents";
 
-	public $acl=false;
+	public $acl='xepan\hr\Model_Employee';
 	
 	function init(){
 		parent::init();
