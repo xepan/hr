@@ -23,7 +23,7 @@ class Controller_ACL extends \AbstractController {
 	function init(){
 		parent::init();		
 	
-		if($this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
+		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
 		$this->model = $model = $this->getModel();
 
