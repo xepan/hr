@@ -23,7 +23,7 @@ class Controller_ACL extends \AbstractController {
 	function init(){
 		parent::init();		
 	
-		if($this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
+		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
 		$this->model = $model = $this->getModel();
 
@@ -35,7 +35,6 @@ class Controller_ACL extends \AbstractController {
 
 		if($model instanceof \xepan\base\Model_Table){		
 			$view_array = $this->canView();	
-
 			$q= $this->model->dsql();
 
 			$where_condition=[];
@@ -187,7 +186,12 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function getModel(){
-		return $this->owner instanceof \Model_Table ? $this->owner: $this->owner->model;
+		$model =  $this->owner instanceof \Model_Table ? $this->owner: $this->owner->model;
+		if(strpos($model->acl, 'xepan\\')===0){
+			$model = $this->add($model->acl);
+		}
+
+		return $model;
 	}
 
 	
@@ -202,7 +206,6 @@ class Controller_ACL extends \AbstractController {
 		foreach ($this->action_allowed as $status => $actions) {
 			$view_array[$status] = isset($actions['view'])?$actions['view']:false;
 		}
-
 
 		return $view_array;
 	}
@@ -299,11 +302,6 @@ class Controller_ACL extends \AbstractController {
 			return;
 		}
 
-		if(strpos($this->model->acl, 'xepan\\')===0){
-			$this->model = $this->add($this->model->acl);
-		}
-
-
 		$class = new \ReflectionClass($this->model);
 
 		// if($this->model->acl !==true && $this->model->acl !==false && $this->model->acl !== null){
@@ -344,6 +342,7 @@ class Controller_ACL extends \AbstractController {
 		$this->action_allowed = $this->acl_m['action_allowed'];
 
 		foreach ($this->model->actions as $status => $actions) {
+			if($status=='*') $status='All';
 			foreach ($actions as $action) {
 				$acl_value = isset($this->action_allowed[$status][$action])?$this->action_allowed[$status][$action]:$this->permissive_acl;
 				$this->action_allowed[$status][$action] = $this->api->auth->model->isSuperUser()?true:$this->textToCode($acl_value);
