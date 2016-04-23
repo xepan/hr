@@ -22,9 +22,9 @@ class Initiator extends \Controller_Addon {
 			$m = $this->app->top_menu->addMenu('HR');
 			$m->addItem(['Department','icon'=>'fa fa-sliders'],'xepan_hr_department');
 			$m->addItem(['Post','icon'=>'fa fa-sitemap'],'xepan_hr_post');
-			$m->addItem(['Employee','icon'=>'fa fa-user'],'xepan_hr_employee');
-			$m->addItem(['Employee Movement','icon'=>'fa fa-edit'],'xepan_hr_employeemovement');
-			$m->addItem(['User','icon'=>'fa fa-male'],'xepan_hr_user');
+			$m->addItem(['Employee','icon'=>'fa fa-male'],'xepan_hr_employee');
+			$m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
+			$m->addItem(['User','icon'=>'fa fa-user'],'xepan_hr_user');
 			$m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
 			
 			$this->app->layout->template->trySet('department',$this->app->employee['department']);
@@ -36,7 +36,12 @@ class Initiator extends \Controller_Addon {
 	        // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 	        // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 
-		}
+		}else{
+            $this->app->employee = $this->add('xepan\hr\Model_Employee')
+                                    ->addCondition('user_id',$this->add('xepan\base\Model_User_SuperUser')->setLimit(1)->setOrder('id')->fieldQuery('id'))
+                                    ->tryLoadAny()
+                                    ;
+        }
 	}
 
 	function resetDB(){
