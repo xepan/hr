@@ -226,13 +226,13 @@ class Controller_ACL extends \AbstractController {
 		if(!$status){
 			$status='All';
 		}
-		$x =  $this->action_allowed[$status]['edit']===null?$this->permissive_acl: in_array($this->app->employee->id,$this->action_allowed[$status]['edit']?:[]); // can be true/false/ or []
+		$x =  $this->action_allowed[$status]['edit']===null?$this->permissive_acl: $this->action_allowed[$status]['edit']?: in_array($this->app->employee->id,$this->action_allowed[$status]['edit']?:[]); // can be true/false/ or []
 		return $x;
 	}
 
 	function canDelete($status=null){
 		if(!$status) $status='All';
-		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl:in_array($this->app->employee->id,$this->action_allowed[$status]['delete']?:[]); // can be true/false/ or []
+		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl: $this->action_allowed[$status]['delete']?: in_array($this->app->employee->id,$this->action_allowed[$status]['delete']?:[]); // can be true/false/ or []
 	}
 
 	function getActions($status=null){
