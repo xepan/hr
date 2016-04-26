@@ -70,19 +70,27 @@ class Controller_ACL extends \AbstractController {
 		}
 
 		// TODO Cross check hook for add/edit on Model, if trying to hack UI when not permitted
-		if(!$this->canAdd()){
+		if(!$this->canAdd($this->model['status'])){
 			$this->model->addHook('beforeInsert',function($m){
 				throw $this->exception('You are not permitted to add '. ucfirst($this->model->table));
 			});
 		}
 
-		if(!$this->canEdit()){
+		if(!$this->canEdit($this->model['status'])){
 			$this->model->addHook('beforeSave',function($m){
-				throw $this->exception('You are not permitted to edit '. ucfirst($this->model->table));
+				throw $this->exception('You are not permitted to edit '. ucfirst($this->model->table))
+						->addMoreInfo('Model',$this->model)
+						->addMoreInfo('Permissions',print_r($this->action_allowed,true))
+						->addMoreInfo('model_id',$this->model->id)
+						->addMoreInfo('status',$this->model['status'])
+						->addMoreInfo('status_edit_permission',$this->action_allowed[$this->model['status']]['edit'])
+						->addMoreInfo('model_created_by',$this->model['created_by_id'])
+						->addMoreInfo('app->amployee->id',$this->app->employee->id)
+						;
 			});
 		}
 
-		if(!$this->canDelete()){
+		if(!$this->canDelete($this->model['status'])){
 			$this->model->addHook('beforeDelete',function($m){
 				throw $this->exception('You are not permitted to delete '. ucfirst($this->model->table));
 			});
@@ -218,12 +226,13 @@ class Controller_ACL extends \AbstractController {
 		if(!$status){
 			$status='All';
 		}
-		return $this->action_allowed[$status]['edit']===null?$this->permissive_acl:$this->action_allowed[$status]['edit']; // can be true/false/ or []
+		$x =  $this->action_allowed[$status]['edit']===null?$this->permissive_acl: in_array($this->app->employee->id,$this->action_allowed[$status]['edit']); // can be true/false/ or []
+		return $x;
 	}
 
 	function canDelete($status=null){
 		if(!$status) $status='All';
-		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl:$this->action_allowed[$status]['delete']; // can be true/false/ or []
+		return $this->action_allowed[$status]['delete']===null?$this->permissive_acl:in_array($this->app->employee->id,$this->action_allowed[$status]['delete']); // can be true/false/ or []
 	}
 
 	function getActions($status=null){
