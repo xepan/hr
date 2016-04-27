@@ -25,6 +25,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
 		$emp_j->addField('mode')->enum(['First_time_login','Mannual']);
+		$emp_j->addField('in_time');
+		$emp_j->addField('out_time');
 
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
@@ -33,14 +35,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
-        });
-
-		$this->addExpression('in_time')->set(function($m){
-            return $m->refSQL('post_id')->fieldQuery('in_time');
-        });
-
-        $this->addExpression('out_time')->set(function($m){
-            return $m->refSQL('post_id')->fieldQuery('out_time');
         });
 		
 		$this->getElement('status')->defaultValue('Active');
@@ -55,6 +49,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function throwEmployeeUpdateHook(){
 		$this->app->hook('employee_update',[$this]);
+	}
+
+	function afterLoginCheck(){
+				
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
