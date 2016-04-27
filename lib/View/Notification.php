@@ -19,7 +19,7 @@ class View_Notification extends \CompleteLister{
 					$js[] = $p->js()->univ()->notify(
 							$nt['details']?$nt['activity']:'',  // title
 							$nt['details']?:($nt['notification']?:$nt['activity']), //message
-							'warning',true,undefined,true);
+							'notice',true,undefined,false);
 				}
 
 				$this->app->employee->set('notified_till',$nt['id'])->save();
@@ -51,10 +51,6 @@ class View_Notification extends \CompleteLister{
 	}
 
 	function render(){		
-		$this->js(true)
-			->_load('pnotify.custom.min')
-			->_css('pnotify.custom.min');
-		$this->js(true)->_library('PNotify.desktop')->permission();
 		$this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']));
 		return parent::render();
 	}
