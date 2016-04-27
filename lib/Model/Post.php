@@ -30,6 +30,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Post');
 
+		$this->addHook('beforeSave',[$this,'changeEmployeeInOutTimes']);
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeDelete',[$this,'deleteEmailAssociation']);
 
@@ -54,5 +55,23 @@ class Model_Post extends \xepan\hr\Model_Document{
 	}
 	function deleteEmailAssociation(){
 		$this->ref('EmailPermissions')->deleteAll();
+	}
+
+	function changeEmployeeInOutTimes(){
+		$model_employee = $this->add('xepan\hr\Model_Employee')->addCondition('post_id',$this->id);
+		
+		if($this->dirty['in_time']){
+			foreach ($model_employee as $emp) {
+				$emp['in_time'] = $this['in_time'];
+				$emp->save();
+			}
+		}
+
+		if($this->dirty['out_time']){
+			foreach ($model_employee as $emp) {
+				$emp['out_time'] = $this['out_time'];
+				$emp->save();
+			}
+		}
 	}
 }
