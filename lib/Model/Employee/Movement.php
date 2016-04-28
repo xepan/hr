@@ -13,5 +13,7 @@ class Model_Employee_Movement extends \xepan\base\Model_Table{
 		$this->addField('time');
 		$this->addField('type')->enum(['Attandance','Movement']);
 		$this->addField('direction');
+		$this->addField('reason')->enum(['Personal Outing', 'Official Outing', 'Other']);
+		$this->addField('narration')->type('text');
 	}
 }

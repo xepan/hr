@@ -52,23 +52,21 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function afterLoginCheck(){
-		$model_employee_movement = $this->add('xepan\hr\Model_Employee_Movement');
-		$model_employee_movement->addCondition('employee_id',$this->id);
-		$model_employee_movement->addCondition('time','>=',$this->app->today);
-		$model_employee_movement->tryLoadAny();
+		$movement = $this->add('xepan\hr\Model_Employee_Movement');
+		$movement->addCondition('employee_id',$this->id);
+		$movement->addCondition('time',$this->app->now);
+		$movement->addCondition('type','Attandance');
+		$movement->addCondition('direction','In');
+		$movement->save();	
+	}
 
-		if($model_employee_movement->loaded()){
-			return;
-		}
-		else{
-			
-			$movement = $this->add('xepan\hr\Model_Employee_Movement');
-			$movement->addCondition('employee_id',$this->id);
-			$movement->addCondition('time',$this->app->now);
-			$movement->addCondition('type','Attandance');
-			$movement->addCondition('direction','In');
-			$movement->save();
-		}	
+	function logoutHook($app, $user, $employee){
+		// $movement = $this->add('xepan\hr\Model_Employee_Movement');
+		// $movement->addCondition('employee_id',$employee->id);
+		// $movement->addCondition('time',$this->app->now);
+		// $movement->addCondition('type','Attandance');
+		// $movement->addCondition('direction','Out');
+		// $movement->save();
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null){
