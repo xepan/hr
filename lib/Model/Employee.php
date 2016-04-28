@@ -15,7 +15,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->getElement('created_by_id')->defaultValue(@$this->app->employee->id);
 		$emp_j = $this->join('employee.contact_id');
 
-		// $emp_j->hasOne('xepan\base\User',null,'username');
+		// $emp_j->hasOne('xepan\base\User',null,'username'); // Now in Contact
 		$emp_j->hasOne('xepan\hr\Department','department_id');
 		$emp_j->hasOne('xepan\hr\Post','post_id');
 		
@@ -126,13 +126,14 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function deactivate(){
 		$this['status']='InActive';
-		$this->ref('user_id')
 		$this->save();
+		if(($user = $this->ref('user_id')) && $user->loaded()) $user->deactivate();
 	}
 
 	function activate(){
 		$this['status']='Active';
 		$this->save();
+		if(($user = $this->ref('user_id')) && $user->loaded()) $user->activate();
 	}
 
 }
