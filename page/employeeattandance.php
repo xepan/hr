@@ -8,6 +8,7 @@ class page_employeeattandance extends \Page{
 		parent::init();
 
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
+		$movement->addCondition('time','>',$this->app->today);
 		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\attandance-grid']);
 		$grid->setModel($movement,['employee','direction','time','reason','narration']);
 
