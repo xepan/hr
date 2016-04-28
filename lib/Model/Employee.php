@@ -5,8 +5,8 @@ namespace xepan\hr;
 class Model_Employee extends \xepan\base\Model_Contact{
 	
 	public $actions=[
-		'Active'=>['view','edit','delete'],
-		'InActive'=>['view','edit','delete']
+		'Active'=>['view','edit','delete','deactivate'],
+		'InActive'=>['view','edit','delete','activate']
 	];
 
 	function init(){
@@ -123,4 +123,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			}
 			/*if No*/
 	}
+
+	function deactivate(){
+		$this['status']='InActive';
+		$this->ref('user_id')
+		$this->save();
+	}
+
+	function activate(){
+		$this['status']='Active';
+		$this->save();
+	}
+
 }
