@@ -65,7 +65,8 @@ class View_ActionBtn extends \CompleteLister{
 					'Pending'=>'warning',
 					'Assigned'=>'success',
 					'On-Hold'=>'danger',
-					'Onhold'=>'info'
+					'Onhold'=>'info',
+					'Closed'=>'success'
 
 				];
 
