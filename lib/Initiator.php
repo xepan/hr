@@ -43,7 +43,11 @@ class Initiator extends \Controller_Addon {
                                     ->tryLoadAny()
                                     ;
         }
+
+        $this->app->addHook('user_loggedout',[$this->app->employee,'logoutHook']);
 	}
+
+
 
 	function resetDB(){
         // Clear DB
