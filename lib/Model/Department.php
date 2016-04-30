@@ -21,6 +21,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$dep_j->hasMany('xepan\hr\Post','department_id',null,'Posts');
 		$dep_j->hasMany('xepan\hr\Employee','department_id',null,'Employees');
 		$dep_j->addField('is_system')->type('boolean')->defaultValue(false)->system(true);
+		$dep_j->addField('is_outsourced')->type('boolean')->defaultValue(false);
 
 		$this->addExpression('posts_count')->set(function($m,$q){
 			return $this->add('xepan\hr\Model_Post',['table_alias'=>'dept_post_count'])->addCondition('department_id',$m->getElement('id'))->count();
