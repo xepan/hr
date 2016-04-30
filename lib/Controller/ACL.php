@@ -252,8 +252,7 @@ class Controller_ACL extends \AbstractController {
 			$p->set(function($p)use($action){
 				try{
 					$this->api->db->beginTransaction();
-					
-						$page_action_result = $this->model->{"page_".$action}($p);
+						$page_action_result = $this->model->{"page_".$action}($p);						
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
@@ -261,7 +260,7 @@ class Controller_ACL extends \AbstractController {
 					$this->api->db->rollback();
 					throw $e;
 				}
-				if($page_action_result){
+				if(isset($page_action_result)){
 					
 					$js=[];
 					if($page_action_result instanceof \jQuery_Chain) {
