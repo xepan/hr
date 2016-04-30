@@ -7,7 +7,7 @@ class Initiator extends \Controller_Addon {
 	public $addon_name = 'xepan_hr';
 
 	function setup_admin(){
-		
+
 		$this->routePages('xepan_hr');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('../vendor/xepan/hr/');
@@ -34,13 +34,12 @@ class Initiator extends \Controller_Addon {
                 $this->app->forget('user_loggedin');
                 $this->api->employee->afterLoginCheck();
             }
-            $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
+            // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 
-		}else{
-            
-        }
+		}
 
         $this->app->addHook('user_loggedout',[$this->app->employee,'logoutHook']);
+        return $this;
 	}
 
     function setup_frontend(){
@@ -48,6 +47,7 @@ class Initiator extends \Controller_Addon {
         $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
         ->setBaseURL('./vendor/xepan/hr/');
         $this->app->employee = $this->add('xepan\hr\Model_Employee');
+        return $this;
     }
 
 
