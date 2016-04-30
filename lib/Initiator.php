@@ -6,15 +6,14 @@ class Initiator extends \Controller_Addon {
 	
 	public $addon_name = 'xepan_hr';
 
-	function init(){
-		parent::init();
+	function setup_admin(){
 		
 		$this->routePages('xepan_hr');
 		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
 		->setBaseURL('../vendor/xepan/hr/');
 
 
-		if($this->app->is_admin && $this->app->auth->isLoggedIn()){
+		if($this->app->auth->isLoggedIn()){
 
             $m = $this->app->top_menu->addMenu('HR');
             $m->addItem(['Department','icon'=>'fa fa-sliders'],'xepan_hr_department');
@@ -38,14 +37,18 @@ class Initiator extends \Controller_Addon {
             $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 
 		}else{
-            $this->app->employee = $this->add('xepan\hr\Model_Employee')
-                                    ->addCondition('user_id',$this->add('xepan\base\Model_User_SuperUser')->setLimit(1)->setOrder('id')->fieldQuery('id'))
-                                    ->tryLoadAny()
-                                    ;
+            
         }
 
         $this->app->addHook('user_loggedout',[$this->app->employee,'logoutHook']);
 	}
+
+    function setup_frontend(){
+        $this->routePages('xepan_hr');
+        $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
+        ->setBaseURL('./vendor/xepan/hr/');
+        $this->app->employee = $this->add('xepan\hr\Model_Employee');
+    }
 
 
 
