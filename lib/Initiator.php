@@ -85,7 +85,6 @@ class Initiator extends \Controller_Addon {
         $post = $this->add('xepan\hr\Model_Post')
                     ->set('name','CEO')
                     ->set('department_id',$dept->id)
-                    ->set('production_level',1)
                     ->save();
 
         $user = $this->add('xepan\base\Model_User_SuperUser')
