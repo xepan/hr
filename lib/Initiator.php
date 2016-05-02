@@ -38,6 +38,11 @@ class Initiator extends \Controller_Addon {
 
 		}
 
+        // if($this->app->employee['image'])
+        //     $this->app->layout->template->set('image',$this->app->employee['image']);
+        $this->app->layout->setModel($this->app->employee);
+        $this->app->layout->add('xepan\base\Controller_Avatar');
+
         $this->app->addHook('user_loggedout',[$this->app->employee,'logoutHook']);
         return $this;
 	}
