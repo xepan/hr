@@ -297,13 +297,13 @@ class Controller_ACL extends \AbstractController {
 	 * @return ['submit'=>[1],'can_view'=>false/true/[1,2,3]] [description]
 	 */
 	function canDo(){
-
 		if(!isset($this->model->acl)){
 			throw $this->exception('ACL property not set')
 						->addMoreInfo('Model',get_class($this->model));
 			
 		}
 
+		
 		if($this->model->acl === false){
 			
 			$this->permissive_acl = true;
@@ -348,12 +348,11 @@ class Controller_ACL extends \AbstractController {
 		 * )
 		 */
 		$this->action_allowed = $this->acl_m['action_allowed'];
-
 		foreach ($this->model->actions as $status => $actions) {
 			if($status=='*') $status='All';
 			foreach ($actions as $action) {
 				$acl_value = isset($this->action_allowed[$status][$action])?$this->action_allowed[$status][$action]:$this->permissive_acl;
-				$this->action_allowed[$status][$action] = $this->api->auth->model->isSuperUser()?true:$this->textToCode($acl_value);
+				$this->action_allowed[$status][$action] = ($this->api->auth->model->isSuperUser() && $this->app->getConfig('all_rights_to_superuser',true))?true:$this->textToCode($acl_value);
 			}
 		}
 
