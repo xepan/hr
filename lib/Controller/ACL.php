@@ -219,7 +219,7 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function canAdd(){
-		return $this->api->auth->model->isSuperUser()?true:($this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add']);
+		return ($this->api->auth->model->isSuperUser() && $this->app->getConfig('all_rights_to_superuser',true))?true:($this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add']);
 	}
 
 	function canEdit($status=null){
