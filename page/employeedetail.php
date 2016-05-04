@@ -55,8 +55,9 @@ class page_employeedetail extends \xepan\base\Page {
 			$q->setModel($employee->ref('EmployeeDocuments'));
 
 			$activity_view = $this->add('xepan\base\Grid',null,'activity_view',['view/activity/activity-grid']);
+			$activity_view->add('xepan\base\Paginator',null,'Paginator');
 
-			$activity=$this->add('xepan\base\Model_Activity');
+			$activity=$this->add('xepan\base\Model_Activity')->setOrder('created_at','desc');
 			$activity->addCondition('contact_id',$_GET['contact_id']);
 			$activity->tryLoadAny();
 			$activity_view->setModel($activity);
