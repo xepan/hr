@@ -60,7 +60,7 @@ class page_post extends \Page {
 		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
 		$s_f->js('change',$f->js()->submit());
 
-		$epan_emails = $this->add('xepan\base\Model_Epan_EmailSetting');
+		$epan_emails = $this->add('xepan\communication\Model_Communication_EmailSetting');
 		$value =[];
 		foreach ($epan_emails as $ee) {
 			$value[]=['value'=>$ee->id,'text'=>$ee['email_username']];
