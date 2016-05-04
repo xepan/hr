@@ -13,11 +13,12 @@ class page_employeemovement extends \Page{
 
 		$grid->add('xepan\base\Controller_Avatar',['options'=>['size'=>40,'border'=>['width'=>0]],'name_field'=>'employee','default_value'=>'']);
 		$frm=$grid->addQuickSearch(['employee']);
-		$frm->addField('DatePicker','from_date','From');
-		$frm->addField('DatePicker','to_date','To');
-		$frm_drop = $frm->addField('DropDown','direction')->setEmptyText('Select A Direction')->setValueList(['In'=>'In','Out'=>'Out']);
 		$frm_emp = $frm->addField('dropdown','emp')->setEmptyText('Select An Employee');
 		$frm_emp->setModel('xepan\hr\Model_Employee');
+		$frm_drop = $frm->addField('DropDown','direction')->setEmptyText('Select A Direction')->setValueList(['In'=>'In','Out'=>'Out']);
+		$frm->addField('DatePicker','to_date','To');
+		$frm->addField('DatePicker','from_date','From');
+		
 		
 		$frm_drop->js('change',$frm->js()->submit());
 		$frm_emp->js('change',$frm->js()->submit());
