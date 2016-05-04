@@ -7,7 +7,7 @@ class page_employeemovement extends \Page{
 	function init(){
 		parent::init();
 
-		$movement = $this->add('xepan\hr\Model_Employee_Movement');
+		$movement = $this->add('xepan\hr\Model_Employee_Movement')->setOrder('time','desc');
 		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\attandance-grid']);
 		$grid->setModel($movement,['employee','direction','time','reason','narration']);
 

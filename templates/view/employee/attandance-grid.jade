@@ -12,12 +12,12 @@
             {header}
             thead
                 {cols}{col}
-                th
-                    span Employee
-                th
-                    span Direction
-                th
-                    span Time
+                th(id="{$employee_sortid}")
+                    span Employee {$employee_sort}
+                th(id="{$direction_sortid}")
+                    span Direction {$direction_sort}
+                th(id="{$time_sortid}")
+                    span Time {$time_sort}
                 th
                     span Reason
                 th
