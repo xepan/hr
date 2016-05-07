@@ -11,10 +11,14 @@ a.btn.dropdown-toggle(data-toggle='dropdown')
         a(href='#')
           i(class="fa fa-{icon}comment{/}")
           span.content {notification}New comment on ‘Awesome P...{/}
-          span.time
+          span.time.xepan-padding-horizontal-xsmall
             i.fa.fa-clock-o
             | {callback_date}13 min.{/}
     {/}{/}              
     li.item-footer
           a(href='?page=xepan_hr_notification')
                 | View all notifications
+style.
+  .notifications-list .item a .time{
+    background:white none repeat scroll 0 0;
+  }
