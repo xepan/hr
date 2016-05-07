@@ -92,7 +92,7 @@ class Controller_ACL extends \AbstractController {
 
 		if(!$this->canDelete($this->model['status'])){
 			$this->model->addHook('beforeDelete',function($m){
-				throw $this->exception('You are not permitted to delete '. ucfirst($this->model->table));
+				throw $this->exception('You are not permitted to delete '. ucfirst($this->model->table). ' ['. $this->model[$this->mdoel->title_field] .']');
 			});
 		}
 

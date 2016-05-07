@@ -23,7 +23,14 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['User','icon'=>'fa fa-user'],'xepan_hr_user');
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
             
-    		$this->app->employee = $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id);
+    		$this->app->employee = $this->recall(
+                            $this->app->epan->id.'_employee',
+                            $this->memorize(
+                                $this->app->epan->id.'_employee',
+                                $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id)
+                            )
+                        );
+
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
             $post=$this->app->employee->ref('post_id');
             $this->app->layout->template->trySet('post',$post['name']);
@@ -34,7 +41,7 @@ class Initiator extends \Controller_Addon {
                 $this->app->forget('user_loggedin');
                 $this->api->employee->afterLoginCheck();
             }
-            // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
+            $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 
 		}
 
