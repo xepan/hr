@@ -13,11 +13,14 @@
             thead
                 {cols}{col}
                 th(id="{$employee_sortid}")
-                    span Employee {$employee_sort}
+                    span Employee 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_sort}
                 th(id="{$direction_sortid}")
-                    span Direction {$direction_sort}
+                    span Direction 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$direction_sort}
                 th(id="{$time_sortid}")
-                    span Time {$time_sort}
+                    span Time 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$time_sort}
                 th
                     span Reason
                 th

@@ -14,11 +14,14 @@
                 thead
                     {cols}{col}
                     th(id="{$name_sortid}")
-                        span Department {$name_sort}
+                        span Department 
+                        span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
                     th(id="{$production_level_sortid}")
-                        span Production Level {$production_level_sort}
+                        span Production Level 
+                        span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$production_level_sort}
                     th(id="{$posts_count_sortid}")
-                        span Post {$posts_count_sort}
+                        span Post 
+                        span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$posts_count_sort}
                     th 
                     th 
                     {/}{/}

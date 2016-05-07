@@ -14,9 +14,12 @@ class page_user extends \Page{
 		$user_m->addHook('beforeSave',function($m){
 			$m['password']=$m->app->auth->encryptPassword($m['password'],$m['username']);
 		});
-		
+
 		$user_view=$this->add('xepan\hr\CRUD',null,null,['view/setting/user-grid']);
-		$user_view->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'username','default_value'=>'']);
+		$user_view->grid->addPaginator(50);
+		$user_view->grid->addQuickSearch(['username']);
+		$user_view->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'username','default_value'=>'']);		
 		$user_view->setModel($user_m);
+
 	}
 }

@@ -53,6 +53,7 @@ class page_post extends \Page {
 		}
 
 		$crud=$this->add('xepan\hr\CRUD',null,null,['view/post/post-grid']);
+		$crud->grid->addPaginator(50);
 
 		$crud->setModel($post);
 		

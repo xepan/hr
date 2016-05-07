@@ -13,15 +13,18 @@
             thead
                 {cols}{col}
                 th(id="{$department_id_sortid}")
-                    span Department {$department_id_sort}
+                    span Department 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$department_id_sort}
                 th(id="{$name_sortid}")
-                    span Post {$name_sort}
+                    span Post 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
                 th
                     span Schedule Time
                 th
                     span E-mail
                 th(id="{$employee_count_sortid}")
-                    span Employee {$employee_count_sort}
+                    span Employee 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_count_sort}
                 th
                 th
                 {/}{/}

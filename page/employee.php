@@ -29,7 +29,7 @@ class page_employee extends \Page {
 		}
 						
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
-
+		$crud->grid->addPaginator(50);
 		$crud->setModel($employee);
 		$f = $crud->grid->addQuickSearch(['first_name','last_name']);
 
