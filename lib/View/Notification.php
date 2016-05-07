@@ -11,6 +11,7 @@ class View_Notification extends \CompleteLister{
 			$new_notificagions = $this->add('xepan\hr\Model_Activity')
 									->addCondition('id','>',$this->app->employee['notified_till']?:0)
 									->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%')
+									->setOrder('id','asc')
 									->getRows();
 
 			$js=[];
@@ -22,7 +23,10 @@ class View_Notification extends \CompleteLister{
 							'notice',true,undefined,false);
 				}
 
-				$this->app->employee->set('notified_till',$nt['id'])->save();
+				$this->add('xepan\hr\Model_Employee')
+						->load($this->app->employee->id)
+						->set('notified_till',$new_notificagions[count($new_notificagions)-1]['id'])
+						->save();
 			}
 
 			$p->js(null,$js)->execute();
@@ -37,17 +41,21 @@ class View_Notification extends \CompleteLister{
 		
 			$notifications = $this->add('xepan\base\Model_Activity');
 			$notifications->addCondition('id','>',$this->app->employee['notified_till']?:0);
-			// $notifications->addCondition('notify_to','like',','.$this->app->employee->id.',');
+			$notifications->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%');
 
 			$this->setModel($notifications)->setLimit(3);
 			
 			$this->template->setHTML('icon','envelope-o');
-			$this->template->set('notification_count',rand(1,100));
-			$this->template->set('unread_notification',rand(1,100));
+			$this->template->set('notification_count',$notifications->count()->getOne());
+			$this->template->set('unread_notification',$notifications->count()->getOne());
 
 			// $this->js(true)->univ()->setTimeout($this->js()->reload()->_enclose(),15000);
 		}
 
+	}
+	function formatRow(){
+		$this->current_row['notification']=$this->model['notification']?$this->model['notification']:$this->model['activity'];
+		return parent::formatRow();
 	}
 
 	function render(){		
