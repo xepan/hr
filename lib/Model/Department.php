@@ -15,8 +15,8 @@ class Model_Department extends \xepan\hr\Model_Document{
 		parent::init();
 
 		$dep_j = $this->join('department.document_id');
-		$dep_j->addField('name');
-		$dep_j->addField('production_level');
+		$dep_j->addField('name')->sortable(true);
+		$dep_j->addField('production_level')->sortable(true);
 
 		$dep_j->hasMany('xepan\hr\Post','department_id',null,'Posts');
 		$dep_j->hasMany('xepan\hr\Employee','department_id',null,'Employees');
@@ -26,7 +26,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$this->addExpression('posts_count')->set(function($m,$q){
 			return $this->add('xepan\hr\Model_Post',['table_alias'=>'dept_post_count'])->addCondition('department_id',$m->getElement('id'))->count();
 			
-		});
+		})->sortable(true);
 
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');

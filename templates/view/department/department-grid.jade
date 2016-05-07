@@ -13,15 +13,12 @@
                 {header}
                 thead
                     {cols}{col}
-                    th
-                        a(href='#')
-                            span Department
-                    th.text-right
-                        a.asc(href='#')
-                            span Production Level
-                    th.text-center
-                        a.desc(href='#')
-                            span Post
+                    th(id="{$name_sortid}")
+                        span Department {$name_sort}
+                    th(id="{$production_level_sortid}")
+                        span Production Level {$production_level_sort}
+                    th(id="{$posts_count_sortid}")
+                        span Post {$posts_count_sort}
                     th 
                     th 
                     {/}{/}
@@ -33,9 +30,9 @@
                         {cols}
                         td
                           | {$name}
-                        td.text-right
+                        td
                           | {$production_level}
-                        td.text-center
+                        td
                           a(href='index.php?page=xepan_hr_post&department_id={$id}')
                             | {$posts_count}
                         td

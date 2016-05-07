@@ -18,6 +18,12 @@ class page_department extends \Page {
 		parent::init();
 		
 		$department=$this->add('xepan\hr\Model_Department');
+		$department->add('xepan\hr\Controller_SideBarStatusFilter');
+		
+		if($status = $this->app->stickyGET('status'))
+			$department->addCondition('status',$status);
+
+
 		$department->setOrder('production_level','asc');
 		$crud=$this->add('xepan\hr\CRUD',null,null,['view/department/department-grid']);
 
@@ -37,21 +43,5 @@ class page_department extends \Page {
 		});
 
 		$f=$crud->grid->addQuickSearch(['name']);
-
-		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
-		$s_f->js('change',$f->js()->submit());
-
-		$f->addHook('appyFilter',function($f,$m){
-			if($f['status']='Active'){
-				$m->addCondition('status','Active');
-			}else{
-				$m->addCondition('status','Inactive');
-
-			}
-
-		});
-
-		
-		
 	}
 }

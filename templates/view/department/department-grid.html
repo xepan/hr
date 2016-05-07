@@ -10,17 +10,17 @@
     <div class="table-responsive">
       <table style="width:100%" class="table user-list table-hover">{header}
         <thead>{cols}{col}
-          <th><a href="#"><span>Department</span></a></th>
-          <th class="text-right"><a href="#" class="asc"><span>Production Level</span></a></th>
-          <th class="text-center"><a href="#" class="desc"><span>Post</span></a></th>
+          <th id="{$name_sortid}"><span>Department {$name_sort}</span></th>
+          <th id="{$production_level_sortid}"><span>Production Level {$production_level_sort}</span></th>
+          <th id="{$posts_count_sortid}"><span>Post {$posts_count_sort}</span></th>
           <th> </th>
           <th> </th>{/}{/}
         </thead>{$subheader}
         <tbody>{rows}{row}
           <tr data-id="{$id}" class="{$odd_even}">{cols}
             <td>{$name}</td>
-            <td class="text-right">{$production_level}</td>
-            <td class="text-center"><a href="index.php?page=xepan_hr_post&amp;department_id={$id}">{$posts_count}</a></td>
+            <td>{$production_level}</td>
+            <td><a href="index.php?page=xepan_hr_post&amp;department_id={$id}">{$posts_count}</a></td>
             <td>{action}Action Here{/}</td>
             <td style="width: 15%;">
               {$edit}

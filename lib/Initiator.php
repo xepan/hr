@@ -16,7 +16,7 @@ class Initiator extends \Controller_Addon {
 		if($this->app->auth->isLoggedIn()){
 
             $m = $this->app->top_menu->addMenu('HR');
-            $m->addItem(['Department','icon'=>'fa fa-sliders'],'xepan_hr_department');
+            $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
             $m->addItem(['Post','icon'=>'fa fa-sitemap'],'xepan_hr_post');
             $m->addItem(['Employee','icon'=>'fa fa-male'],'xepan_hr_employee');
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
