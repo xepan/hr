@@ -12,20 +12,16 @@
             {header}
             thead
                 {cols}{col}
-                th
-                  a(href='#')
-                    span Department
-                th
-                  a(href='#')
-                    span Post
+                th(id="{$department_id_sortid}")
+                    span Department {$department_id_sort}
+                th(id="{$name_sortid}")
+                    span Post {$name_sort}
                 th
                     span Schedule Time
-                th.text-left
-                  a.desc(href='#')
+                th
                     span E-mail
-                th.text-center
-                  a.asc(href='#')
-                    span Employee
+                th(id="{$employee_count_sortid}")
+                    span Employee {$employee_count_sort}
                 th
                 th
                 {/}{/}
@@ -46,9 +42,9 @@
                         small In_Time : {$in_time}
                         .xepan-push-small
                         small Out_Time : {$out_time}
-                    td.text-left
+                    td
                       a.emails-accesible(data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}")
-                    td.text-center
+                    td
                       a(href='index.php?page=xepan_hr_employee&post_id={$id}')
                         |  {$employee_count}
                     td

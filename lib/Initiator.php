@@ -17,10 +17,10 @@ class Initiator extends \Controller_Addon {
 
             $m = $this->app->top_menu->addMenu('HR');
             $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
-            $m->addItem(['Post','icon'=>'fa fa-sitemap'],'xepan_hr_post');
-            $m->addItem(['Employee','icon'=>'fa fa-male'],'xepan_hr_employee');
+            $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
+            $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
-            $m->addItem(['User','icon'=>'fa fa-user'],'xepan_hr_user');
+            $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
             
     		$this->app->employee = $this->recall(

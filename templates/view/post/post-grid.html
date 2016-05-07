@@ -9,11 +9,11 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
-        <th><a href="#"><span>Department</span></a></th>
-        <th><a href="#"><span>Post</span></a></th>
+        <th id="{$department_id_sortid}"><span>Department {$department_id_sort}</span></th>
+        <th id="{$name_sortid}"><span>Post {$name_sort}</span></th>
         <th><span>Schedule Time</span></th>
-        <th class="text-left"><a href="#" class="desc"><span>E-mail</span></a></th>
-        <th class="text-center"><a href="#" class="asc"><span>Employee</span></a></th>
+        <th><span>E-mail</span></th>
+        <th id="{$employee_count_sortid}"><span>Employee {$employee_count_sort}</span></th>
         <th></th>
         <th></th>{/}{/}
       </thead>{/}
@@ -27,8 +27,8 @@
           <td><small>In_Time : {$in_time}</small>
             <div class="xepan-push-small"></div><small>Out_Time : {$out_time}</small>
           </td>
-          <td class="text-left"><a data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}" class="emails-accesible"></a></td>
-          <td class="text-center"><a href="index.php?page=xepan_hr_employee&amp;post_id={$id}"> {$employee_count}</a></td>
+          <td><a data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}" class="emails-accesible"></a></td>
+          <td><a href="index.php?page=xepan_hr_employee&amp;post_id={$id}"> {$employee_count}</a></td>
           <td>{$action}</td>
           <td style="width: 15%;">
             {$edit}

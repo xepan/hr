@@ -39,6 +39,10 @@ class page_post extends \Page {
 		});
 
 		$post=$this->add('xepan\hr\Model_Post');
+		$post->add('xepan\hr\Controller_SideBarStatusFilter');
+		if($status = $this->api->stickyGET('status'))
+			$post->addCondition('status',$status);
+
 		$post->addExpression('existing_permitted_emails')->set(function($m,$q){
 			$x = $m->add('xepan\hr\Model_Post_Email_Association',['table_alias'=>'emails_str']);
 			return $x->addCondition('post_id',$q->getField('id'))->_dsql()->del('fields')->field($q->expr('group_concat([0])',[$x->getElement('emailsetting_id')]));
@@ -51,14 +55,14 @@ class page_post extends \Page {
 		$crud=$this->add('xepan\hr\CRUD',null,null,['view/post/post-grid']);
 
 		$crud->setModel($post);
+		
+		$crud->grid->controller->importField('department_id');
+		
 		$f=$crud->grid->addQuickSearch(['name']);
 
 		$d_f =$f->addField('DropDown','department_id')->setEmptyText("All Department");
 		$d_f->setModel('xepan\hr\Department');
 		$d_f->js('change',$f->js()->submit());
-
-		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
-		$s_f->js('change',$f->js()->submit());
 
 		$epan_emails = $this->add('xepan\communication\Model_Communication_EmailSetting');
 		$value =[];
@@ -66,7 +70,7 @@ class page_post extends \Page {
 			$value[]=['value'=>$ee->id,'text'=>$ee['email_username']];
 		}
 
-		$crud->grid->js(true)->_selector('.emails-accesible')->editable(
+		$crud->grid->js(true)->_load('bootstrap-editable.min')->_css('libs/bootstrap-editable')->_selector('.emails-accesible')->editable(
 			[
 			'url'=>$vp->getURL(),
 			'limit'=> 3,

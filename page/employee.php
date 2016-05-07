@@ -19,6 +19,10 @@ class page_employee extends \Page {
 		$this->api->stickyGET('post_id');
 
 		$employee=$this->add('xepan\hr\Model_Employee');
+		$employee->add('xepan\hr\Controller_SideBarStatusFilter');
+		
+		if($status = $this->api->stickyGET('status'))
+			$employee->addCondition('status',$status);	
 		
 		if($_GET['post_id']){
 			$employee->addCondition('post_id',$_GET['post_id']);
@@ -40,9 +44,6 @@ class page_employee extends \Page {
 		$u_f=$f->addField('DropDown','user_id')->setEmptyText('All User');
 		$u_f->setModel('xepan\base\User');
 		$u_f->js('change',$f->js()->submit());
-
-		$s_f=$f->addField('DropDown','status')->setValueList(['Active'=>'Active','Inactive'=>'Inactive'])->setEmptyText('All Status');
-		$s_f->js('change',$f->js()->submit());
 
 		$f->addHook('appyFilter',function($f,$m){
 			if($f['department_id'])

@@ -10,18 +10,9 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>
         <tr>{cols}{col}
-          <th id="{$sortid}"><a href="javascript:void(0)">
-              User
-              {$descr}
-              {sort}<span class="{$sorticon}"></span>{/}</a></th>
-          <th id="{$sortid}"><a href="javascript:void(0)">
-              Date Of Joining
-              {$descr}
-              {sort}<span class="{$sorticon}"></span>{/}</a></th>
-          <th id="{$sortid}"><a href="javascript:void(0)">
-              Email
-              {$descr}
-              {sort}<span class="{$sorticon}"></span>{/}</a></th>
+          <th id="{$name_sortid}"><span>User {$name_sort}</span></th>
+          <th id="{$doj_sortid}"><span>Date Of Joining {$name_sort}</span></th>
+          <th><span>Email</span></th>
           <th></th>
           <th></th>{/}{/}    
         </tr>
@@ -29,7 +20,7 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="{url}index.php?page=xepan_hr_employeedetail&amp;contact_id={$id}{/}" class="user-link">{first_name}Scarlett{/} {last_name}Johansson{/}</a><span class="user-subhead">{$department} / {$posts}</span></td>
+          <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="{url}index.php?page=xepan_hr_employeedetail&amp;contact_id={$id}{/}" class="user-link">{$name}</a><span class="user-subhead">{$department} / {$posts}</span></td>
           <td>{doj}2013/08/08{/}</td>
           <td><a href="#">
                
