@@ -354,7 +354,7 @@ class Controller_ACL extends \AbstractController {
 				$acl_value = isset($this->action_allowed[$status][$action])?$this->action_allowed[$status][$action]:$this->permissive_acl;
 				$this->action_allowed[$status][$action] = ($this->api->auth->model->isSuperUser() && $this->app->getConfig('all_rights_to_superuser',true))?true:$this->textToCode($acl_value);
 			}
-		}
+		}		
 
 		return $this->action_allowed;
 	}

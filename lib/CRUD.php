@@ -2,6 +2,8 @@
 namespace xepan\hr;
 
 class CRUD extends \xepan\base\CRUD {
+
+	public $grid_class='xepan\base\Grid';
 	
 	function setModel($model,$grid_fields=null,$form_fields=null){
 
