@@ -16,7 +16,10 @@
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td class="text-center"><i class="fa fa-comment"></i></td>
-          <td>{contact}Vijay mali{/}&nbsp; {activity}| Scarlett Johansson posted a comment in{/}&nbsp;<a href="#">{$related_document} </a>{related_contact} Avengers Initiative{/}</td>
+          <td>
+            {activity}| Scarlett Johansson posted a comment in{/}&nbsp;
+            (created by  <a href="#">{$contact}</a>) <a href="#">{$related_document} </a>
+          </td>
           <td>{callback_date} 2014/08/08 12:08{/}</td>
           <td>
             {$edit}

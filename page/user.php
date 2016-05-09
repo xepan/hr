@@ -1,6 +1,6 @@
 <?php
 namespace xepan\hr;
-class page_user extends \Page{
+class page_user extends \xepan\base\Page{
 	public $title="User Managment";
 	function init(){
 		parent::init();

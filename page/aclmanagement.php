@@ -11,7 +11,7 @@
 
 namespace xepan\hr;
 
-class page_aclmanagement extends \Page {
+class page_aclmanagement extends \xepan\base\Page {
 	public $title='Access Control Management';
 
 	function init(){

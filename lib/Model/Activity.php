@@ -13,15 +13,16 @@ namespace xepan\hr;
 
 class Model_Activity extends \xepan\base\Model_Activity{
 
-	function notifyWhoCan($list_of_actions,$current_status,$document=null,$notify_self=true){
+	function notifyWhoCan($list_of_actions,$current_status,$model=null,$notify_self=true){
 		$acl_m = $this->add('xepan\hr\Model_ACL');
-		if(!$document)
-			$document = $this->ref('related_document_id');
+		if(!$model)
+			$model = $this->ref('related_document_id');
 
-		$acl_m->addCondition('document_type',$document['type']);
+		$acl_m->addCondition('document_type',$model['type']);
 	
 		if(!is_array($list_of_actions)) $list_of_actions = explode(",", $list_of_actions);		
 
+		
 		$employee_ids=[];
 		foreach ($acl_m as $acl) {
 			$actions = $acl['action_allowed'][$current_status];
@@ -30,9 +31,9 @@ class Model_Activity extends \xepan\base\Model_Activity{
 				$text_code = $actions[$req_act]; // Self Only, All, None, Etc.
 				switch ($text_code) {
 					case 'Self Only':
-						# if($document->created_by->post_id == $acl->post_id) include this id
-						if($this->getPost($document['created_by_id'])->get('id') == $acl['post_id'])
-							$employee_ids[] = $document['created_by_id'];
+						# if($model->created_by->post_id == $acl->post_id) include this id
+						if($this->getPost($model['created_by_id'])->get('id') == $acl['post_id'])
+							$employee_ids[] = $model['created_by_id'];
 						break;
 					case 'All':
 						# code...
