@@ -15,7 +15,7 @@
                 {/}{/}
             {/}
             {$subheader}
-
+            //- {contact}Vijay mali{/} &nbsp; {related_contact} Avengers Initiative{/}
             tbody
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
@@ -23,9 +23,11 @@
                     td.text-center
                      i.fa.fa-comment
                     td
-                     {contact}Vijay mali{/}&nbsp; {activity}| Scarlett Johansson posted a comment in{/}&nbsp;
+                     {activity}| Scarlett Johansson posted a comment in{/}&nbsp;
+                     | (created by  
+                     a(href='#'){$contact}
+                     |) 
                      a(href='#'){$related_document} 
-                     {related_contact} Avengers Initiative{/}
                     td
                      |{callback_date} 2014/08/08 12:08{/}
                     td
