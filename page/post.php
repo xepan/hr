@@ -11,7 +11,7 @@
 
 namespace xepan\hr;
 
-class page_post extends \Page {
+class page_post extends \xepan\base\Page {
 	public $title='Post';
 
 	function init(){
@@ -57,27 +57,30 @@ class page_post extends \Page {
 
 		$crud->setModel($post);
 		
-		$crud->grid->controller->importField('department_id');
+		if(!$crud->isEditing()){
+				
+			$crud->grid->controller->importField('department_id');
+			
+			$f=$crud->grid->addQuickSearch(['name']);
+
+			$d_f =$f->addField('DropDown','department_id')->setEmptyText("All Department");
+			$d_f->setModel('xepan\hr\Department');
+			$d_f->js('change',$f->js()->submit());
+
+			$epan_emails = $this->add('xepan\communication\Model_Communication_EmailSetting');
+			$value =[];
+			foreach ($epan_emails as $ee) {
+				$value[]=['value'=>$ee->id,'text'=>$ee['email_username']];
+			}
+
+			$crud->grid->js(true)->_load('bootstrap-editable.min')->_css('libs/bootstrap-editable')->_selector('.emails-accesible')->editable(
+				[
+				'url'=>$vp->getURL(),
+				'limit'=> 3,
+				'source'=> $value
+				]);
 		
-		$f=$crud->grid->addQuickSearch(['name']);
-
-		$d_f =$f->addField('DropDown','department_id')->setEmptyText("All Department");
-		$d_f->setModel('xepan\hr\Department');
-		$d_f->js('change',$f->js()->submit());
-
-		$epan_emails = $this->add('xepan\communication\Model_Communication_EmailSetting');
-		$value =[];
-		foreach ($epan_emails as $ee) {
-			$value[]=['value'=>$ee->id,'text'=>$ee['email_username']];
 		}
-
-		$crud->grid->js(true)->_load('bootstrap-editable.min')->_css('libs/bootstrap-editable')->_selector('.emails-accesible')->editable(
-			[
-			'url'=>$vp->getURL(),
-			'limit'=> 3,
-			'source'=> $value
-			]);
-		
 	}
 
 }

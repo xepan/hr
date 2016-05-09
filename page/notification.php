@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class page_notification extends \Page{
+class page_notification extends \xepan\base\Page{
 	public $title="Activity Notification";
 	function init(){
 		parent::init();

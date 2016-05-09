@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class page_employeemovement extends \Page{
+class page_employeemovement extends \xepan\base\Page{
 	public $title = "Employee Movement";
 	function init(){
 		parent::init();

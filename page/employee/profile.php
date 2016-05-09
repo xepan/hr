@@ -1,6 +1,6 @@
 <?php
 namespace xepan\hr;
-class page_employee_profile extends \Page{
+class page_employee_profile extends \xepan\base\Page{
 	public $title="Employee Profile";
 	function init(){
 		parent::init();
