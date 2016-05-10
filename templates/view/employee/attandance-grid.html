@@ -9,21 +9,17 @@
   <div class="main-box-body clearfix table">
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead class="xepan-hover-hand">{cols}{col}
-        <th id="{$employee_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_sort}</span></th>
-        <th id="{$direction_sortid}"><span>Direction </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$direction_sort}</span></th>
-        <th id="{$time_sortid}"><span>Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$time_sort}</span></th>
-        <th><span>Reason</span></th>
-        <th><span>Narration</span></th>
+        <th id="{$employee_sortid}"><span>Employee </span></th>
+        <th id="{$direction_sortid}"><span>In Time </span></th>
+        <th id="{$time_sortid}"><span>Out Time</span></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}  <a href="{url}index.php?page=xepan_hr_employeedetail&amp;contact_id={$employee_id}" class="user-link">{$employee}</a></td>
-          <td><span>{$direction}  </span></td>
-          <td><span>{$time}</span></td>
-          <td><span>{$reason}</span></td>
-          <td><span>{$narration}</span></td>
+          <td>{$avatar}  <a href="{url}index.php?page=xepan_hr_movementdetail&amp;contact_id={$employee_id}" class="user-link">{$name}</a><span class="label label-{$in_color}"> <span class="small">In</span></span><span class="label label-{$out_color}"> <span class="small">Out</span></span></td>
+          <td><span>{$first_in}</span></td>
+          <td><span>{$last_out}</span></td>
           <td>                             </td>{/}
         </tr>{/}{/}
         {not_found}

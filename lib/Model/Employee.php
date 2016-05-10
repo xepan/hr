@@ -57,12 +57,23 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function afterLoginCheck(){
+		
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
-		$movement->addCondition('employee_id',$this->id);
-		$movement->addCondition('time',$this->app->now);
-		$movement->addCondition('type','Attandance');
-		$movement->addCondition('direction','In');
-		$movement->save();	
+		$movement->addCondition('employee_id',$this->app->employee->id);
+		$movement->setOrder('time','desc');
+		$movement->tryLoadAny();
+
+		if($movement->loaded() && $movement['direction']=='In'){
+			return;
+		}else{			
+			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
+			$model_movement->addCondition('employee_id',$this->id);
+			$model_movement->addCondition('time',$this->app->now);
+			$model_movement->addCondition('type','Attandance');
+			$model_movement->addCondition('direction','In');
+			$model_movement->save();	
+		}
+		
 	}
 
 	function logoutHook($app, $user, $employee){

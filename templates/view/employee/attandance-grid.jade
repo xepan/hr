@@ -14,17 +14,10 @@
                 {cols}{col}
                 th(id="{$employee_sortid}")
                     span Employee 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_sort}
                 th(id="{$direction_sortid}")
-                    span Direction 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$direction_sort}
+                    span In Time 
                 th(id="{$time_sortid}")
-                    span Time 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$time_sort}
-                th
-                    span Reason
-                th
-                    span Narration
+                    span Out Time
                 th 
                 {/}{/}
             {/}
@@ -36,16 +29,16 @@
                     {cols}
                     td
                       {$avatar}  
-                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$employee_id}')
-                        {$employee}
+                      a.user-link(href='{url}index.php?page=xepan_hr_movementdetail&contact_id={$employee_id}')
+                        {$name}
+                      span.label(class='label-{$in_color}') 
+                        span.small In
+                      span.label(class='label-{$out_color}') 
+                        span.small Out
                     td
-                      span {$direction}  
+                      span {$first_in}
                     td
-                      span {$time}
-                    td
-                      span {$reason}
-                    td
-                      span {$narration}
+                      span {$last_out}
                     td                              
                     {/}
                 {/}{/}
