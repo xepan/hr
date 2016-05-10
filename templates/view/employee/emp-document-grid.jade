@@ -1,4 +1,13 @@
 .xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
+    style.
+        .widget-users li{
+            height:auto!important;
+        }
+        .doc-img{
+            width:100px;
+            min-height:80px;
+            max-height:100px;
+        }
     {Pannel}
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block
@@ -11,18 +20,21 @@
         .row
             {header}{cols}{col}{/}{/}{/}
             {rows}{row}
-            div(class="{$odd_even} col-md-{col-width}6{/}" data-id="{$id}")
+            div(class="{$odd_even} col-md-{col-width}3{/}" data-id="{$id}")
                 {cols}
                 li.col-md-12
                     .details
                         .name
-                            a(href='#') {name}Secondary Marksheet{/}
+                            a.text-center(href='#') {name}Secondary Marksheet{/}
                         .type
                             .btn-group(role='group', aria-label='...')
                                 //- button.btn.btn-sm.btn-success(type='button')|Download
-                                <a class=" btn btn-sm btn-success" href="{$employee_document}" download="{$name}"> Download</a>
-                                //- button.btn.btn-sm.btn-danger(type='button')  
-                                button.btn-danger{$delete}   
+                                a( href="{employee_document}logo.png{/}" download="{$name}")
+                                    img(class="doc-img" alt='Download' title="Click to Download {$name}"  src='{employee_document}img/samples/hdr/small/img_5.jpg{/}')
+                                //- button.btn.btn-sm.btn-danger(type='button')
+                                //- br  
+                                {$edit}   
+                                {$delete}   
             {/}
             {/}{/}
             {not_found}

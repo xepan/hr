@@ -1,5 +1,15 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix {$class}">{Pannel}
+<div id="{$_name}" class="xepan-grid main-box clearfix {$class}">
+  <style>
+    .widget-users li{
+        height:auto!important;
+    }
+    .doc-img{
+        width:100px;
+        min-height:80px;
+        max-height:100px;
+    }
+  </style>{Pannel}
   <header class="main-box-header clearfix atk-actions  {$class} ">
     <div class="filter-block">
       <div class="pull-right">{$grid_buttons} </div>
@@ -12,13 +22,13 @@
     <div class="row">
       {header}{cols}{col}{/}{/}{/}
       {rows}{row}
-      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}6{/}">{cols}
+      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}3{/}">{cols}
         <li class="col-md-12">
           <div class="details">
-            <div class="name"><a href="#">{name}Secondary Marksheet{/}</a></div>
+            <div class="name"><a href="#" class="text-center">{name}Secondary Marksheet{/}</a></div>
             <div class="type">
-              <div role="group" aria-label="..." class="btn-group"><a class=" btn btn-sm btn-success" href="{$employee_document}" download="{$name}"> Download</a>
-                <button class="btn-danger">{$delete}   </button>
+              <div role="group" aria-label="..." class="btn-group"><a href="{employee_document}logo.png{/}" download="{$name}"><img alt="Download" title="Click to Download {$name}" src="{employee_document}img/samples/hdr/small/img_5.jpg{/}" class="doc-img"/></a>{$edit}   
+                {$delete}   
               </div>
             </div>
           </div>
