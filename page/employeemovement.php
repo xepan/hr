@@ -8,6 +8,7 @@ class page_employeemovement extends \xepan\base\Page{
 		parent::init();
 
 		$movement = $this->add('xepan\hr\Model_Employee_Movement')->setOrder('time','desc');
+		$movement->addCondition('time','>',$this->app->today);
 		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\attandance-grid']);
 		$grid->setModel($movement,['employee','direction','time','reason','narration']);
 
@@ -16,23 +17,15 @@ class page_employeemovement extends \xepan\base\Page{
 		$frm=$grid->addQuickSearch(['employee']);
 		$frm_emp = $frm->addField('dropdown','emp')->setEmptyText('Select An Employee');
 		$frm_emp->setModel('xepan\hr\Model_Employee');
-		$frm_drop = $frm->addField('DropDown','direction')->setEmptyText('Select A Direction')->setValueList(['In'=>'In','Out'=>'Out']);
-		$frm->addField('DatePicker','to_date','To');
-		$frm->addField('DatePicker','from_date','From');
-		
-		
-		$frm_drop->js('change',$frm->js()->submit());
+		$frm->addField('DatePicker','date');
+				
 		$frm_emp->js('change',$frm->js()->submit());
 
 		$frm->addHook('applyFilter',function($frm,$m){
 			if($frm['emp'])
 				$m->addCondition('employee_id',$frm['emp']);
-			if($frm['direction'])
-				$m->addCondition('direction',$frm['direction']);
-			if($frm['from_date'])
-				$m->addCondition('time','>',$frm['from_date']);
-			if($frm['to_date'])
-				$m->addCondition('time','<',$frm['to_date']);
+			if($frm['date'])										
+				$m->addCondition('time','>',$frm['date']);
 		});
 	}
 }
