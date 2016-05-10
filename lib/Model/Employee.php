@@ -49,6 +49,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeLedger']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeMovements']);
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
 	}
 
 	function throwEmployeeUpdateHook(){
@@ -56,12 +57,23 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function afterLoginCheck(){
+		
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
-		$movement->addCondition('employee_id',$this->id);
-		$movement->addCondition('time',$this->app->now);
-		$movement->addCondition('type','Attandance');
-		$movement->addCondition('direction','In');
-		$movement->save();	
+		$movement->addCondition('employee_id',$this->app->employee->id);
+		$movement->setOrder('time','desc');
+		$movement->tryLoadAny();
+
+		if($movement->loaded() && $movement['direction']=='In'){
+			return;
+		}else{			
+			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
+			$model_movement->addCondition('employee_id',$this->id);
+			$model_movement->addCondition('time',$this->app->now);
+			$model_movement->addCondition('type','Attandance');
+			$model_movement->addCondition('direction','In');
+			$model_movement->save();	
+		}
+		
 	}
 
 	function logoutHook($app, $user, $employee){
@@ -136,6 +148,54 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this['status']='Active';
 		$this->save();
 		if(($user = $this->ref('user_id')) && $user->loaded()) $user->activate();
+	}
+
+	function updateSearchString($m){
+
+		$search_string = ' ';
+		$search_string .=" ". $this['contact_id'];
+		$search_string .=" ". $this['notified_till'];
+		$search_string .=" ". $this['offer_date'];
+		$search_string .=" ". $this['doj'];
+		$search_string .=" ". $this['contract_date'];
+		$search_string .=" ". $this['leaving_date'];
+		$search_string .=" ". $this['mode'];
+		$search_string .=" ". $this['in_time'];
+		$search_string .=" ". $this['out_time'];
+
+		$qualification = $this->ref('Qualifications');
+		foreach ($qualification as $qualification_detail) {
+			$search_string .=" ". $qualification_detail['name'];
+			$search_string .=" ". $qualification_detail['qualificaton_level'];
+			$search_string .=" ". $qualification_detail['remarks'];
+		}
+
+		$experience = $this->ref('Experiences');
+		foreach ($experience as $experience_detail) {
+			$search_string .=" ". $experience_detail['name'];
+			$search_string .=" ". $experience_detail['department'];
+			$search_string .=" ". $experience_detail['company_branch'];
+			$search_string .=" ". $experience_detail['salary'];
+			$search_string .=" ". $experience_detail['designation'];
+			$search_string .=" ". $experience_detail['duration'];
+		}
+
+		$employeedocument = $this->ref('EmployeeDocuments');
+		foreach ($experience as $employeedocument_detail) {
+			$search_string .=" ". $employeedocument_detail['name'];
+		}
+
+		$employeemovement = $this->ref('EmployeeMovements');
+		foreach ($experience as $employeemovement_detail) {
+			$search_string .=" ". $employeemovement_detail['time'];
+			$search_string .=" ". $employeemovement_detail['type'];
+			$search_string .=" ". $employeemovement_detail['direction'];
+			$search_string .=" ". $employeemovement_detail['reason'];
+			$search_string .=" ". $employeemovement_detail['narration'];
+		}
+
+		$this['search_string'] = $search_string;
+		
 	}
 
 }

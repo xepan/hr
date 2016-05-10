@@ -7,33 +7,79 @@ class page_employeemovement extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$movement = $this->add('xepan\hr\Model_Employee_Movement')->setOrder('time','desc');
-		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\attandance-grid']);
-		$grid->setModel($movement,['employee','direction','time','reason','narration']);
+		$employee = $this->add('xepan\hr\Model_Employee');
+		$date = $this->app->today;
+		
+		$employee->addExpression('first_in')->set(function($m,$q)use($date){
+			return $m->refSQL('EmployeeMovements')
+					->addCondition('date',$date)
+					->addCondition('direction','In')
+					->setOrder('time','asc')
+					->setLimit(1)
+					->fieldQuery('time');
+		});
 
-		$grid->add('xepan\base\Controller_Avatar',['options'=>['size'=>40,'border'=>['width'=>0]],'name_field'=>'employee','default_value'=>'']);
+		$employee->addExpression('last_out')->set(function($m,$q)use($date){
+			return $m->refSQL('EmployeeMovements')
+					->addCondition('date',$date)
+					->addCondition('direction','Out')
+					->setOrder('time','desc')
+					->setLimit(1)
+					->fieldQuery('time');
+		});
+
+
+		$employee->addExpression('is_late')->set(function($m,$q)use($date){
+			return $q->expr(
+					"IF([0]>= CONCAT('[1]',' ',[2]),1,0)",
+					  [
+						$m->getElement('first_in'),
+						$date,
+						$m->getElement('in_time')
+					  ]
+					);
+		});
+
+		
+		$employee->addExpression('is_in')->set(function($m,$q){
+			return $q->expr(
+					"IF([0] IS NOT NULL,1,0)",
+					  [
+						$m->getElement('first_in'),
+					  ]
+					);
+		});
+
+		$employee->addExpression('is_out');
+		
+		$employee->addExpression('in_color')->set(function($m,$q)use($date){
+			return $q->expr(
+					"IF([0]<= CONCAT('[1]',' ',[2]),'primary','danger')",
+					  [
+						$m->getElement('first_in'),
+						$date,
+						$m->getElement('in_time')
+					  ]
+					);
+		});
+
+		$employee->addExpression('out_color')->set(function($m,$q)use($date){
+			return $q->expr(
+					"IF([0]>= CONCAT('[1]',' ',[2]),'primary','danger')",
+					  [
+						$m->getElement('last_out'),
+						$date,
+						$m->getElement('out_time')
+					  ]
+					);
+		});
+
+		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\attandance-grid']);
+		$grid->setModel($employee,['name','first_in','last_out','in_color','out_color','is_late']);
+
+		$grid->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$grid->addPaginator(50);
 		$frm=$grid->addQuickSearch(['employee']);
-		$frm_emp = $frm->addField('dropdown','emp')->setEmptyText('Select An Employee');
-		$frm_emp->setModel('xepan\hr\Model_Employee');
-		$frm_drop = $frm->addField('DropDown','direction')->setEmptyText('Select A Direction')->setValueList(['In'=>'In','Out'=>'Out']);
-		$frm->addField('DatePicker','to_date','To');
-		$frm->addField('DatePicker','from_date','From');
-		
-		
-		$frm_drop->js('change',$frm->js()->submit());
-		$frm_emp->js('change',$frm->js()->submit());
-
-		$frm->addHook('applyFilter',function($frm,$m){
-			if($frm['emp'])
-				$m->addCondition('employee_id',$frm['emp']);
-			if($frm['direction'])
-				$m->addCondition('direction',$frm['direction']);
-			if($frm['from_date'])
-				$m->addCondition('time','>',$frm['from_date']);
-			if($frm['to_date'])
-				$m->addCondition('time','<',$frm['to_date']);
-		});
 	}
 }
 
