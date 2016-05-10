@@ -27,8 +27,10 @@ class Controller_SideBarStatusFilter extends \AbstractController{
 			$this->app->side_menu->addItem(['All','badge'=>[$total,'swatch'=>' label label-primary label-circle pull-right']],$this->api->url());
 		}
 
+		$icon_array = $this->app->getConfig('status_icon');
+		$model_class=get_class($this->owner);
 		foreach ($this->owner->status as $s) {
-			$this->app->side_menu->addItem([$s,'badge'=>[$counts_redefined[$s],'swatch'=>' label label-primary label-circle pull-right']],$this->api->url(null,['status'=>$s]));
+			$this->app->side_menu->addItem([$s,'icon'=>$icon_array[$model_class][$s],'badge'=>[$counts_redefined[$s],'swatch'=>' label label-primary label-circle pull-right']],$this->api->url(null,['status'=>$s]));
 		}
 
 		if($status=$this->api->stickyGET('status')){
