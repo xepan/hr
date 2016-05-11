@@ -19,10 +19,11 @@ class Controller_ACL extends \AbstractController {
 	public $permissive_acl=false;
 	public $action_btn_group=null;
 	public $view_reload_url=null;
+	public $dependent = false;
 
 	function init(){
-		parent::init();		
-	
+		parent::init();
+
 		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
 		$this->model = $model = $this->getModel();
@@ -107,7 +108,11 @@ class Controller_ACL extends \AbstractController {
 				
 				if($grid instanceof \xepan\base\Grid){
 					$grid->addMethod('format_edit',function($g,$f){
-						$ids= $this->canEdit($g->model['status']);
+						if($this->dependent){
+							$ids= $this->canEdit($g->model['status']?:$this->model['status']);
+						}else{
+							$ids= $this->canEdit($g->model['status']);
+						}
 						if($ids === true || $ids == false){
 							$g->row_edit=$ids;
 							return;
@@ -119,7 +124,11 @@ class Controller_ACL extends \AbstractController {
 					$grid->setFormatter('edit','edit');
 
 					$grid->addMethod('format_delete2',function($g,$f){
-						$ids= $this->canDelete($g->model['status']);
+						if($this->dependent){
+							$ids= $this->canDelete($g->model['status']?:$this->model['status']);
+						}else{
+							$ids= $this->canDelete($g->model['status']);
+						}
 						if($ids === true || $ids == false){
 							$g->row_delete=$ids;
 							return;
@@ -196,6 +205,7 @@ class Controller_ACL extends \AbstractController {
 	function getModel(){
 		$model =  $this->owner instanceof \Model_Table ? $this->owner: $this->owner->model;
 		if(strpos($model->acl, 'xepan\\')===0){
+			$this->dependent=$model;
 			$model = $this->add($model->acl);
 		}
 
@@ -305,7 +315,6 @@ class Controller_ACL extends \AbstractController {
 
 		
 		if($this->model->acl === false){
-			
 			$this->permissive_acl = true;
 			return;
 		}
