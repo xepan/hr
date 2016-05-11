@@ -49,7 +49,7 @@ class View_Notification extends \CompleteLister{
 			$this->template->set('notification_count',$notifications->count()->getOne());
 			$this->template->set('unread_notification',$notifications->count()->getOne());
 
-			$this->js(true)->univ()->setTimeout($this->js()->reload()->_enclose(),15000);
+			$this->js(true)->univ()->setTimeout($this->js()->reload(null,null,$this->app->url('/',['cut_obejct'=>$this->name]))->_enclose(),15000);
 		}
 
 	}
