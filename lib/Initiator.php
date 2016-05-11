@@ -46,6 +46,24 @@ class Initiator extends \Controller_Addon {
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');
             $this->app->addHook('user_loggedout',[$this->app->employee,'logoutHook']);
+            
+            $this->app->status_icon = [
+                        "xepan\hr\Model_Department"=>[
+                                    'All'=>'fa fa-globe',
+                                    'Active'=>"fa fa-circle xepan-effect-green",
+                                    'InActive'=>'fa fa fa-circle xepan-effect-red'
+                                ],
+                        "xepan\hr\Model_Post"=>[
+                                    'All'=>'fa fa-globe',
+                                    'Active'=>"fa fa-circle xepan-effect-green",
+                                    'InActive'=>'fa fa fa-circle xepan-effect-red'
+                                ],
+                        "xepan\hr\Model_Employee"=>[
+                                    'All'=>'fa fa-globe',
+                                    'Active'=>"fa fa-circle xepan-effect-green",
+                                    'InActive'=>'fa fa fa-circle xepan-effect-red'
+                                ]
+                        ];
         }
 
         return $this;
