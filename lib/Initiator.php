@@ -21,6 +21,7 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
             $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
+            $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
             
     		$this->app->employee = $this->recall(
@@ -41,7 +42,7 @@ class Initiator extends \Controller_Addon {
                 $this->app->forget('user_loggedin');
                 $this->api->employee->afterLoginCheck();
             }
-            // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
+            $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');

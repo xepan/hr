@@ -48,9 +48,9 @@ class View_Notification extends \CompleteLister{
 			$this->template->setHTML('icon','envelope-o');
 			$this->template->set('notification_count',$notifications->count()->getOne());
 			$this->template->set('unread_notification',$notifications->count()->getOne());
-
-			$this->js(true)->univ()->setTimeout($this->js()->reload(null,null,$this->app->url('/',['cut_obejct'=>$this->name]))->_enclose(),15000);
 		}
+
+		$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']))->_enclose(),15000);
 
 	}
 	function formatRow(){
@@ -59,6 +59,7 @@ class View_Notification extends \CompleteLister{
 	}
 
 	function render(){		
+		$this->js(true)->_library('PNotify.desktop')->permission();
 		$this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']));
 		return parent::render();
 	}
