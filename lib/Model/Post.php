@@ -83,18 +83,23 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$search_string .=" ".$this['in_time'];
 		$search_string .=" ".$this['out_time'];
 
-		$parent_post = $this->ref('ParentPosts');
-		foreach ($parent_post as $parent_post_detail) 
-		{
-			$search_string .=" ". $parent_post_detail['name'];
-			$search_string .=" ". $parent_post_detail['in_time'];
-			$search_string .=" ". $parent_post_detail['out_time'];
+
+		if($this->loaded()){
+			$parent_post = $this->ref('ParentPosts');
+			foreach ($parent_post as $parent_post_detail) 
+			{
+				$search_string .=" ". $parent_post_detail['name'];
+				$search_string .=" ". $parent_post_detail['in_time'];
+				$search_string .=" ". $parent_post_detail['out_time'];
+			}
 		}
 
-		$employees = $this->ref('Employees');
-		foreach ($employees as $employees_detail) {
-			$search_string .=" ". $employees_detail['contract_date'];
-			$search_string .=" ". $employees_detail['doj'];
+		if($this->loaded()){
+			$employees = $this->ref('Employees');
+			foreach ($employees as $employees_detail) {
+				$search_string .=" ". $employees_detail['contract_date'];
+				$search_string .=" ". $employees_detail['doj'];
+			}
 		}
 
 		$this['search_string'] = $search_string;
