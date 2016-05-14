@@ -163,11 +163,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$search_string .=" ". $this['in_time'];
 		$search_string .=" ". $this['out_time'];
 
-		$qualification = $this->ref('Qualifications');
-		foreach ($qualification as $qualification_detail) {
-			$search_string .=" ". $qualification_detail['name'];
-			$search_string .=" ". $qualification_detail['qualificaton_level'];
-			$search_string .=" ". $qualification_detail['remarks'];
+		if($this->loaded()){
+			$qualification = $this->ref('Qualifications');
+			foreach ($qualification as $qualification_detail) {
+				$search_string .=" ". $qualification_detail['name'];
+				$search_string .=" ". $qualification_detail['qualificaton_level'];
+				$search_string .=" ". $qualification_detail['remarks'];
+			}
 		}
 
 		if($this->loaded()){
