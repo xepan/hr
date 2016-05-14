@@ -162,6 +162,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$search_string .=" ". $this['mode'];
 		$search_string .=" ". $this['in_time'];
 		$search_string .=" ". $this['out_time'];
+		$search_string .=" ". $this['first_name'];
+		$search_string .=" ". $this['last_name'];
 
 		if($this->loaded()){
 			$qualification = $this->ref('Qualifications');

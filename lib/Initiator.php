@@ -54,6 +54,9 @@ class Initiator extends \Controller_Addon {
             $this->app->status_icon["xepan\base\Model_User"] = ['All'=>'fa fa-globe','Active'=>"fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
         }
 
+        $search_department = $this->add('xepan\hr\Model_Department');
+        $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
+
         return $this;
 	}
 

@@ -21,13 +21,25 @@ class Model_Affiliate extends \xepan\base\Model_Contact{
 
 		$this->addCondition('type','Affiliate');
 		$this->getElement('status')->defaultValue('Active');
-		$this->addHook('beforeSave',$this);
+		$this->addHook('beforeSave',[$this,'updateSearchString']);
 	}
 
 	function updateSearchString($m){
 
 		$search_string = ' ';
+		$search_string .=" ". $this['name'];
+		$search_string .=" ". str_replace("<br/>", " ", $this['contacts_str']);
+		$search_string .=" ". str_replace("<br/>", " ", $this['emails_str']);
 		$search_string .=" ". $this['source'];
+		$search_string .=" ". $this['type'];
+		$search_string .=" ". $this['city'];
+		$search_string .=" ". $this['state'];
+		$search_string .=" ". $this['pin_code'];
+		$search_string .=" ". $this['organization'];
+		$search_string .=" ". $this['post'];
+		$search_string .=" ". $this['website'];
+		$search_string .=" ". $this['narration'];
+
 		$this['search_string'] = $search_string;
 	}
 	
@@ -52,5 +64,4 @@ class Model_Affiliate extends \xepan\base\Model_Contact{
 
 	}
 
-	function beforeSave($m){}
 } 
