@@ -172,28 +172,34 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$search_string .=" ". $qualification_detail['remarks'];
 		}
 
-		$experience = $this->ref('Experiences');
-		foreach ($experience as $experience_detail) {
-			$search_string .=" ". $experience_detail['name'];
-			$search_string .=" ". $experience_detail['department'];
-			$search_string .=" ". $experience_detail['company_branch'];
-			$search_string .=" ". $experience_detail['salary'];
-			$search_string .=" ". $experience_detail['designation'];
-			$search_string .=" ". $experience_detail['duration'];
+		if($this->loaded()){
+			$experience = $this->ref('Experiences');
+			foreach ($experience as $experience_detail) {
+				$search_string .=" ". $experience_detail['name'];
+				$search_string .=" ". $experience_detail['department'];
+				$search_string .=" ". $experience_detail['company_branch'];
+				$search_string .=" ". $experience_detail['salary'];
+				$search_string .=" ". $experience_detail['designation'];
+				$search_string .=" ". $experience_detail['duration'];
+			}
 		}
 
-		$employeedocument = $this->ref('EmployeeDocuments');
-		foreach ($experience as $employeedocument_detail) {
-			$search_string .=" ". $employeedocument_detail['name'];
+		if($this->loaded()){
+			$employeedocument = $this->ref('EmployeeDocuments');
+			foreach ($experience as $employeedocument_detail) {
+				$search_string .=" ". $employeedocument_detail['name'];
+			}
 		}
 
-		$employeemovement = $this->ref('EmployeeMovements');
-		foreach ($experience as $employeemovement_detail) {
-			$search_string .=" ". $employeemovement_detail['time'];
-			$search_string .=" ". $employeemovement_detail['type'];
-			$search_string .=" ". $employeemovement_detail['direction'];
-			$search_string .=" ". $employeemovement_detail['reason'];
-			$search_string .=" ". $employeemovement_detail['narration'];
+		if($this->loaded()){
+			$employeemovement = $this->ref('EmployeeMovements');
+			foreach ($experience as $employeemovement_detail) {
+				$search_string .=" ". $employeemovement_detail['time'];
+				$search_string .=" ". $employeemovement_detail['type'];
+				$search_string .=" ". $employeemovement_detail['direction'];
+				$search_string .=" ". $employeemovement_detail['reason'];
+				$search_string .=" ". $employeemovement_detail['narration'];
+			}
 		}
 
 		$this['search_string'] = $search_string;

@@ -68,23 +68,27 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$search_string .=" ".$this['is_outsourced'];
 		$search_string .=" ".$this['posts_count'];
 
-		$post = $this->ref('Posts');
-		foreach ($post as $post_detail) 
-		{
-			$search_string .=" ". $post_detail['name'];
-			$search_string .=" ". $post_detail['in_time'];
-			$search_string .=" ". $post_detail['out_time'];
+		if($this->loaded()){
+			$post = $this->ref('Posts');
+			foreach ($post as $post_detail) 
+			{
+				$search_string .=" ". $post_detail['name'];
+				$search_string .=" ". $post_detail['in_time'];
+				$search_string .=" ". $post_detail['out_time'];
+			}
 		}
 
-		$employees = $this->ref('Employees');
-		foreach ($employees as $employees_detail) {
-			$search_string .=" ". $employees_detail['offer_date'];
-			$search_string .=" ". $employees_detail['contract_date'];
-			$search_string .=" ". $employees_detail['doj'];
-			$search_string .=" ". $employees_detail['leaving_date'];
-			$search_string .=" ". $employees_detail['mode'];
-			$search_string .=" ". $employees_detail['in_time'];
-			$search_string .=" ". $employees_detail['out_time'];
+		if($this->loaded()){
+			$employees = $this->ref('Employees');
+			foreach ($employees as $employees_detail) {
+				$search_string .=" ". $employees_detail['offer_date'];
+				$search_string .=" ". $employees_detail['contract_date'];
+				$search_string .=" ". $employees_detail['doj'];
+				$search_string .=" ". $employees_detail['leaving_date'];
+				$search_string .=" ". $employees_detail['mode'];
+				$search_string .=" ". $employees_detail['in_time'];
+				$search_string .=" ". $employees_detail['out_time'];
+			}
 		}
 
 		$this['search_string'] = $search_string;
