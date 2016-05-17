@@ -31,6 +31,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('mode')->enum(['First_time_login','Mannual']);
 		$emp_j->addField('in_time');
 		$emp_j->addField('out_time');
+		$emp_j->addField('remark')->type('text');
 
 		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
