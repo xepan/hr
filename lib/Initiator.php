@@ -28,9 +28,15 @@ class Initiator extends \Controller_Addon {
                             $this->app->epan->id.'_employee',
                             $this->memorize(
                                 $this->app->epan->id.'_employee',
-                                $this->add('xepan\hr\Model_Employee')->loadBy('user_id',$this->app->auth->model->id)
+                                $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id)
                             )
                         );
+
+            if(!$this->app->employee->loaded()){
+                $this->resetDB();
+                $this->app->redirect('.');
+                exit;
+            }
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
             $post=$this->app->employee->ref('post_id');
@@ -42,7 +48,7 @@ class Initiator extends \Controller_Addon {
                 $this->app->forget('user_loggedin');
                 $this->api->employee->afterLoginCheck();
             }
-            $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
+            // $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
 
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');
