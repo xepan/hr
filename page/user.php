@@ -10,10 +10,12 @@ class page_user extends \xepan\base\Page{
 		if($status = $this->api->stickyGET('status'))
 			$user_m->addCondition('status',$status);
 		
-		$this->app->auth->addEncryptionHook($user_m);
-		$user_m->addHook('beforeSave',function($m){
-			$m['password']=$m->app->auth->encryptPassword($m['password'],$m['username']);
-		});
+		$auth= $this->add('Auth');
+		$auth->usePasswordEncryption('md5');
+		$auth->addEncryptionHook($user_m);
+		// $user_m->addHook('beforeSave',function($m){
+		// 	$m['password']=$m->app->auth->encryptPassword($m['password'],$m['username']);
+		// });
 
 		$user_view=$this->add('xepan\hr\CRUD',null,null,['view/setting/user-grid']);
 		$user_view->grid->addPaginator(50);
