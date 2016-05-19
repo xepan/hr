@@ -32,7 +32,7 @@ class Initiator extends \Controller_Addon {
                             )
                         );
 
-            if(!$this->app->employee->loaded()){
+            if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
                 $this->createDefaultEmployee();
                 $this->app->redirect('.');
                 exit;
@@ -83,7 +83,7 @@ class Initiator extends \Controller_Addon {
         if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
 
         $this->app->epan=$this->app->old_epan;
-        $truncate_models = ['ACL','Activity','Employee','Post','Department'];
+        $truncate_models = ['ACL','Activity','Employee','Post','Department','Affiliate'];
         foreach ($truncate_models as $t) {
             $m=$this->add('xepan\hr\Model_'.$t);
             foreach ($m as $mt) {
@@ -93,7 +93,7 @@ class Initiator extends \Controller_Addon {
         
         $this->app->epan=$this->app->new_epan;
 
-        $this->createDefaultEmployee($dept,$post);
+        $this->createDefaultEmployee();
 
         // Do other tasks needed
         // Like empting any folder etc
