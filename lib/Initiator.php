@@ -93,6 +93,14 @@ class Initiator extends \Controller_Addon {
         
         $this->app->epan=$this->app->new_epan;
 
+        $this->createDefaultEmployee($dept,$post);
+
+        // Do other tasks needed
+        // Like empting any folder etc
+    }
+
+    function createDefaultEmployee(){
+
         // Create default Company Department
         $dept = $this->add('xepan\hr\Model_Department')
                     ->set('is_system',true)
@@ -110,14 +118,6 @@ class Initiator extends \Controller_Addon {
                     ->set('name','CEO')
                     ->set('department_id',$dept->id)
                     ->save();
-
-        $this->createDefaultEmployee();
-
-        // Do other tasks needed
-        // Like empting any folder etc
-    }
-
-    function createDefaultEmployee(){
         $user = $this->add('xepan\base\Model_User_SuperUser')
                     ->addCondition('epan_id',$this->app->epan->id)
                     ->loadAny();
