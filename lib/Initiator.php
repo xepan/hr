@@ -33,7 +33,7 @@ class Initiator extends \Controller_Addon {
                         );
 
             if(!$this->app->employee->loaded()){
-                $this->resetDB();
+                $this->createDefaultEmployee();
                 $this->app->redirect('.');
                 exit;
             }
@@ -111,21 +111,25 @@ class Initiator extends \Controller_Addon {
                     ->set('department_id',$dept->id)
                     ->save();
 
-        $user = $this->add('xepan\base\Model_User_SuperUser')
-        			->addCondition('epan_id',$this->app->epan->id)
-        			->loadAny();
-
-        // Create One Default Employee as CEO/Owner
-        $emp = $this->add('xepan\hr\Model_Employee');
-        		$emp->set('type','Employee')
-        		->set('first_name','Super')
-        		->set('last_name','User')
-        		->set('department_id',$dept->id)
-        		->set('post_id',$post->id)
-        		->set('user_id',$user->id)
-        		->save();
+        $this->createDefaultEmployee();
 
         // Do other tasks needed
         // Like empting any folder etc
+    }
+
+    function createDefaultEmployee(){
+        $user = $this->add('xepan\base\Model_User_SuperUser')
+                    ->addCondition('epan_id',$this->app->epan->id)
+                    ->loadAny();
+
+        // Create One Default Employee as CEO/Owner
+        $emp = $this->add('xepan\hr\Model_Employee');
+                $emp->set('type','Employee')
+                ->set('first_name','Super')
+                ->set('last_name','User')
+                ->set('department_id',$dept->id)
+                ->set('post_id',$post->id)
+                ->set('user_id',$user->id)
+                ->save();
     }
 }
