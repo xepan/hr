@@ -7,13 +7,13 @@
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix table-responsive">
-    <table style="width:100%" class="table user-list table-hover">{header}
+    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$employee_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_sort}</span></th>
         <th id="{$direction_sortid}"><span>Direction </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$direction_sort}</span></th>
-        <th id="{$time_sortid}"><span>Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$time_sort}</span></th>
-        <th><span>Reason</span></th>
-        <th><span>Narration</span></th>
+        <th id="{$time_sortid}" data-hide="phone"><span>Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$time_sort}</span></th>
+        <th data-hide="phone"><span>Reason</span></th>
+        <th data-hide="phone"><span>Narration</span></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}

@@ -8,7 +8,7 @@
                     i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix.table-responsive
-        table.table.user-list.table-hover(style="width:100%")
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
@@ -18,12 +18,12 @@
                 th(id="{$direction_sortid}")
                     span Direction 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$direction_sort}
-                th(id="{$time_sortid}")
+                th(id="{$time_sortid}" data-hide="phone")
                     span Time 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$time_sort}
-                th
+                th(data-hide="phone")
                     span Reason
-                th
+                th(data-hide="phone")
                     span Narration
                 th 
                 {/}{/}
