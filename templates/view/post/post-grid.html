@@ -6,14 +6,14 @@
       <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
   </header>{/Pannel}
-  <div class="main-box-body clearfix table">
-    <table style="width:100%" class="table user-list table-hover">{header}
+  <div class="main-box-body clearfix table-responsive">
+    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$department_id_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$department_id_sort}</span></th>
         <th id="{$name_sortid}"><span>Post </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
-        <th><span>Schedule Time</span></th>
-        <th><span>E-mail</span></th>
-        <th id="{$employee_count_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_count_sort}</span></th>
+        <th data-hide="phone"><span>Schedule Time</span></th>
+        <th data-hide="phone"><span>E-mail</span></th>
+        <th id="{$employee_count_sortid}" data-hide="phone"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_count_sort}</span></th>
         <th></th>
         <th></th>{/}{/}
       </thead>{/}
