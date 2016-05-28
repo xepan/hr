@@ -4,7 +4,7 @@
   .col-lg-9.col-md-8.col-sm-8
     .main-box.clearfix
       .tabs-wrapper.profile-tabs
-        ul.nav.nav-tabs
+        ul.nav.nav-tabs.responsive-tabs
           li.active
             a(data-toggle='tab', href='#tab-portfolio') Portfolio
           li
@@ -16,13 +16,13 @@
           //- li
           //-   a(data-toggle='tab', href='#tab-email') Email
         .tab-content
-          #tab-portfolio.tab-pane.fade.in.active
+          #tab-portfolio.tab-pane.active
             {portfolio_view}Please Save Basic Information First{/}
-          #tab-official.tab-pane.fade
+          #tab-official.tab-pane
             {$official_info}
-           #tab-activity.tab-pane.fade
+           #tab-activity.tab-pane
             {$activity_view}
-          #tab-documents.tab-pane.clearfix.fade
+          #tab-documents.tab-pane
             {$document_view}
           //- #tab-email.tab-pane.fade
           //-   {$emails}                       
