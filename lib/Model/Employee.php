@@ -25,7 +25,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 		$emp_j->addField('notified_till')->type('number')->defaultValue(0); // TODO Should be current id of Activity
 		$emp_j->addField('offer_date')->type('date')->sortable(true);
-		$emp_j->addField('doj')->caption('Date of Joining')->type('date')->sortable(true);
+		$emp_j->addField('doj')->caption('Date of Joining')->type('date')->defaultValue(@$this->app->now)->sortable(true);
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
 		$emp_j->addField('mode')->enum(['First_time_login','Mannual']);
