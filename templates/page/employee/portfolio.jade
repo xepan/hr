@@ -2,24 +2,21 @@
   .panel.panel-default
     .panel-body 
       .col-lg-12.xepan-push
-        .col-md-12
-          .col-lg-4
-            strong  Department
-          .col-lg-4
-            strong  Post
-          .col-lg-4.xepan-push
-            strong  User
-            strong  User
-          .col-lg-4
-            .atk-form-row.atk-form-field  {$department}{$department_id}
-          .col-lg-4
-            .atk-form-row.atk-form-field  {$post}{$post_id}
-          .col-lg-4.xepan-push
-            .atk-form-row.atk-form-field  {$user}{$user_id}
+        .col-lg-4
+          .atk-form-row.atk-form-field 
+            strong  Department :  
+            div {$department}{$department_id}
+        .col-lg-4
+          .atk-form-row.atk-form-field  
+            strong  Post :
+            div {$post}{$post_id}
+        .col-lg-4
+          .atk-form-row.atk-form-field  
+            strong User : 
+            div {$user}{$user_id}
         .col-lg-12.xepan-push
           strong  Remarks
-        .col-md-12
-            .atk-form-row.atk-form-field  {$remark}
+          .atk-form-row.atk-form-field  {$remark}
       .col-lg-2.pull-right 
         | {$FormButtons}
 .col-lg-12
