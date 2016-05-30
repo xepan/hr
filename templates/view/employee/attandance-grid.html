@@ -12,7 +12,8 @@
         <th id="{$employee_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_sort}</span></th>
         <th id="{$direction_sortid}"><span>In Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$direction_sort}</span></th>
         <th id="{$time_sortid}" data-hide="phone"><span>Out Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$time_sort}</span></th>
-        <th> </th>{/}{/}
+        <th><span>In/Out</span></th>
+        <th></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
@@ -20,6 +21,10 @@
           <td>{$avatar}  <a href="{url}index.php?page=xepan_hr_movementdetail&amp;employee_id={$id}{/}" class="user-link">{$name}  </a><small><span class="label label-{$in_color}">In  </span><span class="label label-{$out_color}">Out  </span></small></td>
           <td><span>{$first_in}  </span></td>
           <td><span>{$last_out}</span></td>
+          <td>
+            {$is_in}
+            {$is_out}
+          </td>
           <td>                             </td>{/}
         </tr>{/}{/}
         {not_found}

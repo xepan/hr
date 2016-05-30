@@ -8,6 +8,7 @@ class page_employeemovement extends \xepan\base\Page{
 		parent::init();
 
 		$employee = $this->add('xepan\hr\Model_Employee');
+		$employee->addCondition('status','Active');
 		$date = $this->app->today;
 		
 		$employee->addExpression('first_in')->set(function($m,$q)use($date){
@@ -40,17 +41,32 @@ class page_employeemovement extends \xepan\base\Page{
 					);
 		});
 
+		$employee->addExpression('last_direction')->set(function($m,$q){
+			$temp = $m->refSQL('EmployeeMovements')
+			  			->setOrder('time','desc')
+			  			->setLimit(1);
+
+			return $q->expr('IFNULL([0],"Out")',[$temp->fieldQuery('direction')]);
+		});
+
 		
 		$employee->addExpression('is_in')->set(function($m,$q){
 			return $q->expr(
-					"IF([0] IS NOT NULL,1,0)",
+					"IF([0]='In','In','Out')",
 					  [
-						$m->getElement('first_in'),
+						$m->getElement('last_direction'),
 					  ]
 					);
 		});
 
-		$employee->addExpression('is_out');
+		$employee->addExpression('is_out')->set(function($m,$q){
+			return $q->expr(
+					"IF([0]='Out','Out','In')",
+					  [
+						$m->getElement('last_direction'),
+					  ]
+					);
+		});
 		
 		$employee->addExpression('in_color')->set(function($m,$q)use($date){
 			return $q->expr(
@@ -75,11 +91,17 @@ class page_employeemovement extends \xepan\base\Page{
 		});
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\attandance-grid']);
-		$grid->setModel($employee,['name','first_in','last_out','in_color','out_color','is_late']);
-		
+		$grid->setModel($employee,['name','first_in','last_out','in_color','out_color','is_late','is_out']);
+
 		$grid->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$grid->addPaginator(50);
 		$frm=$grid->addQuickSearch(['employee']);
+
+		$grid->addColumn('In/Out');
+		$grid->addMethod('format_inout',function($grid,$field){				
+		});
+
+		$grid->addFormatter('In/Out','inout');
 	}
 }
 

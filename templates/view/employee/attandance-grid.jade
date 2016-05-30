@@ -21,7 +21,9 @@
                 th(id="{$time_sortid}" data-hide="phone")
                     span Out Time 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$time_sort}
-                th 
+                th
+                    span In/Out
+                th
                 {/}{/}
             {/}
             {$subheader}
@@ -41,6 +43,9 @@
                       span {$first_in}  
                     td
                       span {$last_out}
+                    td
+                      {$is_in}
+                      {$is_out}
                     td                              
                     {/}
                 {/}{/}
