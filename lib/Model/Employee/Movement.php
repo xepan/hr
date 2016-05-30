@@ -16,5 +16,9 @@ class Model_Employee_Movement extends \xepan\base\Model_Table{
 		$this->addField('direction')->sortable(true);
 		$this->addField('reason')->enum(['Personal Outing', 'Official Outing', 'Other']);
 		$this->addField('narration')->type('text');
+
+		$this->addExpression('employee_in_time')->set($this->refSQL('employee_id')->fieldQuery('in_time'));
+		$this->addExpression('employee_out_time')->set($this->refSQL('employee_id')->fieldQuery('out_time'));
+		
 	}
 }
