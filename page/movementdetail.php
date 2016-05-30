@@ -4,6 +4,7 @@ namespace xepan\hr;
 
 class page_movementdetail extends \xepan\base\Page{
 	public $title = "Movement Detail";
+	public $breadcrumb=['Home'=>'index','Movement'=>'xepan_hr_employeemovement','Detail'=>'#'];
 	function init(){
 		parent::init();
 		
