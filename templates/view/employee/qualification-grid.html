@@ -6,22 +6,25 @@
     </div>
   </header>{/Pannel}
   <div class="main-box-body clearfix">
-    <div class="row">{header}{cols}{col}
-      <div class="col-md-12 xepan-push">
-        <div class="col-md-5"><strong>Qualification:</strong></div>
-        <div class="col-md-4"><strong>Qualification Level:</strong></div>
-        <div class="col-md-3"><strong>Remaks:</strong></div>
-      </div>{/}{/}{/}
+    <div class="row">
+      {header}{cols}{col}
+      {/}{/}{/}
       {rows}{row}
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}12{/}">{cols}
         <div class="col-md-12">
-          <div class="col-md-5">{name} Institute name here {/name}</div>
-          <div class="col-md-4">
-            {qualificaton_level}
-              Graduation/Post Graduation
-            {/qualificaton_level}  
+          <div class="col-md-5"> <strong>Qualification:</strong>
+            <div>{name} Institute name here {/name}</div>
           </div>
-          <div class="col-md-3">{remarks}|  7.00{/remarks}</div>
+          <div class="col-md-4"><strong>Qualification Level:</strong>
+            <div>
+              {qualificaton_level}
+                Graduation/Post Graduation
+              {/qualificaton_level}  
+            </div>
+          </div>
+          <div class="col-md-3"><strong>Remaks:</strong>
+            <div>{remarks}|  7.00{/remarks}</div>
+          </div>
         </div>
         <div style="margin-bottom:3%" class="col-md-12 text-right">
           <div class="com-md-3"></div>{$edit}

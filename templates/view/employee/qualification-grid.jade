@@ -10,24 +10,22 @@
     .main-box-body.clearfix
         .row
             {header}{cols}{col}
-            .col-md-12.xepan-push
-                .col-md-5
-                    strong Qualification:
-                .col-md-4
-                    strong Qualification Level:
-                .col-md-3
-                    strong Remaks:
             {/}{/}{/}
             {rows}{row}
             div(class="{$odd_even} col-md-{col-width}12{/}" data-id="{$id}")
                 {cols}
                 .col-md-12
-                    .col-md-5 {name} Institute name here {/name}
+                    .col-md-5 
+                        strong Qualification:
+                        div {name} Institute name here {/name}
                     .col-md-4
-                        {qualificaton_level}
-                        |   Graduation/Post Graduation
-                        {/qualificaton_level}  
-                    .col-md-3 {remarks}|  7.00{/remarks}
+                        strong Qualification Level:
+                        div {qualificaton_level}
+                            |   Graduation/Post Graduation
+                            {/qualificaton_level}  
+                    .col-md-3
+                        strong Remaks:
+                        div {remarks}|  7.00{/remarks}
                    .col-md-12.text-right(style="margin-bottom:3%")
                     .com-md-3
                     //- | {$action}
