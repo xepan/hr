@@ -23,7 +23,7 @@ class page_employeedetail extends \xepan\base\Page {
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 
 		
-		$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee'],'contact_view');
+		$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
 		$contact_view->setModel($employee);
 
 		if($employee->loaded()){
