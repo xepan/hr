@@ -23,8 +23,6 @@ class Model_Document extends \xepan\base\Model_Document{
 	}
 
 	function page_manage_attachments($p){
-		throw new \Exception($this->id);
-		
 		$p->add('CRUD')->setModel($this->ref('Attachments'));
 	}
 }
