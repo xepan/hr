@@ -23,7 +23,7 @@ class Controller_ACL extends \AbstractController {
 
 	function init(){
 		parent::init();
-
+		
 		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
 		$this->model = $model = $this->getModel();
@@ -99,7 +99,7 @@ class Controller_ACL extends \AbstractController {
 
 		// Check add/edit/delete if CRUD/Lister
 		
-		if(($crud = $this->getView()) instanceof \xepan\base\CRUD){			
+		if(($crud = $this->getView()) instanceof \xepan\base\CRUD){
 			if(!$this->canAdd())
 				$this->getView()->add_button->destroy();
 			
@@ -196,6 +196,31 @@ class Controller_ACL extends \AbstractController {
 
 
 			}elseif($view instanceof \xepan\base\View_Document){
+				if($view->effective_template->hasTag('action')){
+					$actions = $this->getActions($this->model['status']);
+					if(isset($actions['edit'])) unset($actions['edit']);
+					if(isset($actions['view'])) unset($actions['view']);
+					if(isset($actions['delete'])) unset($actions['delete']);
+					
+					$action_btn_list = [];
+					foreach ($actions as $action => $acl) {
+						if($acl===false) continue;
+						if($acl === true){
+							 $action_btn_list[] = $action;
+							 continue;	
+						}
+						if(is_array($acl)){
+							if(in_array($g->model['created_by_id'], $acl))
+								$action_btn_list[] = $action;
+						}
+					}
+
+					$view->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$this->model->id,'status'=>$this->model['status'],'action_btn_group'=>$this->action_btn_group],'action')->getHTML();
+					if(!isset($this->app->acl_action_added[$view->name])){
+						$view->effective_object->on('click','.acl-action',[$this,'manageAction']);
+						$this->app->acl_action_added[$view->name] = true;
+					}
+				}
 
 			}
 			// May be you have CRUD form here
