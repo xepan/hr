@@ -49,12 +49,23 @@ class page_employeemovement extends \xepan\base\Page{
 			return $q->expr('IFNULL([0],"Out")',[$temp->fieldQuery('direction')]);
 		});
 
+		$employee->addExpression('last_direction_today')->set(function($m,$q){
+			$temp = $m->refSQL('EmployeeMovements')
+						->addCondition('date',$this->app->today)
+			  			->setOrder('time','desc')
+			  			->setLimit(1);
+
+			return $q->expr('IFNULL([0],"Out")',[$temp->fieldQuery('direction')]);
+		});
+
 		
 		$employee->addExpression('is_in')->set(function($m,$q){
 			return $q->expr(
-					"IF([0]='In','In','Out')",
+					"IF([0]='In' AND [1]=	[2],'In','Out')",
 					  [
 						$m->getElement('last_direction'),
+						$m->getElement('date'),
+					  	$this->app->today
 					  ]
 					);
 		});
@@ -63,7 +74,7 @@ class page_employeemovement extends \xepan\base\Page{
 			return $q->expr(
 					"IF([0]='Out','Out','In')",
 					  [
-						$m->getElement('last_direction'),
+						$m->getElement('last_direction_today'),
 					  ]
 					);
 		});
@@ -98,10 +109,6 @@ class page_employeemovement extends \xepan\base\Page{
 		$frm=$grid->addQuickSearch(['employee']);
 
 		$grid->addColumn('In/Out');
-		$grid->addMethod('format_inout',function($grid,$field){				
-		});
-
-		$grid->addFormatter('In/Out','inout');
 	}
 }
 
