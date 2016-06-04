@@ -57,16 +57,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->app->hook('employee_update',[$this]);
 	}
 
-	function afterLoginCheck(){
-		
+	function afterLoginCheck(){		
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
 		$movement->addCondition('employee_id',$this->app->employee->id);
+		$movement->addCondition('date',$this->app->today);
 		$movement->setOrder('time','desc');
 		$movement->tryLoadAny();
 
-		if($movement->loaded() && $movement['direction']=='In'){
+		if($movement->loaded() && $movement['direction']=='In'){						
 			return;
-		}else{			
+		}else{						
 			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
 			$model_movement->addCondition('employee_id',$this->id);
 			$model_movement->addCondition('time',$this->app->now);
