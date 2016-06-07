@@ -12,7 +12,6 @@ class View_EasySetupWizard extends \View{
 			$this->js(true)->univ()->frameURL("Department of Organization",$this->app->url('xepan_hr_department'));
 			
 		}
-
 			$isDone = false;
 
 			$action = $this->js()->reload([$this->name.'_add_department'=>1]);
@@ -83,8 +82,8 @@ class View_EasySetupWizard extends \View{
 			$file_update_body = file_get_contents(realpath(getcwd().'/vendor/xepan/hr/templates/default/update_password_body.html'));
 			
 
-			// if($_GET['REGISTRATION_TYPE']){
-				// $this->js(true)->univ()->frameURL("User Configuration For Activation/Deactivation",$this->app->url('xepan_communication_general_emailcontent_usertool'));
+			// if(!$_GET['REGISTRATION_TYPE']){
+			// 	$this->js(true)->univ()->frameURL("User Configuration For Activation/Deactivation",$this->app->url('xepan_communication_general_emailcontent_usertool'));
 			// }else{
 
 				$reg_type= $frontend_config->setConfig('REGISTRATION_TYPE',"admin_activated",'base');
@@ -119,10 +118,23 @@ class View_EasySetupWizard extends \View{
 
 			$action = $this->js()->reload([$this->name.'_config_user_settings'=>1]);
 
-				if($this->app->epan->config->count()->getOne() > 0){
-					$isDone = true;
-					$action = $this->js()->univ()->dialogOK("Already have Data",' You already config the user settings, visit page ? <a href="'. $this->app->url('xepan_communication_general_emailcontent_usertool')->getURL().'"> click here to go </a>');
-				}
+			$all = $this->app->epan->config;
+			$r_type = $all->getConfig('REGISTRATION_TYPE');
+			$reg_sub = $all->getConfig('REGISTRATION_SUBJECT');
+			$reg_body = $all->getConfig('REGISTRATION_BODY');
+			$reset_pwd_sub = $all->getConfig('RESET_PASSWORD_SUBJECT');
+			$reset_pwd_body = $all->getConfig('RESET_PASSWORD_BODY');
+			$verify_subject = $all->getConfig('VERIFICATIONE_MAIL_SUBJECT');
+			$verify_body = $all->getConfig('VERIFICATIONE_MAIL_SUBJECT');
+			$update_subject = $all->getConfig('UPDATE_PASSWORD_SUBJECT');
+			$update_body = $all->getConfig('UPDATE_PASSWORD_BODY');
+
+			if(!$r_type || !$reg_sub || !$reg_body || !$reset_pwd_sub || !$reset_pwd_body || !$verify_subject || !$verify_body || !$update_body || !$update_subject){
+				$isDone = false;
+			}else{	
+				$isDone = true;
+				$action = $this->js()->univ()->dialogOK("Already have Data",' You already config the user settings, visit page ? <a href="'. $this->app->url('xepan_communication_general_emailcontent_usertool')->getURL().'"> click here to go </a>');
+			}
 
 			$user_config_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
