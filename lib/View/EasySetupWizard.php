@@ -23,8 +23,8 @@ class View_EasySetupWizard extends \View{
 
 			$dept_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
-				->setTitle('Department of Company/Organization')
-				->setMessage('Add the avilable department in Organization')
+				->setTitle('Add Other Departments')
+				->setMessage('Add all the departments present in your organization. Need help! click on help icon ')
 				->setHelpURL('#')	
 				->setAction('Click Here',$action,$isDone);
 
@@ -43,8 +43,8 @@ class View_EasySetupWizard extends \View{
 
 			$user_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
-				->setTitle('Creation of Users')
-				->setMessage('Create users & assign user_id to particular employee')
+				->setTitle('Create New Users')
+				->setMessage('Create new users & assign user_id to particular employee')
 				->setHelpURL('#')
 				->setAction('Click Here',$action,$isDone);
 
@@ -138,8 +138,8 @@ class View_EasySetupWizard extends \View{
 
 			$user_config_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
-				->setTitle('Config the User Settings')
-				->setMessage('Set the config for web user activation & deactivation')
+				->setTitle('Configure Settings For New Users')
+				->setMessage('Configuration setting for web user activation & deactivation mailing content')
 				->setHelpURL('#')
 				->setAction('Click Here',$action,$isDone);
 
@@ -158,8 +158,8 @@ class View_EasySetupWizard extends \View{
 
 			$emp_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
-				->setTitle('Employees of their related Department')
-				->setMessage('Add the employees, according to their specific departments')
+				->setTitle('Add New Employees')
+				->setMessage('Add new employees according specific departments')
 				->setHelpURL('#')
 				->setAction('Click Here',$action,$isDone);
 	}
