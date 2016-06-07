@@ -54,11 +54,10 @@ class page_post extends \xepan\base\Page {
 
 		$crud=$this->add('xepan\hr\CRUD',null,null,['view/post/post-grid']);
 		$crud->grid->addPaginator(50);
-
+		$crud->form->setLayout('form\post');
 		$crud->setModel($post);
 		
-		if(!$crud->isEditing()){
-				
+		if(!$crud->isEditing()){			
 			$crud->grid->controller->importField('department_id');
 			
 			$f=$crud->grid->addQuickSearch(['name']);
