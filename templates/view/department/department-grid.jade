@@ -7,59 +7,58 @@
                 span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix
-        .table-responsive
-            table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
-                {header}
-                thead.xepan-hover-hand
-                    {cols}{col}
-                    th(id="{$name_sortid}")
-                        span Department 
-                        span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
-                    th(id="{$production_level_sortid}" data-hide="phone")
-                        span Production Level 
-                        span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$production_level_sort}
-                    th(id="{$posts_count_sortid}" data-hide="phone")
-                        span Post 
-                        span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$posts_count_sort}
-                    th 
-                    th 
-                    {/}{/}
-                {$subheader}
+    .main-box-body.clearfix.table-responsive
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
+            {header}
+            thead.xepan-hover-hand
+                {cols}{col}
+                th(id="{$name_sortid}")
+                    span Department 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
+                th(id="{$production_level_sortid}" data-hide="phone")
+                    span Production Level 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$production_level_sort}
+                th(id="{$posts_count_sortid}" data-hide="phone")
+                    span Post 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$posts_count_sort}
+                th 
+                th 
+                {/}{/}
+            {$subheader}
 
-                tbody
-                    {rows}{row}
-                    tr(class="{$odd_even}" data-id="{$id}")
-                        {cols}
-                        td
-                          | {$name}
-                        td
-                          | {$production_level}
-                        td
-                          a(href='index.php?page=xepan_hr_post&department_id={$id}')
-                            | {$posts_count}
-                        td
-                            | {action}Action Here{/}
-                        td(style="width: 15%;")
-                            {$edit}
-                            {$delete}
-                            {/}
-                        
+            tbody
+                {rows}{row}
+                tr(class="{$odd_even}" data-id="{$id}")
+                    {cols}
+                    td
+                      | {$name}
+                    td
+                      | {$production_level}
+                    td
+                      a(href='index.php?page=xepan_hr_post&department_id={$id}')
+                        | {$posts_count}
+                    td
+                        | {action}Action Here{/}
+                    td(style="width: 15%;")
+                        {$edit}
+                        {$delete}
                         {/}
-                    {/}{/}
-                    {not_found}
-                    div.row
-                        .col-md-12.text-center.alert.alert-warning(role="alert")
-                            span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+                    
                     {/}
-
-                {totals}
-                tfoot
-                    tr(class="totals")
-                        {cols}{col}
-                        <td {$tdparam}>
-                        {$content}
-                        </td>
-                        {/}{/}
+                {/}{/}
+                {not_found}
+                div.row
+                    .col-md-12.text-center.alert.alert-warning(role="alert")
+                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
                 {/}
-            {$Paginator}
+
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
+        {$Paginator}
