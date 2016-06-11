@@ -50,7 +50,7 @@ class View_Notification extends \CompleteLister{
 			$this->template->set('unread_notification',$notifications->count()->getOne());
 		}
 
-		$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']))->_enclose(),15000);
+		$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']))->_enclose(),120000);
 
 	}
 	function formatRow(){
