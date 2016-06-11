@@ -104,9 +104,10 @@ class Initiator extends \Controller_Addon {
 
         // Create default Company Department
         $dept = $this->add('xepan\hr\Model_Department')
-                    ->set('is_system',true)
-                    ->set('name','Company')
-                    ->set('production_level',1)
+                    ->addCondition('is_system',true)
+                    ->addCondition('name','Company')
+                    ->addCondition('production_level',1)
+                    ->tryLoadAny()
                     ->save();
 
         $this->app->db->dsql()->table('department')
@@ -116,9 +117,11 @@ class Initiator extends \Controller_Addon {
 
         // Create default CEO/Owner Post
         $post = $this->add('xepan\hr\Model_Post')
-                    ->set('name','CEO')
-                    ->set('department_id',$dept->id)
+                    ->addCondition('name','CEO')
+                    ->addCondition('department_id',$dept->id)
+                    ->tryLoadAny()
                     ->save();
+
         $user = $this->add('xepan\base\Model_User_SuperUser')
                     ->addCondition('epan_id',$this->app->epan->id)
                     ->loadAny();
@@ -126,11 +129,12 @@ class Initiator extends \Controller_Addon {
         // Create One Default Employee as CEO/Owner
         $emp = $this->add('xepan\hr\Model_Employee');
                 $emp->set('type','Employee')
-                ->set('first_name','Super')
-                ->set('last_name','User')
-                ->set('department_id',$dept->id)
-                ->set('post_id',$post->id)
-                ->set('user_id',$user->id)
+                ->addCondition('first_name','Super')
+                ->addCondition('last_name','User')
+                ->addCondition('department_id',$dept->id)
+                ->addCondition('post_id',$post->id)
+                ->addCondition('user_id',$user->id)
+                ->tryLoadAny()
                 ->save();
     }
 }
