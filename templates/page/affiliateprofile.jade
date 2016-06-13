@@ -1,7 +1,10 @@
 | {$Content}
 .row
+  .col-lg-12.col-md-12.col-sm-12
+    {$contact_view_full_width}
   .col-lg-3.co-md-3.col-sm-3
     {$contact_view}
+  {other_details}
   .col-lg-9.col-md-8.col-sm-8
       .main-box.clearfix
         .tabs-wrapper.profile-tabs
@@ -9,13 +12,11 @@
             li.active
               a(data-toggle='tab', href='#tab-affiliate') Narration 
           .tab-content
-            
-             #tab-affiliate.tab-pane.fade.in.active
-                  {details}
-                  .alert.alert-warning
-                    i.fa.fa-warning.fa-fw.fa-lg
-                    strong Warning!
-                    |  Please Fill the basic information first. 
-                  {/details}
-     
-             
+            #tab-affiliate.tab-pane.fade.in.active
+              {details}
+              .alert.alert-warning
+                i.fa.fa-warning.fa-fw.fa-lg
+                  strong Warning!
+                |  Please Fill the basic information first. 
+              {/details}
+  {/}        
