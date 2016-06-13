@@ -28,6 +28,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$contact_view->document_view->effective_template->del('im_and_events_andrelation');
 			$contact_view->document_view->effective_template->del('email_and_phone');
 			$this->template->del('details');
+			$contact_view->setStyle(['width'=>'70%','margin'=>'auto']);
 		}else{
 			$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
 		}
