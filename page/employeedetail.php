@@ -22,10 +22,17 @@ class page_employeedetail extends \xepan\base\Page {
 
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 
-		
-		$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
-		$contact_view->setModel($employee);
+		if($action=="add"){
 
+			$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
+			$contact_view->document_view->effective_template->del('im_and_events_andrelation');
+			$contact_view->document_view->effective_template->del('email_and_phone');
+			$this->template->del('details');
+		}else{
+			$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+		}
+		
+		$contact_view->setModel($employee);
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
