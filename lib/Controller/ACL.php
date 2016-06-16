@@ -215,7 +215,7 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 
-					$view->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$this->model->id,'status'=>$this->model['status'],'action_btn_group'=>$this->action_btn_group],'action')->getHTML();
+					$view->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$this->model->id,'status'=>$this->model['status'],'action_btn_group'=>'xs'],'action')->getHTML();
 					if(!isset($this->app->acl_action_added[$view->name])){
 						$view->effective_object->on('click','.acl-action',[$this,'manageAction']);
 						$this->app->acl_action_added[$view->name] = true;
