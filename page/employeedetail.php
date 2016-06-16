@@ -45,10 +45,10 @@ class page_employeedetail extends \xepan\base\Page {
 				$f->js(null,$f->js()->univ()->successMessage('Updated'))->reload()->execute();				
 			}
 
-			$q = $portfolio_view->addMany('Qualification',null,'Qualification',['view/employee/qualification-grid']);
+			$q = $portfolio_view->addMany('Qualification',['no_records_message'=>'No qualifications found'],'Qualification',['view/employee/qualification-grid']);
 			$q->setModel($employee->ref('Qualifications'));
 
-			$e = $portfolio_view->addMany('Experiences',null,'Experiences',['view/employee/experience-grid']);
+			$e = $portfolio_view->addMany('Experiences',['no_records_message'=>'No experience found'],'Experiences',['view/employee/experience-grid']);
 			$e->setModel($employee->ref('Experiences'));
 
 			$official_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info',['view/employee/official-details']);
@@ -59,10 +59,10 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
 			$document_view->setIdField('contact_id');
-			$q = $document_view->addMany('EmployeeDocument',null,'Document',['view/employee/emp-document-grid']);
+			$q = $document_view->addMany('EmployeeDocument',['no_records_message'=>'No document found'],'Document',['view/employee/emp-document-grid']);
 			$q->setModel($employee->ref('EmployeeDocuments'));
 
-			$activity_view = $this->add('xepan\base\Grid',null,'activity_view',['view/activity/activity-grid']);
+			$activity_view = $this->add('xepan\base\Grid',['no_records_message'=>'No activity found'],'activity_view',['view/activity/activity-grid']);
 			$activity_view->add('xepan\base\Paginator',null,'Paginator');
 
 			$activity=$this->add('xepan\base\Model_Activity')->setOrder('created_at','desc');
