@@ -109,6 +109,8 @@ class page_employeemovement extends \xepan\base\Page{
 		$frm=$grid->addQuickSearch(['employee']);
 
 		$grid->addColumn('In/Out');
+
+		$grid->js('click')->_selector('.view-frame')->univ()->frameURL('Employee Details',[$this->api->url('xepan_hr_employeedetail'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 	}
 }
 

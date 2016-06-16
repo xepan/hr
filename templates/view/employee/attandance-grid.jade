@@ -34,7 +34,8 @@
                     {cols}
                     td
                       {$avatar}  
-                      a.user-link(href='{url}index.php?page=xepan_hr_movementdetail&employee_id={$id}{/}')
+                      //- a.user-link(href='{url}index.php?page=xepan_hr_movementdetail&employee_id={$id}{/}')
+                      a.user-link.view-frame(href='#' data-id="{$id}")
                         {$name}  
                       small
                           span(class="label label-{$in_color}") In  

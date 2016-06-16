@@ -18,7 +18,8 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}  <a href="{url}index.php?page=xepan_hr_movementdetail&amp;employee_id={$id}{/}" class="user-link">{$name}  </a><small><span class="label label-{$in_color}">In  </span><span class="label label-{$out_color}">Out  </span></small></td>
+          <td>{$avatar}  <a href="#" data-id="{$id}" class="user-link view-frame">{$name}  </a><small><span class="label label-{$in_color}">In  </span><span class="label label-{$out_color}">Out  </span></small>
+          </td>
           <td><span>{$first_in}  </span></td>
           <td><span>{$last_out}</span></td>
           <td>
