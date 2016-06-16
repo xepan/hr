@@ -30,8 +30,8 @@
                       {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
                       {/}
-                      a.user-link(href='{url}index.php?page=xepan_hr_affiliatedetails&contact_id={$id}{/}')
-                        {name}Name{/}
+                      //- a.user-link(href='{url}index.php?page=xepan_hr_affiliatedetails&contact_id={$id}{/}')
+                      a.user-link.view-frame(href='#',data-id="{$id}")  {name}Name{/}
                       span.user-subhead [{city}{/}] 
                     td
                         {$narration}    
