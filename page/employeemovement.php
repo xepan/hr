@@ -110,7 +110,7 @@ class page_employeemovement extends \xepan\base\Page{
 
 		$grid->addColumn('In/Out');
 
-		$grid->js('click')->_selector('.view-frame')->univ()->frameURL('Employee Movements',[$this->api->url('xepan_hr_movementdetail'),'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		$grid->js('click')->_selector('.do-view-frame')->univ()->frameURL('Employee Movements',[$this->api->url('xepan_hr_movementdetail'),'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 	}
 }
 
