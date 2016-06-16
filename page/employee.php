@@ -31,6 +31,10 @@ class page_employee extends \xepan\base\Page {
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
 		$crud->grid->addPaginator(50);
 		$crud->setModel($employee);
+
+
+
+
 		$f = $crud->grid->addQuickSearch(['first_name','last_name']);
 
 		$d_f =$f->addField('DropDown','department_id')->setEmptyText("All Department");
@@ -63,6 +67,13 @@ class page_employee extends \xepan\base\Page {
 		});
 
 		$crud->add('xepan\base\Controller_Avatar');
+		
+		if(!$crud->isEditing()){
+			$crud->grid->js('click')->_selector('.view-frame')->univ()->frameURL('Employee Details',[$this->api->url('xepan_hr_employeedetail'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		}
+		$crud->grid->on('click','a.view-frame',function($js,$data){
+			$js->univ()->frameURL();
+		});
 		
 	}
 }

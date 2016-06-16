@@ -35,7 +35,8 @@
                       {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
                       {/}
-                      a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$id}{/}') {$name}
+                      //- a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$id}{/}') {$name}
+                      a.user-link.view-frame(href='#',data-id="{$id}") {$name}
                       span.user-subhead {$department} / {$posts}
                     td
                       | {doj}2013/08/08{/}
