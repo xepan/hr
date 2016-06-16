@@ -196,7 +196,7 @@ class Controller_ACL extends \AbstractController {
 
 
 			}elseif($view instanceof \xepan\base\View_Document){
-				if($view->effective_template->hasTag('action')){
+				if($view->effective_template->hasTag('action') && $this->model->loaded()){
 					$actions = $this->getActions($this->model['status']);
 					if(isset($actions['edit'])) unset($actions['edit']);
 					if(isset($actions['view'])) unset($actions['view']);
