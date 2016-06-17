@@ -27,13 +27,18 @@ class page_aclmanagement extends \xepan\base\Page {
 		$dt = $this->api->stickyGET('document_type');
 
 		$acl_m = $this->add('xepan\hr\Model_ACL');
-		// $acl_m->_dsql()->del('fields')->field($this->api->db->dsql()->expr('distinct([0]',[$acl_m->getElement('name')]));
 		$acl_m->_dsql()->group('name');
+
+		// $acl_m->add('xepan\hr\Controller_ACL');
+
+		$post_m = $this->add('xepan\hr\Model_Post');
+		$post_m->addExpression('post_with_department')->set($post_m->dsql()->expr('CONCAT([0]," : ",[1])',[$post_m->getElement('department'),$post_m->getElement('name')]));
+		$post_m->title_field = 'post_with_department';
 
 		$form = $this->add('Form',null,null,['form/empty']);
 		$form->setLayout('form/aclpost');
 
-		$form->addField('DropDown','post')->addClass('form-control')->setModel('xepan\hr\Post')->set($post);
+		$form->addField('DropDown','post')->addClass('form-control')->setModel($post_m)->set($post);
 		$form->addField('DropDown','document_type')
 									->addClass('form-control')
 									->setModel($acl_m);
