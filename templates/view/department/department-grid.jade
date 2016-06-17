@@ -35,7 +35,8 @@
                     td
                       | {$production_level}
                     td
-                      a(href='index.php?page=xepan_hr_post&department_id={$id}')
+                      //- a(href='index.php?page=xepan_hr_post&department_id={$id}')
+                      a.do-view-department-post(href='#' data-id="{$id}")
                         | {$posts_count}
                     td
                         | {action}Action Here{/}
