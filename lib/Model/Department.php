@@ -95,66 +95,85 @@ class Model_Department extends \xepan\hr\Model_Document{
 	}
 
 
-	function quickSearch($app,$search_string,$view){
+	function quickSearch($app,$search_string,&$result_array){
 		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$this->addCondition('Relevance','>',0);
  		$this->setOrder('Relevance','Desc');
+ 		
  		if($this->count()->getOne()){
- 			$lc = $view->add('Completelister',null,null,['view/quicksearch-hr-grid']);
- 			$lc->setModel($this);
-    		$lc->addHook('formatRow',function($g){
-    			$g->current_row_html['url'] = $this->app->url('xepan_hr_department',['status'=>$g->model['Active']]);	
-     		});	
+ 			foreach ($this->getRows() as $data) {
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['name'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_hr_department',['status'=>$data['status']])->getURL(),
+ 				];
+ 			}
 		}
+		
 
     	$post = $this->add('xepan\hr\Model_Post');	
      	$post->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$post->addCondition('Relevance','>',0);
  		$post->setOrder('Relevance','Desc');
+ 		
  		if($post->count()->getOne()){
- 			$pc = $view->add('Completelister',null,null,['view/quicksearch-hr-grid']);
- 			$pc->setModel($post);
-    		$pc->addHook('formatRow',function($g){
-    			$g->current_row_html['url'] = $this->app->url('xepan_hr_post',['status'=>$g->model['Active']]);	
-     		});			
- 		}
-
+ 			foreach ($post->getRows() as $data) {
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['name'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_hr_post',['status'=>$data['status']])->getURL(),
+ 				];
+ 			}
+		}
 
  		$employee = $this->add('xepan\hr\Model_Employee');	
      	$employee->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$employee->addCondition('Relevance','>',0);
  		$employee->setOrder('Relevance','Desc');
+ 			
  		if($employee->count()->getOne()){
- 			$ec = $view->add('Completelister',null,null,['view/quicksearch-hr-grid']);
- 			$ec->setModel($employee);
-    		$ec->addHook('formatRow',function($g){
-    			$g->current_row_html['url'] = $this->app->url('xepan/hr/employeedetail',['action'=>'view','contact_id'=>$g->model->id]);	
-     		});			
- 		}
+ 			foreach ($employee->getRows() as $data) {
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['name'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_hr_employeedetail',['status'=>$data['status'],'contact_id'=>$data['id']])->getURL(),
+ 				];
+ 			}
+		}
 
 		$user = $this->add('xepan\base\Model_User');	
      	$user->addExpression('Relevance')->set('MATCH(username, type, scope) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$user->addCondition('Relevance','>',0);
  		$user->setOrder('Relevance','Desc');
+ 		
  		if($user->count()->getOne()){
- 			$uc = $view->add('Completelister',null,null,['view/quicksearch-hr-grid']);
- 			$uc->setModel($user);
-    		$uc->addHook('formatRow',function($g){
-    			$g->current_row_html['url'] = $this->app->url('xepan_hr_user',['status'=>$g->model->status]);	
-     		});			
- 		}
+ 			foreach ($user->getRows() as $data) {
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['username'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan_hr_user',['status'=>$data['status']]),
+ 				];
+ 			}
+		}
 
  		$affiliate = $this->add('xepan\hr\Model_Affiliate');	
      	$affiliate->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
 		$affiliate->addCondition('Relevance','>',0);
  		$affiliate->setOrder('Relevance','Desc');
+ 		
  		if($affiliate->count()->getOne()){
- 			$ac = $view->add('Completelister',null,null,['view/quicksearch-hr-grid']);
- 			$ac->setModel($affiliate);
-    		$ac->addHook('formatRow',function($g){
-    			$g->current_row_html['url'] = $this->app->url('xepan/hr/affiliatedetails',['action'=>'view','contact_id'=>$g->model->id]);	
-     		});			
- 		}
-
+ 			foreach ($affiliate->getRows() as $data) {
+ 				$result_array[] = [
+ 					'image'=>null,
+ 					'title'=>$data['name'],
+ 					'relevency'=>$data['Relevance'],
+ 					'url'=>$this->app->url('xepan/hr/affiliatedetails',['status'=>$data['status'],'contact_id'=>$data['id']])->getURL(),
+ 				];
+ 			}
+		}
 	}
 }
