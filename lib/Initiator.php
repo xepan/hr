@@ -59,6 +59,8 @@ class Initiator extends \Controller_Addon {
             $this->app->status_icon["xepan\hr\Model_Employee"] = ['All'=>'fa fa-globe','Active'=>"fa fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
             $this->app->status_icon["xepan\base\Model_User"] = ['All'=>'fa fa-globe','Active'=>"fa fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
             $this->app->status_icon["xepan\hr\Model_Affiliate"] = ['All'=>'fa fa-globe','Active'=>"fa fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
+        }else{
+            $this->app->employee = $this->add('xepan\hr\Model_Employee');
         }
 
         $search_department = $this->add('xepan\hr\Model_Department');
