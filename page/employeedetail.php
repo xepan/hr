@@ -32,6 +32,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$contact_view->document_view->effective_template->del('send_email_sms_wrapper');
 			$contact_view->document_view->effective_template->del('online_status_wrapper');
 			$contact_view->document_view->effective_template->del('contact_type_wrapper');
+			$contact_view->document_view->effective_template->del('post_wrapper');
 			$this->template->del('details');
 			$contact_view->setStyle(['width'=>'50%','margin'=>'auto']);
 		}else{
