@@ -107,6 +107,8 @@ class Model_Department extends \xepan\hr\Model_Document{
  					'title'=>$data['name'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_hr_department',['status'=>$data['status']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
+ 					'quick_info'=>'Post Count: '.$data['posts_count'],
  				];
  			}
 		}
@@ -124,6 +126,8 @@ class Model_Department extends \xepan\hr\Model_Document{
  					'title'=>$data['name'],
  					'relevency'=>$data['Relevance'],
  					'url'=>$this->app->url('xepan_hr_post',['status'=>$data['status']])->getURL(),
+ 					'type_status'=>$data['type'].' '.'['.$data['status'].']',
+ 					'quick_info'=>'Employee Count: '.$data['employee_count'].' In-Time: '.$data['in_time'].' Out-Time: '.$data['out-time'],
  				];
  			}
 		}
