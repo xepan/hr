@@ -20,7 +20,7 @@ class page_affiliate extends \xepan\base\Page{
 		$frm=$crud->grid->addQuickSearch(['name']);
 
 		if(!$crud->isEditing()){
-			$crud->grid->js('click')->_selector('.do-view-frame')->univ()->frameURL('Affiliate Details',[$this->api->url('xepan_hr_affiliatedetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$crud->grid->js('click')->_selector('.do-view-affiliate')->univ()->frameURL('Affiliate Details',[$this->api->url('xepan_hr_affiliatedetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		}
 
 	}
