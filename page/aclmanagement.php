@@ -27,6 +27,8 @@ class page_aclmanagement extends \xepan\base\Page {
 		$dt = $this->api->stickyGET('document_type');
 
 		$acl_m = $this->add('xepan\hr\Model_ACL');
+		// $acl_m->_dsql()->del('fields')->field($this->api->db->dsql()->expr('distinct([0]',[$acl_m->getElement('name')]));
+		$acl_m->_dsql()->group('name');
 
 		$form = $this->add('Form',null,null,['form/empty']);
 		$form->setLayout('form/aclpost');
@@ -34,8 +36,8 @@ class page_aclmanagement extends \xepan\base\Page {
 		$form->addField('DropDown','post')->addClass('form-control')->setModel('xepan\hr\Post')->set($post);
 		$form->addField('DropDown','document_type')
 									->addClass('form-control')
-									->setModel($acl_m)
-									->_dsql()->del('fields')->field($this->api->db->dsql()->expr('distinct([0]',[$acl_m->getElement('name')]));
+									->setModel($acl_m);
+									;
 
 		$form->addSubmit('Go')->addClass('btn btn-success');
 
