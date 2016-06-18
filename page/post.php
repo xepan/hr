@@ -80,6 +80,9 @@ class page_post extends \xepan\base\Page {
 				]);
 		
 		}
+		if(!$crud->isEditing()){
+			$crud->grid->js('click')->_selector('.do-view-post-employees')->univ()->frameURL('Post Employees',[$this->api->url('xepan_hr_employee'),'post_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		}
 	}
 
 }

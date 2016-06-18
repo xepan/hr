@@ -48,7 +48,8 @@
                     td
                       a.emails-accesible(data-type="checklist" data-value="{$existing_permitted_emails}" data-title="Permitted Emails" data-pk="{$id}")
                     td
-                      a(href='index.php?page=xepan_hr_employee&post_id={$id}')
+                      //- a(href='index.php?page=xepan_hr_employee&post_id={$id}')
+                      a.do-view-post-employees(href='#' data-id="{$id}")
                         |  {$employee_count}
                     td
                         | {$action}
