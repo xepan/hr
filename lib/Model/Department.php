@@ -95,8 +95,8 @@ class Model_Department extends \xepan\hr\Model_Document{
 	}
 
 
-	function quickSearch($app,$search_string,&$result_array){
-		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+	function quickSearch($app,$search_string,&$result_array,$relevency_mode){
+		$this->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$this->addCondition('Relevance','>',0);
  		$this->setOrder('Relevance','Desc');
  		
@@ -115,7 +115,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		
 
     	$post = $this->add('xepan\hr\Model_Post');	
-     	$post->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+     	$post->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$post->addCondition('Relevance','>',0);
  		$post->setOrder('Relevance','Desc');
  		
@@ -133,7 +133,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		}
 
  		$employee = $this->add('xepan\hr\Model_Employee');	
-     	$employee->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+     	$employee->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$employee->addCondition('Relevance','>',0);
  		$employee->setOrder('Relevance','Desc');
  			
@@ -149,7 +149,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		}
 
 		$user = $this->add('xepan\base\Model_User');	
-     	$user->addExpression('Relevance')->set('MATCH(username, type, scope) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+     	$user->addExpression('Relevance')->set('MATCH(username, type, scope) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$user->addCondition('Relevance','>',0);
  		$user->setOrder('Relevance','Desc');
  		
@@ -165,7 +165,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 		}
 
  		$affiliate = $this->add('xepan\hr\Model_Affiliate');	
-     	$affiliate->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" IN NATURAL LANGUAGE MODE)');
+     	$affiliate->addExpression('Relevance')->set('MATCH(search_string) AGAINST ("'.$search_string.'" '.$relevency_mode.')');
 		$affiliate->addCondition('Relevance','>',0);
  		$affiliate->setOrder('Relevance','Desc');
  		
