@@ -63,10 +63,6 @@ class Model_Department extends \xepan\hr\Model_Document{
 
 		$search_string = ' ';
 		$search_string .=" ". $this['name'];
-		$search_string .=" ".$this['production_level'];
-		$search_string .=" ".$this['is_system'];
-		$search_string .=" ".$this['is_outsourced'];
-		$search_string .=" ".$this['posts_count'];
 
 		if($this->loaded()){
 			$post = $this->ref('Posts');
