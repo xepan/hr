@@ -181,9 +181,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				$search_string .=" ". $experience_detail['name'];
 				$search_string .=" ". $experience_detail['department'];
 				$search_string .=" ". $experience_detail['company_branch'];
-				$search_string .=" ". $experience_detail['salary'];
 				$search_string .=" ". $experience_detail['designation'];
-				$search_string .=" ". $experience_detail['duration'];
 			}
 		}
 
