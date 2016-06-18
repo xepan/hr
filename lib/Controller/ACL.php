@@ -210,7 +210,7 @@ class Controller_ACL extends \AbstractController {
 							 continue;	
 						}
 						if(is_array($acl)){
-							if(in_array($g->model['created_by_id'], $acl))
+							if(in_array($this->model['created_by_id'], $acl))
 								$action_btn_list[] = $action;
 						}
 					}
