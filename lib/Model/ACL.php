@@ -22,20 +22,18 @@ class Model_ACL extends \xepan\base\Model_Table {
 		$this->hasOne('xepan\base\Epan','epan_id');
 		$this->hasOne('xepan\hr\Post','post_id');
 		$this->addField('namespace');
-		$this->addField('document_type');
+		$this->addField('type');
 		$this->addField('action_allowed')->type('text')->defaultValue(json_encode([]));
 		$this->addField('allow_add')->type('boolean')->defaultValue(true);
 
-		$this->addExpression('name')->set("CONCAT(document_type, ' [',namespace,']')");
-
-		$this->addExpression('type','"ACL"');
+		$this->addExpression('name')->set("CONCAT(type, ' [',namespace,']')");
 
 		$this->addHook('beforeSave',function($m){
-			if(!$m['epan_id'] || !$m['post_id'] || !$m['document_type'] || !$m['namespace'])
+			if(!$m['epan_id'] || !$m['post_id'] || !$m['type'] || !$m['namespace'])
 				throw $this->exception('ACL Model does not have proper informations')
 							->addMoreInfo('epan_id',$m['epan_id'])
 							->addMoreInfo('post_id',$m['post_id'])
-							->addMoreInfo('type',$m['document_type'])
+							->addMoreInfo('type',$m['type'])
 							->addMoreInfo('namespace',$m['namespace']);
 		});
 

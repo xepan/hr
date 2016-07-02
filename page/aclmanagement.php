@@ -24,7 +24,7 @@ class page_aclmanagement extends \xepan\base\Page {
 
 		$post = $this->api->stickyGET('post_id');
 		$ns = $this->api->stickyGET('namespace');
-		$dt = $this->api->stickyGET('document_type');
+		$dt = $this->api->stickyGET('type');
 
 		$acl_m = $this->add('xepan\hr\Model_ACL');
 		$acl_m->_dsql()->group('name');
@@ -39,7 +39,7 @@ class page_aclmanagement extends \xepan\base\Page {
 		$form->setLayout('form/aclpost');
 
 		$form->addField('DropDown','post')->addClass('form-control')->setModel($post_m)->set($post);
-		$form->addField('DropDown','document_type')
+		$form->addField('DropDown','type')
 									->addClass('form-control')
 									->setModel($acl_m);
 									;
@@ -55,7 +55,7 @@ class page_aclmanagement extends \xepan\base\Page {
 			$existing_acl = $this->add('xepan\hr\Model_ACL')
 								->addCondition('post_id',$post)
 								->addCondition('namespace',$ns)
-								->addCondition('document_type',$dt)
+								->addCondition('type',$dt)
 								->tryLoadAny();
 
 			if(!$existing_acl->loaded())
@@ -91,7 +91,7 @@ class page_aclmanagement extends \xepan\base\Page {
 			$class = new \ReflectionClass($m);
 			$acl_m = $this->add('xepan\hr\Model_ACL')
 					->addCondition('namespace',$class->getNamespaceName())
-					->addCondition('document_type',$m['type'])
+					->addCondition('type',$m['type'])
 					->addCondition('post_id',$post)
 					;
 			$acl_m->tryLoadAny();
@@ -102,8 +102,8 @@ class page_aclmanagement extends \xepan\base\Page {
 		});
 
 		$form->onSubmit(function($f)use($af){
-			$acl_m = $this->add('xepan\hr\Model_ACL')->load($f['document_type']);
-			return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'document_type'=> $acl_m['document_type']]);
+			$acl_m = $this->add('xepan\hr\Model_ACL')->load($f['type']);
+			return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $acl_m['type']]);
 		});
 		
 	}

@@ -18,7 +18,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		if(!$model)
 			$model = $this->ref('related_document_id');
 
-		$acl_m->addCondition('document_type',$model['type']);
+		$acl_m->addCondition('type',$model['type']);
 	
 		if(!is_array($list_of_actions)) $list_of_actions = explode(",", $list_of_actions);		
 		if(!is_array($current_statuses)) $current_statuses = explode(",", $current_statuses);		
@@ -26,10 +26,12 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		
 		$employee_ids=[];
 		foreach ($acl_m as $acl) {
+			// echo $acl['namespace'].' '. $acl['post']. ' ';
 			foreach ($current_statuses as $current_status) {
 				$actions = $acl['action_allowed'][$current_status];
 				foreach ($list_of_actions as $req_act) {
 					$text_code = $actions[$req_act]; // Self Only, All, None, Etc.
+					// echo '<br/>-----'.$current_status. ' '.$req_act. ' ' . $text_code;
 					switch ($text_code) {
 						case 'Self Only':
 							# if($model->created_by->post_id == $acl->post_id) include this id
@@ -52,7 +54,11 @@ class Model_Activity extends \xepan\base\Model_Activity{
 					}
 				}
 			}
+			// echo ' <br/>';
 		}
+
+		$employee_ids = array_unique($employee_ids, SORT_REGULAR);
+		// throw new \Exception(print_r($employee_ids,true), 1);
 		
 		$this['notify_to'] = json_encode($employee_ids);
 		$this->save();

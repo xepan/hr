@@ -354,7 +354,7 @@ class Controller_ACL extends \AbstractController {
 
 		$this->acl_m = $this->add('xepan\hr\Model_ACL')
 					->addCondition('namespace',$class->getNamespaceName())
-					->addCondition('document_type',$this->model['type'])
+					->addCondition('type',$this->model['type'])
 					->addCondition('post_id',$this->app->employee['post_id'])
 					;
 		$this->acl_m->tryLoadAny();
@@ -366,7 +366,7 @@ class Controller_ACL extends \AbstractController {
 		/**
 		 * ACL
 		 * -  post_id  
-		 * -  document_type('Opportunity') 
+		 * -  type('Opportunity') 
 		 * - actions_allowed (
 		 * 'add'=>true/false,
 		 * 'Draft' => [

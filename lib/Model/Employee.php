@@ -98,6 +98,25 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		return $activity;
 	}
 
+	function communicationCreatedNotify($app,$comm){
+		if(($comm['direction']=='In' && !$comm['from_id']) || ($comm['direction']=='Out' && !$comm['to_id']))
+			return;
+
+		$related_contact_id=null;
+		$comm_model=null;
+		$msg = $comm['from'].' Communicated '. $comm['to'];
+		if($comm['direction']=='In'){
+			$related_contact_id = $comm['from_id'];
+			$comm_model = $comm->ref('from_id');
+		}else{
+			$related_contact_id = $comm['to_id'];
+			$comm_model = $comm->ref('to_id');
+		}
+
+		$activity  = $this->addActivity($msg,null,$related_contact_id,null,$this->id);
+		$activity->notifyWhoCan('communication','Active,InActive' ,$comm_model);
+	}
+
 	function deleteEmployeeLedger(){
 		$account=$this->add('xepan\accounts\Model_Ledger');
 		$account->addCondition('contact_id',$this->id);
