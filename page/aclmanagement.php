@@ -17,10 +17,10 @@ class page_aclmanagement extends \xepan\base\Page {
 	function init(){
 		parent::init();
 
-		// if(!$this->api->auth->model->isSuperUser()){
-		// 	$this->add('View_Error')->set('Sorry, you are not permitted to handle acl, Ask respective authority');
-		// 	return;
-		// }
+		if(!$this->api->auth->model->isSuperUser()){
+			$this->add('View_Error')->set('Sorry, you are not permitted to handle acl, Ask respective authority');
+			return;
+		}
 
 		$post = $this->api->stickyGET('post_id');
 		$ns = $this->api->stickyGET('namespace');
@@ -90,9 +90,13 @@ class page_aclmanagement extends \xepan\base\Page {
 
 			$class = new \ReflectionClass($m);
 			$acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',$class->getNamespaceName())
-					->addCondition('type',$m['type'])
-					->addCondition('post_id',$post)
+					->addCondition('namespace',$class->getNamespaceName());
+			
+			if($m['type']=='Contact' || $m['type']=='Document')
+				$m['type'] = str_replace("Model_", '', $class->getShortName());
+
+			$acl_m->addCondition('type',$m['type']);
+			$acl_m->addCondition('post_id',$post)
 					;
 			$acl_m->tryLoadAny();
 			$acl_m['action_allowed'] = json_encode($acl_array);
