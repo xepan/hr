@@ -51,7 +51,11 @@ class page_aclmanagement extends \xepan\base\Page {
 
 		if($dt){
 			$af->addField('Checkbox','allow_add');
-			$m = $this->add($ns.'\\Model_'.$dt);
+			try{
+				$m = $this->add($ns.'\\Model_'.$dt);
+			}catch(\Exception $e){
+				$m = $this->add($ns.'\\'.$dt);
+			}
 			$existing_acl = $this->add('xepan\hr\Model_ACL')
 								->addCondition('post_id',$post)
 								->addCondition('namespace',$ns)
@@ -79,7 +83,11 @@ class page_aclmanagement extends \xepan\base\Page {
 		}
 
 		$af->onSubmit(function($f)use($post,$ns,$dt){
-			$m = $this->add($ns.'\\Model_'.$dt);
+			try{
+				$m = $this->add($ns.'\\Model_'.$dt);
+			}catch(\Exception $e){
+				$m = $this->add($ns.'\\'.$dt);
+			}
 			$acl_array=[];
 			foreach ($m->actions as $status => $actions) {
 				$status = $status=='*'?'All':$status;			
