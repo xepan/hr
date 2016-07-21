@@ -11,6 +11,7 @@ class View_Notification extends \CompleteLister{
 			$new_notificagions = $this->add('xepan\hr\Model_Activity')
 									->addCondition('id','>',$this->app->employee['notified_till']?:0)
 									->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%')
+									->addCondition('created_at','<',$this->app->now)
 									->setOrder('id','asc')
 									->getRows();
 

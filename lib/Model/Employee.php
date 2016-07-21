@@ -40,6 +40,15 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
         });
+
+        $this->addExpression('first_email')->set(function($m,$q){
+			$x = $m->add('xepan\base\Model_Contact_Email');
+			return $x->addCondition('contact_id',$q->getField('id'))
+						->addCondition('is_active',true)
+						->addCondition('is_valid',true)
+						->setLimit(1)
+						->fieldQuery('value');
+		});
 		
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
