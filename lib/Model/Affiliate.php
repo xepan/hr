@@ -46,8 +46,8 @@ class Model_Affiliate extends \xepan\base\Model_Contact{
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
-            ->addActivity("Affiliate is now active", null/* Related Document ID*/, $this->id /*Related Contact ID*/)
-            ->notifyWhoCan('activate','InActive',$this);
+            ->addActivity("Affiliate '".$this['name']."' is now active", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_affiliatedetails&contact_id=".$this->id."")
+            ->notifyWhoCan('deactivate','Active',$this);
 		$this->save();
 	}
 
@@ -55,8 +55,8 @@ class Model_Affiliate extends \xepan\base\Model_Contact{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->app->employee
-            ->addActivity("Affiliate is deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/)
-            ->notifyWhoCan('deactivate','Active',$this);
+            ->addActivity("Affiliate '".$this['name']."' has been deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_affiliatedetails&contact_id=".$this->id."")
+            ->notifyWhoCan('activate','InActive',$this);
 		$this->save();
 	}
 
