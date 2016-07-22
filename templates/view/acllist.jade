@@ -3,7 +3,7 @@
     .panel-heading
       h4.panel-title
         a.accordion-toggle.collapsed(data-toggle='collapse', data-parent='#accordion2', href="# {$_name}")
-          | {action}actions{/}
+          | {action}{/}
     .panel-collapse.collapse(style='height: 2px;' id="{$_name}")
       .panel-body
-        {$Content}
+        |  {$Content}
