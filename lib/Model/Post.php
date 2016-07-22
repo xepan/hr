@@ -42,11 +42,17 @@ class Model_Post extends \xepan\hr\Model_Document{
 	}
 	function activate(){
 		$this['status']='Active';
-		$this->saveAndUnLoad();
-		
+		$this->app->employee
+            ->addActivity("'".$this['name']."' post  is now active of department '".$this['department']."' ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+            ->notifyWhoCan('deactivate','Active',$this);
+		$this->saveAndUnload();
 	}
+
 	function deactivate(){
 		$this['status']='InActive';
+		$this->app->employee
+            ->addActivity("'".$this['name']."' post has been deactivated in '".$this['department']."' department ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+            ->notifyWhoCan('activate','InActive',$this);
 		$this->saveAndUnLoad();
 	}
 
