@@ -17,7 +17,7 @@ class page_affiliate extends \xepan\base\Page{
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_Avatar');
 		
-		$frm=$crud->grid->addQuickSearch(['name']);
+		$frm=$crud->grid->addQuickSearch(['name','organization']);
 
 		if(!$crud->isEditing()){
 			$crud->grid->js('click')->_selector('.do-view-affiliate')->univ()->frameURL('Affiliate Details',[$this->api->url('xepan_hr_affiliatedetails'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
