@@ -25,6 +25,13 @@ class Model_Activity extends \xepan\base\Model_Activity{
 
 		
 		$employee_ids=[];
+		
+		if($this->app->getConfig('all_notification_to_superuser',true)){
+			foreach($this->add('xepan\hr\Model_Employee')->addCondition('scope','SuperUser')->getRows() as $emps){
+				$employee_ids [] = $emps['id'];
+			}
+		}
+
 		foreach ($acl_m as $acl) {
 			// echo $acl['namespace'].' '. $acl['post']. ' ';
 			foreach ($current_statuses as $current_status) {
