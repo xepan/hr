@@ -21,7 +21,8 @@ class page_user extends \xepan\base\Page{
 		$user_view->grid->addPaginator(50);
 		$user_view->grid->addQuickSearch(['username']);
 		$user_view->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'username','default_value'=>'']);		
-		if($user_view->isEditing()){
+		
+		if($user_view->isEditing('add')){
 		if($emp_id=$this->app->employee->id)
 			$user_m->addCondition('created_by_id',$emp_id);
 		}

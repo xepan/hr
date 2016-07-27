@@ -68,13 +68,14 @@ class Initiator extends \Controller_Addon {
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
 
         return $this;
-	}
+    }
 
     function setup_frontend(){
         $this->routePages('xepan_hr');
         $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
         ->setBaseURL('./vendor/xepan/hr/');
         $this->app->employee = $this->add('xepan\hr\Model_Employee');
+        $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         return $this;
     }
 
