@@ -14,10 +14,10 @@ namespace xepan\hr;
 class Model_Activity extends \xepan\base\Model_Activity{
 
 	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true){
-		throw new \Exception("Employee: ". $this->app->employee, 1);
 		
 		if(!isset($this->app->employee))
 			return;
+		throw new \Exception("Employee: ". $this->app->employee->id, 1);
 		
 		$acl_m = $this->add('xepan\hr\Model_ACL');
 		if(!$model)
