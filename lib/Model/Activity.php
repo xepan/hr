@@ -15,7 +15,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 
 	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true){
 		
-		if(!isset($this->app->employee))
+		if(!isset($this->app->employee->loaded()))
 			return;
 		throw new \Exception("Employee: ". $this->app->employee->id, 1);
 		
