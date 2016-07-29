@@ -14,6 +14,8 @@ namespace xepan\hr;
 class Model_Activity extends \xepan\base\Model_Activity{
 
 	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true){
+		throw new \Exception($this->app->employee, 1);
+		
 		if(!isset($this->app->employee))
 			return;
 		
