@@ -34,7 +34,7 @@ class Controller_ACL extends \AbstractController {
 
 		// Put Model View Conditions 
 
-		if($model instanceof \xepan\base\Model_Table){		
+		if($model instanceof \xepan\base\Model_Table){
 			$view_array = $this->canView();	
 			$q= $this->model->dsql();
 
@@ -346,6 +346,7 @@ class Controller_ACL extends \AbstractController {
 			return;
 		}
 
+
 		$class = new \ReflectionClass($this->model);
 
 		// if($this->model->acl !==true && $this->model->acl !==false && $this->model->acl !== null){
@@ -360,7 +361,7 @@ class Controller_ACL extends \AbstractController {
 		if($this->model['type']=='Contact' || $this->model['type']=='Document')
 				$this->model['type'] = str_replace("Model_", '', $class->getShortName());
 		
-		$this->acl_m->addCondition('type',$this->model['type']);
+		$this->acl_m->addCondition('type',$this->model['type']?:$this->model->acl_type);
 		$this->acl_m->addCondition('post_id',$this->app->employee['post_id']);
 		
 		$this->acl_m->tryLoadAny();
