@@ -197,7 +197,9 @@ class Controller_ACL extends \AbstractController {
 				$view->setFormatter('attachment_icon','attachment_icon');
 
 
-			}elseif($view instanceof \xepan\base\View_Document){
+			}elseif($view instanceof \View){
+				if(!isset($view->effective_template))
+					$view->effective_template=$view->template;
 				if($view->effective_template->hasTag('action') && $this->model->loaded()){
 					$actions = $this->getActions($this->model['status']);
 					if(isset($actions['edit'])) unset($actions['edit']);
@@ -219,6 +221,8 @@ class Controller_ACL extends \AbstractController {
 
 					$view->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$this->model->id,'status'=>$this->model['status'],'action_btn_group'=>'xs'],'action')->getHTML();
 					if(!isset($this->app->acl_action_added[$view->name])){
+						if(!isset($this->app->acl_action_added[$view->name]))
+							$view->effective_object=$view;
 						$view->effective_object->on('click','.acl-action',[$this,'manageAction']);
 						$this->app->acl_action_added[$view->name] = true;
 					}
