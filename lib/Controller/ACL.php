@@ -303,8 +303,12 @@ class Controller_ACL extends \AbstractController {
 					$this->api->db->rollback();
 					throw $e;
 				}
-				if(isset($page_action_result)){
+				if(isset($page_action_result) or isset($this->app->page_action_result)){
 					
+					if(isset($this->app->page_action_result)){						
+						$page_action_result = $this->app->page_action_result;
+					}
+
 					$js=[];
 					if($page_action_result instanceof \jQuery_Chain) {
 						$js[] = $page_action_result;
