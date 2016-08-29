@@ -1,0 +1,25 @@
+.row
+	.col-md-12
+		.main-box
+			.clearfix
+				.infographic-box.merged.merged-top.pull-left
+					i.fa.fa-user.red-bg
+					span.value.red {$late_employees}
+					span.headline Late Employees
+				.infographic-box.merged.merged-top.merged-right.pull-left
+					i.fa.fa-user.green-bg
+					span.value.red {$out_employees}
+					span.headline Employees Out
+			.clearfix
+				.infographic-box.merged.pull-left
+					i.fa.fa-clock-o.yellow-bg
+					span.value.yellow {$in_time}
+					span.headline Average Intime 
+				.infographic-box.merged.merged-right.pull-left
+					i.fa.fa-clock-o.red-bg
+					span.value.red {$out_time}
+					span.headline Average OutTime
+	
+.row		
+	.col-md-12
+		{$grid}
