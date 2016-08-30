@@ -17,6 +17,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		
 		if(!$this->app->employee->loaded())
 			return;
+
 		
 		$acl_m = $this->add('xepan\hr\Model_ACL');
 		if(!$model)
@@ -24,8 +25,8 @@ class Model_Activity extends \xepan\base\Model_Activity{
 
 		$acl_m->addCondition('type',$model['type']);
 	
-		if(!is_array($list_of_actions)) $list_of_actions = explode(",", $list_of_actions);		
-		if(!is_array($current_statuses)) $current_statuses = explode(",", $current_statuses);		
+		if(!is_array($list_of_actions)) $list_of_actions = explode(",", $list_of_actions);
+		if(!is_array($current_statuses)) $current_statuses = explode(",", $current_statuses);
 
 		
 		$employee_ids=[];
@@ -46,6 +47,8 @@ class Model_Activity extends \xepan\base\Model_Activity{
 					switch ($text_code) {
 						case 'Self Only':
 							# if($model->created_by->post_id == $acl->post_id) include this id
+							if(!$model['created_by_id'])
+								break;
 							if($this->getPost($model['created_by_id'])->get('id') == $acl['post_id'])
 								$employee_ids[] = $model['created_by_id'];
 							break;
@@ -67,6 +70,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 			}
 			// echo ' <br/>';
 		}
+
 
 		$employee_ids = array_unique($employee_ids, SORT_REGULAR);
 		// throw new \Exception(print_r($employee_ids,true), 1);
