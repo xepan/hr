@@ -21,7 +21,24 @@ class page_dashboard extends \xepan\base\Page{
 
 		$this->add('xepan\base\Grid',null,'grid',['view\dashboard\grid'])->setModel($employee);
 
-		$employee_in = $this->add('xepan\hr\Model_Employee_Movement');
+		$employee_movement = $this->add('xepan\hr\Model_Employee');
+
+		$count = 0;
+		foreach ($employee_movement as $emp){
+			$mov = $this->add('xepan\hr\Model_Employee_Movement');
+			$mov->addCondition('employee_id',$emp->id);
+			$mov->addCondition('time','>=',$this->app->today);
+			$mov->setOrder('time','desc');
+			$mov->tryLoadAny();
+
+			if($mov['direction'] == 'Out' || !$mov->loaded())
+				$count ++;
+		}
+
+		$this->template->trySet('out_employees',$count);
+
+		$total_employee = $employee_movement->count()->getOne();
+		$this->template->trySet('in_employees',abs($count-$total_employee));
 	}
 
 	function defaultTemplate(){
