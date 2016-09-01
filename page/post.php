@@ -69,7 +69,7 @@ class page_post extends \xepan\base\Page {
 			$epan_emails = $this->add('xepan\communication\Model_Communication_EmailSetting');
 			$value =[];
 			foreach ($epan_emails as $ee) {
-				$value[]=['value'=>$ee->id,'text'=>$ee['email_username']];
+				$value[]=['value'=>$ee->id,'text'=>$ee['name']];
 			}
 
 			$crud->grid->js(true)->_load('bootstrap-editable.min')->_css('libs/bootstrap-editable')->_selector('.emails-accesible')->editable(
