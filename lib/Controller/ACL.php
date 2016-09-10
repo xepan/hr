@@ -104,7 +104,7 @@ class Controller_ACL extends \AbstractController {
 		// Check add/edit/delete if CRUD/Lister
 		
 		if(($crud = $this->getView()) instanceof \xepan\base\CRUD){
-			if(!$this->canAdd())
+			if(!$this->canAdd() && $this->getView()->add_button)
 				$this->getView()->add_button->destroy();
 			
 			if(!$crud->isEditing()){
