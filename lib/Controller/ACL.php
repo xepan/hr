@@ -300,7 +300,8 @@ class Controller_ACL extends \AbstractController {
 				}catch(\Exception_StopInit $e){
 
 				}catch(\Exception $e){
-					$this->api->db->rollback();
+					if($this->app->db->intransaction())
+						$this->api->db->rollback();
 					throw $e;
 				}
 				if(isset($page_action_result) or isset($this->app->page_action_result)){
