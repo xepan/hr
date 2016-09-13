@@ -296,11 +296,11 @@ class Controller_ACL extends \AbstractController {
 				try{
 					$this->api->db->beginTransaction();
 						$page_action_result = $this->model->{"page_".$action}($p);						
-					$this->api->db->commit();
+					if($this->app->db->intransaction()) $this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
 				}catch(\Exception $e){
-					$this->api->db->rollback();
+					if($this->app->db->intransaction()) $this->api->db->rollback();
 					throw $e;
 				}
 				if(isset($page_action_result) or isset($this->app->page_action_result)){
