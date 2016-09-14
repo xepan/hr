@@ -12,5 +12,9 @@ class Model_EmployeeDocument extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\hr\Employee','employee_id');
 		$this->addField('name');
 		$this->add('xepan/filestore/Field_File','employee_document_id');
+
+		$this->addExpression('filename')->set(function($m,$q){
+			return $m->refSQL('employee_document_id')->fieldQuery('original_filename');
+		});
 	}
 }

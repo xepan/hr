@@ -28,11 +28,11 @@
                 li.col-md-12
                     .details
                         .name
-                            a.text-center(href="{$employee_document}" download="{$name}") {name}Secondary Marksheet{/}
+                            a.text-center(href="{$employee_document}" download="{$name}_{$filename}") {name}Secondary Marksheet{/}
                         .type
                             .btn-group(role='group', aria-label='...')
                                 //- a(href="{$original_filename}" title="Bos 3 (p.vanhaastrecht)")
-                                a( href="{$employee_document}" download="{$name}")
+                                a( href="{$employee_document}" download="{$name}_{$filename}")
                                     embed(class="doc-img litebox-image" title="Click to Download {$name}"  src='{employee_document}img/samples/hdr/small/img_5.jpg{/}')
                                 {$edit}   
                                 {$delete}   
