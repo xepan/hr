@@ -5,8 +5,8 @@
         height:auto!important;
     }
     .doc-img{
-        width:100px;
-        min-height:80px;
+        width:100%;
+        min-height:100px;
         max-height:100px;
     }
   </style>{Pannel}
@@ -25,9 +25,10 @@
       <div data-id="{$id}" class="{$odd_even} col-md-{col-width}3{/}">{cols}
         <li class="col-md-12">
           <div class="details">
-            <div class="name"><a href="#" class="text-center">{name}Secondary Marksheet{/}</a></div>
+            <div class="name"><a href="{$employee_document}" download="{$name}_{$filename}" class="text-center">{name}Secondary Marksheet{/}</a></div>
             <div class="type">
-              <div role="group" aria-label="..." class="btn-group"><a href="{employee_document}logo.png{/}" download="{$name}"><img alt="Download" title="Click to Download {$name}" src="{employee_document}img/samples/hdr/small/img_5.jpg{/}" class="doc-img"/></a>{$edit}   
+              <div role="group" aria-label="..." class="btn-group"><a href="{$employee_document}" download="{$name}_{$filename}">
+                  <embed title="Click to Download {$name}" src="{employee_document}img/samples/hdr/small/img_5.jpg{/}" class="doc-img litebox-image"/></a>{$edit}   
                 {$delete}   
               </div>
             </div>

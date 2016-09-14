@@ -1,11 +1,14 @@
 .xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
+    //- script(type="text/javascript" src="../admin/templates/js/jquery.mousewheel-3.0.6.pack.js")
+    //- script(type="text/javascript" src="../admin/templates/js/jquery.fancybox.pack.js?v=2.1.5")
+    //- link(rel="stylesheet" href="../admin/templates/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen")
     style.
         .widget-users li{
             height:auto!important;
         }
         .doc-img{
-            width:100px;
-            min-height:80px;
+            width:100%;
+            min-height:100px;
             max-height:100px;
         }
     {Pannel}
@@ -25,14 +28,12 @@
                 li.col-md-12
                     .details
                         .name
-                            a.text-center(href='#') {name}Secondary Marksheet{/}
+                            a.text-center(href="{$employee_document}" download="{$name}_{$filename}") {name}Secondary Marksheet{/}
                         .type
                             .btn-group(role='group', aria-label='...')
-                                //- button.btn.btn-sm.btn-success(type='button')|Download
-                                a( href="{employee_document}logo.png{/}" download="{$name}")
-                                    img(class="doc-img" alt='Download' title="Click to Download {$name}"  src='{employee_document}img/samples/hdr/small/img_5.jpg{/}')
-                                //- button.btn.btn-sm.btn-danger(type='button')
-                                //- br  
+                                //- a(href="{$original_filename}" title="Bos 3 (p.vanhaastrecht)")
+                                a( href="{$employee_document}" download="{$name}_{$filename}")
+                                    embed(class="doc-img litebox-image" title="Click to Download {$name}"  src='{employee_document}img/samples/hdr/small/img_5.jpg{/}')
                                 {$edit}   
                                 {$delete}   
             {/}
@@ -45,3 +46,10 @@
 
             {totals}{cols}{col}{$content}{/}{/}{/}
         {$Paginator}
+//- script.
+//-     $(document).ready(function() {
+//-         $(".litebox-image").fancybox({
+//-             openEffect  : 'none',
+//-             closeEffect : 'none'
+//-         });
+//-     });        
