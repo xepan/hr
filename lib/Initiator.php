@@ -25,13 +25,10 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
             
-    		$this->app->employee = $this->recall(
-                            $this->app->epan->id.'_employee',
-                            $this->memorize(
-                                $this->app->epan->id.'_employee',
-                                $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id)
-                            )
-                        );
+    		if(!($this->app->employee = $this->recall($this->app->epan->id.'_employee',false))){                
+                $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
+                $this->memorize($this->app->epan->id.'_employee', $this->app->employee);
+            }
 
             if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
                 $this->createDefaultEmployee();
@@ -40,8 +37,8 @@ class Initiator extends \Controller_Addon {
             }
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
-            $post=$this->app->employee->ref('post_id');
-            $this->app->layout->template->trySet('post',$post['name']);
+            // $post=$this->app->employee->ref('post_id');
+            $this->app->layout->template->trySet('post',$this->app->employee['post']);
             $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
             $this->app->layout->template->trySet('status',$this->app->employee['status']);
             
