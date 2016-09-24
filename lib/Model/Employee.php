@@ -20,6 +20,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j = $this->join('employee.contact_id');
 
 		// $emp_j->hasOne('xepan\base\User',null,'username'); // Now in Contact
+		$emp_j->hasOne('xepan\hr\LeaveTemplate','leave_template_id');
+		$emp_j->hasOne('xepan\hr\SalaryTemplate','salary_template_id');
 		$emp_j->hasOne('xepan\hr\Department','department_id')->sortable(true);
 		$emp_j->hasOne('xepan\hr\Post','post_id');
 		
