@@ -12,5 +12,7 @@ class Model_EmployeeTransaction extends \xepan\base\Model_Table{
 		$this->addField('name');
 		$this->addField('type')->setValueList('Due'=>'Due','Paid'=>'Paid');
 		$this->addField('narration')->type('text');
+		
+		$this->hasMany('xepan\hr\EmployeeTransactionRow','employee_transaction_id',null,'EmployeeTransactionRow');
 	}
 }

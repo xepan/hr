@@ -9,7 +9,7 @@ class Model_OfficialHolidays extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->addField('name');
-		$this->addField('date')->type('datetime')
+		$this->addField('date')->type('datetime');
 		$this->addField('narration')->type('text');
 	}
 }

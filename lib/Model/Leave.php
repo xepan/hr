@@ -14,5 +14,7 @@ class Model_Leave extends \xepan\base\Model_Table{
 		$this->addField('type');
 		$this->addField('allowed');
 		$this->addField('deduction');		
+		
+		$this->hasMany('xepan\hr\EmployeeAllowedLeave','leave_id',null,'EmployeeAllowedLeave');
 	}
 }

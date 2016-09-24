@@ -43,7 +43,7 @@ class page_employeedetail extends \xepan\base\Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['department','post','user','remark'],['department_id','post_id','user_id','remark']);
+			$portfolio_view->setModel($employee,['department','post','user','remark','salary_template'],['department_id','post_id','user_id','remark','salary_template_id']);
 			$f=$portfolio_view->form;
 
 			if($f->isSubmitted()){
@@ -75,7 +75,6 @@ class page_employeedetail extends \xepan\base\Page {
 			$activity->addCondition('contact_id',$_GET['contact_id']);
 			$activity->tryLoadAny();
 			$activity_view->setModel($activity);
-
 
 			// $this->add('xepan\hr\')
 

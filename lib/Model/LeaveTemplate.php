@@ -7,6 +7,8 @@ class Model_LeaveTemplate extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
-		$this->addField('name');		
+		$this->addField('name');
+
+		$this->hasMany('xepan\hr\Leave','leave_template_id',null,'Leave');
 	}
 }
