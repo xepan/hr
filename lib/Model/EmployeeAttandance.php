@@ -11,6 +11,7 @@ class Model_EmployeeAttandance extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\hr\Leave','leave_id');
 		$this->hasOne('xepan\hr\Employee','employee_id');
 
-		$this->addField('date')->type('datetime');
+		$this->addField('created_at')->type('datetime')->defaultValue($this->app->now);
+		$this->addField('date')->type('datetime');		
 	}
 }
