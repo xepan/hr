@@ -36,9 +36,8 @@ class Controller_ACL extends \AbstractController {
 
 		// Put Model View Conditions 
 
-		if($model instanceof \xepan\base\Model_Table){
+		if($model instanceof \Model){
 			$view_array = $this->canView();	
-			$q= $this->model->dsql();
 
 			$where_condition=[];
 			foreach ($view_array as $status => $acl) { // acl can be true(for all, false for none and [] for employee created_by_ids)
@@ -60,6 +59,7 @@ class Controller_ACL extends \AbstractController {
 				}
 			}
 			if(!empty($where_condition)){
+				$q= $this->model->dsql();
 				$this->model->addCondition(
 					$q->expr("(".implode(" OR ", $where_condition).")", 
 						[
