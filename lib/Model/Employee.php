@@ -20,6 +20,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j = $this->join('employee.contact_id');
 
 		// $emp_j->hasOne('xepan\base\User',null,'username'); // Now in Contact
+		$emp_j->hasOne('xepan\hr\SalaryTemplate','salary_template_id');
 		$emp_j->hasOne('xepan\hr\Department','department_id')->sortable(true);
 		$emp_j->hasOne('xepan\hr\Post','post_id');
 		
@@ -36,6 +37,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
 		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
 		$emp_j->hasMany('xepan\hr\Employee_Movement','employee_id',null,'EmployeeMovements');
+		$emp_j->hasMany('xepan\hr\EmployeeAllowedLeave','employee_id',null,'EmployeeAllowedLeave');
+		$emp_j->hasMany('xepan\hr\EmployeeAttandance','employee_id',null,'EmployeeAttandance');
+		$emp_j->hasMany('xepan\hr\EmployeeTransaction','employee_id',null,'EmployeeTransaction');
+		$emp_j->hasMany('xepan\hr\PaymentAndDeduction','employee_id',null,'PaymentAndDeduction');
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
@@ -53,6 +58,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
 		$this->addHook('afterSave',[$this,'throwEmployeeUpdateHook']);
+		$this->addHook('afterSave',[$this,'updateTemplates']);
 		$this->addHook('beforeDelete',[$this,'deleteQualification']);
 		$this->addHook('beforeDelete',[$this,'deleteExperience']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
@@ -63,6 +69,17 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function throwEmployeeUpdateHook(){
 		$this->app->hook('employee_update',[$this]);
+	}
+
+	function updateTemplates(){
+		// copy salary and leave templates of posts
+		$post = $this->add('xepan\hr\Model_Post')->tryLoadBy('id',$this['post_id']);
+		
+		if(!$post->loaded())
+			return;
+		
+			$this['salary_template_id'] = $post['salary_template_id'];  
+			$this->save(); 
 	}
 
 	function afterLoginCheck(){		

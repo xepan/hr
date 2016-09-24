@@ -20,10 +20,13 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
             $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
             $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
+            $m->addItem(['Employee Attandance','icon'=>'fa fa-check-square-o'],'xepan_hr_employeeattandance');
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
+            $m->addItem(['Payroll','icon'=>'fa fa-money'],'xepan_hr_payroll');
             $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
+            $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_hr_leavetemplate');
             
     		if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
