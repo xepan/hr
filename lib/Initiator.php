@@ -25,9 +25,9 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
             
-    		if(!($this->app->employee = $this->recall($this->app->epan->id.'_employee',false))){                
+    		if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
-                $this->memorize($this->app->epan->id.'_employee', $this->app->employee);
+                $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
             }
 
             if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
