@@ -50,12 +50,18 @@ class page_aclmanagement extends \xepan\base\Page {
 
 
 		if($dt){
-			$af->addField('Checkbox','allow_add');
+			$is_config= false;
 			try{
 				$m = $this->add($ns.'\\Model_'.$dt);
 			}catch(\Exception $e){
-				$m = $this->add($ns.'\\'.$dt);
+				try{
+					$m = $this->add($ns.'\\'.$dt);
+				}catch(\Exception $e1){
+					$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+					$is_config = true;
+				}
 			}
+
 			$existing_acl = $this->add('xepan\hr\Model_ACL')
 								->addCondition('post_id',$post)
 								->addCondition('namespace',$ns)
@@ -65,15 +71,25 @@ class page_aclmanagement extends \xepan\base\Page {
 			if(!$existing_acl->loaded())
 				$existing_acl->save();
 
-			$af->getElement('allow_add')->set($existing_acl['allow_add']);
+			if(!$is_config){
+				$af->addField('Checkbox','allow_add');
+				$af->getElement('allow_add')->set($existing_acl['allow_add']);
+			}
 			
+
+			$value_list=['Self Only'=>'Self Only','All'=>'All','None'=>'None'];
+
+			if($is_config){
+				unset($value_list['Self Only']);
+			}
+
 			foreach ($m->actions as $status => $actions) {
 				$status = $status=='*'?'All':$status;	
 				$greeting_card = $af->add('View', null, null, ['view/acllist']);
 				foreach ($actions as $action) {
 					$greeting_card->template->set('action',$status);					
 					$greeting_card->addField('DropDown',$status.'_'.$action,$action)
-						->setValueList(['Self Only'=>'Self Only','All'=>'All','None'=>'None'])
+						->setValueList($value_list)
 						->addClass('form-control')
 						->set($existing_acl['action_allowed'][$status][$action]);
 					;
@@ -83,10 +99,16 @@ class page_aclmanagement extends \xepan\base\Page {
 		}
 
 		$af->onSubmit(function($f)use($post,$ns,$dt){
+			$is_config = false;
 			try{
 				$m = $this->add($ns.'\\Model_'.$dt);
 			}catch(\Exception $e){
-				$m = $this->add($ns.'\\'.$dt);
+				try{
+					$m = $this->add($ns.'\\'.$dt);
+				}catch(\Exception $e1){
+					$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+					$is_config = true;
+				}
 			}
 			$acl_array=[];
 			foreach ($m->actions as $status => $actions) {
@@ -98,7 +120,7 @@ class page_aclmanagement extends \xepan\base\Page {
 
 			$class = new \ReflectionClass($m);
 			$acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',$class->getNamespaceName());
+					->addCondition('namespace',isset($class->namespace)? $class->namespace:$class->getNamespaceName());
 			
 			if($m['type']=='Contact' || $m['type']=='Document')
 				$m['type'] = str_replace("Model_", '', $class->getShortName());
@@ -108,7 +130,7 @@ class page_aclmanagement extends \xepan\base\Page {
 					;
 			$acl_m->tryLoadAny();
 			$acl_m['action_allowed'] = json_encode($acl_array);
-			$acl_m['allow_add'] = $f['allow_add'];
+			$acl_m['allow_add'] = $f['allow_add']?:false;
 			$acl_m->save();
 
 		});
