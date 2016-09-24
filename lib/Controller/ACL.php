@@ -36,9 +36,8 @@ class Controller_ACL extends \AbstractController {
 
 		// Put Model View Conditions 
 
-		if($model instanceof \xepan\base\Model_Table){
+		if($model instanceof \Model){
 			$view_array = $this->canView();	
-			$q= $this->model->dsql();
 
 			$where_condition=[];
 			foreach ($view_array as $status => $acl) { // acl can be true(for all, false for none and [] for employee created_by_ids)
@@ -60,6 +59,7 @@ class Controller_ACL extends \AbstractController {
 				}
 			}
 			if(!empty($where_condition)){
+				$q= $this->model->dsql();
 				$this->model->addCondition(
 					$q->expr("(".implode(" OR ", $where_condition).")", 
 						[
@@ -236,7 +236,7 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function getModel(){
-		$model =  $this->owner instanceof \Model_Table ? $this->owner: $this->owner->model;
+		$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;		
 		if(strpos($model->acl, 'xepan\\')===0){
 			$this->dependent=$model;
 			$model = $this->add($model->acl);
@@ -367,7 +367,7 @@ class Controller_ACL extends \AbstractController {
 		// }
 
 		$this->acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',$class->getNamespaceName());
+					->addCondition('namespace',isset($class->namespace)? $class->namespace:$class->getNamespaceName());
 
 		if($this->model['type']=='Contact' || $this->model['type']=='Document')
 				$this->model['type'] = str_replace("Model_", '', $class->getShortName());
