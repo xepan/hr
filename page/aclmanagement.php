@@ -132,7 +132,7 @@ class page_aclmanagement extends \xepan\base\Page {
 			$acl_m['action_allowed'] = json_encode($acl_array);
 			$acl_m['allow_add'] = $f['allow_add']?:false;
 			$acl_m->save();
-
+			return "Done";
 		});
 
 		$form->onSubmit(function($f)use($af){
