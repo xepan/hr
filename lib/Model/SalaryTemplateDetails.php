@@ -15,8 +15,8 @@ class Model_SalaryTemplateDetails extends \xepan\base\Model_Table{
 
 		$this->addField('amount')->type('int');
 
-		// $this->addExpression('unit')->set(function($m,$q){
-		// 	return $m->ref('salary_id')->fieldQuery('unit');
-		// });
+		$this->addExpression('unit')->set(function($m,$q){
+			return $m->ref('salary_id')->fieldQuery('unit');
+		});
 	}
 }

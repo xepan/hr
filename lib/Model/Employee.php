@@ -62,6 +62,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeMovements']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('beforeSave',[$this,'updateEmployeeSalary']);
+		$this->addHook('beforeSave',[$this,'updateEmployeeLeave']);
 	}
 
 	function throwEmployeeUpdateHook(){
@@ -76,14 +77,40 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$this->ref('EmployeeSalary')->each(function($m){
 				$m->delete();
 			});
-			
+
 			if($temp->loaded()){
 				foreach ($temp->ref('xepan\hr\SalaryTemplateDetails') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_Salary');
 					$m['employee_id'] = $this->id;
 					$m['salary_id'] = $row['salary_id'];
 					$m['amount'] = $row['amount'];
-					$m['unit'] = "monthly";
+					$m['unit'] = $row['unit'];
+					$m->save();
+				}
+			}
+		}
+	}
+
+	function updateEmployeeLeave(){
+		
+		if($this->dirty['post_id']){
+			$temp = $this->ref('post_id')->ref('leave_template_id');
+
+			$this->ref('EmployeeSalary')->each(function($m){
+				$m->delete();
+			});
+
+			if($temp->loaded()){
+				foreach ($temp->ref('xepan\hr\LeaveTemplateDetail') as $row) {
+					$m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
+					$m['employee_id'] = $this->id;
+					$m['leave_id'] = $row['leave_id'];
+					$m['is_yearly_carried_forward'] = $row['is_yearly_carried_forward'];
+					$m['type'] = $row['type'];
+					$m['is_unit_carried_forward'] = $row['is_unit_carried_forward'];
+					$m['unit'] = $row['unit'];
+					$m['allow_over_quota'] = $row['allow_over_quota'];
+					$m['no_of_leave'] = $row['no_of_leave'];
 					$m->save();
 				}
 			}
