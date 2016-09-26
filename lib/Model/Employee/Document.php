@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class Model_EmployeeDocument extends \xepan\base\Model_Table{
+class Model_Employee_Document extends \xepan\base\Model_Table{
 	public $table="employee_documents";
 
 	public $acl='xepan\hr\Model_Employee';

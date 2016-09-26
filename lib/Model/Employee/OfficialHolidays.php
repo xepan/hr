@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class Model_OfficialHolidays extends \xepan\base\Model_Table{
+class Model_Employee_OfficialHolidays extends \xepan\base\Model_Table{
 	public $table =  "official_holidays";
 
 	function init(){

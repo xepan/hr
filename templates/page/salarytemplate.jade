@@ -1,0 +1,15 @@
+#user-profile
+  .col-lg-12.col-md-12.col-sm-12
+    .main-box.clearfix
+      .tabs-wrapper.profile-tabs
+        ul.nav.nav-tabs.responsive-tabs
+          li.active
+            a(data-toggle='tab', href='#tab-salary-temp') Salary Template
+          li
+            a(data-toggle='tab', href='#tab-salary') Salary
+        
+        .tab-content
+          #tab-salary-temp.tab-pane.active
+            {salary_template_view}Please Save Basic Information First{/}
+          #tab-salary.tab-pane
+            {$salary_view}

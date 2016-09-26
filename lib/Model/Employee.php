@@ -20,7 +20,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j = $this->join('employee.contact_id');
 
 		// $emp_j->hasOne('xepan\base\User',null,'username'); // Now in Contact
-		$emp_j->hasOne('xepan\hr\SalaryTemplate','salary_template_id');
 		$emp_j->hasOne('xepan\hr\Department','department_id')->sortable(true);
 		$emp_j->hasOne('xepan\hr\Post','post_id');
 		
@@ -33,14 +32,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('in_time');
 		$emp_j->addField('out_time');
 
-		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
-		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
-		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
+		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');
+		$emp_j->hasMany('xepan\hr\Employee_Experience','employee_id',null,'Experiences');
+		$emp_j->hasMany('xepan\hr\Employee_Document','employee_id',null,'EmployeeDocuments');
 		$emp_j->hasMany('xepan\hr\Employee_Movement','employee_id',null,'EmployeeMovements');
-		$emp_j->hasMany('xepan\hr\EmployeeAllowedLeave','employee_id',null,'EmployeeAllowedLeave');
-		$emp_j->hasMany('xepan\hr\EmployeeAttandance','employee_id',null,'EmployeeAttandance');
-		$emp_j->hasMany('xepan\hr\EmployeeTransaction','employee_id',null,'EmployeeTransaction');
-		$emp_j->hasMany('xepan\hr\PaymentAndDeduction','employee_id',null,'PaymentAndDeduction');
+		$emp_j->hasMany('xepan\hr\Employee_Salary','employee_id',null,'EmployeeSalary');
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
@@ -65,10 +61,33 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeLedger']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeMovements']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
+		$this->addHook('beforeSave',[$this,'updateEmployeeSalary']);
 	}
 
 	function throwEmployeeUpdateHook(){
 		$this->app->hook('employee_update',[$this]);
+	}
+
+	function updateEmployeeSalary(){
+		
+		if($this->dirty['post_id']){
+			$temp = $this->ref('post_id')->ref('salary_template_id');
+
+			$this->ref('EmployeeSalary')->each(function($m){
+				$m->delete();
+			});
+			
+			if($temp->loaded()){
+				foreach ($temp->ref('xepan\hr\SalaryTemplateDetails') as $row) {
+					$m = $this->add('xepan\hr\Model_Employee_Salary');
+					$m['employee_id'] = $this->id;
+					$m['salary_id'] = $row['salary_id'];
+					$m['amount'] = $row['amount'];
+					$m['unit'] = "monthly";
+					$m->save();
+				}
+			}
+		}
 	}
 
 	function updateTemplates(){

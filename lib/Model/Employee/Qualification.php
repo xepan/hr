@@ -1,6 +1,6 @@
 <?php
 namespace xepan\hr;
-class Model_Qualification extends \xepan\base\Model_Table{
+class Model_Employee_Qualification extends \xepan\base\Model_Table{
 	public $table="qualification";
 
 	public $acl=false;
