@@ -65,8 +65,6 @@ class Model_Department extends \xepan\hr\Model_Document{
 		$posts_count=$this->ref('Posts')->count()->getOne();
 		$employee_count=$this->ref('Employees')->count()->getOne();
 		
-		throw new \Exception($employee_count, 1);
-
 		if($posts_count or $employee_count){
 			throw new \Exception("Department Can not be deleted its content Post And Employee Delete First", 1);
 		}
