@@ -47,6 +47,7 @@ class page_department extends \xepan\base\Page {
 
 		if(!$crud->isEditing()){
 			$crud->grid->js('click')->_selector('.do-view-department-post')->univ()->frameURL('Department Post',[$this->api->url('xepan_hr_post'),'department_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+			$crud->grid->js('click')->_selector('.do-view-department-employee')->univ()->frameURL('Department Employee',[$this->api->url('xepan_hr_employee'),'department_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id'),'status'=>'']);
 		}
 	}
 }

@@ -21,6 +21,9 @@
                 th(id="{$posts_count_sortid}" data-hide="phone")
                     span Post 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$posts_count_sort}
+                th(id="{$emp_count_sortid}" data-hide="phone")
+                    span Employee 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$emp_count_sort}
                 th 
                 th 
                 {/}{/}
@@ -38,6 +41,9 @@
                       //- a(href='index.php?page=xepan_hr_post&department_id={$id}')
                       a.do-view-department-post(href='#' data-id="{$id}")
                         | {$posts_count}
+                    td
+                      a.do-view-department-employee(href='#' data-id="{$id}")
+                        | {$employee_count}
                     td
                         | {action}Action Here{/}
                     td(style="width: 15%;")
