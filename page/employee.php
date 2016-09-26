@@ -17,7 +17,8 @@ class page_employee extends \xepan\base\Page {
 	function init(){
 		parent::init();
 		$this->api->stickyGET('post_id');
-
+		$this->api->stickyGET('department_id');
+		
 		$employee=$this->add('xepan\hr\Model_Employee');
 		$employee->add('xepan\hr\Controller_SideBarStatusFilter');
 		
@@ -26,6 +27,10 @@ class page_employee extends \xepan\base\Page {
 		
 		if($_GET['post_id']){
 			$employee->addCondition('post_id',$_GET['post_id']);
+		}
+		if($_GET['department_id']){
+			// throw new \Exception($this->api->stickyGET('status'), 1);
+			$employee->addCondition('department_id',$_GET['department_id']);
 		}
 						
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
