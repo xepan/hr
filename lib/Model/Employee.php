@@ -37,6 +37,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Employee_Document','employee_id',null,'EmployeeDocuments');
 		$emp_j->hasMany('xepan\hr\Employee_Movement','employee_id',null,'EmployeeMovements');
 		$emp_j->hasMany('xepan\hr\Employee_Salary','employee_id',null,'EmployeeSalary');
+		$emp_j->hasMany('xepan\hr\Employee_LeaveAllow','employee_id',null,'EmployeeLeaveAllow');
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');

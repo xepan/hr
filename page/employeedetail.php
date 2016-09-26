@@ -67,6 +67,11 @@ class page_employeedetail extends \xepan\base\Page {
 			$o = $emp_salary_view->addMany('EmployeeSalary',['no_records_message'=>'No document found']);//,'official_info',['view/employee/emp-document-grid']);
 			$o->setModel($employee->ref('EmployeeSalary'));
 
+			$emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
+			$emp_leave_view->setIdField('contact_id');
+			$o = $emp_leave_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found']);//,'official_info',['view/employee/emp-document-grid']);
+			$o->setModel($employee->ref('EmployeeLeaveAllow'));
+
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
 			$document_view->setIdField('contact_id');
