@@ -16,7 +16,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j = $this->join('post.document_id');
 		
 		$post_j->hasOne('xepan\hr\Department','department_id')->sortable(true);
-		$post_j->hasOne('xepan\hr\ParentPost','parent_post_id');
+		$post_j->hasOne('xepan\hr\ParentPost','parent_post_id')->sortable(true);
 		$post_j->hasOne('xepan\hr\SalaryTemplate','salary_template_id');
 		$post_j->hasOne('xepan\hr\LeaveTemplate','leave_template_id');
 

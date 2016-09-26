@@ -12,12 +12,17 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
-                th(id="{$department_id_sortid}")
-                    span Department 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$department_id_sort}
                 th(id="{$name_sortid}")
                     span Post 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
+                th(id="{$department_id_sortid}")
+                    span Department 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$department_id_sort}
+                
+                th(id="{$parent_post_sortid}")
+                    span Report to 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$parent_post_sort}
+               
                 th( data-hide="phone")
                     span Schedule Time
                 th( data-hide="phone")
@@ -36,11 +41,13 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                        small {$department}
-                    td
                         {$name}
-                        .atk-label
-                            small.fa.fa-level-up.user-subhead &nbsp;{$parent_post}
+                        //- .atk-label
+                        //-     small.fa.fa-level-up.user-subhead &nbsp;{$parent_post}
+                    td
+                         {$department}
+                    td
+                         {$parent_post}
                     td
                         small In_Time : {$in_time}
                         .xepan-push-small
