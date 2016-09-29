@@ -90,6 +90,8 @@ class page_aclmanagement extends \xepan\base\Page {
 					$greeting_card->template->set('action',$status);					
 					$greeting_card->addField('DropDown',$status.'_'.$action,$action)
 						->setValueList($value_list)
+						->setEmptyText('Please select ACL')
+						->validate('required?Acl must be provided or will work based on global permisible setting')
 						->addClass('form-control')
 						->set($existing_acl['action_allowed'][$status][$action]);
 					;
@@ -120,7 +122,7 @@ class page_aclmanagement extends \xepan\base\Page {
 
 			$class = new \ReflectionClass($m);
 			$acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',isset($m->namespace)? $m->namespace:$class->getNamespaceName());
+					->addCondition('namespace',isset($ns)? $ns:$class->getNamespaceName());
 			
 			if($m['type']=='Contact' || $m['type']=='Document')
 				$m['type'] = str_replace("Model_", '', $class->getShortName());
