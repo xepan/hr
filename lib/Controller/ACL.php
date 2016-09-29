@@ -54,6 +54,7 @@ class Controller_ACL extends \AbstractController {
 						// No employee condition .. just check status
 						$where_condition[] = "([1] = \"$status\")";
 					}else{
+						if(!is_array($acl)) $acl=[$acl];
 						$where_condition[] = "( ([0] in (". implode(",", $acl) .")) AND ([1] = \"$status\") )";
 					}
 				}
