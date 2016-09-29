@@ -408,6 +408,20 @@ class Controller_ACL extends \AbstractController {
 			}
 		}		
 
+		// remove actions tht was in acl but now model has updated
+
+		foreach ($this->acl_m['action_allowed'] as $status => $actions_array) {
+			if(!isset($this->model->actions[$status])){
+				unset($this->action_allowed[$status]);
+				continue;
+			}
+			foreach ($actions_array as $action) {
+				if(!in_array($action,$this->model->actions[$status]))
+					unset($this->action_allowed[$status]);
+			}
+
+		}
+
 		return $this->action_allowed;
 	}
 

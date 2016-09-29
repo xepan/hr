@@ -28,7 +28,7 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
             $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_hr_config');
             
-    		if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
+            if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
                 $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
             }
@@ -38,6 +38,8 @@ class Initiator extends \Controller_Addon {
                 $this->app->redirect('.');
                 exit;
             }
+            $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
+            // $m = $this->app->side_menu->addItem('HR');
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
             // $post=$this->app->employee->ref('post_id');
