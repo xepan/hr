@@ -120,7 +120,7 @@ class page_aclmanagement extends \xepan\base\Page {
 
 			$class = new \ReflectionClass($m);
 			$acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',isset($class->namespace)? $class->namespace:$class->getNamespaceName());
+					->addCondition('namespace',isset($m->namespace)? $m->namespace:$class->getNamespaceName());
 			
 			if($m['type']=='Contact' || $m['type']=='Document')
 				$m['type'] = str_replace("Model_", '', $class->getShortName());
