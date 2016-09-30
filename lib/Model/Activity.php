@@ -86,7 +86,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		if($related_document) $this['related_document_id'] = $related_document->id;
 		if($related_contact) $this['related_contact_id'] = $related_contact->id;
 
-		if(!$contact) $contact = $this->app->employee->id;
+		if(!$contact) $contact = $this->app->employee;
 		if(!$this['contact_id']) $this['contact_id'] = $contact->id;
 
 		

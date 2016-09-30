@@ -97,7 +97,7 @@ class Controller_ACL extends \AbstractController {
 
 		if(!$this->canDelete($this->model['status'])){
 			$this->model->addHook('beforeDelete',function($m){
-				throw $this->exception('You are not permitted to delete '. ucfirst($this->model->table). ' ['. $this->model[$this->mdoel->title_field] .']');
+				throw $this->exception('You are not permitted to delete '. ucfirst($this->model->table). ' ['. $this->model[$this->model->title_field] .']');
 			});
 		}
 
@@ -237,9 +237,13 @@ class Controller_ACL extends \AbstractController {
 
 	function getModel(){
 		$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;		
-		if(strpos($model->acl, 'xepan\\')===0){
-			$this->dependent=$model;
-			$model = $this->add($model->acl);
+		if(strpos($model->acl, 'xepan\\')===0 or $model->acl instanceof \Model){
+			if(is_string($model->acl)){
+				$this->dependent=$model;
+				$model = $this->add($model->acl);
+			}else{
+				$model = $model->acl;
+			}
 		}
 
 		return $model;
@@ -366,8 +370,9 @@ class Controller_ACL extends \AbstractController {
 		// 	$ns = $class->getNamespaceName();
 		// }
 
+
 		$this->acl_m = $this->add('xepan\hr\Model_ACL')
-					->addCondition('namespace',isset($class->namespace)? $class->namespace:$class->getNamespaceName());
+					->addCondition('namespace',isset($this->model->namespace)? $this->model->namespace:$class->getNamespaceName());
 
 		if($this->model['type']=='Contact' || $this->model['type']=='Document')
 				$this->model['type'] = str_replace("Model_", '', $class->getShortName());
@@ -399,7 +404,10 @@ class Controller_ACL extends \AbstractController {
 			 * ]
 		 * )
 		 */
+		// echo $this->model. '<br/>';
 		$this->action_allowed = $this->acl_m['action_allowed'];
+		// echo "acl_data";
+		// var_dump($this->action_allowed);
 		foreach ($this->model->actions as $status => $actions) {
 			if($status=='*') $status='All';
 			foreach ($actions as $action) {
@@ -409,18 +417,29 @@ class Controller_ACL extends \AbstractController {
 		}		
 
 		// remove actions tht was in acl but now model has updated
+		// echo "acl_data converted to ids array";
+		// var_dump($this->action_allowed);
+		// echo "model->actions";
+		// var_dump($this->model->actions);
 
 		foreach ($this->acl_m['action_allowed'] as $status => $actions_array) {
 			if(!isset($this->model->actions[$status])){
+				// echo 'unsetting $this->model->actions['.$status.'] <br/>';
 				unset($this->action_allowed[$status]);
 				continue;
 			}
-			foreach ($actions_array as $action) {
-				if(!in_array($action,$this->model->actions[$status]))
-					unset($this->action_allowed[$status]);
+			foreach ($actions_array as $action=>$permission) {
+				if(!in_array($action,$this->model->actions[$status])){
+					// echo "in_array($action, ".print_r($this->model->actions[$status], true).' for '.$status.' -- unsetting 2 '. $action .' $this->model->actions['.$status.']['.$action.'] <br/>';
+					unset($this->action_allowed[$status][$action]);
+				}
 			}
 
 		}
+
+		// echo "final this->action_allowed";
+		// var_dump($this->action_allowed);
+		// die('');
 
 		return $this->action_allowed;
 	}
