@@ -28,7 +28,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date')->defaultValue(@$this->app->now)->sortable(true);
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
-		$emp_j->addField('mode')->enum(['First_time_login','Mannual']);
+		$emp_j->addField('attandance_mode')->enum(['First_time_login','Mannual']);
 		$emp_j->addField('in_time');
 		$emp_j->addField('out_time');
 
