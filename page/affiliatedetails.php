@@ -15,7 +15,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 		
 		if($action=="add"){
 
-			$affiliate_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
+			$affiliate_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document','page_reload'=>($action=='add')],'contact_view_full_width');
 			$affiliate_view->document_view->effective_template->del('im_and_events_andrelation');
 			$affiliate_view->document_view->effective_template->del('email_and_phone');
 			$affiliate_view->document_view->effective_template->del('avatar_wrapper');
