@@ -130,10 +130,30 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function afterLoginCheck(){		
+		$this->app->employee['attandance_mode'] = "Web Login";
+		$this->app->employee->save();
+
+		$attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+		$attan_m->addCondition('employee_id',$this->app->employee->id);
+		$attan_m->addCondition('fdate',$this->app->today);
+		$attan_m->setOrder('id','desc');
+		$attan_m->tryLoadAny();
+		// throw new \Exception($attan_m->id, 1);
+		
+		if(!$attan_m->loaded()){
+			$attan_m['employee_id'] = $this->app->employee->id;
+			$attan_m['from_date']  = $this->app->now;
+		}else{
+			$attan_m['to_date']  = null;
+		}
+		$attan_m->save();
+
+
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
 		$movement->addCondition('employee_id',$this->app->employee->id);
+		$movement->addCondition('movement_at',$this->app->today);
 		$movement->addCondition('date',$this->app->today);
-		$movement->setOrder('time','desc');
+		$movement->setOrder('movement_at','desc');
 		$movement->tryLoadAny();
 
 		if($movement->loaded() && $movement['direction']=='In'){						
@@ -141,7 +161,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}else{						
 			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
 			$model_movement->addCondition('employee_id',$this->id);
-			$model_movement->addCondition('time',$this->app->now);
+			$model_movement->addCondition('movement_at',$this->app->now);
 			$model_movement->addCondition('type','Attandance');
 			$model_movement->addCondition('direction','In');
 			$model_movement->save();	
@@ -150,12 +170,23 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function logoutHook($app, $user, $employee){
-		// $movement = $this->add('xepan\hr\Model_Employee_Movement');
-		// $movement->addCondition('employee_id',$employee->id);
-		// $movement->addCondition('time',$this->app->now);
-		// $movement->addCondition('type','Attandance');
-		// $movement->addCondition('direction','Out');
-		// $movement->save();
+		$attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+		$attan_m->addCondition('employee_id',$employee->id);
+		$attan_m->addCondition('fdate',$this->app->today);
+		$attan_m->setOrder('id','desc');
+		$attan_m->tryLoadAny();
+
+		// throw new \Exception($attan_m->id, 1);
+		if($attan_m->loaded()){
+			$attan_m['to_date'] = $this->app->now;
+			$attan_m->save();
+		}
+
+		$movement = $this->add('xepan\hr\Model_Employee_Movement');
+		$movement->addCondition('employee_id',$employee->id);
+		$movement->addCondition('movement_at',$this->app->now);
+		$movement->addCondition('direction','Out');
+		$movement->save();
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null,$document_url=null){
