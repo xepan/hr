@@ -133,7 +133,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
 		$movement->addCondition('employee_id',$this->app->employee->id);
 		$movement->addCondition('date',$this->app->today);
-		$movement->setOrder('time','desc');
+		$movement->setOrder('movement_at','desc');
 		$movement->tryLoadAny();
 
 		if($movement->loaded() && $movement['direction']=='In'){						
@@ -141,7 +141,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}else{						
 			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
 			$model_movement->addCondition('employee_id',$this->id);
-			$model_movement->addCondition('time',$this->app->now);
+			$model_movement->addCondition('movement_at',$this->app->now);
 			$model_movement->addCondition('type','Attandance');
 			$model_movement->addCondition('direction','In');
 			$model_movement->save();	
