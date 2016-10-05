@@ -34,9 +34,11 @@ class Initiator extends \Controller_Addon {
             }
 
             if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
-                $this->createDefaultEmployee();
-                $this->app->redirect('.');
-                exit;
+                throw new \Exception('User is not Employee', 1);
+                
+                // $this->createDefaultEmployee();
+                // $this->app->redirect('.');
+                // exit;
             }
             $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
             // $m = $this->app->side_menu->addItem('HR');
