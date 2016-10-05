@@ -8,10 +8,7 @@ class page_employeeattandance extends \xepan\base\Page{
 	function init(){
 		parent::init();
 		$employee = $this->add('xepan\hr\Model_Employee');
-		// $attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
-		// $c = $this->add('xepan\hr\CRUD');
 		$form=$this->add('Form',null,null,['form/empty']);
-		// $form->setModel($employee);
 
 		foreach ($employee as $emp) {
 
@@ -36,6 +33,8 @@ class page_employeeattandance extends \xepan\base\Page{
 				->setOption('minuteStep',1)
 				->setOption('showSeconds',true);
 		}
+
+		$form->addSubmit('Take Attandance')->addClass('btn btn-info');
 
 		if($form->isSubmitted()){
 
