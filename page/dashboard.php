@@ -27,8 +27,8 @@ class page_dashboard extends \xepan\base\Page{
 		foreach ($employee_movement as $emp){
 			$mov = $this->add('xepan\hr\Model_Employee_Movement');
 			$mov->addCondition('employee_id',$emp->id);
-			$mov->addCondition('time','>=',$this->app->today);
-			$mov->setOrder('time','desc');
+			$mov->addCondition('movement_at','>=',$this->app->today);
+			$mov->setOrder('movement_at','desc');
 			$mov->tryLoadAny();
 
 			if($mov['direction'] == 'Out' || !$mov->loaded())
