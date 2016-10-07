@@ -24,7 +24,8 @@ class View_EasySetupWizard extends \View{
 			$dept_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
 				->setTitle('Add Other Departments')
-				->setMessage('Add all the departments present in your organization. Need help! click on help icon ')
+				->setMessage('Add all the departments present in your organization.')
+				->setHelpMessage('Need help ! click on the help icon')
 				->setHelpURL('#')	
 				->setAction('Click Here',$action,$isDone);
 
@@ -44,7 +45,8 @@ class View_EasySetupWizard extends \View{
 			$user_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
 				->setTitle('Create New Users')
-				->setMessage('Create new users & assign user_id to particular employee')
+				->setMessage('Create new users & assign user_id to particular employee.')
+				->setHelpMessage('Need help ! click on the help icon')
 				->setHelpURL('#')
 				->setAction('Click Here',$action,$isDone);
 
@@ -64,7 +66,8 @@ class View_EasySetupWizard extends \View{
 			$emp_view = $this->add('xepan\base\View_Wizard_Step')
 				->setAddOn('Application - HR')
 				->setTitle('Add New Employees')
-				->setMessage('Add new employees according specific departments')
+				->setMessage('Add new employees according specific departments.')
+				->setHelpMessage('Need help ! click on the help icon')
 				->setHelpURL('#')
 				->setAction('Click Here',$action,$isDone);
 	}
