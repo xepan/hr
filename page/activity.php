@@ -27,6 +27,7 @@ class page_activity extends \xepan\base\Page{
 		$form->addField('Dropdown','department','Department')->setModel($this->add('xepan\hr\Model_Department'));
 		$form->addSubmit("FILTER")->addClass('btn btn-block btn-primary');
 
+		$this->js(true,$form_view->js()->hide());
 		$toggle_button->js('click',$form_view->js()->toggle());
 
 		$activity_view = $this->add('xepan\base\View_Activity',['from_date'=>$from_date,'to_date'=>$to_date,'contact_id'=>$contact_id,'related_person_id'=>$related_person_id,'department_id'=>$department_id],'activity_view');
