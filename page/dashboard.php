@@ -52,8 +52,8 @@ class page_dashboard extends \xepan\base\Page{
 	    // =======  Late Coming or Extra time
 	    $attendances = $this->add('xepan\hr\Model_Employee_Attandance');
 		// $attendances->join('employee.contact_id','employee_id')->addField('status');
-		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('late_coming')]));
-		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('extra_hours')]));
+		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('late_coming')]));
+		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('extra_work')]));
 		$attendances->_dsql()->group('employee_id');
 		// $attendances->addCondition('status','Active');
      	

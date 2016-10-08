@@ -28,7 +28,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addExpression('official_day_end')->set(function($m,$q){
 			return $q->expr('CONCAT([0]," ",[1])',[
 					$m->getElement('fdate'),
-					$m->refSQL('employee_id')->fieldQuery('in_time')
+					$m->refSQL('employee_id')->fieldQuery('out_time')
 				]);
 		});
 
@@ -41,23 +41,23 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		});
 
 		$this->addExpression('late_coming')->set(function($m,$q){
-			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
+			return $q->expr('TIMESTAMPDIFF(MINUTE,[0],[1])',[
 					$m->getElement('official_day_start'),
 					$q->getField('from_date'),
 				]);
 		});
 
-		$this->addExpression('extra_hours')->set(function($m,$q){
-			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
+		$this->addExpression('extra_work')->set(function($m,$q){
+			return $q->expr('TIMESTAMPDIFF(MINUTE,[0],[1])',[
+					$m->getElement('actual_day_ending'),
 					$m->getElement('official_day_end'),
-					$m->getElement('actual_day_ending')
 				]);
 		});
 
 		$this->addExpression('working_hours')->set(function($m,$q){
 			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
-					$m->getElement('actual_day_ending'),
 					$q->getField('from_date'),
+					$m->getElement('actual_day_ending'),
 				]);
 		});
 	}
