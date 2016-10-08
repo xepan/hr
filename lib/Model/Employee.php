@@ -32,6 +32,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('in_time');
 		$emp_j->addField('out_time');
 
+		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
 		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');
 		$emp_j->hasMany('xepan\hr\Employee_Experience','employee_id',null,'Experiences');
 		$emp_j->hasMany('xepan\hr\Employee_Document','employee_id',null,'EmployeeDocuments');

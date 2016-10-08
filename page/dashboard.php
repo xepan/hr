@@ -8,18 +8,65 @@ class page_dashboard extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$employee = $this->add('xepan\hr\Model_Employee');
-		$employee->_dsql()->group('department_id');
-		$employee->addExpression('count','count(*)');
-		
-		$employee->addExpression('post_count')->set(function($m,$q){
-			$dept = $this->add('xepan\hr\Model_Department');
-			$dept->addCondition('name',$m->getElement('department'));
-			$dept->setLimit(1);
-			return $dept->fieldQuery('posts_count');
-		});
 
-		$this->add('xepan\base\Grid',null,'grid',['view\dashboard\grid'])->setModel($employee);
+		$employee = $this->add('xepan\hr\Model_Employee_Active');
+		$total_employees = $employee->count()->getOne();
+		
+		$employee = $this->add('xepan\hr\Model_Employee');
+		$employee->addExpression('present_today')->set(function($m,$q){
+			return $m->refSQL('Attendances')
+					->addCondition('employee_id',$q->getField('id'))
+					->addCondition('from_date','>=',$this->app->today)->count();
+		})->type('boolean');
+
+		$employee->addCondition('present_today',true);
+
+		$present_employees = $employee->count()->getOne();
+
+		// engagement-percentage
+     	$this->add('xepan\base\View_Chart',null,'Charts')
+     		->setData(['columns'=> [['present', ($present_employees/$total_employees*100)]],
+				        'type'=>'gauge'
+				    	])
+     		->setTitle('Work Force Available')
+     		->addClass('col-md-4')
+     		->setOption('color',['pattern'=>['#FF0000', '#F97600', '#F6C600', '#60B044'],'threshold'=>['values'=>[30, 60, 90, 100]]])
+     		;
+
+	    // =======  Avg Working Hours ===========
+		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+		// $attendances->join('employee.contact_id','employee_id')->addField('status');
+		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
+		$attendances->_dsql()->group('employee_id');
+		// $attendances->addCondition('status','Active');
+     	
+     	$this->add('xepan\base\View_Chart',null,'Charts')
+	    		->setType('bar')
+	    		->setModel($attendances,'employee',['avg_work_hours'])
+	    		// ->setData($data)
+	    		->addClass('col-md-12')
+	    		->rotateAxis()
+	    		->setTitle('Employee Avg Work Hour')
+	    		;
+
+	    // =======  Late Coming or Extra time
+	    $attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+		// $attendances->join('employee.contact_id','employee_id')->addField('status');
+		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('late_coming')]));
+		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('extra_hours')]));
+		$attendances->_dsql()->group('employee_id');
+		// $attendances->addCondition('status','Active');
+     	
+     	$this->add('xepan\base\View_Chart',null,'Charts')
+	    		->setType('bar')
+	    		->setModel($attendances,'employee',['avg_late','avg_extra_work'])
+	    		// ->setData($data)
+	    		->addClass('col-md-12')
+	    		->rotateAxis()
+	    		->setTitle('Employee Avg Late Coming & Extra Work')
+	    		;
+
+	    return;
 
 		$employee_movement = $this->add('xepan\hr\Model_Employee');
 
@@ -42,8 +89,8 @@ class page_dashboard extends \xepan\base\Page{
 
 	   	
 	   	// engagement-percentage
-     	$this->add('xepan\base\View_Chart',null,'engagement_percentage')
-     		->setData(['columns'=> [['data', 90]],
+     	$this->add('xepan\base\View_Chart',null)
+     		->setData(['columns'=> [['data', 90,5]],
 				        'type'=>'gauge'
 				    	])
      		->setTitle('Current Engage');
@@ -52,7 +99,7 @@ class page_dashboard extends \xepan\base\Page{
             // ['percentage', 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
             ['Score', 10, 30, 70, 90, 70, 75]
         ]];
-		$this->add('xepan\base\View_Chart',null,'engagement_graph')
+		$this->add('xepan\base\View_Chart',null)
 	    		->setType('line')
 	    		// ->setModel($model,'Date',['lead_count','score_sum'])
 	    		->setData($data)
@@ -108,6 +155,6 @@ class page_dashboard extends \xepan\base\Page{
 	}
 
 	function defaultTemplate(){
-		return ['page\dashboard\dashboard'];
+		return ['page\hr\dashboard'];
 	}
 }
