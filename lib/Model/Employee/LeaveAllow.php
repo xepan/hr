@@ -9,6 +9,8 @@ namespace xepan\hr;
 class Model_Employee_LeaveAllow extends \xepan\base\Model_Table{
 	public $table ="employee_leave_allow";
 	public $acl=false;
+	public $title_field="leave";
+	
 	function init(){
 		parent::init();
 
