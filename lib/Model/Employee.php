@@ -8,6 +8,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		'Active',
 		'InActive'
 	];
+
 	public $actions=[
 		'Active'=>['view','edit','delete','deactivate','communication'],
 		'InActive'=>['view','edit','delete','activate','communication']
@@ -28,7 +29,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date')->defaultValue(@$this->app->now)->sortable(true);
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
-		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual']);
+		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual'])->defaultValue('Web Login');
 		$emp_j->addField('in_time');
 		$emp_j->addField('out_time');
 
@@ -130,9 +131,12 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$this->save(); 
 	}
 
-	function afterLoginCheck(){		
-		$this->app->employee['attandance_mode'] = "Web Login";
-		$this->app->employee->save();
+	function afterLoginCheck(){
+		
+		$this->app->auth->model['last_login_date'] = $this->app->now;
+        $this->app->auth->model->save();
+
+		if($this->app->employee['attandance_mode'] != "Web Login") return;
 
 		$attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
 		$attan_m->addCondition('employee_id',$this->app->employee->id);
