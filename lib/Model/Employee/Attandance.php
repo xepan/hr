@@ -42,8 +42,8 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 		$this->addExpression('late_coming')->set(function($m,$q){
 			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
+					$m->getElement('official_day_start'),
 					$q->getField('from_date'),
-					$m->getElement('official_day_start')
 				]);
 		});
 
@@ -56,8 +56,8 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 		$this->addExpression('working_hours')->set(function($m,$q){
 			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
+					$m->getElement('actual_day_ending'),
 					$q->getField('from_date'),
-					$m->getElement('actual_day_ending')
 				]);
 		});
 	}
