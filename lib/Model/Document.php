@@ -23,6 +23,7 @@ class Model_Document extends \xepan\base\Model_Document{
 	}
 
 	function page_manage_attachments($p){
-		$p->add('CRUD')->setModel($this->ref('Attachments'));
+		$crud = $p->add('xepan\base\CRUD');
+		$crud->setModel($this->ref('Attachments'));
 	}
 }

@@ -15,18 +15,18 @@ class page_employeemovement extends \xepan\base\Page{
 			return $m->refSQL('EmployeeMovements')
 					->addCondition('date',$date)
 					->addCondition('direction','In')
-					->setOrder('time','asc')
+					->setOrder('movement_at','asc')
 					->setLimit(1)
-					->fieldQuery('time');
+					->fieldQuery('movement_at');
 		});
 
 		$employee->addExpression('last_out')->set(function($m,$q)use($date){
 			return $m->refSQL('EmployeeMovements')
 					->addCondition('date',$date)
 					->addCondition('direction','Out')
-					->setOrder('time','desc')
+					->setOrder('movement_at','desc')
 					->setLimit(1)
-					->fieldQuery('time');
+					->fieldQuery('movement_at');
 		});
 
 
@@ -43,7 +43,7 @@ class page_employeemovement extends \xepan\base\Page{
 
 		$employee->addExpression('last_direction')->set(function($m,$q){
 			$temp = $m->refSQL('EmployeeMovements')
-			  			->setOrder('time','desc')
+			  			->setOrder('movement_at','desc')
 			  			->setLimit(1);
 
 			return $q->expr('IFNULL([0],"Out")',[$temp->fieldQuery('direction')]);
@@ -52,7 +52,7 @@ class page_employeemovement extends \xepan\base\Page{
 		$employee->addExpression('last_direction_today')->set(function($m,$q){
 			$temp = $m->refSQL('EmployeeMovements')
 						->addCondition('date',$this->app->today)
-			  			->setOrder('time','desc')
+			  			->setOrder('movement_at','desc')
 			  			->setLimit(1);
 
 			return $q->expr('IFNULL([0],"Out")',[$temp->fieldQuery('direction')]);

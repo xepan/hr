@@ -28,6 +28,11 @@ class Model_Department extends \xepan\hr\Model_Document{
 			
 		})->sortable(true);
 
+		$this->addExpression('employee_count')->set(function($m,$q){
+			return $this->add('xepan\hr\Model_Employee',['table_alias'=>'dept_emp_count'])->addCondition('department_id',$m->getElement('id'))->count();
+			
+		})->sortable(true);
+
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
 
@@ -59,7 +64,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 	function checkForPostsAndEmployees(){
 		$posts_count=$this->ref('Posts')->count()->getOne();
 		$employee_count=$this->ref('Employees')->count()->getOne();
-
+		
 		if($posts_count or $employee_count){
 			throw new \Exception("Department Can not be deleted its content Post And Employee Delete First", 1);
 		}

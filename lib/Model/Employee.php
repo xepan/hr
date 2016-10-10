@@ -8,6 +8,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		'Active',
 		'InActive'
 	];
+
 	public $actions=[
 		'Active'=>['view','edit','delete','deactivate','communication'],
 		'InActive'=>['view','edit','delete','activate','communication']
@@ -28,14 +29,17 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date')->defaultValue(@$this->app->now)->sortable(true);
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
-		$emp_j->addField('mode')->enum(['First_time_login','Mannual']);
+		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual'])->defaultValue('Web Login');
 		$emp_j->addField('in_time');
 		$emp_j->addField('out_time');
 
-		$emp_j->hasMany('xepan\hr\Qualification','employee_id',null,'Qualifications');
-		$emp_j->hasMany('xepan\hr\Experience','employee_id',null,'Experiences');
-		$emp_j->hasMany('xepan\hr\EmployeeDocument','employee_id',null,'EmployeeDocuments');
+		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
+		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');
+		$emp_j->hasMany('xepan\hr\Employee_Experience','employee_id',null,'Experiences');
+		$emp_j->hasMany('xepan\hr\Employee_Document','employee_id',null,'EmployeeDocuments');
 		$emp_j->hasMany('xepan\hr\Employee_Movement','employee_id',null,'EmployeeMovements');
+		$emp_j->hasMany('xepan\hr\Employee_Salary','employee_id',null,'EmployeeSalary');
+		$emp_j->hasMany('xepan\hr\Employee_LeaveAllow','employee_id',null,'EmployeeLeaveAllow');
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
@@ -53,23 +57,107 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
 		$this->addHook('afterSave',[$this,'throwEmployeeUpdateHook']);
+		$this->addHook('afterSave',[$this,'updateTemplates']);
 		$this->addHook('beforeDelete',[$this,'deleteQualification']);
 		$this->addHook('beforeDelete',[$this,'deleteExperience']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeLedger']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeMovements']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
+		$this->addHook('beforeSave',[$this,'updateEmployeeSalary']);
+		$this->addHook('beforeSave',[$this,'updateEmployeeLeave']);
 	}
 
 	function throwEmployeeUpdateHook(){
 		$this->app->hook('employee_update',[$this]);
 	}
 
-	function afterLoginCheck(){		
+	function updateEmployeeSalary(){
+		
+		if($this->dirty['post_id']){
+			$temp = $this->ref('post_id')->ref('salary_template_id');
+
+			$this->ref('EmployeeSalary')->each(function($m){
+				$m->delete();
+			});
+
+			if($temp->loaded()){
+				foreach ($temp->ref('xepan\hr\SalaryTemplateDetails') as $row) {
+					$m = $this->add('xepan\hr\Model_Employee_Salary');
+					$m['employee_id'] = $this->id;
+					$m['salary_id'] = $row['salary_id'];
+					$m['amount'] = $row['amount'];
+					$m['unit'] = $row['unit'];
+					$m->save();
+				}
+			}
+		}
+	}
+
+	function updateEmployeeLeave(){
+		
+		if($this->dirty['post_id']){
+			$temp = $this->ref('post_id')->ref('leave_template_id');
+
+			$this->ref('EmployeeSalary')->each(function($m){
+				$m->delete();
+			});
+
+			if($temp->loaded()){
+				foreach ($temp->ref('xepan\hr\LeaveTemplateDetail') as $row) {
+					$m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
+					$m['employee_id'] = $this->id;
+					$m['leave_id'] = $row['leave_id'];
+					$m['is_yearly_carried_forward'] = $row['is_yearly_carried_forward'];
+					$m['type'] = $row['type'];
+					$m['is_unit_carried_forward'] = $row['is_unit_carried_forward'];
+					$m['unit'] = $row['unit'];
+					$m['allow_over_quota'] = $row['allow_over_quota'];
+					$m['no_of_leave'] = $row['no_of_leave'];
+					$m->save();
+				}
+			}
+		}
+	}
+
+	function updateTemplates(){
+		// copy salary and leave templates of posts
+		$post = $this->add('xepan\hr\Model_Post')->tryLoadBy('id',$this['post_id']);
+		
+		if(!$post->loaded())
+			return;
+		
+			$this['salary_template_id'] = $post['salary_template_id'];  
+			$this->save(); 
+	}
+
+	function afterLoginCheck(){
+		
+		$this->app->auth->model['last_login_date'] = $this->app->now;
+        $this->app->auth->model->save();
+
+		if($this->app->employee['attandance_mode'] != "Web Login") return;
+
+		$attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+		$attan_m->addCondition('employee_id',$this->app->employee->id);
+		$attan_m->addCondition('fdate',$this->app->today);
+		$attan_m->setOrder('id','desc');
+		$attan_m->tryLoadAny();
+		
+		if(!$attan_m->loaded()){
+			$attan_m['employee_id'] = $this->app->employee->id;
+			$attan_m['from_date']  = $this->app->now;
+		}else{
+			$attan_m['to_date']  = null;
+		}
+		$attan_m->save();
+
+
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
 		$movement->addCondition('employee_id',$this->app->employee->id);
+		$movement->addCondition('movement_at',$this->app->today);
 		$movement->addCondition('date',$this->app->today);
-		$movement->setOrder('time','desc');
+		$movement->setOrder('movement_at','desc');
 		$movement->tryLoadAny();
 
 		if($movement->loaded() && $movement['direction']=='In'){						
@@ -77,8 +165,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}else{						
 			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
 			$model_movement->addCondition('employee_id',$this->id);
-			$model_movement->addCondition('time',$this->app->now);
-			$model_movement->addCondition('type','Attandance');
+			$model_movement->addCondition('movement_at',$this->app->now);
+			// $model_movement->addCondition('type','Attandance');
 			$model_movement->addCondition('direction','In');
 			$model_movement->save();	
 		}
@@ -88,10 +176,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function logoutHook($app, $user, $employee){
 		// $movement = $this->add('xepan\hr\Model_Employee_Movement');
 		// $movement->addCondition('employee_id',$employee->id);
-		// $movement->addCondition('time',$this->app->now);
-		// $movement->addCondition('type','Attandance');
+		// $movement->addCondition('movement_at',$this->app->now);
 		// $movement->addCondition('direction','Out');
 		// $movement->save();
+		// throw new \Exception($movement->id);
+
 	}
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null,$document_url=null){

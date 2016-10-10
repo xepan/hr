@@ -24,7 +24,7 @@ class page_employeedetail extends \xepan\base\Page {
 
 		if($action=="add"){
 
-			$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view_full_width');
+			$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document','page_reload'=>($action=='add')],'contact_view_full_width');
 			$contact_view->document_view->effective_template->del('im_and_events_andrelation');
 			$contact_view->document_view->effective_template->del('email_and_phone');
 			$contact_view->document_view->effective_template->del('avatar_wrapper');
@@ -43,7 +43,7 @@ class page_employeedetail extends \xepan\base\Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['department','post','user','remark'],['department_id','post_id','user_id','remark']);
+			$portfolio_view->setModel($employee,['department','post','user','remark','salary_template'],['department_id','post_id','user_id','remark']);
 			$f=$portfolio_view->form;
 
 			if($f->isSubmitted()){
@@ -62,6 +62,16 @@ class page_employeedetail extends \xepan\base\Page {
 			$official_view->setModel($employee,['offer_date','doj','contract_date','leaving_date','in_time','out_time'],
 											   ['offer_date','doj','contract_date','leaving_date','in_time','out_time']);
 
+			$emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
+			$emp_salary_view->setIdField('contact_id');
+			$o = $emp_salary_view->addMany('EmployeeSalary',['no_records_message'=>'No document found']);//,'official_info',['view/employee/emp-document-grid']);
+			$o->setModel($employee->ref('EmployeeSalary'));
+
+			$emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
+			$emp_leave_view->setIdField('contact_id');
+			$o = $emp_leave_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found']);//,'official_info',['view/employee/emp-document-grid']);
+			$o->setModel($employee->ref('EmployeeLeaveAllow'));
+
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
 			$document_view->setIdField('contact_id');
@@ -75,7 +85,6 @@ class page_employeedetail extends \xepan\base\Page {
 			$activity->addCondition('contact_id',$_GET['contact_id']);
 			$activity->tryLoadAny();
 			$activity_view->setModel($activity);
-
 
 			// $this->add('xepan\hr\')
 

@@ -11,18 +11,18 @@ class page_movementdetail extends \xepan\base\Page{
 		$employee_id = $this->app->stickyGET('employee_id');
 		$m = $this->add('xepan\hr\Model_Employee_Movement');
 		$m->addCondition('employee_id',$employee_id);
-		$m->addCondition('time','>=',$this->app->today);
-		$m->addCondition('time','<',$this->app->nextDate($this->app->today));
+		$m->addCondition('movement_at','>=',$this->app->today);
+		$m->addCondition('movement_at','<',$this->app->nextDate($this->app->today));
 
 		$m->addExpression('next_movement_time')->set(function($m,$q){
 			$next_movement = $this->add('xepan\hr\Model_Employee_Movement',['table_alias'=>'next_movement'])
 						 	->addCondition('employee_id',$m->getElement('employee_id'))
-						 	->addCondition('time','>',$m->getElement('time'))
+						 	->addCondition('movement_at','>',$m->getElement('movement_at'))
 						 	->addCondition('date',$m->getElement('date'))
 		                 	->setLimit(1);
 		    return $q->expr('IFNULL([0],CONCAT([1]," ",[2]))',
 		    			[
-			    			$next_movement->fieldQuery('time'),
+			    			$next_movement->fieldQuery('movement_at'),
 			    			$m->getElement('date'),
 			    			$m->getElement('employee_out_time')
 			    		]
@@ -32,14 +32,14 @@ class page_movementdetail extends \xepan\base\Page{
 		$m->addExpression('next_movement_direction')->set(function($m,$q){
 			$next_movement = $this->add('xepan\hr\Model_Employee_Movement',['table_alias'=>'next_movement'])
 						 	->addCondition('employee_id',$m->getElement('employee_id'))
-						 	->addCondition('time','>',$m->getElement('time'))
+						 	->addCondition('movement_at','>',$m->getElement('movement_at'))
 						 	->addCondition('date',$m->getElement('date'))
 		                 	->setLimit(1);
 		    return $next_movement->fieldQuery('direction');
 		});
 
 		$m->addExpression('duration')->set(function($m,$q){
-			return $q->expr('(TIMEDIFF([0],[1]))',[$m->getElement('next_movement_time'),$m->getElement('time')]);
+			return $q->expr('(TIMEDIFF([0],[1]))',[$m->getElement('next_movement_time'),$m->getElement('movement_at')]);
 		});
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movementdetail']);

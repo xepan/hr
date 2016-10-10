@@ -1,6 +1,6 @@
 <?php
 namespace xepan\hr;
-class Model_Experience extends \xepan\base\Model_Table{
+class Model_Employee_Experience extends \xepan\base\Model_Table{
 	public $table="experience";
 
 	public $acl=false;

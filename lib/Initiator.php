@@ -20,28 +20,34 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
             $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
             $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
+            $m->addItem(['Employee Attandance','icon'=>'fa fa-check-square-o'],'xepan_hr_employeeattandance');
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
+            $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
+            // $m->addItem(['Payroll','icon'=>'fa fa-money'],'xepan_hr_payroll');
             $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
+            $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_hr_config');
             
-    		$this->app->employee = $this->recall(
-                            $this->app->epan->id.'_employee',
-                            $this->memorize(
-                                $this->app->epan->id.'_employee',
-                                $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id)
-                            )
-                        );
-
-            if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
-                $this->createDefaultEmployee();
-                $this->app->redirect('.');
-                exit;
+            if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
+                $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
+                $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
             }
 
+            if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
+                throw new \Exception('User is not Employee', 1);
+                
+                // $this->createDefaultEmployee();
+                // $this->app->redirect('.');
+                // exit;
+            }
+            $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
+            $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_hr');
+            // $m = $this->app->side_menu->addItem('HR');
+
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
-            $post=$this->app->employee->ref('post_id');
-            $this->app->layout->template->trySet('post',$post['name']);
+            // $post=$this->app->employee->ref('post_id');
+            $this->app->layout->template->trySet('post',$this->app->employee['post']);
             $this->app->layout->template->trySet('first_name',$this->app->employee['first_name']);
             $this->app->layout->template->trySet('status',$this->app->employee['status']);
             
@@ -85,19 +91,19 @@ class Initiator extends \Controller_Addon {
 	function resetDB(){
         // Clear DB
         
-        if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
-        if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
+        // if(!isset($this->app->old_epan)) $this->app->old_epan = $this->app->epan;
+        // if(!isset($this->app->new_epan)) $this->app->new_epan = $this->app->epan;
 
-        $this->app->epan=$this->app->old_epan;
-        $truncate_models = ['ACL','Activity','Employee','Post','Department','Affiliate'];
-        foreach ($truncate_models as $t) {
-            $m=$this->add('xepan\hr\Model_'.$t);
-            foreach ($m as $mt) {
-                $mt->delete();
-            }
-        }
+        // $this->app->epan=$this->app->old_epan;
+        // $truncate_models = ['ACL','Activity','Employee','Post','Department','Affiliate'];
+        // foreach ($truncate_models as $t) {
+        //     $m=$this->add('xepan\hr\Model_'.$t);
+        //     foreach ($m as $mt) {
+        //         $mt->delete();
+        //     }
+        // }
         
-        $this->app->epan=$this->app->new_epan;
+        // $this->app->epan=$this->app->new_epan;
 
         $this->createDefaultEmployee();
 

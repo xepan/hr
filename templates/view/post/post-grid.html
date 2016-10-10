@@ -9,8 +9,9 @@
   <div class="main-box-body clearfix table-responsive">
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
-        <th id="{$department_id_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$department_id_sort}</span></th>
         <th id="{$name_sortid}"><span>Post </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
+        <th id="{$department_id_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$department_id_sort}</span></th>
+        <th id="{$parent_post_sortid}"><span>Report to </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$parent_post_sort}</span></th>
         <th data-hide="phone"><span>Schedule Time</span></th>
         <th data-hide="phone"><span>E-mail</span></th>
         <th id="{$employee_count_sortid}" data-hide="phone"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_count_sort}</span></th>
@@ -20,10 +21,10 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td><small>{$department}</small></td>
           <td>{$name}
-            <div class="atk-label"><small class="fa fa-level-up user-subhead">&nbsp;{$parent_post}</small></div>
           </td>
+          <td>{$department}</td>
+          <td>{$parent_post}</td>
           <td><small>In_Time : {$in_time}</small>
             <div class="xepan-push-small"></div><small>Out_Time : {$out_time}</small>
           </td>

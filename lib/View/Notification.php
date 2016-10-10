@@ -28,6 +28,8 @@ class View_Notification extends \CompleteLister{
 						->load($this->app->employee->id)
 						->set('notified_till',$new_notificagions[count($new_notificagions)-1]['id'])
 						->save();
+				$this->app->employee->reload();
+				$this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
 			}
 
 			$p->js(null,$js)->execute();
