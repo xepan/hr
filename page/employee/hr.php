@@ -29,6 +29,7 @@ class page_employee_hr extends \xepan\base\Page{
 		$draft_leave_m->addCondition('status',"Draft");
 		$draft_grid = $at->add('xepan\hr\Grid');
 		$draft_grid->setModel($draft_leave_m);
+		$draft_grid->addQuickSearch(['employee']);
 		
 		if($f->isSubmitted()){
 			$allow_leave_m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
@@ -59,7 +60,9 @@ class page_employee_hr extends \xepan\base\Page{
 		$approved_leave_m->addCondition('employee_id',$this->app->employee->id);
 		$approved_leave_m->addCondition('status',"Approved");
 
-		$approved_tab->add('xepan\hr\Grid')->setModel($approved_leave_m);
+		$apprved_grid = $approved_tab->add('xepan\hr\Grid');
+		$apprved_grid->setModel($approved_leave_m);
+		$apprved_grid->addQuickSearch(['employee']);
 
 	}
 }
