@@ -11,15 +11,15 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 						'Draft'=>['view','edit','delete','submit'],
 						'Submitted'=>['view','edit','delete','approve','reject'],
 						'Approved'=>['view','edit','delete'],
-						'Rejected'=>['view','edit','delete']
+						'Rejected'=>['view','edit','delete'],
 					];
 
-	public $acl =false;
+	public $acl_type ="Employee_Leave";
 	
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\hr\Employee','employee_id')->defaultValue($this->app->employee->id);
+		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id);
 		$this->hasOne('xepan\hr\Employee_LeaveAllow','emp_leave_allow_id');
 		$this->addField('from_date')->type('date');
 		$this->addField('to_date')->type('date');
