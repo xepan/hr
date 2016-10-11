@@ -301,8 +301,11 @@ class Controller_ACL extends \AbstractController {
 				try{
 					$this->api->db->beginTransaction();
 						$page_action_result = $this->model->{"page_".$action}($p);						
+					
 					if($this->app->db->intransaction()) $this->api->db->commit();
+
 				}catch(\Exception_StopInit $e){
+					if($this->app->db->intransaction()) $this->api->db->commit();
 
 				}catch(\Exception $e){
 					if($this->app->db->intransaction()) $this->api->db->rollback();
