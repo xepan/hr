@@ -75,6 +75,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function updateEmployeeSalary(){
 		
 		if($this->dirty['post_id']){
+			
 			$temp = $this->ref('post_id')->ref('salary_template_id');
 
 			$this->ref('EmployeeSalary')->each(function($m){
@@ -82,6 +83,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			});
 
 			if($temp->loaded()){
+				
 				foreach ($temp->ref('xepan\hr\SalaryTemplateDetails') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_Salary');
 					$m['employee_id'] = $this->id;
@@ -90,6 +92,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 					$m['unit'] = $row['unit'];
 					$m->save();
 				}
+				// throw new \Exception($m->id, 1);
 			}
 		}
 	}

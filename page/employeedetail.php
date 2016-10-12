@@ -64,13 +64,13 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			$emp_salary_view->setIdField('contact_id');
-			$o = $emp_salary_view->addMany('EmployeeSalary',['no_records_message'=>'No document found']);//,'official_info',['view/employee/emp-document-grid']);
-			$o->setModel($employee->ref('EmployeeSalary'));
+			$o = $emp_salary_view->addMany('EmployeeSalary',['no_records_message'=>'No document found'],null,['view/employee/emp-salary-grid']);
+			$o->setModel($employee->ref('EmployeeSalary'),['salary','amount','unit']);
 
 			$emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			$emp_leave_view->setIdField('contact_id');
-			$o = $emp_leave_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found']);//,'official_info',['view/employee/emp-document-grid']);
-			$o->setModel($employee->ref('EmployeeLeaveAllow'));
+			$o = $emp_leave_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found'],null,['view/employee/emp-leave-grid']);
+			$o->setModel($employee->ref('EmployeeLeaveAllow'),['leave','type','is_yearly_carried_forward','is_unit_carried_forward','no_of_leave','unit','allow_over_quota']);
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
