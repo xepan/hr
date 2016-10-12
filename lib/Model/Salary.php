@@ -11,7 +11,7 @@ class Model_Salary extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->addField('name');
-		$this->addField('type');
+		$this->addField('type')->enum(['Salary','Allowance','Deduction']);
 		$this->addField('add_deducat')->enum(['add','dedcation']);
 		$this->addField('unit')->enum(['Month','Leave']);
 		$this->hasMany('xepan\hr\SalaryTemplateDetails','salary_id');

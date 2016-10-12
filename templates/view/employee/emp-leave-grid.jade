@@ -1,0 +1,76 @@
+.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    {Pannel}
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block( style="100%")
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                span(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+    {/Pannel}
+    .main-box-body.clearfix.table-responsive
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
+            {header}
+            thead.xepan-hover-hand
+                {cols}{col}
+                th(id="{$salary_sortid}")
+                    span Leave 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$salary_sort}
+                th(data-hide="phone")
+                    span Type 
+                th(data-hide="phone")
+                    span Is Carried Fwd (UNIT) 
+                th(data-hide="phone")
+                    span Is Carried Fwd (Yearly) 
+                th
+                    span No. Leave 
+                th 
+                    span Unit 
+                th 
+                    span Allow Over Quota 
+                th 
+                {/}{/}
+            {$subheader}
+
+            tbody
+                {rows}{row}
+                tr(class="{$odd_even}" data-id="{$id}")
+                    {cols}
+                    td
+                      | {$leave}
+                    td
+                      | {$type}
+                    td
+                        | {$is_unit_carried_forward}
+                    td
+                        | {$is_yearly_carried_forward}
+                    td
+                        | {$no_of_leave}
+                    td
+                        | {$unit}
+                    td
+                        | {$allow_over_quota}
+                    //- td
+                        | {action}Action Here{/}
+                    td(style="width: 15%;")
+                        {$edit}
+                        {$delete}
+                        {/}
+                    
+                    {/}
+                {/}{/}
+                {not_found}
+                div.row
+                    .col-md-12.text-center.alert.alert-warning(role="alert")
+                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+                {/}
+
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
+        {$Paginator}

@@ -106,7 +106,7 @@ class page_employeemovement extends \xepan\base\Page{
 
 		$grid->add('xepan\base\Controller_Avatar',['options'=>['size'=>50,'border'=>['width'=>0]],'name_field'=>'name','default_value'=>'']);
 		$grid->addPaginator(50);
-		$frm=$grid->addQuickSearch(['employee']);
+		$frm=$grid->addQuickSearch(['name']);
 
 		$grid->addColumn('In/Out');
 

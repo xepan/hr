@@ -14,12 +14,12 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 						'Rejected'=>['view','edit','delete'],
 					];
 
-	public $acl =false;
+	public $acl_type ="Employee_Leave";
 	
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\hr\Employee','employee_id')->defaultValue($this->app->employee->id);
+		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id);
 		$this->hasOne('xepan\hr\Employee_LeaveAllow','emp_leave_allow_id');
 		$this->addField('from_date')->type('date');
 		$this->addField('to_date')->type('date');
@@ -28,6 +28,8 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 		$this->addExpression('no_of_leave')->set(function($m,$q){
 			return $q->expr('(DATEDIFF([0],[1]))',[$q->getField('to_date'),$q->getField('from_date')]);
 		});
+
+		$this->addExpression('employee')->set($this->refSQL('created_by_id')->fieldQuery('name'));
 	}
 
 	function submit(){
