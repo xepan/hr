@@ -28,6 +28,8 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 		$this->addExpression('no_of_leave')->set(function($m,$q){
 			return $q->expr('(DATEDIFF([0],[1]))',[$q->getField('to_date'),$q->getField('from_date')]);
 		});
+
+		$this->addExpression('employee')->set($this->refSQL('created_by_id')->fieldQuery('name'));
 	}
 
 	function submit(){

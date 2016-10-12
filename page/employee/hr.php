@@ -25,11 +25,11 @@ class page_employee_hr extends \xepan\base\Page{
 		$f->addSubmit('Get Leave')->addClass('btn btn-primary');
 
 		$draft_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
-		$draft_leave_m->addCondition('employee_id',$this->app->employee->id);
+		$draft_leave_m->addCondition('created_by_id',$this->app->employee->id);
 		$draft_leave_m->addCondition('status',"Draft");
-		$draft_grid = $at->add('xepan\hr\Grid');
+		$draft_grid = $at->add('xepan\hr\CRUD');
 		$draft_grid->setModel($draft_leave_m);
-		$draft_grid->addQuickSearch(['employee']);
+		// $draft_grid->addQuickSearch(['employee']);
 		
 		if($f->isSubmitted()){
 			$allow_leave_m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
@@ -57,7 +57,7 @@ class page_employee_hr extends \xepan\base\Page{
 
 		$approved_tab=$tabs->addTab('Approved Leave');
 		$approved_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
-		$approved_leave_m->addCondition('employee_id',$this->app->employee->id);
+		$approved_leave_m->addCondition('created_by_id',$this->app->employee->id);
 		$approved_leave_m->addCondition('status',"Approved");
 
 		$apprved_grid = $approved_tab->add('xepan\hr\Grid');

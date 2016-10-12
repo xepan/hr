@@ -12,6 +12,7 @@ class page_leavemanagment extends \xepan\base\Page{
 		parent::init();
 
 		$emp_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
+		$emp_leave_m->addCondition('status','<>','Draft');
 		$crud = $this->add('xepan\hr\CRUD',null,null,['view/employee/leave-management-grid']);
 		$crud->setModel($emp_leave_m);
 		$crud->grid->addQuickSearch(['employee']);
