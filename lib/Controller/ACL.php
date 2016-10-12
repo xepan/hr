@@ -380,7 +380,7 @@ class Controller_ACL extends \AbstractController {
 		if($this->model['type']=='Contact' || $this->model['type']=='Document')
 				$this->model['type'] = str_replace("Model_", '', $class->getShortName());
 		
-		$this->acl_m->addCondition('type',$this->model['type']?:$this->model->acl_type);
+		$this->acl_m->addCondition('type',isset($this->model->acl_type)?$this->model->acl_type:$this->model['type']);
 		$this->acl_m->addCondition('post_id',$this->app->employee['post_id']);
 		
 		$this->acl_m->tryLoadAny();
