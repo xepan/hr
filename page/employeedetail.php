@@ -57,9 +57,11 @@ class page_employeedetail extends \xepan\base\Page {
 
 					if($user->loaded())
 						$form->displayError('user_id','username already exist');
-					$user['username'] = $form['user_id'];
-					$user['password'] = $form['password'];
-					$user->save();
+					
+					if($form['user_id'] != '')
+						$user['username'] = $form['user_id'];
+						$user['password'] = $form['password'];
+						$user->save();
 					
 					$form->save();
 					$new_employee_model = $form->getModel();
