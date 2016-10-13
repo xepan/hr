@@ -141,10 +141,10 @@ class page_employeedetail extends \xepan\base\Page {
 			}
 
 		}else{
-			// $contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+			$contact_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+			$contact_view->setModel($employee);
 		}
 		
-		// $contact_view->setModel($employee);
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
