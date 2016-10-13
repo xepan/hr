@@ -167,15 +167,15 @@ class page_employeedetail extends \xepan\base\Page {
 			$official_view->setModel($employee,['offer_date','doj','contract_date','leaving_date','in_time','out_time'],
 											   ['offer_date','doj','contract_date','leaving_date','in_time','out_time']);
 
-			$emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
-			$emp_salary_view->setIdField('contact_id');
-			$o = $emp_salary_view->addMany('EmployeeSalary',['no_records_message'=>'No document found'],null,['view/employee/emp-salary-grid']);
-			$o->setModel($employee->ref('EmployeeSalary'),['salary','amount','unit']);
+			// $emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
+			// $emp_salary_view->setIdField('contact_id');
+			$o = $official_view->addMany('EmployeeSalary',['no_records_message'=>'No document found'],'EmployeeSalary',['view/employee/emp-salary-grid']);
+			$o->setModel($employee->ref('EmployeeSalary'),['salary_id','amount','unit']);
 
-			$emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
-			$emp_leave_view->setIdField('contact_id');
-			$o = $emp_leave_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found'],null,['view/employee/emp-leave-grid']);
-			$o->setModel($employee->ref('EmployeeLeaveAllow'),['leave','type','is_yearly_carried_forward','is_unit_carried_forward','no_of_leave','unit','allow_over_quota']);
+			// $emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
+			// $emp_leave_view->setIdField('contact_id');
+			$o = $official_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found'],'EmployeeLeaveAllow',['view/employee/emp-leave-grid']);
+			$o->setModel($employee->ref('EmployeeLeaveAllow'),['leave_id','type','is_yearly_carried_forward','is_unit_carried_forward','no_of_leave','unit','allow_over_quota']);
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
