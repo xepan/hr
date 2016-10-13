@@ -1,6 +1,6 @@
 .main-box
   header.main-box-header.clearfix.text-center
-    h2 Add New Employee
+    h1 Add New Employee
   .main-box-body.clearfix
     .row
       .form-group.col-xs-8
@@ -49,6 +49,7 @@
           .panel-body
             .form-group.atk-form-row.atk-form-field
               | {$user_id}
+              div.small.text-muted Hint : User id must be a email address
             .form-group.atk-form-row.atk-form-field
               | {$password}
         .panel.panel-default(style='margin-bottom:0px;')

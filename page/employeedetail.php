@@ -41,7 +41,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','contact_no_4');
 			$form->addField('Checkbox','want_to_add_next_employee')->set(true);
 
-			$form->addField('line','user_id');
+			$form->addField('line','user_id')->validate('email');
 			$form->addField('password','password');
 			
 			$form->addSubmit('Add');
@@ -50,18 +50,19 @@ class page_employeedetail extends \xepan\base\Page {
 				try{
 					$this->api->db->beginTransaction();
 										
-					$user = $this->add('xepan\base\Model_User');
-					$user->addCondition('scope','AdminUser');
-					$user->addCondition('username',$form['user_id']);
-					$user->tryLoadAny();
+					if($form['user_id'] && $form['password']){
+						$user = $this->add('xepan\base\Model_User');
+						$user->addCondition('scope','AdminUser');
+						$user->addCondition('username',$form['user_id']);
+						$user->tryLoadAny();
 
-					if($user->loaded())
-						$form->displayError('user_id','username already exist');
-					
-					if($form['user_id'] != '')
-						$user['username'] = $form['user_id'];
-						$user['password'] = $form['password'];
-						$user->save();
+						if($user->loaded())
+							$form->displayError('user_id','username already exist');
+						
+							$user['username'] = $form['user_id'];
+							$user['password'] = $form['password'];
+							$user->save();
+					}
 					
 					$form->save();
 					$new_employee_model = $form->getModel();
