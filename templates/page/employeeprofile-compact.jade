@@ -1,83 +1,70 @@
-div.main-box
-    header.main-box-header.clearfix.text-center
-      h2 Add New Employee
-    div.main-box-body.clearfix
-      div.row
-          div.form-group.col-xs-6.atk-form-row.atk-form-field
-            {$user_id}
-          div.form-group.col-xs-6.atk-form-row.atk-form-field
-            {$password}
-      div.row
-        div.form-group.col-xs-8
-          div.row
-            div.col-xs-6
-              div.form-group.atk-form-row.atk-form-field
-                {$first_name}
-              div.form-group.atk-form-row.atk-form-field
-                {$organization}
-              div.form-group.atk-form-row.atk-form-field
-                {$website}
-            div.col-xs-6
-              div.form-group.atk-form-row.atk-form-field
-                {$last_name}
-              div.form-group.atk-form-row.atk-form-field
-                div
-                  span.text-muted Department
-                  {$department_id} 
-              div.form-group.atk-form-row.atk-form-field
-                div
-                  span.text-muted Post
-                    {$post_id}
-          div.row
-            div.form-group.col-xs-6.atk-form-row.atk-form-field
-              {$address}
-            div.col-xs-6
-              div.form-group.atk-form-row.atk-form-field
-                | Country 
-                {$country_id}
-              div.form-group.atk-form-row.atk-form-field
-                | State
-                {$state_id}    
-              div.form-group.atk-form-row.atk-form-field
-                {$city}
-              div.form-group.atk-form-row.atk-form-field
-                {$pin_code}
-          div.row
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              | Employee Note\ Remark\ Interest\ Narration
-              {$remark}
-        div.form-group.col-xs-4
-          h3 Email Ids
-          div 
-            h2 Official Email
-          div.row
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$email_1}
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$email_2}
-          div
-            h2 Personal Email
-          div.row
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$email_3}
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$email_4}
-          h3 Contact Numbers
-          div 
-            h2 Official Contact Number
-          div.row
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$contact_no_1}
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$contact_no_2}
-          div
-            h2 Personal Contact Number
-          div.row
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$contact_no_3}
-            div.form-group.col-xs-12.atk-form-row.atk-form-field
-              {$contact_no_4}
-      div.row
-        div.form-group.col-xs-12.atk-form-row.atk-form-field
-          {$want_to_add_next_lead}
-    {$FormButtons}
+.main-box
+  header.main-box-header.clearfix.text-center
+    h2 Add New Employee
+  .main-box-body.clearfix
+    .row
+      .form-group.col-xs-8
+        .row
+          .col-xs-6
+            .form-group.atk-form-row.atk-form-field {$first_name}
+            .form-group.atk-form-row.atk-form-field {$organization}
+            .form-group.atk-form-row.atk-form-field {$website}
+          .col-xs-6
+            .form-group.atk-form-row.atk-form-field {$last_name}
+            .form-group.atk-form-row.atk-form-field
+              div
+                span.text-muted Department
+                | {$department_id}
+            .form-group.atk-form-row.atk-form-field
+              div
+                span.text-muted
+                  | Post
+                  | {$post_id}
+        .row
+          .form-group.col-xs-6.atk-form-row.atk-form-field {$address}
+          .col-xs-6
+            .form-group.atk-form-row.atk-form-field
+              | Country
+              | {$country_id}
+            .form-group.atk-form-row.atk-form-field
+              | State
+              | {$state_id}
+            .form-group.atk-form-row.atk-form-field {$city}
+            .form-group.atk-form-row.atk-form-field {$pin_code}
+        .row
+          .form-group.col-xs-12.atk-form-row.atk-form-field
+            | Employee Note\ Remark\ Interest\ Narration
+            | {$remark}
+      .form-group.col-xs-4
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary User Panel
+          .panel-body
+            .form-group.atk-form-row.atk-form-field
+              | {$user_id}
+            .form-group.atk-form-row.atk-form-field
+              | {$password}
+        h3 Email Ids
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Official Email
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_1}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_2}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Personal Email
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_3}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_4}
+        h3 Contact Numbers
+        div
+          h2 Official Contact Number
+        .row
+          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_1}
+          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_2}
+        div
+          h2 Personal Contact Number
+        .row
+          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_3}
+          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_4}
+    .row
+      .form-group.col-xs-12.atk-form-row.atk-form-field {$want_to_add_next_lead}
+  | {$FormButtons}
