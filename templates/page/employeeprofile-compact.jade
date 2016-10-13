@@ -4,37 +4,45 @@
   .main-box-body.clearfix
     .row
       .form-group.col-xs-8
-        .row
-          .col-xs-6
-            .form-group.atk-form-row.atk-form-field {$first_name}
-            .form-group.atk-form-row.atk-form-field {$organization}
-            .form-group.atk-form-row.atk-form-field {$website}
-          .col-xs-6
-            .form-group.atk-form-row.atk-form-field {$last_name}
-            .form-group.atk-form-row.atk-form-field
-              div
-                span.text-muted Department
-                | {$department_id}
-            .form-group.atk-form-row.atk-form-field
-              div
-                span.text-muted
-                  | Post
-                  | {$post_id}
-        .row
-          .form-group.col-xs-6.atk-form-row.atk-form-field {$address}
-          .col-xs-6
-            .form-group.atk-form-row.atk-form-field
-              | Country
-              | {$country_id}
-            .form-group.atk-form-row.atk-form-field
-              | State
-              | {$state_id}
-            .form-group.atk-form-row.atk-form-field {$city}
-            .form-group.atk-form-row.atk-form-field {$pin_code}
-        .row
-          .form-group.col-xs-12.atk-form-row.atk-form-field
-            | Employee Note\ Remark\ Interest\ Narration
-            | {$remark}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary General Information
+          .panel-body
+          .row
+            .col-xs-6
+              .form-group.atk-form-row.atk-form-field {$first_name}
+              .form-group.atk-form-row.atk-form-field {$organization}
+              .form-group.atk-form-row.atk-form-field {$website}
+            .col-xs-6
+              .form-group.atk-form-row.atk-form-field {$last_name}
+              .form-group.atk-form-row.atk-form-field
+                div
+                  span.text-muted Department
+                  | {$department_id}
+              .form-group.atk-form-row.atk-form-field
+                div
+                  span.text-muted
+                    | Post
+                    | {$post_id}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Address
+          .panel-body
+            .row
+              .form-group.col-xs-6.atk-form-row.atk-form-field {$address}
+              .col-xs-6
+                .form-group.atk-form-row.atk-form-field
+                  | Country
+                  | {$country_id}
+                .form-group.atk-form-row.atk-form-field
+                  | State
+                  | {$state_id}
+                .form-group.atk-form-row.atk-form-field {$city}
+                .form-group.atk-form-row.atk-form-field {$pin_code}
+          .panel.panel-default(style='margin-bottom:0px;')
+            .panel.panel-heading.panle-primary Remark
+            .panel-body
+              .row
+                .form-group.col-xs-12.atk-form-row.atk-form-field
+                  | {$remark}
       .form-group.col-xs-4
         .panel.panel-default(style='margin-bottom:0px;')
           .panel.panel-heading.panle-primary User Panel
@@ -43,7 +51,6 @@
               | {$user_id}
             .form-group.atk-form-row.atk-form-field
               | {$password}
-        h3 Email Ids
         .panel.panel-default(style='margin-bottom:0px;')
           .panel.panel-heading.panle-primary Official Email
           .panel-body
@@ -54,17 +61,16 @@
           .panel-body
             .form-group.col-xs-12.atk-form-row.atk-form-field {$email_3}
             .form-group.col-xs-12.atk-form-row.atk-form-field {$email_4}
-        h3 Contact Numbers
-        div
-          h2 Official Contact Number
-        .row
-          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_1}
-          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_2}
-        div
-          h2 Personal Contact Number
-        .row
-          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_3}
-          .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_4}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Official Contact
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_1}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_2}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Personal Contact
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_3}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_4}
     .row
-      .form-group.col-xs-12.atk-form-row.atk-form-field {$want_to_add_next_lead}
+      .form-group.col-xs-12.atk-form-row.atk-form-field {$want_to_add_next_employee}
   | {$FormButtons}

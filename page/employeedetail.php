@@ -39,7 +39,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','contact_no_2');
 			$form->addField('line','contact_no_3');
 			$form->addField('line','contact_no_4');
-			$form->addField('Checkbox','want_to_add_next_lead')->set(true);
+			$form->addField('Checkbox','want_to_add_next_employee')->set(true);
 
 			$form->addField('line','user_id');
 			$form->addField('password','password');
@@ -134,7 +134,7 @@ class page_employeedetail extends \xepan\base\Page {
 		            throw $e;
 		        }	
 
-		        if($form['want_to_add_next_lead']){
+		        if($form['want_to_add_next_employee']){
 		        	$form->js(null,$form->js()->reload())->univ()->successMessage('Employee Created Successfully')->execute();
 		        }
 				$form->js(null,$form->js()->univ()->successMessage('Employee Created Successfully'))->univ()->redirect($this->app->url(null,['action'=>"edit",'contact_id'=>$new_employee_model->id]))->execute();
