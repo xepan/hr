@@ -2,7 +2,13 @@
     {Pannel}
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block( style="100%")
-            .pull-right {$grid_buttons} 
+            .pull-right {$grid_buttons}
+            a(href="{$dept-url}")
+                .btn.btn-primary.pull-right
+                    i.fa.fa-bars &nbsp; Hierarchy
+            .btn.btn-primary.pull-right(href="{$dept-url}")
+                i.fa.fa-bars &nbsp; List
+
             .form-group.pull-right.xepan-filter-form
                 span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")

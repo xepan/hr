@@ -8,6 +8,30 @@ class page_structurechart extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		$company_m = $this->add('xepan\base\Model_ConfigJsonModel',
+				[
+					'fields'=>[
+								'company_name'=>"Line",
+								'company_owner'=>"Line",
+								'mobile_no'=>"Line",
+								'company_email'=>"Line",
+								'company_address'=>"Line",
+								'company_pin_code'=>"Line",
+								'company_description'=>"xepan\base\RichText",
+								'company_logo_absolute_url'=>"Line",
+								'company_twitter_url'=>"Line",
+								'company_facebook_url'=>"Line",
+								'company_google_url'=>"Line",
+								'company_linkedin_url'=>"Line",
+								],
+					'config_key'=>'COMPANY_AND_OWNER_INFORMATION',
+					'application'=>'communication'
+				]);
+		
+		$company_m->add('xepan\hr\Controller_ACL');
+		$company_m->tryLoadAny();
+
+		$this->template->trySet('dept-url',$this->app->url('xepan_hr_department'));
 		$this->js(true)
 				->_load('mindchart/jquery.orgchart')
 				->_load('mindchart/mindchart');
@@ -17,7 +41,7 @@ class page_structurechart extends \xepan\base\Page{
 
 		$data[] = [
 					"id"=>1,
-					"name"=>"BCCS",
+					"name"=>$company_m['company_name'],
 					"parent"=>0,
 					"level"=>1,
 					"type"=>'Company'
@@ -62,12 +86,16 @@ class page_structurechart extends \xepan\base\Page{
 			}
 		}
 
-		$hierarchy_view = $this->add('View')->setStyle('overflow','scroll');
+		$hierarchy_view = $this->add('View',null,'chart')->setStyle('overflow','scroll');
 		$hierarchy_view->js(true)->xepan_mindchart(
 									[	
 										"data" => $data,
 										"allowEdit"=>false,
 										"showControls"=>false
 									]);
+	}
+
+	function defaultTemplate(){
+		return['page\structurechart'];
 	}
 }
