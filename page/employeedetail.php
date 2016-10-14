@@ -76,6 +76,10 @@ class page_employeedetail extends \xepan\base\Page {
 
 						if($user->loaded())
 							$form->displayError('user_id','username already exist');
+						// $user=$this->add('xepan\base\Model_User');
+						$this->add('BasicAuth')
+						->usePasswordEncryption('md5')
+						->addEncryptionHook($user);
 						
 						$user['username'] = $form['user_id'];
 						$user['password'] = $form['password'];
