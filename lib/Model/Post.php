@@ -22,8 +22,9 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasOne('xepan\hr\LeaveTemplate','leave_template_id');
 
 		$post_j->addField('name')->sortable(true);
-		$post_j->addField('in_time');
-		$post_j->addField('out_time');
+		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
+		
+		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));
 
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');

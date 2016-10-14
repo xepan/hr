@@ -101,7 +101,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Official";
-						$email['value'] = $form['email_1'];
+						$email['value'] = trim($form['email_1']);
 						$email->save();
 					}
 
@@ -109,7 +109,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Official";
-						$email['value'] = $form['email_2'];
+						$email['value'] = trim($form['email_2']);
 						$email->save();
 					}
 
@@ -117,14 +117,14 @@ class page_employeedetail extends \xepan\base\Page {
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Personal";
-						$email['value'] = $form['email_3'];
+						$email['value'] = trim($form['email_3']);
 						$email->save();
 					}
 					if($form['email_4']){
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Personal";
-						$email['value'] = $form['email_4'];
+						$email['value'] = trim($form['email_4']);
 						$email->save();
 					}
 
