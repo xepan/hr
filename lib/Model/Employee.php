@@ -30,8 +30,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
 		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual'])->defaultValue('Web Login');
-		$emp_j->addField('in_time');
-		$emp_j->addField('out_time');
+		$emp_j->addField('in_time')->display(array('form' => 'TimePicker'));
+		$emp_j->addField('out_time')->display(array('form' => 'TimePicker'));
 
 		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
 		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');
