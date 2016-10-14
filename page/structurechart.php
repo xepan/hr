@@ -3,6 +3,10 @@
     TODO
     a. Post should be added in array based upon parent and child hierarchy
     b. Employees should be added one under another to reduce horizontal overflowing
+    c. Seperate fill colors for boxes [dept, post, emp] to maintain distinction
+    d. Level open and close mechanism to reduce query timing
+    							OR
+    e. Saving data array in configuration to reduce query timing
 **************************************************************************************/
 namespace xepan\hr;
 
