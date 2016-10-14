@@ -47,7 +47,6 @@ class page_structurechart extends \xepan\base\Page{
 					'config_key'=>'COMPANY_AND_OWNER_INFORMATION',
 					'application'=>'communication'
 				]);
-		$company_m->add('xepan\hr\Controller_ACL');
 		$company_m->tryLoadAny();
 
 		// SETTING DEPARTMENT PAGE URL ON BUTTON TO NAVIAGATE TO DEPARTMET GRID
