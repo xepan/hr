@@ -73,16 +73,17 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function updateEmployeeSalary(){
+
 		
 		if($this->dirty['post_id']){
 			
 			$temp = $this->ref('post_id')->ref('salary_template_id');
 
-			$this->ref('EmployeeSalary')->each(function($m){
-				$m->delete();
-			});
-
 			if($temp->loaded()){
+				
+				$this->ref('EmployeeSalary')->each(function($m){
+					$m->delete();
+				});
 				
 				foreach ($temp->ref('xepan\hr\SalaryTemplateDetails') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_Salary');
@@ -102,11 +103,12 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if($this->dirty['post_id']){
 			$temp = $this->ref('post_id')->ref('leave_template_id');
 
-			$this->ref('EmployeeSalary')->each(function($m){
-				$m->delete();
-			});
 
 			if($temp->loaded()){
+				$this->ref('EmployeeSalary')->each(function($m){
+					$m->delete();
+				});
+				
 				foreach ($temp->ref('xepan\hr\LeaveTemplateDetail') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
 					$m['created_by_id'] = $this->id;
