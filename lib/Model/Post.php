@@ -10,6 +10,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 						'InActive' => ['view','edit','delete','activate']
 					];
 
+	public $title_field = "name_with_dept";
 	function init(){
 		parent::init();
 
@@ -36,6 +37,11 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeDelete',[$this,'deleteEmailAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
+
+		$this->addExpression('name_with_dept')
+			->set($this->dsql()->expr('CONCAT([0]," :: ",[1])',
+				[
+				$this->getElement('department'),$this->getElement('name')]))->sortable(true);
 
 		$this->is([
 			'department_id|required'
