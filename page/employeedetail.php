@@ -89,6 +89,14 @@ class page_employeedetail extends \xepan\base\Page {
 						$new_employee_model->save();
 					}
 
+					if($form['post_id']){
+						$post = $this->add('xepan\hr\Model_Post');
+						$post->tryload($form['post_id']);
+						$new_employee_model['in_time'] = $post['in_time'];
+						$new_employee_model['out_time'] = $post['out_time'];
+						$new_employee_model->save();
+					}
+
 					if($form['email_1']){
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
