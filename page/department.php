@@ -27,7 +27,9 @@ class page_department extends \xepan\base\Page {
 		$department->setOrder('production_level','asc');
 		$crud=$this->add('xepan\hr\CRUD',null,null,['view/department/department-grid']);
 		$crud->grid->addPaginator(50);
-		$crud->grid->template->trySet('dept-url',$this->app->url('xepan_hr_structurechart'));
+		
+		if(!$crud->isEditing())
+			$crud->grid->template->trySet('dept-url',$this->app->url('xepan_hr_structurechart'));
 
 		$crud->setModel($department);
 
