@@ -152,9 +152,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(!$attan_m->loaded()){
 			$attan_m['employee_id'] = $this->app->employee->id;
 			$attan_m['from_date']  = $this->app->now;
-		}else{
+		}/*else{
 			$attan_m['to_date']  = null;
-		}
+		}*/
 		$attan_m->save();
 
 

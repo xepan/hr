@@ -37,13 +37,13 @@
                       //- a.user-link(href='{url}index.php?page=xepan_hr_movementdetail&employee_id={$id}{/}')
                       a.user-link.do-view-employee-movement(href='#' data-id="{$id}")
                         {$name}  
-                      small
-                          span(class="label label-{$in_color}") In  
-                          span(class="label label-{$out_color}") Out  
+                      //- small
+                      //-     span(class="label label-{$in_color}") In  
+                      //-     span(class="label label-{$out_color}") Out  
                     td
-                      span {$first_in}  
+                      strong(class = "text-{$in_color}") {$first_in}  
                     td
-                      span {$last_out}
+                      strong(class = "text-{$out_color}") {$last_out}
                     td
                       {$is_in}
                       {$is_out}
