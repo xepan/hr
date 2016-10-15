@@ -18,10 +18,10 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}  <a href="#" data-id="{$id}" class="user-link do-view-employee-movement">{$name}  </a><small><span class="label label-{$in_color}">In  </span><span class="label label-{$out_color}">Out  </span></small>
+          <td>{$avatar}  <a href="#" data-id="{$id}" class="user-link do-view-employee-movement">{$name}  </a>
           </td>
-          <td><span>{$first_in}  </span></td>
-          <td><span>{$last_out}</span></td>
+          <td><strong class="text-{$in_color}">{$first_in}  </strong></td>
+          <td><strong class="text-{$out_color}">{$last_out}</strong></td>
           <td>
             {$is_in}
             {$is_out}

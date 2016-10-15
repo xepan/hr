@@ -81,7 +81,7 @@ class page_employeemovement extends \xepan\base\Page{
 		
 		$employee->addExpression('in_color')->set(function($m,$q)use($date){
 			return $q->expr(
-					"IF([0]<= CONCAT('[1]',' ',[2]),'primary','danger')",
+					"IF([0]<= CONCAT('[1]',' ',[2]),'success','danger')",
 					  [
 						$m->getElement('first_in'),
 						$date,
@@ -92,7 +92,7 @@ class page_employeemovement extends \xepan\base\Page{
 
 		$employee->addExpression('out_color')->set(function($m,$q)use($date){
 			return $q->expr(
-					"IF([0]>= CONCAT('[1]',' ',[2]),'primary','danger')",
+					"IF([0]>= CONCAT('[1]',' ',[2]),'success','danger')",
 					  [
 						$m->getElement('last_out'),
 						$date,
