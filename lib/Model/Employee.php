@@ -21,8 +21,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j = $this->join('employee.contact_id');
 
 		// $emp_j->hasOne('xepan\base\User',null,'username'); // Now in Contact
-		$emp_j->hasOne('xepan\hr\Department','department_id')->sortable(true);
-		$emp_j->hasOne('xepan\hr\Post','post_id');
+		$emp_j->hasOne('xepan\hr\Department','department_id')->sortable(true)->display(array('form' => 'xepan\commerce\DropDown'));
+		$emp_j->hasOne('xepan\hr\Post','post_id')->display(array('form' => 'xepan\commerce\DropDown'));
 		
 		$emp_j->addField('notified_till')->type('number')->defaultValue(0); // TODO Should be current id of Activity
 		$emp_j->addField('offer_date')->type('date')->sortable(true);
@@ -30,8 +30,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
 		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual'])->defaultValue('Web Login');
-		$emp_j->addField('in_time');
-		$emp_j->addField('out_time');
+		$emp_j->addField('in_time')->display(array('form' => 'TimePicker'));
+		$emp_j->addField('out_time')->display(array('form' => 'TimePicker'));
 
 		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
 		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');

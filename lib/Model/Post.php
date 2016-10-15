@@ -10,6 +10,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 						'InActive' => ['view','edit','delete','activate']
 					];
 
+	public $title_field = "name_with_dept";
 	function init(){
 		parent::init();
 
@@ -21,8 +22,9 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasOne('xepan\hr\LeaveTemplate','leave_template_id');
 
 		$post_j->addField('name')->sortable(true);
-		$post_j->addField('in_time');
-		$post_j->addField('out_time');
+		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
+		
+		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));
 
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
@@ -36,6 +38,11 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeDelete',[$this,'deleteEmailAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
+
+		$this->addExpression('name_with_dept')
+			->set($this->dsql()->expr('CONCAT([0]," :: ",[1])',
+				[
+				$this->getElement('department'),$this->getElement('name')]))->sortable(true);
 
 		$this->is([
 			'department_id|required'
