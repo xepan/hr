@@ -5,6 +5,20 @@ class page_employee_profile extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		$page_url = $this->api->url();
+		$this->vp = $this->add('VirtualPage');
+		$this->vp->set(function($p)use($page_url){
+			$f=$p->add('Form');
+			$f->setModel('xepan\base\Contact',['image_id'])->load($this->app->employee->id);
+			$f->addSubmit('Save');
+			if($f->submitted()){
+				$f->save();
+				$f->js()->univ()->location($page_url)->execute();
+			}
+		});
+
+		$this->js('click')->_selector('.profile-img')->univ()->frameURL('Change Image',$this->vp->getURL());
+
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->app->employee['id']);
 		$user=$employee->ref('user_id');
 		
