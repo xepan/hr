@@ -76,7 +76,8 @@ class page_post extends \xepan\base\Page {
 				[
 				'url'=>$vp->getURL(),
 				'limit'=> 3,
-				'source'=> $value
+				'source'=> $value,
+				'disabled'=>true
 				]);
 		
 		}
