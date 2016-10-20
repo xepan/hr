@@ -20,23 +20,23 @@ class page_post extends \xepan\base\Page {
 		$this->api->stickyGET('department_id');
 
 		$vp = $this->add('VirtualPage');
-		$vp->set(function($p){
-			try{
-				$post = $this->add('xepan\hr\Model_Post')->load($_POST['pk']);
-				$post->ref('EmailPermissions')->deleteAll();
-				foreach ($_POST['value']?:[] as $emailsetting_id) {
-					$this->add('xepan\hr\Model_Post_Email_Association')
-						->set('post_id',$_POST['pk'])
-						->set('emailsetting_id',$emailsetting_id)
-						->saveAndUnload();
-				}
-			}catch(\Exception $e){
-				http_response_code(400);
-				echo $e->getMessage();
-			}
-			exit;
+		// $vp->set(function($p){
+		// 	try{
+		// 		$post = $this->add('xepan\hr\Model_Post')->load($_POST['pk']);
+		// 		$post->ref('EmailPermissions')->deleteAll();
+		// 		foreach ($_POST['value']?:[] as $emailsetting_id) {
+		// 			$this->add('xepan\hr\Model_Post_Email_Association')
+		// 				->set('post_id',$_POST['pk'])
+		// 				->set('emailsetting_id',$emailsetting_id)
+		// 				->saveAndUnload();
+		// 		}
+		// 	}catch(\Exception $e){
+		// 		http_response_code(400);
+		// 		echo $e->getMessage();
+		// 	}
+		// 	exit;
 			
-		});
+		// });
 
 		$post=$this->add('xepan\hr\Model_Post');
 		$post->add('xepan\hr\Controller_SideBarStatusFilter');
