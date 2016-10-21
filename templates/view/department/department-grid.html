@@ -1,15 +1,12 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div style="100%" class="filter-block">
-      <div class="pull-right">{$grid_buttons}</div><a href="{$dept-url}">
-        <div class="btn btn-primary pull-right"><i class="fa fa-sitemap">&nbsp; Hierarchy</i></div></a>
-      <div href="{$dept-url}" class="btn btn-primary pull-right"><i class="fa fa-bars">&nbsp; List</i></div>
+<div id="{$_name}" class="section attached top {$class}">{Pannel}
+  <div class="section attached  {$class} ">
+    <div class="ui menu right">{$grid_buttons}<a href="{$dept-url}" class="button icon"><i class="icon sitemap"></i>Hierarchy</a><a href="{$dept-url}" class="button icon"><i class="icon bard"></i>List</a>
       <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
     </div>
-  </header>{/Pannel}
+  </div>{/Pannel}
   <div class="main-box-body clearfix table-responsive">
-    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
+    <table style="width:100%" class="ui table">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th id="{$name_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
         <th id="{$production_level_sortid}" data-hide="phone"><span>Production Level </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$production_level_sort}</span></th>
@@ -22,9 +19,8 @@
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{$name}</td>
           <td>{$production_level}</td>
-          <td><a href="#" data-id="{$id}" class="do-view-department-post">{$posts_count}</a>
-          </td>
-          <td><a href="#" data-id="{$id}" class="do-view-department-employee">{$employee_count}</a></td>
+          <td>a.do-view-department-post(href='#' data-id="{$id}") {$posts_count}</td>
+          <td>a.do-view-department-employee(href='#' data-id="{$id}") {$employee_count}</td>
           <td>{action}Action Here{/}</td>
           <td style="width: 15%;">
             {$edit}

@@ -1,24 +1,17 @@
-a.btn.dropdown-toggle(data-toggle='dropdown')
-    i.fa.fa-bell
-    span.count {notification_count}8{/}
-  ul.dropdown-menu.dropdown-menu-right.notifications-list
-    li.pointer
-      .pointer-inner
-        .arrow
-    li.item-header You have {unread_notification}6{/} new notifications
+.ui.dropdown.item.icon
+  i.icon.bell
+  i.dropdown.icon
+  .label {notification_count}8{/} {$unread_notification}
+  .menu
     {rows}{row}
-    li.item
-        a(href='#')
-          i(class="fa fa-{icon}comment{/}")
-          span.content {notification}New comment on ‘Awesome P...{/}
-          span.time.xepan-padding-horizontal-xsmall
-            i.fa.fa-clock-o
-            | {callback_date}13 min.{/}
+    .item
+      a(href='#')
+        i(class="fa fa-{icon}comment{/}")
+        span.content {notification}New comment on ‘Awesome P...{/}
+        span.time.xepan-padding-horizontal-xsmall
+          i.fa.fa-clock-o
+          | {callback_date}13 min.{/}
     {/}{/}              
-    li.item-footer
-          a(href='?page=xepan_hr_notification')
-                | View all notifications
-style.
-  .notifications-list .item a .time{
-    background:white none repeat scroll 0 0;
-  }
+    .item
+      a(href='?page=xepan_hr_notification')
+        | View all notifications
