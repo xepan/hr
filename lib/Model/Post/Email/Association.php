@@ -10,5 +10,9 @@ class Model_Post_Email_Association extends \xepan\base\Model_Table{
 
 		$this->hasOne('xepan\hr\Post','post_id');
 		$this->hasOne('xepan\communication\Communication_EmailSetting','emailsetting_id');
+
+		$this->addExpression('name')->set(function($m,$q){
+			return $m->refSQL('emailsetting_id')->fieldQuery('name');
+		});
 	}
 }

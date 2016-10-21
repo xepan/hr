@@ -26,7 +26,7 @@ class page_activity extends \xepan\base\Page{
 		$form->addField('xepan\base\Basic','contact','Created By')->setModel($this->add('xepan\base\Model_Contact'));
 		$form->addField('xepan\base\Basic','related_person','Related Person')->setModel($this->add('xepan\base\Model_Contact'));
 		$form->addField('Dropdown','department','Department')->setModel($this->add('xepan\hr\Model_Department'));
-		$form->addField('Dropdown','communication_type','Communication Type')->setValueList(['Email'=>'Email','TeleMarketing'=>'TeleMarketing','Phone'=>'Phone','SMS'=>'SMS','Personal'=>'Personal'])->setEmptyText('Please select a communication type');
+		$form->addField('Dropdown','communication_type','Communication Type')->setValueList(['Email'=>'Email','Call'=>'Call','TeleMarketing'=>'TeleMarketing','Personal'=>'Personal','SMS'=>'SMS'])->setEmptyText('Please select a communication type');
 		$form->addSubmit("FILTER")->addClass('btn btn-block btn-primary');
 
 		$this->js(true,$form_view->js()->hide());
