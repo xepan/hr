@@ -160,5 +160,4 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 		$this['search_string'] = $search_string;
 	}
-
 }
