@@ -1,5 +1,5 @@
 
-<div class="panel panel-default panel-body">
+<div class="panel panel-default panel-body page-activity">
   <div class="row xepan-push">
     <div class="col-md-6 atk-form-field atk-form-row"><strong>From Date :</strong>{$from_date}</div>
     <div class="col-md-6 atk-form-field atk-form-row">	<strong>To Date :</strong>{$to_date}</div>
@@ -9,10 +9,16 @@
     <div class="col-md-6 atk-form-field atk-form-row">	<strong>Related Person :</strong>{$related_person}</div>
   </div>
   <div class="row xepan-push">
-    <div class="col-md-6 atk-form-field atk-form-row"><strong>Department :</strong>{$department}</div>
-    <div class="col-md-6 atk-form-field atk-form-row"><strong>Communication Type :</strong>{$communication_type}</div>
+    <div class="col-md-4 atk-form-field atk-form-row"><strong>Department :</strong><br/>{$department}</div>
+    <div class="col-md-4 atk-form-field atk-form-row"><strong>Communication Type :</strong><br/>{$communication_type}</div>
+    <div class="col-md-4 atk-form-field atk-form-row"><strong>Don't show My Activities :</strong>{$show_my_activity}	</div>
   </div>
   <div class="row xepan-push">
     <div class="col-md-12">{$FormButtons}</div>
   </div>
+  <style>
+    .page-activity .select2{
+    	width:100% !important;
+    }
+  </style>
 </div>

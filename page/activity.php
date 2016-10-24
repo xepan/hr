@@ -9,10 +9,18 @@ class page_activity extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		$from_date = $this->app->stickyGET('from_date');
+		$to_date = $this->app->stickyGET('to_date');
+		$contact_id = $this->app->stickyGET('contact_id');
+		$related_person_id = $this->app->stickyGET('related_person_id');
+		$department_id = $this->app->stickyGET('department_id');
+		$communication_type = $this->app->stickyGET('communication_type');
+		$self_activity = $this->app->stickyGET('self_activity');			
+
 		$root_posts = $this->add('xepan\hr\Model_Post');
 		$root_posts->addCondition('parent_post_id',$this->app->employee['post_id']);
 		$this->descendants[] = $this->app->employee['post_id'];
-		
+
 		foreach ($root_posts as $post) {		
 			if($post['id'] == $post['parent_post_id']){
 				$this->descendants[] = $post->id;
@@ -22,12 +30,6 @@ class page_activity extends \xepan\base\Page{
 			$this->descendantPosts($post);
 		}
 
-		$from_date = $this->app->stickyGET('from_date');
-		$to_date = $this->app->stickyGET('to_date');
-		$contact_id = $this->app->stickyGET('contact_id');
-		$related_person_id = $this->app->stickyGET('related_person_id');
-		$department_id = $this->app->stickyGET('department_id');
-		$communication_type = $this->app->stickyGET('communication_type');
 			
 		$custom_date = strtotime(date("Y-m-d", strtotime('-1 month', strtotime($this->app->today))));
 		
@@ -40,16 +42,21 @@ class page_activity extends \xepan\base\Page{
 		$form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
 		$form->addField('xepan\base\Basic','contact','Created By')->setModel($this->add('xepan\base\Model_Contact'));
 		$form->addField('xepan\base\Basic','related_person','Related Person')->setModel($this->add('xepan\base\Model_Contact'));
-		$form->addField('Dropdown','department','Department')->setModel($this->add('xepan\hr\Model_Department'));
+
+		$dept_field = $form->addField('Dropdown','department','Department');
+		$dept_field->setModel($this->add('xepan\hr\Model_Department'));
+		$dept_field->setEmptyText('Please select');
+
 		$form->addField('Dropdown','communication_type','Communication Type')->setValueList(['Email'=>'Email','Call'=>'Call','TeleMarketing'=>'TeleMarketing','Personal'=>'Personal','SMS'=>'SMS'])->setEmptyText('Please select a communication type');
+		$form->addField('CheckBox','show_my_activity','');
 		$form->addSubmit("FILTER")->addClass('btn btn-block btn-primary');
 
 		$this->js(true,$form_view->js()->hide());
 		$toggle_button->js('click',$form_view->js()->toggle());
 
-		$activity_view = $this->add('xepan\base\View_Activity',['descendants'=>$this->descendants,'from_date'=>$from_date,'to_date'=>$to_date,'contact_id'=>$contact_id,'related_person_id'=>$related_person_id,'department_id'=>$department_id,'communication_type'=>$communication_type],'activity_view');
+		$activity_view = $this->add('xepan\base\View_Activity',['self_activity'=>$self_activity,'descendants'=>$this->descendants,'from_date'=>$from_date,'to_date'=>$to_date,'contact_id'=>$contact_id,'related_person_id'=>$related_person_id,'department_id'=>$department_id,'communication_type'=>$communication_type],'activity_view');
 
-		if($form->isSubmitted()){			
+		if($form->isSubmitted()){						
 			$form->js(null,$activity_view->js()
 											->reload(
 												[
@@ -59,7 +66,8 @@ class page_activity extends \xepan\base\Page{
 													'related_person_id'=>$form['related_person'],
 													'document_id'=>$form['document'],
 													'department_id'=>$form['department'],
-													'communication_type'=>$form['communication_type']
+													'communication_type'=>$form['communication_type'],
+													'self_activity'=>$form['show_my_activity']
 												]))->univ()->successMessage('wait ... ')->execute();
 
 		}
