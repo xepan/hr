@@ -42,7 +42,11 @@ class page_activity extends \xepan\base\Page{
 		$form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
 		$form->addField('xepan\base\Basic','contact','Created By')->setModel($this->add('xepan\base\Model_Contact'));
 		$form->addField('xepan\base\Basic','related_person','Related Person')->setModel($this->add('xepan\base\Model_Contact'));
-		$form->addField('Dropdown','department','Department')->setModel($this->add('xepan\hr\Model_Department'));
+
+		$dept_field = $form->addField('Dropdown','department','Department');
+		$dept_field->setModel($this->add('xepan\hr\Model_Department'));
+		$dept_field->setEmptyText('Please select');
+
 		$form->addField('Dropdown','communication_type','Communication Type')->setValueList(['Email'=>'Email','Call'=>'Call','TeleMarketing'=>'TeleMarketing','Personal'=>'Personal','SMS'=>'SMS'])->setEmptyText('Please select a communication type');
 		$form->addField('CheckBox','show_my_activity','');
 		$form->addSubmit("FILTER")->addClass('btn btn-block btn-primary');

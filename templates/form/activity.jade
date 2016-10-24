@@ -1,4 +1,4 @@
-.panel.panel-default.panel-body
+.panel.panel-default.panel-body.page-activity
 	.row.xepan-push
 		.col-md-6.atk-form-field.atk-form-row
 			strong From Date :
@@ -16,14 +16,19 @@
 	.row.xepan-push
 		.col-md-4.atk-form-field.atk-form-row
 			strong Department :
+			br
 			{$department}
 		.col-md-4.atk-form-field.atk-form-row
 			strong Communication Type :
+			br
 			{$communication_type}
 		.col-md-4.atk-form-field.atk-form-row
 			strong Don't show My Activities :
-			div
-				{$show_my_activity}	
+			{$show_my_activity}	
 	.row.xepan-push
 		.col-md-12
 			{$FormButtons}
+	style.
+		.page-activity .select2{
+			width:100% !important;
+		}
