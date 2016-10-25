@@ -2,20 +2,18 @@
 
 namespace xepan\hr;
 
-/**
-* 
-*/
-class page_employee_hr extends \xepan\base\Page{
-	public $title="My HR";
+class page_employee_leave extends \xepan\hr\page_employee_myhr{
+	public $title="My Leave";
 	function init(){
 		parent::init();
+
 		$tabs = $this->add('Tabs');
-		$at = $tabs->addTab('New Leave');
+		$new_leave_tab = $tabs->addTab('New Leave');
 
 		$emp_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		// $emp_leave_m->addCondition('employee_id',$this->app->employee->id);
 
-		$f = $at->add('Form');
+		$f = $new_leave_tab->add('Form');
 		$allow_leave_f = $f->addField('Dropdown','allow_leave');
 		$allow_leave_f->setEmptytext('Please Select');
 		$allow_leave_f->setModel('xepan\hr\Model_Employee_LeaveAllow');
@@ -27,7 +25,7 @@ class page_employee_hr extends \xepan\base\Page{
 		$draft_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		$draft_leave_m->addCondition('created_by_id',$this->app->employee->id);
 		$draft_leave_m->addCondition('status',"Draft");
-		$draft_grid = $at->add('xepan\hr\CRUD');
+		$draft_grid = $new_leave_tab->add('xepan\hr\CRUD');
 		$draft_grid->setModel($draft_leave_m);
 		// $draft_grid->addQuickSearch(['employee']);
 		
@@ -55,7 +53,7 @@ class page_employee_hr extends \xepan\base\Page{
 		}
 
 
-		$approved_tab=$tabs->addTab('Approved Leave');
+		$approved_tab = $tabs->addTab('Approved Leave');
 		$approved_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		$approved_leave_m->addCondition('created_by_id',$this->app->employee->id);
 		$approved_leave_m->addCondition('status',"Approved");
@@ -63,6 +61,8 @@ class page_employee_hr extends \xepan\base\Page{
 		$apprved_grid = $approved_tab->add('xepan\hr\Grid');
 		$apprved_grid->setModel($approved_leave_m);
 		$apprved_grid->addQuickSearch(['employee']);
+
+
 
 	}
 }

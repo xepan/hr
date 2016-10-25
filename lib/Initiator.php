@@ -42,7 +42,7 @@ class Initiator extends \Controller_Addon {
                 // exit;
             }
             $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
-            $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_hr');
+            $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_leave');
             // $m = $this->app->side_menu->addItem('HR');
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
