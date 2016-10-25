@@ -5,9 +5,14 @@ namespace xepan\hr;
 class page_activity extends \xepan\base\Page{
 	public $title="Activities";
 	public $descendants = [];
-	
+	public $model;
+
 	function init(){
 		parent::init();
+
+		$this->js(true)->_load('moment.min')
+        			   ->_load('daterangepicker1')
+        			   ->_css('daterangepicker');
 
 		$from_date = $this->app->stickyGET('from_date');
 		$to_date = $this->app->stickyGET('to_date');
@@ -15,7 +20,7 @@ class page_activity extends \xepan\base\Page{
 		$related_person_id = $this->app->stickyGET('related_person_id');
 		$department_id = $this->app->stickyGET('department_id');
 		$communication_type = $this->app->stickyGET('communication_type');
-		$self_activity = $this->app->stickyGET('self_activity');			
+		$self_activity = $this->app->stickyGET('self_activity');
 
 		$root_posts = $this->add('xepan\hr\Model_Post');
 		$root_posts->addCondition('parent_post_id',$this->app->employee['post_id']);
@@ -38,8 +43,11 @@ class page_activity extends \xepan\base\Page{
 		$form_view = $this->add('View',null,'form_view');
 		$form = $form_view->add('Form');
 		$form->setlayout('form\activity');
-		$form->addField('DatePicker','from_date')->validate('required')->set($custom_date);
-		$form->addField('DatePicker','to_date')->validate('required')->set($this->app->today);
+		$date_range_field = $form->addField('DateRangePicker','date_range')
+								 ->setStartDate($this->app->now)
+								 ->setEndDate($this->app->now)
+								 ->getBackDatesSet();
+
 		$form->addField('xepan\base\Basic','contact','Created By')->setModel($this->add('xepan\base\Model_Contact'));
 		$form->addField('xepan\base\Basic','related_person','Related Person')->setModel($this->add('xepan\base\Model_Contact'));
 
@@ -56,12 +64,15 @@ class page_activity extends \xepan\base\Page{
 
 		$activity_view = $this->add('xepan\base\View_Activity',['self_activity'=>$self_activity,'descendants'=>$this->descendants,'from_date'=>$from_date,'to_date'=>$to_date,'contact_id'=>$contact_id,'related_person_id'=>$related_person_id,'department_id'=>$department_id,'communication_type'=>$communication_type],'activity_view');
 
-		if($form->isSubmitted()){						
+		if($form->isSubmitted()){
+			$_from_date = $date_range_field->getStartDate();
+        	$_to_date = $date_range_field->getEndDate();						
+						
 			$form->js(null,$activity_view->js()
 											->reload(
 												[
-													'from_date'=>$form['from_date'],
-													'to_date'=>$form['to_date'],
+													'from_date'=>$_from_date,
+													'to_date'=>$_to_date,
 													'contact_id'=>$form['contact'],
 													'related_person_id'=>$form['related_person'],
 													'document_id'=>$form['document'],
