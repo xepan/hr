@@ -134,7 +134,7 @@ class Initiator extends \Controller_Addon {
                     ->save();
 
         $user = $this->add('xepan\base\Model_User_SuperUser')
-                    ->addCondition('epan_id',$this->app->epan->id)
+                    // ->addCondition('epan_id',$this->app->epan->id)
                     ->loadAny();
 
         // Create One Default Employee as CEO/Owner
