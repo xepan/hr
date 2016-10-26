@@ -42,7 +42,7 @@ class Initiator extends \Controller_Addon {
                 // exit;
             }
             $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
-            $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_hr');
+            $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_leave');
             // $m = $this->app->side_menu->addItem('HR');
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
@@ -73,6 +73,41 @@ class Initiator extends \Controller_Addon {
         $search_department = $this->add('xepan\hr\Model_Department');
         $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
+
+        $my_email=$this->add('xepan\hr\Model_Post_Email_MyEmails');
+        $my_email->addExpression('post_email')->set(function($m,$q){
+         return $q->getField('email_username');
+        });
+
+        $contact_email=$this->add('xepan\communication\Model_Communication_Email_ContactReceivedEmail');
+        $or = $contact_email->dsql()->orExpr();
+        $i=0;
+         foreach ($my_email as $email) {
+             $or->where('mailbox','like',$email['post_email'].'%');
+             $i++;
+         }
+         if($i == 0) $or->where('mailbox',-1);       
+        
+        
+        $contact_email->addCondition($or);
+        $contact_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+        $contact_count=$contact_email->count()->getOne();
+
+        $all_email=$this->add('xepan\communication\Model_Communication_Email_Received');
+        $or = $all_email->dsql()->orExpr();
+        $i=0;
+         foreach ($my_email as $email) {
+             $or->where('mailbox','like',$email['post_email'].'%');
+             $i++;
+         }
+         if($i == 0) $or->where('mailbox',-1);       
+        
+        
+        $all_email->addCondition($or);
+        $all_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+        $all_count=$all_email->count()->getOne();
+        
+        $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
         return $this;
     }

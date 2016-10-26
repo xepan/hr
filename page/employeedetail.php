@@ -61,7 +61,6 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('password','password');
 			
 			$form->addSubmit('Add');
-
 			if($form->isSubmitted()){			
 				try{
 					$this->api->db->beginTransaction();

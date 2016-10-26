@@ -335,4 +335,18 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 	}
 
+	function getAllowSupportEmail(){
+		$my_email = $this->add('xepan\hr\Model_Post_Email_MyEmails');
+		$my_email->addCondition('is_active',true);
+		$my_email->addCondition('is_support_email',true);
+		
+		$support_email_array=[];
+		foreach ($my_email as $email) {
+			$support_email_array[]=$email['id'];
+		}
+		// var_dump($support_email_array);
+		return $support_email_array ;
+
+	}
+
 }
