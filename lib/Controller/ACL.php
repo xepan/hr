@@ -15,7 +15,7 @@ namespace xepan\hr;
 class Controller_ACL extends \AbstractController {
 	
 	public $acl_m = null;
-	public $action_allowed=[];
+	public $action_allowed=null;
 	public $permissive_acl=false;
 	public $action_btn_group=null;
 	public $view_reload_url=null;
@@ -408,13 +408,16 @@ class Controller_ACL extends \AbstractController {
 		 * )
 		 */
 		// echo $this->model. '<br/>';
-		$this->action_allowed = $this->acl_m['action_allowed'];
+		if($this->action_allowed===null)
+			$this->action_allowed = $this->acl_m['action_allowed'];
 		// echo "acl_data";
-		// var_dump($this->action_allowed);
+		// var_dump($this->permissive_acl);
+		// exit;
 		foreach ($this->model->actions as $status => $actions) {
 			if($status=='*') $status='All';
 			foreach ($actions as $action) {
 				$acl_value = isset($this->action_allowed[$status][$action])?$this->action_allowed[$status][$action]:$this->permissive_acl;
+				// echo " testing $action in $status as $acl_value : " . $this->textToCode($acl_value). ' <br/>';
 				$this->action_allowed[$status][$action] = ($this->api->auth->model->isSuperUser() && $this->app->getConfig('all_rights_to_superuser',true))?true:$this->textToCode($acl_value);
 			}
 		}		
@@ -422,6 +425,7 @@ class Controller_ACL extends \AbstractController {
 		// remove actions tht was in acl but now model has updated
 		// echo "acl_data converted to ids array";
 		// var_dump($this->action_allowed);
+		// exit;
 		// echo "model->actions";
 		// var_dump($this->model->actions);
 
@@ -448,9 +452,10 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function textToCode($text){
-		if($text =='' || $text === null) return $this->permissive_acl;
-		if($text == 'None') return false;
-		if($text == 'All' || $text === true ) return true;
-		if($text == 'Self Only') return [$this->app->employee->id];
+		if($text ==='' || $text === null) return $this->permissive_acl;
+		if($text === 'None') return false;
+		if($text === 'All' || $text === true ) return true;
+		if($text === 'Self Only') return [$this->app->employee->id];
+		return $text;
 	}
 }
