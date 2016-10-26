@@ -35,6 +35,22 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','email_3');
 			$form->addField('line','email_4');
 			
+			$dept_field = $form->getElement('department_id');
+			$post_field = $form->getElement('post_id');
+			$country_field =  $form->getElement('country_id');
+			$state_field = $form->getElement('state_id');
+
+			if($dept_id = $this->app->stickyGET('dept_id')){			
+				$post_field->getModel()->addCondition('department_id',$dept_id);
+			}
+		
+			if($cntry_id = $this->app->stickyGET('country_id')){			
+				$state_field->getModel()->addCondition('country_id',$cntry_id);
+			}
+
+			$dept_field->js('change',$post_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$post_field->name]),'dept_id'=>$dept_field->js()->val()]));
+			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
+
 			$form->addField('line','contact_no_1');
 			$form->addField('line','contact_no_2');
 			$form->addField('line','contact_no_3');
@@ -45,11 +61,12 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('password','password');
 			
 			$form->addSubmit('Add');
-
 			if($form->isSubmitted()){			
 				try{
 					$this->api->db->beginTransaction();
-										
+					$form->save();
+					$new_employee_model = $form->getModel();
+
 					if($form['user_id'] && $form['password']){
 						$user = $this->add('xepan\base\Model_User');
 						$user->addCondition('scope','AdminUser');
@@ -58,20 +75,32 @@ class page_employeedetail extends \xepan\base\Page {
 
 						if($user->loaded())
 							$form->displayError('user_id','username already exist');
+						// $user=$this->add('xepan\base\Model_User');
+						$this->add('BasicAuth')
+						->usePasswordEncryption('md5')
+						->addEncryptionHook($user);
 						
-							$user['username'] = $form['user_id'];
-							$user['password'] = $form['password'];
-							$user->save();
+						$user['username'] = $form['user_id'];
+						$user['password'] = $form['password'];
+						$user->save();
+						
+						$new_employee_model['user_id'] = $user->id;
+						$new_employee_model->save();
 					}
-					
-					$form->save();
-					$new_employee_model = $form->getModel();
-					
+
+					if($form['post_id']){
+						$post = $this->add('xepan\hr\Model_Post');
+						$post->tryload($form['post_id']);
+						$new_employee_model['in_time'] = $post['in_time'];
+						$new_employee_model['out_time'] = $post['out_time'];
+						$new_employee_model->save();
+					}
+
 					if($form['email_1']){
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Official";
-						$email['value'] = $form['email_1'];
+						$email['value'] = trim($form['email_1']);
 						$email->save();
 					}
 
@@ -79,7 +108,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Official";
-						$email['value'] = $form['email_2'];
+						$email['value'] = trim($form['email_2']);
 						$email->save();
 					}
 
@@ -87,14 +116,14 @@ class page_employeedetail extends \xepan\base\Page {
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Personal";
-						$email['value'] = $form['email_3'];
+						$email['value'] = trim($form['email_3']);
 						$email->save();
 					}
 					if($form['email_4']){
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Personal";
-						$email['value'] = $form['email_4'];
+						$email['value'] = trim($form['email_4']);
 						$email->save();
 					}
 

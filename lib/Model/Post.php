@@ -6,7 +6,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 	public $status=['Active','InActive'];
 	public $actions = [
-						'Active'=>['view','edit','deactivate'],
+						'Active'=>['view','edit','associateEmail','deactivate'],
 						'InActive' => ['view','edit','delete','activate']
 					];
 
@@ -22,8 +22,9 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasOne('xepan\hr\LeaveTemplate','leave_template_id');
 
 		$post_j->addField('name')->sortable(true);
-		$post_j->addField('in_time');
-		$post_j->addField('out_time');
+		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
+		
+		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));
 
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
@@ -62,6 +63,47 @@ class Model_Post extends \xepan\hr\Model_Document{
             ->addActivity("'".$this['name']."' post has been deactivated in '".$this['department']."' department ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
             ->notifyWhoCan('activate','InActive',$this);
 		$this->saveAndUnLoad();
+	}
+
+	function page_associateEmail($page){
+		$page->add('View')->set('Associate Email');
+		$form = $page->add('Form');
+
+		$ass_email = $this->add('xepan\communication\Model_Communication_EmailSetting');
+		$col = $form->add('Columns')->addClass('row xepan-push');
+		foreach ($ass_email as $emails) {
+			$asso_email = $this->add('xepan\hr\Model_Post_Email_Association');
+			$asso_email->addCondition('post_id',$this->id);
+			$asso_email->addCondition('emailsetting_id',$emails->id);
+			$asso_email->tryLoadAny();	
+			$col1= $col->addColumn(3)->addClass('col-md-3');
+			$email_field = $col1->addField('Checkbox','allow_email_'.$emails->id,$emails['name']);
+			if($asso_email->loaded())
+				$email_field->set(true);
+		}
+
+		$form->addSubmit('Associate Email')->addClass('btn btn-success');
+
+		if($form->isSubmitted()){
+			$this->ref('EmailPermissions')->deleteAll();
+			foreach ($ass_email as $emails) {
+				if($form['allow_email_'.$emails->id]){
+					$asso_email = $this->add('xepan\hr\Model_Post_Email_Association');
+					$asso_email->addCondition('post_id',$this->id);
+					$asso_email->addCondition('emailsetting_id',$emails->id);
+					$asso_email->tryLoadAny();
+					
+					if(!$asso_email->loaded()){
+						$asso_email['post_id'] =  $this->id;
+						$asso_email['emailsetting_id'] =  $emails->id;
+						$asso_email->save();
+					}
+				}
+			}
+			$this->app->page_action_result = $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Associate Emails SuccessFully');
+
+		}
+
 	}
 
 	function beforeDelete(){
@@ -118,5 +160,4 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 		$this['search_string'] = $search_string;
 	}
-
 }

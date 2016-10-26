@@ -1,11 +1,8 @@
-.panel.panel-default.panel-body
+.panel.panel-default.panel-body.page-activity
 	.row.xepan-push
-		.col-md-6.atk-form-field.atk-form-row
-			strong From Date :
-			{$from_date}
-		.col-md-6.atk-form-field.atk-form-row 	
-			strong To Date :
-			{$to_date}
+		.col-md-12.atk-form-field.atk-form-row
+			strong Date Range :
+			{$date_range}
 	.row.xepan-push
 		.col-md-6.atk-form-field.atk-form-row
 			strong Created By :
@@ -14,9 +11,21 @@
 			strong Related Person :
 			{$related_person}
 	.row.xepan-push
-		.col-md-12.atk-form-field.atk-form-row
+		.col-md-4.atk-form-field.atk-form-row
 			strong Department :
+			br
 			{$department}
+		.col-md-4.atk-form-field.atk-form-row
+			strong Communication Type :
+			br
+			{$communication_type}
+		.col-md-4.atk-form-field.atk-form-row
+			strong Don't show My Activities :
+			{$show_my_activity}	
 	.row.xepan-push
 		.col-md-12
 			{$FormButtons}
+	style.
+		.page-activity .select2{
+			width:100% !important;
+		}
