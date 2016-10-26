@@ -358,7 +358,8 @@ class Controller_ACL extends \AbstractController {
 			
 		}
 
-		
+		if($this->action_allowed===null) $this->action_allowed=[];
+
 		if($this->model->acl === false){
 			$this->permissive_acl = true;
 			return;
