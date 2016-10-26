@@ -18,14 +18,16 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		parent::init();
 
 		$reimbursment_j = $this->join('reimbursement.document_id');
+		$reimbursment_j->hasOne('xepan/hr/Employee','employee_id')->sortable(true);
 		$reimbursment_j->addField('name'); // name of 
-
 		$reimbursment_j->hasMany('xepan\hr\ReimbursementDetail','reimbursement_id',null,'Details');
 
 		$this->getElement('created_by');
-		$this->getElement('created_by_id');
+		$this->getElement('created_by_id')->system(false)->visible(true);
 		$this->getElement('status')->defaultValue('Draft');
 		$this->addCondition('type','Reimbursement');
+
+		$this->addExpression('amount',$this->_dsql()->expr('IFNULL([0],0)',[$this->refSQL('Details')->sum('amount')]));
 	}
 
 	function newNumber(){

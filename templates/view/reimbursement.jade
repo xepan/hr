@@ -12,10 +12,12 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
+                th Employee
+                    {$created_by}
                 th(id="{$name_sortid}")
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;") Name {$name_sort} 
                 th
-                    span created at   
+                    span created_at   
                 th
                     span Amount
                 th
@@ -30,6 +32,7 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td {$employee}
                     td {$name}
                     td {$created_at}
                     td {$amount}
