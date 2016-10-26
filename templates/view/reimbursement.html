@@ -9,8 +9,12 @@
   <div class="main-box-body clearfix table-responsive">
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
+        <th>
+          Employee
+          {$created_by}
+        </th>
         <th id="{$name_sortid}"><span style="cursor:pointer; cursor: hand; max-width:600px;">Name {$name_sort} </span></th>
-        <th><span>created at   </span></th>
+        <th><span>created_at   </span></th>
         <th><span>Amount</span></th>
         <th><span>Detail</span></th>
         <th><span>Actions</span></th>
@@ -19,6 +23,7 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
+          <td>{$employee}</td>
           <td>{$name}</td>
           <td>{$created_at}</td>
           <td>{$amount}</td>
