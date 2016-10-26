@@ -70,6 +70,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$form = $page->add('Form');
 
 		$ass_email = $this->add('xepan\communication\Model_Communication_EmailSetting');
+		$ass_email->addCondition('is_active',true);
 		$col = $form->add('Columns')->addClass('row xepan-push');
 		foreach ($ass_email as $emails) {
 			$asso_email = $this->add('xepan\hr\Model_Post_Email_Association');
