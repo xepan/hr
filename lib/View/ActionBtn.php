@@ -62,6 +62,7 @@ class View_ActionBtn extends \CompleteLister{
 					'UnPublished'=>'danger',
 					'OnlineUnpaid'=>'warning',
 					'Running'=>'info',
+					'Inprogress'=>'warning',
 					'Pending'=>'warning',
 					'Assigned'=>'success',
 					'On-Hold'=>'danger',
