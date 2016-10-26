@@ -15,21 +15,139 @@ class page_affiliatedetails extends \xepan\base\Page {
 		
 		if($action=="add"){
 
-			$affiliate_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document','page_reload'=>($action=='add')],'contact_view_full_width');
-			$affiliate_view->document_view->effective_template->del('im_and_events_andrelation');
-			$affiliate_view->document_view->effective_template->del('email_and_phone');
-			$affiliate_view->document_view->effective_template->del('avatar_wrapper');
-			$affiliate_view->document_view->effective_template->del('contact_since_wrapper');
-			$affiliate_view->document_view->effective_template->del('send_email_sms_wrapper');
-			$affiliate_view->document_view->effective_template->del('online_status_wrapper');
-			$affiliate_view->document_view->effective_template->del('contact_type_wrapper');
-			$this->template->del('details');
-			$affiliate_view->setStyle(['width'=>'50%','margin'=>'auto']);
+			$this->template->tryDel('details');
+			$base_validator = $this->add('xepan\base\Controller_Validator');
+			
+			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
+			$form->setLayout(['page/affiliate-compact']);			
+			$form->setModel($affiliate,['first_name','last_name','address','city','country_id','state_id','pin_code','organization','post','website','narration']);
+			$form->addField('line','email_1')->validate('email');
+			$form->addField('line','email_2');
+			$form->addField('line','email_3');
+			$form->addField('line','email_4');
+
+			$country_field =  $form->getElement('country_id');
+			$state_field = $form->getElement('state_id');
+
+			if($cntry_id = $this->app->stickyGET('country_id')){			
+				$state_field->getModel()->addCondition('country_id',$cntry_id);
+			}
+
+			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
+
+			$form->addField('line','contact_no_1');
+			$form->addField('line','contact_no_2');
+			$form->addField('line','contact_no_3');
+			$form->addField('line','contact_no_4');
+			$form->addField('Checkbox','want_to_add_next_affiliate')->set(true);
+
+			$form->addSubmit('Add')->addClass('btn btn-primary');
+			if($form->isSubmitted()){			
+				try{
+					$this->api->db->beginTransaction();
+					$form->save();
+					$new_affiliate_model = $form->getModel();
+
+					if($form['email_1']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_affiliate_model->id;
+						$email['head'] = "Official";
+						$email['value'] = trim($form['email_1']);
+						$email->save();
+					}
+
+					if($form['email_2']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_affiliate_model->id;
+						$email['head'] = "Official";
+						$email['value'] = trim($form['email_2']);
+						$email->save();
+					}
+
+					if($form['email_3']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_affiliate_model->id;
+						$email['head'] = "Personal";
+						$email['value'] = trim($form['email_3']);
+						$email->save();
+					}
+					if($form['email_4']){
+						$email = $this->add('xepan\base\Model_Contact_Email');
+						$email['contact_id'] = $new_affiliate_model->id;
+						$email['head'] = "Personal";
+						$email['value'] = trim($form['email_4']);
+						$email->save();
+					}
+
+					// Contact Form
+					if($form['contact_no_1']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_affiliate_model->id;
+						$phone['head'] = "Official";
+						$phone['value'] = $form['contact_no_1'];
+						$phone->save();
+					}
+
+					if($form['contact_no_2']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_affiliate_model->id;
+						$phone['head'] = "Official";
+						$phone['value'] = $form['contact_no_2'];
+						$phone->save();
+					}
+
+					if($form['contact_no_3']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_affiliate_model->id;
+						$phone['head'] = "Personal";
+						$phone['value'] = $form['contact_no_3'];
+						$phone->save();
+					}
+					if($form['contact_no_4']){
+						$phone = $this->add('xepan\base\Model_Contact_Phone');
+						$phone['contact_id'] = $new_affiliate_model->id;
+						$phone['head'] = "Personal";
+						$phone['value'] = $form['contact_no_4'];
+						$phone->save();
+					}				
+					$this->api->db->commit();
+				}catch(\Exception_StopInit $e){
+
+		        }catch(\Exception $e){
+		            $this->api->db->rollback();
+		            throw $e;
+		        }	
+
+			        if($form['want_to_add_next_affiliate']){
+			        	$form->js(null,$form->js()->reload())->univ()->successMessage('Affiliate Created Successfully')->execute();
+			        }
+					
+					$form->js(null,$form->js()->univ()->successMessage('Affiliate Created Successfully'))->univ()->redirect($this->app->url(null,['action'=>"edit",'contact_id'=>$new_affiliate_model->id]))->execute();
+				}
+
+			// }else{
+			// 	$affiliate_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+			// 	$affiliate_view->setModel($affiliate);
+			// }
+
+			// $affiliate_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document','page_reload'=>($action=='add')],'contact_view_full_width');
+			// $affiliate_view->document_view->effective_template->del('im_and_events_andrelation');
+			// $affiliate_view->document_view->effective_template->del('email_and_phone');
+			// $affiliate_view->document_view->effective_template->del('avatar_wrapper');
+			// $affiliate_view->document_view->effective_template->del('contact_since_wrapper');
+			// $affiliate_view->document_view->effective_template->del('send_email_sms_wrapper');
+			// $affiliate_view->document_view->effective_template->del('online_status_wrapper');
+			// $affiliate_view->document_view->effective_template->del('contact_type_wrapper');
+			// $this->template->del('details');
+			// $affiliate_view->setStyle(['width'=>'50%','margin'=>'auto']);
+			$this->template->del('other_details');
 		}else{
+			$this->template->del('contact_view_full_width');
 			$affiliate_view = $this->add('xepan\base\View_Contact',['acl'=>'xepan\hr\Model_Employee','view_document_class'=>'xepan\hr\View_Document'],'contact_view');
+			$affiliate_view->setModel($affiliate);
 		}	
 
-		$affiliate_view->setModel($affiliate);
+		// $affiliate_view->setModel($affiliate);
 
 		$detail = $this->add('xepan\hr\View_Document',['action'=> $action,'id_field_on_reload'=>'contact_id'],'details',['view/affiliate/details']);
 		$detail->setModel($affiliate,['narration'],['narration']);
