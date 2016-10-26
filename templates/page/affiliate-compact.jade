@@ -1,0 +1,61 @@
+.main-box
+  header.main-box-header.clearfix.text-center
+    h1 Add New Affiliate
+  .main-box-body.clearfix
+    .row
+      .form-group.col-xs-8
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary General Information
+          .panel-body
+          .row
+            .col-xs-6
+              .form-group.atk-form-row.atk-form-field {$first_name}
+              .form-group.atk-form-row.atk-form-field {$last_name}
+              .form-group.atk-form-row.atk-form-field {$website}
+            .col-xs-6
+              .form-group.atk-form-row.atk-form-field {$organization}
+              .form-group.atk-form-row.atk-form-field {$post}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Address
+          .panel-body
+            .row
+              .form-group.col-xs-6.atk-form-row.atk-form-field {$address}
+              .col-xs-6
+                .form-group.atk-form-row.atk-form-field
+                  | Country
+                  | {$country_id}
+                .form-group.atk-form-row.atk-form-field
+                  | State
+                  | {$state_id}
+                .form-group.atk-form-row.atk-form-field {$city}
+                .form-group.atk-form-row.atk-form-field {$pin_code}
+          .panel.panel-default(style='margin-bottom:0px;')
+            .panel.panel-heading.panle-primary Narration  
+            .panel-body
+              .row
+                .form-group.col-xs-12.atk-form-row.atk-form-field
+                  | {$narration}
+      .form-group.col-xs-4
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Official Email
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_1}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_2}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Personal Email
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_3}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_4}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Official Contact
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_1}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_2}
+        .panel.panel-default(style='margin-bottom:0px;')
+          .panel.panel-heading.panle-primary Personal Contact
+          .panel-body
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_3}
+            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_4}
+    .row
+      .form-group.col-xs-12.atk-form-row.atk-form-field {$want_to_add_next_affiliate}
+  | {$FormButtons}
