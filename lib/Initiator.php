@@ -136,14 +136,14 @@ class Initiator extends \Controller_Addon {
         if($attan_m['late_coming']>0){
             $page->add('xepan\base\View_Widget_SingleInfo')
                     ->setIcon('fa fa-thumbs-down')
-                    ->setHeading('YOUR ARE LATE BY ')
+                    ->setHeading(date('h:i A', strtotime($attan_m['from_date'])).' ! YOUR ARE LATE BY ')
                     ->setValue($attan_m['late_coming'].' Minutes')
                     ->makeDanger()
                     ;
         }else{
             $page->add('xepan\base\View_Widget_SingleInfo')
                     ->setIcon('fa fa-thumbs-up')
-                    ->setHeading('YOUR ARE EARLY BY ')
+                    ->setHeading(date('h:i A', strtotime($attan_m['from_date'])).' ! YOUR ARE EARLY BY ')
                     ->setValue(abs($attan_m['late_coming']).' Minutes')
                     ->makeSuccess()
                     ;
