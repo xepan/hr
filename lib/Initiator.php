@@ -111,6 +111,8 @@ class Initiator extends \Controller_Addon {
         
         $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
+        $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
+
         return $this;
     }
 
@@ -121,6 +123,31 @@ class Initiator extends \Controller_Addon {
         $this->app->employee = $this->add('xepan\hr\Model_Employee');
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         return $this;
+    }
+
+    function epanDashboard($app,$page){
+
+        $attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+        $attan_m->addCondition('employee_id',$this->app->employee->id);
+        $attan_m->addCondition('fdate',$this->app->today);
+        $attan_m->setOrder('id','desc');
+        $attan_m->tryLoadAny();
+
+        if($attan_m['late_coming']>0){
+            $page->add('xepan\base\View_Widget_SingleInfo')
+                    ->setIcon('fa fa-thumbs-down')
+                    ->setHeading('YOUR ARE LATE BY ')
+                    ->setValue($attan_m['late_coming'].' Minutes')
+                    ->makeDanger()
+                    ;
+        }else{
+            $page->add('xepan\base\View_Widget_SingleInfo')
+                    ->setIcon('fa fa-thumbs-up')
+                    ->setHeading('YOUR ARE EARLY BY ')
+                    ->setValue(abs($attan_m['late_coming']).' Minutes')
+                    ->makeSuccess()
+                    ;
+        }
     }
 
 
