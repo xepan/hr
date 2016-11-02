@@ -133,8 +133,21 @@ class Initiator extends \Controller_Addon {
         $attan_m->setOrder('id','desc');
         $attan_m->tryLoadAny();
 
-        if($attan_m['late_coming']>0)
-            $page->add('View')->addClass('panel panel-default')->set('YOUR ARE LATE BY '. $attan_m['late_coming'].' Minutes');
+        if($attan_m['late_coming']>0){
+            $page->add('xepan\base\View_Widget_SingleInfo')
+                    ->setIcon('fa fa-thumbs-down')
+                    ->setHeading('YOUR ARE LATE BY ')
+                    ->setValue($attan_m['late_coming'].' Minutes')
+                    ->makeDanger()
+                    ;
+        }else{
+            $page->add('xepan\base\View_Widget_SingleInfo')
+                    ->setIcon('fa fa-thumbs-up')
+                    ->setHeading('YOUR ARE EARLY BY ')
+                    ->setValue(abs($attan_m['late_coming']).' Minutes')
+                    ->makeSuccess()
+                    ;
+        }
     }
 
 
