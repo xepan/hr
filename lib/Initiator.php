@@ -24,6 +24,7 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
             $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
             $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
+            $m->addItem(['Deduction Management','icon'=>'fa fa-money'],'xepan_hr_deduction');
             // $m->addItem(['Payroll','icon'=>'fa fa-money'],'xepan_hr_payroll');
             $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
@@ -110,6 +111,8 @@ class Initiator extends \Controller_Addon {
         
         $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
+        $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
+
         return $this;
     }
 
@@ -120,6 +123,18 @@ class Initiator extends \Controller_Addon {
         $this->app->employee = $this->add('xepan\hr\Model_Employee');
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         return $this;
+    }
+
+    function epanDashboard($app,$page){
+
+        $attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+        $attan_m->addCondition('employee_id',$this->app->employee->id);
+        $attan_m->addCondition('fdate',$this->app->today);
+        $attan_m->setOrder('id','desc');
+        $attan_m->tryLoadAny();
+
+        if($attan_m['late_coming']>0)
+            $page->add('View')->addClass('panel panel-default')->set('YOUR ARE LATE BY '. $attan_m['late_coming'].' Minutes');
     }
 
 
