@@ -196,9 +196,20 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$official_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info',['view/employee/official-details']);
 			$official_view->setIdField('contact_id');
+			
 			$official_view->setModel($employee,['offer_date','doj','contract_date','leaving_date','in_time','out_time'],
 											   ['offer_date','doj','contract_date','leaving_date','in_time','out_time']);
+			if($official_view->effective_object instanceof \Form){
+				$official_view->effective_object->getElement('out_time')->setOption('showMeridian',false)
+					->setOption('defaultTime',1)
+					->setOption('minuteStep',1)
+					->setOption('showSeconds',true);
 
+				$official_view->effective_object->getElement('in_time')->setOption('showMeridian',false)
+					->setOption('defaultTime',1)
+					->setOption('minuteStep',1)
+					->setOption('showSeconds',true);
+			}
 			// $emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			// $emp_salary_view->setIdField('contact_id');
 			$o = $official_view->addMany('EmployeeSalary',['no_records_message'=>'No document found'],'EmployeeSalary',['view/employee/emp-salary-grid']);
