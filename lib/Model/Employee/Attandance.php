@@ -40,6 +40,15 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 							);
 		});
 
+		$this->addExpression('actual_day_start_time')->set('TIME(from_date)');
+		$this->addExpression('actual_day_end_time')->set(function($m,$q){
+			return $q->expr('TIME([0])',[
+										$m->getElement('actual_day_ending')
+										]
+							);
+
+		});
+
 		$this->addExpression('late_coming')->set(function($m,$q){
 			return $q->expr('TIMESTAMPDIFF(MINUTE,[0],[1])',[
 					$m->getElement('official_day_start'),
