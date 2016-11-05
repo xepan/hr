@@ -5,7 +5,7 @@ a.btn.dropdown-toggle(data-toggle='dropdown')
     li.pointer
       .pointer-inner
         .arrow
-    li.item-header You have {unread_notification}6{/} new notifications
+    li.item-header.xepan-notification-view You have {unread_notification}6{/} new notifications
     {rows}{row}
     li.item
         a(href='#')
@@ -18,6 +18,8 @@ a.btn.dropdown-toggle(data-toggle='dropdown')
     li.item-footer
           a(href='?page=xepan_hr_notification')
                 | View all notifications
+          a(href='#')
+            span.play-pause-notifications(class = "{notif-class}fa fa-pause{/}" style = "cursor:pointer; cursor: hand; max-width:600px;") &nbsp;&nbsp; {notif-text}Pause Notifications{/}
 style.
   .notifications-list .item a .time{
     background:white none repeat scroll 0 0;
