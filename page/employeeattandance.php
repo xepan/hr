@@ -31,13 +31,13 @@ class page_employeeattandance extends \xepan\base\Page{
 
 			$from_time_field
 				->setOption('showMeridian',false)
-				->setOption('defaultTime',1)
+				->setOption('defaultTime',0)
 				->setOption('minuteStep',1)
 				->setOption('showSeconds',true);
 			$to_time_field = $c3->addField('TimePicker','out_time_'.$emp->id)->set($emp['out_time']);
 			$to_time_field
 				->setOption('showMeridian',false)
-				->setOption('defaultTime',1)
+				->setOption('defaultTime',0)
 				->setOption('minuteStep',1)
 				->setOption('showSeconds',true);
 			

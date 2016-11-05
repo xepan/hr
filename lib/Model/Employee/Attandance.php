@@ -40,9 +40,9 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 							);
 		});
 
-		$this->addExpression('actual_day_start_time')->set('TIME(from_date)');
+		$this->addExpression('actual_day_start_time')->set('date_format(from_date,"%H:%i:%s")');
 		$this->addExpression('actual_day_end_time')->set(function($m,$q){
-			return $q->expr('TIME([0])',[
+			return $q->expr('date_format([0],"%H:%i:%s")',[
 										$m->getElement('actual_day_ending')
 										]
 							);
