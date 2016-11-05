@@ -9,6 +9,7 @@ class page_employeeattandance extends \xepan\base\Page{
 		parent::init();
 
 		$employee = $this->add('xepan\hr\Model_Employee');
+		$employee->addCondition('status','Active');
 		$form=$this->add('Form',null,null,['form/empty']);
 
 		$header= $form->add('Columns')->addClass('row');
