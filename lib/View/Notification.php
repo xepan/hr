@@ -67,16 +67,26 @@ class View_Notification extends \CompleteLister{
 			$this->template->trySet('notif-text', 'Pause Notifications');
 		}
 
-		$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('/',[$this->vp->name=>'true']))->_enclose(),120000);
-
-		$this->on('click','.play-pause-notifications',function($js,$data){
+		if($_GET['notification_mute_toggle']){
 			if($this->app->recall('mute_all_notification',false))
 				$this->app->memorize('mute_all_notification',false);
 			else	
 				$this->app->memorize('mute_all_notification',true);
+
+			$this->js()->_selector('.xepan-notification-view')->trigger('reload')->execute();
+		}
+
+		$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('.',[$this->vp->name=>'true']))->_enclose(),120000);
+		$this->js('click',$this->js()->univ()->ajaxec($this->api->url('.',['notification_mute_toggle'=>true])))->_selector('.play-pause-notifications');
+		
+		// $this->on('click','.play-pause-notifications',function($js,$data){
+		// 	if($this->app->recall('mute_all_notification',false))
+		// 		$this->app->memorize('mute_all_notification',false);
+		// 	else	
+		// 		$this->app->memorize('mute_all_notification',true);
 			
-			return $this->js()->_selector('.xepan-notification-view')->trigger('reload');
-		});
+		// 	return $this->js()->_selector('.xepan-notification-view')->trigger('reload');
+		// });
 	}
 
 	function formatRow(){
