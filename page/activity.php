@@ -22,19 +22,21 @@ class page_activity extends \xepan\base\Page{
 		$communication_type = $this->app->stickyGET('communication_type');
 		$self_activity = $this->app->stickyGET('self_activity');
 
-		$root_posts = $this->add('xepan\hr\Model_Post');
-		$root_posts->addCondition('parent_post_id',$this->app->employee['post_id']);
-		$this->descendants[] = $this->app->employee['post_id'];
+		// $root_posts = $this->add('xepan\hr\Model_Post');
+		// $root_posts->addCondition('parent_post_id',$this->app->employee['post_id']);
+		// $root_posts->tryLoadAny();
+		// $this->descendants[] = $this->app->employee['post_id'];
 
-		foreach ($root_posts as $post) {		
-			if($post['id'] == $post['parent_post_id']){
-				$this->descendants[] = $post->id;
-				continue; 
-			}
+		// foreach ($root_posts as $post) {		
+		// 	if($post['id'] == $post['parent_post_id']){
+		// 		$this->descendants[] = $post->id;
+		// 		continue; 
+		// 	}
 
-			$this->descendantPosts($post);
-		}
+		// 	$this->descendantPosts($post);
+		// }
 
+		$this->descendants = $this->app->employee->ref('post_id')->descendantPosts();
 			
 		$custom_date = strtotime(date("Y-m-d", strtotime('-1 month', strtotime($this->app->today))));
 		
@@ -62,7 +64,7 @@ class page_activity extends \xepan\base\Page{
 		$this->js(true,$form_view->js()->hide());
 		$toggle_button->js('click',$form_view->js()->toggle());
 
-		$activity_view = $this->add('xepan\base\View_Activity',['self_activity'=>$self_activity,'descendants'=>$this->descendants,'from_date'=>$from_date,'to_date'=>$to_date,'contact_id'=>$contact_id,'related_person_id'=>$related_person_id,'department_id'=>$department_id,'communication_type'=>$communication_type],'activity_view');
+		$activity_view = $this->add('xepan\base\View_Activity',['paginator_count'=>50,'self_activity'=>$self_activity,'descendants'=>$this->descendants,'from_date'=>$from_date,'to_date'=>$to_date,'contact_id'=>$contact_id,'related_person_id'=>$related_person_id,'department_id'=>$department_id,'communication_type'=>$communication_type],'activity_view');
 
 		if($form->isSubmitted()){
 			$_from_date = $date_range_field->getStartDate();
@@ -84,20 +86,20 @@ class page_activity extends \xepan\base\Page{
 		}
 	}
 
-	function descendantPosts($post){		
-		$this->descendants[] = $post->id;		
-		$sub_posts = $this->add('xepan\hr\Model_Post');
-		$sub_posts->addCondition('parent_post_id',$post->id);
+	// function descendantPosts($post){		
+	// 	$this->descendants[] = $post->id;		
+	// 	$sub_posts = $this->add('xepan\hr\Model_Post');
+	// 	$sub_posts->addCondition('parent_post_id',$post->id);
 		
-		foreach ($sub_posts as $sub_post){
-			if($sub_post['id'] == $sub_post['parent_post_id']){
-				$this->descendants[] = $sub_post->id;
-				continue; 
-			}
+	// 	foreach ($sub_posts as $sub_post){
+	// 		if($sub_post['id'] == $sub_post['parent_post_id']){
+	// 			$this->descendants[] = $sub_post->id;
+	// 			continue; 
+	// 		}
 
-			$this->descendantPosts($sub_post);
-		}
-	}
+	// 		$this->descendantPosts($sub_post);
+	// 	}
+	// }
 
 	function defaultTemplate(){
 		return ['page\activity'];

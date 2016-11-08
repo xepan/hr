@@ -70,7 +70,20 @@ class page_post extends \xepan\base\Page {
 					->setOption('showSeconds',true);
 		}
 		
-		if(!$crud->isEditing()){			
+		if($crud->isEditing()){
+			$crud->form->getElement('in_time')
+					   ->setOption('showMeridian',true)
+					   ->setOption('minuteStep',5)
+					   ->setOption('showSeconds',false);
+
+			$crud->form->getElement('out_time')
+					   ->setOption('showMeridian',true)
+					   ->setOption('minuteStep',5)
+					   ->setOption('showSeconds',false);		   
+		}
+
+		if(!$crud->isEditing()){
+
 			$crud->grid->controller->importField('department_id');
 			
 			$f=$crud->grid->addQuickSearch(['name']);

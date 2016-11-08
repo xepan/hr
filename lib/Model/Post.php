@@ -49,6 +49,28 @@ class Model_Post extends \xepan\hr\Model_Document{
 			]);
 
 	}
+
+	function descendantPosts($include_self = true){		
+		if(!$this->loaded()) throw $this->exception('PLease call on loaded model');
+
+		$descendants = [];
+
+		if($include_self)
+			$descendants[] = $this->id;
+
+		// return $descendants;
+
+		$sub_posts = $this->add('xepan\hr\Model_Post');
+		$sub_posts->addCondition('parent_post_id',$this->id);
+		$sub_posts->addCondition('id','<>',$this->id);
+		
+		foreach ($sub_posts as $sub_post){
+			$descendants = array_merge($descendants, $sub_post->descendantPosts(true));
+		}
+
+		return $descendants;
+	}
+
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
