@@ -58,10 +58,11 @@ class Model_Post extends \xepan\hr\Model_Document{
 		if($include_self)
 			$descendants[] = $this->id;
 
-		return $descendants;
+		// return $descendants;
 
 		$sub_posts = $this->add('xepan\hr\Model_Post');
 		$sub_posts->addCondition('parent_post_id',$this->id);
+		$sub_posts->addCondition('id','<>',$this->id);
 		
 		foreach ($sub_posts as $sub_post){
 			$descendants = array_merge($descendants, $sub_post->descendantPosts(true));
