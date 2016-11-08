@@ -27,7 +27,7 @@ class page_employeeattandance extends \xepan\base\Page{
 			$c3=$col->addColumn(3)->addClass('col-md-2');
 
 			$is_present_field = $c0->addField('checkbox','is_present_'.$emp->id,'');
-			$c1->addField('line','name_'.$emp->id)->set($emp['name']);
+			$c1->addField('Readonly','name_'.$emp->id)->set($emp['name']);
 			$from_time_field = $c2->addField('TimePicker','in_time_'.$emp->id)->set($emp['in_time']);
 
 			$from_time_field
@@ -66,11 +66,14 @@ class page_employeeattandance extends \xepan\base\Page{
 					if(!$form['in_time_'.$emp->id]){
 						$form->displayError('in_time_'.$emp->id,'In Time Must be Define');
 					}
+					if(!$form['out_time_'.$emp->id]){
+						$form->displayError('out_time_'.$emp->id,'Out Time Must be Define');
+					}
 
-					$emp['attandance_mode'] = "Mannual";					
-					$emp['in_time'] = $form['in_time_'.$emp->id];
-					$emp['out_time'] = $form['out_time_'.$emp->id];
-					$emp->save();
+					// $emp['attandance_mode'] = "Mannual";					
+					// $emp['in_time'] = $form['in_time_'.$emp->id];
+					// $emp['out_time'] = $form['out_time_'.$emp->id];
+					// $emp->save();
 
 					$emp_attandance =  $this->add('xepan\hr\Model_Employee_Attandance');
 					$emp_attandance->addCondition('employee_id' , $emp->id); 
@@ -78,8 +81,9 @@ class page_employeeattandance extends \xepan\base\Page{
 					$emp_attandance->tryLoadAny();
 
 					if(!$emp_attandance->loaded()){
-						$emp_attandance['employee_id'] = $emp->id;
+						// $emp_attandance['employee_id'] = $emp->id;
 						$emp_attandance['from_date']  = $this->app->today." ".$form['in_time_'.$emp->id];
+						$emp_attandance['to_date']  = $this->app->today." ".$form['out_time_'.$emp->id];
 						$emp_attandance->save();
 					}
 				}
