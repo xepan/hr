@@ -38,9 +38,9 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this['status'] = 'Submitted';
 		$this->app->employee
 		->addActivity(
-					"New Reimbursement Submitted by ".$this['created_by'],
+					"New Reimbursement : ".$this['name']." Submitted, Related To : ".$this['employee']."",
 					$this->id/* Related Document ID*/,
-					$this['contact_id'] /*Related Contact ID*/,
+					$this['employee_id'] /*Related Contact ID*/,
 					null,
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
