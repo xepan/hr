@@ -264,7 +264,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->app->employee
-            ->addActivity("Employee '".$this['name']."' has been deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
+            ->addActivity("Employee : '".$this['name']."' has been deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
             ->notifyWhoCan('activate','InActive',$this);
 		$this->save();
 		if(($user = $this->ref('user_id')) && $user->loaded()) $user->deactivate();
@@ -273,7 +273,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
-            ->addActivity("Employee '".$this['name']."' is now active", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
+            ->addActivity("Employee : '".$this['name']."' is now active", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
             ->notifyWhoCan('deactivate','Active',$this);
 		$this->save();
 		if(($user = $this->ref('user_id')) && $user->loaded()) $user->activate();
