@@ -112,6 +112,8 @@ class Initiator extends \Controller_Addon {
         $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
+        $this->app->addHook('widget_collection',[$this,'exportWidgets']);
+        $this->app->addHook('entity_collection',[$this,'exportEntities']);
 
         return $this;
     }
@@ -123,6 +125,17 @@ class Initiator extends \Controller_Addon {
         $this->app->employee = $this->add('xepan\hr\Model_Employee');
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         return $this;
+    }
+
+    function exportWidgets($app,&$array){
+        // $array['widget_list'][] = 'xepan\base\Widget';
+
+    }
+
+    function exportEntities($app,&$array){
+        $array['employee'] = ['caption'=>'Employee', 'type'=>'xepan\base\Basic','model'=>'xepan\hr\Model_Employee'];
+        $array['department'] = ['caption'=>'Department', 'type'=>'DropDown','model'=>'xepan\hr\Model_Department'];
+        $array['post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
     }
 
     function epanDashboard($app,$page){
