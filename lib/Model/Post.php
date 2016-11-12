@@ -127,7 +127,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 			}
 			$email_string = (implode(", ", $emails_added));
 			$this->app->employee
-			    ->addActivity("These Emails : '".$email_string."' has associated with this Post : '".$this['name']."'", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+			    ->addActivity("These Emails : '".$email_string."' associated with this Post : '".$this['name']."'", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
 				->notifyWhoCan(' ',' ',$this);
 			$this->app->page_action_result = $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Associate Emails SuccessFully');
 
