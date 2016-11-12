@@ -113,6 +113,7 @@ class Initiator extends \Controller_Addon {
 
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
+        $this->app->addHook('entity_collection',[$this,'exportEntities']);
 
         return $this;
     }
@@ -129,9 +130,12 @@ class Initiator extends \Controller_Addon {
     function exportWidgets($app,&$array){
         // $array['widget_list'][] = 'xepan\base\Widget';
 
-        $array['filter_entities']['employee'] = ['caption'=>'Employee', 'type'=>'xepan\base\Basic','model'=>'xepan\hr\Model_Employee'];
-        $array['filter_entities']['department'] = ['caption'=>'Department', 'type'=>'DropDown','model'=>'xepan\hr\Model_Department'];
-        $array['filter_entities']['post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
+    }
+
+    function exportEntities($app,&$array){
+        $array['employee'] = ['caption'=>'Employee', 'type'=>'xepan\base\Basic','model'=>'xepan\hr\Model_Employee'];
+        $array['department'] = ['caption'=>'Department', 'type'=>'DropDown','model'=>'xepan\hr\Model_Department'];
+        $array['post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
     }
 
     function epanDashboard($app,$page){
