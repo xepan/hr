@@ -130,6 +130,7 @@ class Initiator extends \Controller_Addon {
     function exportWidgets($app,&$array){
         // $array['widget_list'][] = 'xepan\base\Widget';
         $array[] = 'xepan\hr\Widget_EmployeeAttendance';
+        $array[] = 'xepan\hr\Widget_EmployeeMovement';
 
     }
 
