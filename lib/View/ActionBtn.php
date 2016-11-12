@@ -37,7 +37,9 @@ class View_ActionBtn extends \CompleteLister{
 					'Active' => 'success',
 					'InActive' => 'danger',
 					'Open'=>'warning',
+					'Qualified' =>'success',
 					'Converted' =>'success',
+					'NeedsAnalysis' => 'danger',
 					'Rejected' => 'danger',
 					'Draft'=>'default',
 					'Submitted' => 'warning',
@@ -45,8 +47,11 @@ class View_ActionBtn extends \CompleteLister{
 					'Rejected' => 'danger',
 					'Pending' => 'warning',
 					'Rejected'=>'danger',
+					'Lost'=>'danger',
 					'Received'=>'info',
+					'Quoted'=>'info',
 					'Forwarded'=>'success',
+					'Won'=>'success',
 					'Processing'=>'warning',
 					'Completed'=>'success',
 					'Canceled'=>'info',
@@ -67,6 +72,7 @@ class View_ActionBtn extends \CompleteLister{
 					'Assigned'=>'success',
 					'On-Hold'=>'danger',
 					'Onhold'=>'info',
+					'Negotiated'=>'info',
 					'Closed'=>'success'
 
 				];

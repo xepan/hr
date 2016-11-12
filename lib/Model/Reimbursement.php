@@ -38,37 +38,58 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this['status'] = 'Submitted';
 		$this->app->employee
 		->addActivity(
-					"New Reimbursement Submitted by ".$this['created_by'],
+					"New Reimbursement : '".$this['name']."' Submitted, Related To : ".$this['employee']."",
 					$this->id/* Related Document ID*/,
-					$this['contact_id'] /*Related Contact ID*/,
+					$this['employee_id'] /*Related Contact ID*/,
 					null,
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyWhoCan('approve',$this);
+		->notifyWhoCan('inprogress,cancel,redraft,approve','Submitted',$this);
 		$this->save();
 	}
 
 	function approve(){
 		$this['status']='Approved';
 		$this->save();
-
+		
+		if($this['employee_id'] == $this['updated_by_id']){
+			$id = [];
+			$id = [$this['employee_id']];
+			$msg = " Your Reimbursement ( ".$this['name']." ) Approved";
+		}
+		else{
+			$id = [];
+			$id = [$this['employee_id'],$this['updated_by_id']];
+			$msg = "Reimbursement ( ".$this['name']." ) Approved, Related To : ".$this['employee']."";
+		}
 		$this->app->employee
 		->addActivity(
-					"Reimbursement ( ".$this['name']." ) of ".$this['created_by']." Approved",
+					"Reimbursement ( ".$this['name']." ) of ".$this['employee']." Approved",
 					$this->id/* Related Document ID*/,
 					$this['contact_id'] /*Related Contact ID*/,
 					null,
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$this['created_by_id']]," Your Reimbursement ( ".$this['name']." ) Approved");
+		->notifyTo([$id],$msg);
 		$this->save();
 	}
 
 	function inprogress(){
 		$this['status']='InProgress';
 		$this->save();
+
+		if($this['employee_id'] == $this['updated_by_id']){
+			$id = [];
+			$id = [$this['employee_id']];
+			$msg = " Your Reimbursement ( ".$this['name']." ) is In-Progress";
+		}
+		else{
+			$id = [];
+			$id = [$this['employee_id'],$this['updated_by_id']];
+			$msg = "Reimbursement ( ".$this['name']." ) is In-Progress, Related To : ".$this['employee']."";
+		}
 
 		$this->app->employee
 		->addActivity(
@@ -79,7 +100,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$this['created_by_id']]," Your Reimbursement ( ".$this['name']." ) is In-Progress");
+		->notifyTo([$id],$msg);
 		$this->save();
 	}
 
@@ -87,22 +108,44 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this['status']='Canceled';
 		$this->save();
 
+		if($this['employee_id'] == $this['updated_by_id']){
+			$id = [];
+			$id = [$this['employee_id']];
+			$msg = " Your Reimbursement ( ".$this['name']." ) has Canceled";
+		}
+		else{
+			$id = [];
+			$id = [$this['employee_id'],$this['updated_by_id']];
+			$msg = "Reimbursement ( ".$this['name']." ) has Canceled, Related To : ".$this['employee']."";
+		}
+
 		$this->app->employee
 		->addActivity(
-					"Reimbursement ( ".$this['name']." ) Canceled",
+					"Reimbursement ( ".$this['name']." ) has Canceled",
 					$this->id/* Related Document ID*/,
 					$this['contact_id'] /*Related Contact ID*/,
 					null,
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$this['created_by_id']]," Your Reimbursement ( ".$this['name']." ) has Canceled");
+		->notifyTo([$id],$msg);
 		$this->save();
 	}	
 
 	function redraft(){
 		$this['status']='Draft';
 		$this->save();
+
+		if($this['employee_id'] == $this['updated_by_id']){
+			$id = [];
+			$id = [$this['employee_id']];
+			$msg = " Your Reimbursement ( ".$this['name']." ) Re-Drafted";
+		}
+		else{
+			$id = [];
+			$id = [$this['employee_id'],$this['updated_by_id']];
+			$msg = "Reimbursement ( ".$this['name']." ) Re-Drafted, Related To : ".$this['employee']."";
+		}
 
 		$this->app->employee
 		->addActivity(
@@ -113,7 +156,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$this['created_by_id']]," Your Reimbursement ( ".$this['name']." ) Re-Draft Again");
+		->notifyTo([$id],$msg);
 		$this->save();
 	}
 }

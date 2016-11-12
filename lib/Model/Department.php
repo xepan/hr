@@ -48,7 +48,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
-            ->addActivity("'".$this['name']."' department  is now active", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+            ->addActivity("Department : '".$this['name']."' Acivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
             ->notifyWhoCan('deactivate','Active',$this);
 		$this->saveAndUnload();
 	}
@@ -56,7 +56,7 @@ class Model_Department extends \xepan\hr\Model_Document{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->app->employee
-            ->addActivity("'".$this['name']."' department has been deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+            ->addActivity("Department : '".$this['name']."'  has been deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
             ->notifyWhoCan('activate','InActive',$this);
 		$this->saveAndUnload();
 	}
