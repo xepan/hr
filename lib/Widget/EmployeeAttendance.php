@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class Widget_EmployeeMovement extends \xepan\base\Widget {
+class Widget_EmployeeAttendance extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();
