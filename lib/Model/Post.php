@@ -108,6 +108,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$form->addSubmit('Associate Email')->addClass('btn btn-success');
 
 		if($form->isSubmitted()){
+			$emails_added=[];
 			$this->ref('EmailPermissions')->deleteAll();
 			foreach ($ass_email as $emails) {
 				if($form['allow_email_'.$emails->id]){
@@ -121,8 +122,13 @@ class Model_Post extends \xepan\hr\Model_Document{
 						$asso_email['emailsetting_id'] =  $emails->id;
 						$asso_email->save();
 					}
+					$emails_added[] = $emails['name'];
 				}
 			}
+			$email_string = (implode(", ", $emails_added));
+			$this->app->employee
+			    ->addActivity("These Emails : '".$email_string."' has associated with this Post : '".$this['name']."'", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+				->notifyWhoCan(' ',' ',$this);
 			$this->app->page_action_result = $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Associate Emails SuccessFully');
 
 		}
