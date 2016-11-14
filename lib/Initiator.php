@@ -16,7 +16,7 @@ class Initiator extends \Controller_Addon {
 		if($this->app->auth->isLoggedIn()){
 
             $m = $this->app->top_menu->addMenu('HR');
-            $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
+            // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
             $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
             $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
             $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
@@ -112,7 +112,7 @@ class Initiator extends \Controller_Addon {
         
         $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
-        $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
+        // $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
         $this->app->addHook('entity_collection',[$this,'exportEntities']);
 
@@ -144,32 +144,32 @@ class Initiator extends \Controller_Addon {
         $array['post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
     }
 
-    function epanDashboard($app,$page){
+    // function epanDashboard($app,$page){
 
-        $attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
-        $attan_m->addCondition('employee_id',$this->app->employee->id);
-        $attan_m->addCondition('fdate',$this->app->today);
-        $attan_m->setOrder('id','desc');
-        $attan_m->tryLoadAny();
+    //     $attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+    //     $attan_m->addCondition('employee_id',$this->app->employee->id);
+    //     $attan_m->addCondition('fdate',$this->app->today);
+    //     $attan_m->setOrder('id','desc');
+    //     $attan_m->tryLoadAny();
 
-        if($attan_m['late_coming']>0){
-            $page->add('xepan\base\View_Widget_SingleInfo',null,'top_bar')
-                    ->setIcon('fa fa-thumbs-down')
-                    ->setHeading(date('h:i A', strtotime($attan_m['from_date'])).' ! YOUR ARE LATE BY ')
-                    ->setValue($attan_m['late_coming'].' Minutes')
-                    ->makeDanger()
-                    ->addClass('col-md-4')
-                    ;
-        }else{
-            $page->add('xepan\base\View_Widget_SingleInfo',null,'top_bar')
-                    ->setIcon('fa fa-thumbs-up')
-                    ->setHeading(date('h:i A', strtotime($attan_m['from_date'])).' ! YOUR ARE EARLY BY ')
-                    ->setValue(abs($attan_m['late_coming']).' Minutes')
-                    ->makeSuccess()
-                    ->addClass('col-md-4')
-                    ;
-        }
-    }
+    //     if($attan_m['late_coming']>0){
+    //         $page->add('xepan\base\View_Widget_SingleInfo',null,'top_bar')
+    //                 ->setIcon('fa fa-thumbs-down')
+    //                 ->setHeading(date('h:i A', strtotime($attan_m['from_date'])).' ! YOUR ARE LATE BY ')
+    //                 ->setValue($attan_m['late_coming'].' Minutes')
+    //                 ->makeDanger()
+    //                 ->addClass('col-md-4')
+    //                 ;
+    //     }else{
+    //         $page->add('xepan\base\View_Widget_SingleInfo',null,'top_bar')
+    //                 ->setIcon('fa fa-thumbs-up')
+    //                 ->setHeading(date('h:i A', strtotime($attan_m['from_date'])).' ! YOUR ARE EARLY BY ')
+    //                 ->setValue(abs($attan_m['late_coming']).' Minutes')
+    //                 ->makeSuccess()
+    //                 ->addClass('col-md-4')
+    //                 ;
+    //     }
+    // }
 
 
 
