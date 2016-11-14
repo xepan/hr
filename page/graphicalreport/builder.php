@@ -23,7 +23,7 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 		$c = $this->add('xepan\hr\CRUD',null,null,['view\graphicalreportbuilder']);
 		$c->setModel($m,['name']);
 		if(!$c->isEditing()){
-			$c->grid->addColumn('link','run')->setTemplate('<a href="'.$this->app->url('xepan/base/graphicalreport/runner',[])->getURL().'&report_id={$id}">{$name}</a>');
+			$c->grid->addColumn('link','run')->setTemplate('<a href="'.$this->app->url('xepan/hr/graphicalreport/runner',[])->getURL().'&report_id={$id}">{$name}</a>');
 		}
 	}
 }
