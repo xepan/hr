@@ -20,6 +20,9 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 	function page_index(){
 		$m = $this->add('xepan\base\Model_GraphicalReport');
 
+		if(!$this->app->auth->model->isSuperUser())			
+			$m->addCondition('permitted_post','like','%"'.$this->app->employee['post_id'].'"%');
+		
 		$c = $this->add('xepan\hr\CRUD',null,null,['view\graphicalreportbuilder']);
 		$c->setModel($m,['name']);
 		if(!$c->isEditing()){
