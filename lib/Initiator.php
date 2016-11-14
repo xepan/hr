@@ -134,6 +134,7 @@ class Initiator extends \Controller_Addon {
         $array[] = 'xepan\hr\Widget_AvailableWorkforce';
         $array[] = 'xepan\hr\Widget_AverageWorkHour';
         $array[] = 'xepan\hr\Widget_LateComing';
+        $array[] = 'xepan\hr\Widget_MyCommunication';
 
     }
 
