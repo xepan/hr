@@ -21,10 +21,12 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 		$m = $this->add('xepan\base\Model_GraphicalReport');
 
 		if(!$this->app->auth->model->isSuperUser())			
-			$m->addCondition('permitted_post','like','%"'.$this->app->employee['post_id'].'"%');
+			$m->addCondition($m->dsql()->orExpr()
+	    					->where('created_by_id',$this->app->employee->id)
+							->where('permitted_post','like','%"'.$this->app->employee['post_id'].'"%'));			
 		
 		$c = $this->add('xepan\hr\CRUD',null,null,['view\graphicalreportbuilder']);
-		$c->setModel($m,['name']);
+		$c->setModel($m,['name','description']);
 		if(!$c->isEditing()){
 			$import_btn=$c->grid->addButton('import')->addClass('btn btn-primary');
 

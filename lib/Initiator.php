@@ -3,17 +3,17 @@
 namespace xepan\hr;
 
 class Initiator extends \Controller_Addon {
-	
-	public $addon_name = 'xepan_hr';
+    
+    public $addon_name = 'xepan_hr';
 
-	function setup_admin(){
+    function setup_admin(){
 
-		$this->routePages('xepan_hr');
-		$this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
-		->setBaseURL('../vendor/xepan/hr/');
+        $this->routePages('xepan_hr');
+        $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
+        ->setBaseURL('../vendor/xepan/hr/');
 
 
-		if($this->app->auth->isLoggedIn()){
+        if($this->app->auth->isLoggedIn()){
 
             $m = $this->app->top_menu->addMenu('HR');
             // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
@@ -29,7 +29,6 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
-            $m->addItem(['Graphical Reports','icon'=>'fa fa-dashboard'],'xepan_hr_graphicalreport_builder');
             $m->addItem(['Configuration','icon'=>'fa fa-cog'],'xepan_hr_config');
             
             if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
@@ -46,6 +45,7 @@ class Initiator extends \Controller_Addon {
             }
             $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
             $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_leave');
+            $this->app->user_menu->addItem(['Analytical Reports','icon'=>'fa fa-dashboard'],'xepan_hr_graphicalreport_builder');
             // $m = $this->app->side_menu->addItem('HR');
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
