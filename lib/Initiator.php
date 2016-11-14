@@ -195,6 +195,19 @@ class Initiator extends \Controller_Addon {
 
         // Do other tasks needed
         // Like empting any folder etc
+
+        // Default Widgets 
+        $path=realpath(getcwd().'/vendor/xepan/hr/defaultWidget');
+        
+        if(file_exists($path)){
+            foreach (new \DirectoryIterator($path) as $file) {
+                 if($file->isDot()) continue;
+                // echo $path."/".$file;
+                 $json= file_get_contents($path."/".$file);
+                 $import_model = $this->add('xepan\base\Model_GraphicalReport');
+                 $import_model->importJson($json);
+            }
+        }   
     }
 
     function createDefaultEmployee(){
