@@ -130,12 +130,12 @@ class Initiator extends \Controller_Addon {
 
     function exportWidgets($app,&$array){
         // $array['widget_list'][] = 'xepan\base\Widget';
-        $array[] = 'xepan\hr\Widget_EmployeeAttendance';
-        $array[] = 'xepan\hr\Widget_EmployeeMovement';
-        $array[] = 'xepan\hr\Widget_AvailableWorkforce';
-        $array[] = 'xepan\hr\Widget_AverageWorkHour';
-        $array[] = 'xepan\hr\Widget_LateComing';
-        $array[] = 'xepan\hr\Widget_MyCommunication';
+        $array[] = ['xepan\hr\Widget_EmployeeAttendance','level'=>'Global'];
+        $array[] = ['xepan\hr\Widget_EmployeeMovement','level'=>'Global'];
+        $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global'];
+        $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global'];
+        $array[] = ['xepan\hr\Widget_LateComing',['level'=>'Global']];
+        $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual'];
 
     }
 
