@@ -131,6 +131,9 @@ class Initiator extends \Controller_Addon {
         // $array['widget_list'][] = 'xepan\base\Widget';
         $array[] = 'xepan\hr\Widget_EmployeeAttendance';
         $array[] = 'xepan\hr\Widget_EmployeeMovement';
+        $array[] = 'xepan\hr\Widget_AvailableWorkforce';
+        $array[] = 'xepan\hr\Widget_AverageWorkHour';
+        $array[] = 'xepan\hr\Widget_LateComing';
 
     }
 
