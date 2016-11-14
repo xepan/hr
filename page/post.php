@@ -56,19 +56,6 @@ class page_post extends \xepan\base\Page {
 		$crud->grid->addPaginator(50);
 		$crud->form->setLayout('form\post');
 		$crud->setModel($post);
-
-		if($crud->isEditing()){
-			$form = $crud->form;
-			$form->getElement('in_time')->setOption('showMeridian',false)
-					->setOption('defaultTime',1)
-					->setOption('minuteStep',1)
-					->setOption('showSeconds',true);
-
-				$form->getElement('out_time')->setOption('showMeridian',false)
-					->setOption('defaultTime',1)
-					->setOption('minuteStep',1)
-					->setOption('showSeconds',true);
-		}
 		
 		if($crud->isEditing()){
 			$crud->form->getElement('in_time')
