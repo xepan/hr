@@ -23,12 +23,12 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 				$g->current_row_html['in_at'] = date('h:i A', strtotime($g->model['first_in']));
 			
 			if($g->model['is_late'] || $g->model['first_in']== null){
-				$g->current_row_html['icon-class'] = 'fa-thumbs-o-down red-bg';
-				$g->current_row_html['text-class'] = 'value red';
+				$g->current_row_html['icon-class'] = 'fa fa-thumbs-o-down';
+				$g->current_row_html['text-class'] = 'red';
 			}
 			else{
-				$g->current_row_html['icon-class'] = 'fa-thumbs-o-up green-bg';
-				$g->current_row_html['text-class'] = 'value green';
+				$g->current_row_html['icon-class'] = 'fa fa-thumbs-o-up';
+				$g->current_row_html['text-class'] = 'green';
 			}
 		});
 

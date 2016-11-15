@@ -8,10 +8,21 @@
   </header>{/Pannel}
   <div class="main-box-body clearfix table">{$subheader}
     <div class="main-box-body clearfix table">
-      <div class="main-box clearfix"></div>{cols}
+      <h2 class="text-muted">Employee Movement</h2>
+      <div class="row main-box clearfix"></div>{cols}
       {rows}{row}
-      <div class="col-md-3 small">
-        <div class="infographic-box merged merged-top pull-left"><i class="fa {$icon-class}"></i><span style="font-size: 15px;" class="small {$text-class}">{$in_at}</span><span class="headline text-small text-muted">{$name}</span></div>
+      <div class="col-md-4 small">
+        <div style="margin-top:4px; margin-bottom:4px;" class="row">
+          <div class="col-md-3"><span style="padding-left:4px;" class="{$text-class}"><i style="text-shadow: 1px 1px 1px #ccc;font-size: 1.5em;" class="{$icon-class}"></i></span></div>
+          <div class="col-md-9">
+            <div class="row">    
+              <div class="col-md-12"><span style="font-size: 12px;" class="text-center small {$text-class}">{$in_at}</span></div>
+            </div>
+            <div class="row">
+              <div class="col-md-12"><span style="font-size: 11px; font-weight:5px;" class="headline text-small text-muted text-center">{$name}</span></div>
+            </div>
+          </div>
+        </div>
       </div>{/}
       {/}{/}
       {not_found}
