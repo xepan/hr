@@ -197,7 +197,7 @@ class Initiator extends \Controller_Addon {
         // Like empting any folder etc
 
         // Default Widgets 
-        $path=realpath(getcwd().'/vendor/xepan/hr/defaultWidget');
+        $path=realpath(getcwd().'/vendor/xepan/hr/defaultReports');
         
         if(file_exists($path)){
             foreach (new \DirectoryIterator($path) as $file) {
