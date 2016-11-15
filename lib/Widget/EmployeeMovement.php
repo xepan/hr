@@ -7,32 +7,21 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 	function init(){
 		parent::init();
 
-		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('employee');
-
+		$this->grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movement-mini']);
 	}
 
 	function recursiveRender(){
-
-		$movement_m = $this->add("xepan\hr\Model_Employee_Movement");
-		if(isset($this->report->employee))
-	        $movement_m->addCondition('employee_id',$this->report->employee);
-		if(isset($this->report->start_date))
-			$movement_m->addCondition('date','>',$this->report->start_date);
-		if(isset($this->report->end_date))
-			$movement_m->addCondition('date','<',$this->app->nextDate($this->report->end_date));
-
-		$data_array = [];
+		$employee = $this->add('xepan\hr\Model_Widget_EmployeeMovement');
 		
-		$this->add('xepan\base\View_Chart')
-			->setType('bar')
-	 		->setData(['json'=>$data_array])
-	 		->setGroup(['In','Out'])
-	 		->setXAxis('date')
-	 		->setYAxises(['In','Out'])
-	 		->addClass('col-md-12')
-	 		->setTitle('Employee Movement')
-	 		;
+		$this->grid->setModel($employee,['name','first_in','last_out','is_late','in_color','out_color']);
+		$this->grid->addPaginator(10);
+		
+		$this->grid->addHook('formatRow',function($g){
+			if($g->model['is_late'] || $g->model['first_in']== null)
+				$g->current_row_html['icon'] = 'fa fa-thumbs-o-down';
+			else
+				$g->current_row_html['icon'] = 'fa fa-thumbs-o-up';
+		});
 
 		return parent::recursiveRender();
 	}
