@@ -72,6 +72,7 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 			$fld->set($this->$filter_entity);
 
 		if($fld instanceof \Form_Field_DateRangePicker){
+			$fld->getFutureDatesSet();
 			if(!isset($this->start_date)) $this->start_date = $this->app->today;
 			if(!isset($this->end_date)) $this->end_date = $this->app->today;
 		}
