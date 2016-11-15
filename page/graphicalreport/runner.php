@@ -31,8 +31,9 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 		$rpt = $this->add('xepan\base\Model_GraphicalReport')->load($report_id);
 
 		$this->title = $rpt['name'];
-
-		foreach ($rpt->ref('xepan\base\GraphicalReport_Widget') as $widget) {
+		$report_w = $rpt->ref('xepan\base\GraphicalReport_Widget')->addCondition('is_active',true);
+		
+		foreach ($report_w as $widget) {
 			$w = $this->add('xepan\base\Widget_Wrapper');
 			$w->addClass('widget');
 			$w->addClass('col-md-'.$widget['col_width']);

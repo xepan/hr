@@ -6,7 +6,7 @@ class Widget_AvailableWorkforce extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
-     	$this->chart = $this->add('xepan\base\View_Chart');
+     	$this->chart = $this->add('xepan\base\View_Chart');		
 	}
 
 	function recursiveRender(){
@@ -23,8 +23,8 @@ class Widget_AvailableWorkforce extends \xepan\base\Widget{
 		$employee->addCondition('present_today',true);
 
 		$present_employees = $employee->count()->getOne();
-
-		$this->chart->setData(['columns'=> [['present', ($present_employees/$total_employees*100)]],'type'=>'gauge'])
+		
+		$this->chart->setData(['columns'=> [['present', (($present_employees/$total_employees)*100)]],'type'=>'gauge'])
      				->setTitle('Work Force Available')
      				->setOption('color',['pattern'=>['#FF0000', '#F97600', '#F6C600', '#60B044'],'threshold'=>['values'=>[30, 60, 90, 100]]]);
 		
