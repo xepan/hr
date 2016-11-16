@@ -29,7 +29,7 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
 			$form->setLayout(['page/employeeprofile-compact']);			
-			$form->setModel($employee,['first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
+			$form->setModel($employee,['graphical_report_id','first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
 			$form->addField('line','email_1')->validate('email');
 			$form->addField('line','email_2');
 			$form->addField('line','email_3');
@@ -180,7 +180,7 @@ class page_employeedetail extends \xepan\base\Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['department','post','user','remark','salary_template'],['department_id','post_id','user_id','remark']);
+			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template'],['graphical_report_id','department_id','post_id','user_id','remark']);
 			$f=$portfolio_view->form;
 
 			if($f->isSubmitted()){

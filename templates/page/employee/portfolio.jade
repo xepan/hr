@@ -2,21 +2,26 @@
   .panel.panel-default
     .panel-body 
       .col-lg-12.xepan-push
-        .col-lg-4
+        .col-lg-6
           .atk-form-row.atk-form-field 
             strong  Department :  
             div {$department}{$department_id}
-        .col-lg-4
+        .col-lg-6
           .atk-form-row.atk-form-field  
             strong  Post :
             div {$post}{$post_id}
-        .col-lg-4
+      .col-lg-12.xepan-push
+        .col-lg-6
           .atk-form-row.atk-form-field  
             strong User : 
             div {$user}{$user_id}
-        .col-lg-12.xepan-push
-          strong  Remarks
-          .atk-form-row.atk-form-field  {$remark}
+        .col-lg-6
+          .atk-form-row.atk-form-field  
+            strong Permitted Dashboard : 
+            div {$graphical_report_id}
+      .col-lg-12.xepan-push
+        strong  Remarks
+        .atk-form-row.atk-form-field  {$remark}
         //- .col-lg-12.xepan-push
         //-   strong  Salary Template
         //-   .atk-form-row.atk-form-field  {$salary_template}{$salary_template_id}
