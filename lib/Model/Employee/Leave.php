@@ -36,7 +36,7 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 		$this['status']='Submitted';
 		$this->app->employee
             ->addActivity("Employee '".$this->app->employee['name']."' Submitted Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
-            ->notifyWhoCan('approve','reject','Submitted',$this);
+            ->notifyWhoCan('approve,reject','Submitted',$this);
 		$this->save();
 	}
 	function approve(){
