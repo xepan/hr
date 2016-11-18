@@ -22,8 +22,10 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 		$report_id = $this->api->stickyGET('report_id');
 
 		foreach ($_GET as $get=>$value) {
-			if($value)
-				$this->$get = $value;
+			if($value){
+                $this->api->stickyGET($get);
+                $this->$get = $value;
+            }
 		}
 		
 		$this->filter_form = $this->add('Form',null,'filter_form');
@@ -65,13 +67,17 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 
 		$fld = $this->filter_form->addField($this->entity_list[$filter_entity]['type'],$filter_entity,$this->entity_list[$filter_entity]['caption']?:null);
 		
-		if($this->entity_list[$filter_entity]['model'])
+		if($this->entity_list[$filter_entity]['model']){
 			$fld->setModel($this->entity_list[$filter_entity]['model']);
+			if($fld->hasMethod('setEmptyText'))
+                $fld->setEmptyText('Please select');
+		}
 		
 		if(isset($this->$filter_entity))
 			$fld->set($this->$filter_entity);
 
 		if($fld instanceof \Form_Field_DateRangePicker){
+			$fld->getFutureDatesSet();
 			if(!isset($this->start_date)) $this->start_date = $this->app->today;
 			if(!isset($this->end_date)) $this->end_date = $this->app->today;
 		}

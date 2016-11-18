@@ -9,14 +9,22 @@
     .main-box-body.clearfix.table
         {$subheader}
         .main-box-body.clearfix.table
-            .main-box.clearfix
+            h2.text-muted Employees Present
+            .row.main-box.clearfix
             {cols}
             {rows}{row}
-            div.col-md-3.small
-                .infographic-box.merged.merged-top.pull-left
-                  i(class="fa {$icon-class}")
-                  span.small(class="{$text-class}" style="font-size: 15px;") {$in_at}
-                  span.headline.text-small.text-muted {$name}
+            .col-md-4.small{$dummy}
+                .row(style="margin-top:4px; margin-bottom:4px;")
+                    .col-md-3
+                        span(class="{$text-class}" style="padding-left:4px;")
+                            i(class="{$icon-class}" style = "text-shadow: 1px 1px 1px #ccc;font-size: 1.5em;")
+                    .col-md-9
+                        .row     
+                            .col-md-12
+                                span.text-center.small(class="{$text-class}" style="font-size: 12px;") {$in_at}
+                        .row
+                            .col-md-12
+                                span.headline.text-small.text-muted.text-center(style="font-size: 11px; font-weight:5px;") {$name}
             {/}
             {/}{/}
             {not_found}

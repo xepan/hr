@@ -25,6 +25,9 @@ class Widget_MyCommunication extends \xepan\base\Widget{
 		$this->grid->setModel($communication_model,['to','title','communication_type','created_at']);
 		$this->grid->addPaginator(10);
 
+		$this->grid->add('H2',null,'grid_buttons')->set('My Communications')->addClass('text-muted');
+		$this->grid->removeSearchIcon();
+
 		return parent::recursiveRender();
 	}
 }

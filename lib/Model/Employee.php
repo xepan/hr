@@ -20,7 +20,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->getElement('created_by_id')->defaultValue(@$this->app->employee->id);
 		$emp_j = $this->join('employee.contact_id');
 
-		// $emp_j->hasOne('xepan\base\User',null,'username'); // Now in Contact
+		$emp_j->hasOne('xepan\base\GraphicalReport','graphical_report_id');
+		
 		$emp_j->hasOne('xepan\hr\Department','department_id')->sortable(true)->display(array('form' => 'xepan\commerce\DropDown'));
 		$emp_j->hasOne('xepan\hr\Post','post_id')->display(array('form' => 'xepan\commerce\DropDown'));
 		
