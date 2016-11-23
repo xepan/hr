@@ -148,13 +148,12 @@ class Initiator extends \Controller_Addon {
 
     function exportWidgets($app,&$array){
         // $array['widget_list'][] = 'xepan\base\Widget';
-        $array[] = ['xepan\hr\Widget_MyTodaysAttendance','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_EmployeeMovement','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_LateComing',['level'=>'Global']];
-        $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual'];
-
+        $array[] = ['xepan\hr\Widget_MyTodaysAttendance','level'=>'Global','title'=>'My Todays Attendance'];
+        $array[] = ['xepan\hr\Widget_EmployeeMovement','level'=>'Global','title'=>'Employees Attendance'];
+        $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global','title'=>'Workforce Available'];
+        $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global','title'=>'Employees Average Working Hours'];
+        $array[] = ['xepan\hr\Widget_LateComing','level'=>'Global','title'=>'Employees Average Late Arrivals'];
+        $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual','title'=>'My Communication'];
     }
 
     function exportEntities($app,&$array){
