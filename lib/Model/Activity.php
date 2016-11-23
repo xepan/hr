@@ -78,7 +78,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		$this['notify_to'] = json_encode($employee_ids);
 		$this->save();
 
-		$this->pushToWebSocket($employee_ids,$notification_msg);
+		$this->pushToWebSocket($employee_ids,$this['notification']?:$this['activity']);
 		
 	}
 
