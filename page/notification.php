@@ -7,23 +7,85 @@ class page_notification extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$activity=$this->add('xepan\hr\Model_Activity');
+		$start_date = $this->app->stickyGET('from_date');
+		$end_date = $this->app->stickyGET('to_date');
+		$document = $this->app->stickyGET('document');
+
+		$activity = $this->add('xepan\hr\Model_Activity');
+		
+		$activity->addExpression('document_type')->set(function($m,$q){
+			$document = $this->add('xepan\hr\Model_Document');
+			$document->addCondition('id',$m->getElement('related_document_id'));
+			$document->setLimit(1);
+			
+			return $document->fieldQuery('type');
+		});	
+
 		$activity->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%');		
-		$g=$this->add('xepan\hr\Grid',null,null,['view/activity/activity-grid']);
+
+		if($start_date){
+			$activity->addCondition('created_at','>',$start_date);
+			$activity->addCondition('created_at','<',$end_date);				
+		}
+		
+		if($document){			
+			$activity->addCondition('document_type',explode(',', $document));
+		}
+
+		$activity_doc = $this->add('xepan\hr\Model_Activity');
+		$activity_doc->addExpression('document_type')->set(function($m,$q){
+			$document = $this->add('xepan\hr\Model_Document');
+			$document->addCondition('id',$m->getElement('related_document_id'));
+			$document->setLimit(1);
+			
+			return $document->fieldQuery('type');
+		});	
+
+		$activity_doc->_dsql()->group('document_type');
+		$activity_doc->title_field = 'document_type';
+
+		// document array
+		$document_type_array = [];
+		
+		foreach ($activity_doc as $activity_m) {
+			$document_type_array[$activity_m->id] = $activity_m['document_type']?:"Other";
+		}	
+		$form = $this->add('Form');
+		$date_range_field = $form->addField('DateRangePicker','date_range')
+								 ->setStartDate($this->app->now)
+								 ->setEndDate($this->app->now)
+								 ->getBackDatesSet();
+		$document_field = $form->addField('xepan\base\DropDown','document_type');						 
+		$document_field->setAttr(['multiple'=>'multiple']);
+		$document_field->setModel($activity_doc);
+
+		$form->addSubmit('Filter')->addClass('xepan-push btn btn-primary');
+		
+		$g = $this->add('xepan\hr\Grid',null,null,['view/activity/activity-grid']);
+		
+		if($form->isSubmitted()){
+
+
+			$selected_doc_type_array  = [];
+
+			if($form['document_type']){
+				foreach (explode(",", $form['document_type']) as $key => $value) {
+					$selected_doc_type_array[$value] = $value;
+				}
+
+				$selected_doc_type_array = array_intersect_key($document_type_array,$selected_doc_type_array);
+			}
+
+			$form->js(null,$g->js()
+								->reload(
+									[
+										'from_date'=>$date_range_field->getStartDate(),
+										'to_date'=>$date_range_field->getEndDate(),
+										'document'=>implode(',',$selected_doc_type_array)
+									]))->univ()->successMessage('wait ... ')->execute();
+		}
+
 		$g->setModel($activity);
-
-		// $activity_m = $this->add('xepan\hr\Model_Activity');
-		// $activity_m->addExpresion('doc_type')->set(function($m,$q){
-		// 	return $
-		// });
-		// $counts = $count_m->_dsql()->del('fields')->field('status')->field('count(*) counts')->group('Status')->get();
-		// $counts_redefined =[];
-		// $total=0;
-		// foreach ($counts as $cnt) {
-		// 	$counts_redefined[$cnt['status']] = $cnt['counts'];
-		// 	$total += $cnt['counts'];
-		// }
 		$g->addPaginator(50);
-
 	}
 }
