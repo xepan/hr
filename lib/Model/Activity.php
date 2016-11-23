@@ -77,6 +77,8 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		
 		$this['notify_to'] = json_encode($employee_ids);
 		$this->save();
+
+		$this->pushToWebSocket($employee_ids,$notification_msg);
 		
 	}
 
@@ -93,6 +95,9 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		$this['notification'] =$notification_msg;
 		$this['notify_to'] = json_encode($employee_ids);
 		$this->save();
+
+		$this->pushToWebSocket($employee_ids,$notification_msg);
+
 	}
 
 	function getPost($employee_id){
@@ -101,5 +106,27 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		}
 
 		return $this->emp_posts[$employee_id];
+	}
+
+	function pushToWebSocket($employee_ids, $message){
+		if($this->app->getConfig('websocket-notifications',false)){
+			$response = $this->add('xepan\base\Controller_WebSocket')
+				->sendTo($employee_ids, $message);
+
+			$response = json_decode($response,true);
+
+			$notified_employees= [];
+
+			foreach ($response as $id) {
+				$notified_employees[] = explode("_", $id)[1];
+			}
+
+			if($this->id){
+				$this->app->db->dsql()->table('employee')
+					->set('notified_till',$this->id)
+					->where('contact_id','in',$notified_employees)
+					->update();
+			}
+		}
 	}
 }
