@@ -109,8 +109,26 @@ class Initiator extends \Controller_Addon {
         $all_email->addCondition($or);
         $all_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
         $all_count=$all_email->count()->getOne();
-        
+       
+       /*Message Count*/
+        $total_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
+        $total_msg_m->addCondition([
+            ['from_raw','like','%"'.$this->app->employee->id.'"%'],
+            ['to_raw','like','%"'.$this->app->employee->id.'"%']
+            ]);
+        $total_emp_message_count = $total_msg_m->count()->getOne();
+
+        $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
+        $unread_msg_m->addCondition([
+            ['from_raw','like','%"'.$this->app->employee->id.'"%'],
+            ['to_raw','like','%"'.$this->app->employee->id.'"%']
+            ]);
+        $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+        $unread_emp_message_count = $unread_msg_m->count()->getOne();
+
+
         $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
+        $this->app->js(true)->html($unread_emp_message_count." / ". $total_emp_message_count)->_selector('.contact-and-all-message-count a span.atk-swatch-');
 
         // $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
@@ -130,13 +148,12 @@ class Initiator extends \Controller_Addon {
 
     function exportWidgets($app,&$array){
         // $array['widget_list'][] = 'xepan\base\Widget';
-        $array[] = ['xepan\hr\Widget_MyTodaysAttendance','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_EmployeeMovement','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global'];
-        $array[] = ['xepan\hr\Widget_LateComing',['level'=>'Global']];
-        $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual'];
-
+        $array[] = ['xepan\hr\Widget_MyTodaysAttendance','level'=>'Global','title'=>'My Todays Attendance'];
+        $array[] = ['xepan\hr\Widget_EmployeeMovement','level'=>'Global','title'=>'Employees Attendance'];
+        $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global','title'=>'Workforce Available'];
+        $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global','title'=>'Employees Average Working Hours'];
+        $array[] = ['xepan\hr\Widget_LateComing','level'=>'Global','title'=>'Employees Average Late Arrivals'];
+        $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual','title'=>'My Communication'];
     }
 
     function exportEntities($app,&$array){
