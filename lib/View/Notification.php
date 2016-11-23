@@ -39,8 +39,15 @@ class View_Notification extends \CompleteLister{
 			$this->js()->_selector('.xepan-notification-view')->trigger('reload')->execute();
 		}
 
-		$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('xepan_hr_notificationexec'))->_enclose(),120000);
 		$this->js('click',$this->js()->univ()->ajaxec($this->api->url('.',['notification_mute_toggle'=>true])))->_selector('.play-pause-notifications');
+		
+		if($this->app->getConfig('websocket-notifications',false)){
+			if(!$this->app->recall('mute_all_notification',false))
+				$this->app->js(true)->_load('websocketclient')->univ()->runWebSocketClient($this->app->getConfig('websocket-server',false),$this->app->current_website_name.'_'.$this->app->employee->id);
+		}else{
+			// No WebSocket implemented, keep 2 minute refresh method activated
+			$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('xepan_hr_notificationexec'))->_enclose(),120000);
+		}
 		
 		// $this->on('click','.play-pause-notifications',function($js,$data){
 		// 	if($this->app->recall('mute_all_notification',false))
