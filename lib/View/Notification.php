@@ -13,11 +13,15 @@ class View_Notification extends \CompleteLister{
 		// append them in template by js
 		
 		$notifications = $this->add('xepan\base\Model_Activity');
+		// $notifications->addCondition('id','>',$this->app->employee['notified_till']?:0);
+		$notifications->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%');
+		$notifications->setOrder('id','desc');
+		$this->setModel($notifications)->setLimit(5);
+		
+		$notifications = $this->add('xepan\base\Model_Activity');
 		$notifications->addCondition('id','>',$this->app->employee['notified_till']?:0);
 		$notifications->addCondition('notify_to','like','%"'.$this->app->employee->id.'"%');
 
-		$this->setModel($notifications)->setLimit(3);
-		
 		$this->template->setHTML('icon','envelope-o');
 		$this->template->set('notification_count',$notifications->count()->getOne());
 		$this->template->set('unread_notification',$notifications->count()->getOne());
