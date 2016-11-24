@@ -121,7 +121,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 				$notified_employees[] = explode("_", $id)[1];
 			}
 
-			if($this->id){
+			if($this->id && count($notified_employees)){
 				$this->app->db->dsql()->table('employee')
 					->set('notified_till',$this->id)
 					->where('contact_id','in',$notified_employees)
