@@ -114,18 +114,20 @@ class Model_Activity extends \xepan\base\Model_Activity{
 				->sendTo($employee_ids, $message);
 
 			$response = json_decode($response,true);
-
-			$notified_employees= [];
+			$notified_employees= [0];
 
 			foreach ($response as $id) {
 				$notified_employees[] = explode("_", $id)[1];
 			}
 
-			if($this->id && count($notified_employees)){
+			if($this->id){
 				$this->app->db->dsql()->table('employee')
 					->set('notified_till',$this->id)
 					->where('contact_id','in',$notified_employees)
 					->update();
+
+				$this->app->employee->reload();
+				$this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
 			}
 		}
 	}
