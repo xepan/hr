@@ -13,7 +13,7 @@ namespace xepan\hr;
 
 class Model_Activity extends \xepan\base\Model_Activity{
 
-	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true){
+	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true, $msg=null){
 		
 		if(!$this->app->employee->loaded())
 			return;
@@ -76,9 +76,11 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		// throw new \Exception(print_r($employee_ids,true), 1);
 		
 		$this['notify_to'] = json_encode($employee_ids);
+		if($msg) $this['notification'] = $msg;
+		
 		$this->save();
 
-		$this->pushToWebSocket($employee_ids,$this['notification']?:$this['activity']);
+		// $this->pushToWebSocket($employee_ids,$this['notification']?:$this['activity']);
 		
 	}
 
@@ -96,7 +98,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		$this['notify_to'] = json_encode($employee_ids);
 		$this->save();
 
-		$this->pushToWebSocket($employee_ids,$notification_msg);
+		// $this->pushToWebSocket($employee_ids,$notification_msg);
 
 	}
 
@@ -108,27 +110,4 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		return $this->emp_posts[$employee_id];
 	}
 
-	function pushToWebSocket($employee_ids, $message){
-		if($this->app->getConfig('websocket-notifications',false)){
-			$response = $this->add('xepan\base\Controller_WebSocket')
-				->sendTo($employee_ids, $message);
-
-			$response = json_decode($response,true);
-			$notified_employees= [0];
-
-			foreach ($response as $id) {
-				$notified_employees[] = explode("_", $id)[1];
-			}
-
-			if($this->id){
-				$this->app->db->dsql()->table('employee')
-					->set('notified_till',$this->id)
-					->where('contact_id','in',$notified_employees)
-					->update();
-
-				$this->app->employee->reload();
-				$this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
-			}
-		}
-	}
 }
