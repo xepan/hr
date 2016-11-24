@@ -19,10 +19,24 @@ class page_notificationexec extends \xepan\base\Page{
 			$js=[];
 			if(count($new_notificagions)){
 				foreach ($new_notificagions as $nt) {
-					$js[] = $p->js()->univ()->notify(
-							$nt['details']?$nt['activity']:'',  // title
-							$nt['details']?:($nt['notification']?:$nt['activity']), //message
-							'notice',true,undefined,false);
+					$title= "Notification";
+					$type= "notice";
+					$desktop = true;
+					$sticky = true;
+					$icon = null;
+
+					$message=$nt['activity'];
+
+					if($nt['notification']){
+						$message=$nt['notification']['message'];
+						$title= $nt['notification']['tite']?:'Notification';
+						$type= $nt['notification']['type']?:'notice';
+						$desktop = $nt['notification']['desktop']?true:false;
+						$sticky = $nt['notification']['sticky']?true:false;
+						$icon = $nt['notification']['icon']?:null;
+					}
+
+					$js[] = $p->js()->univ()->notify($title, $message, $type, $desktop, null, $sticky, $icon);
 				}
 
 				$this->add('xepan\hr\Model_Employee')
