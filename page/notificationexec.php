@@ -28,6 +28,7 @@ class page_notificationexec extends \xepan\base\Page{
 					$message=$nt['activity'];
 
 					if($nt['notification']){
+						if($this->isJson($nt['notification'])) $nt['notification'] = json_decode($nt['notification'],true);
 						$message=$nt['notification']['message'];
 						$title= $nt['notification']['tite']?:'Notification';
 						$type= $nt['notification']['type']?:'notice';
@@ -48,5 +49,10 @@ class page_notificationexec extends \xepan\base\Page{
 			}
 
 			$p->js(null,$js)->execute();
+	}
+
+	function isJson($string) {
+		json_decode($string);
+		return (json_last_error() == JSON_ERROR_NONE);
 	}
 }
