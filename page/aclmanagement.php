@@ -78,6 +78,9 @@ class page_aclmanagement extends \xepan\base\Page {
 			
 
 			$value_list=['Self Only'=>'Self Only','All'=>'All','None'=>'None'];
+			
+			if(isset($m->assigable_by_field) && $m->assigable_by_field !=false)
+				$value_list['Assigned To']='Assigned To Employee';
 
 			if($is_config){
 				unset($value_list['Self Only']);
