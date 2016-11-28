@@ -54,6 +54,14 @@ class Model_Employee extends \xepan\base\Model_Contact{
 						->setLimit(1)
 						->fieldQuery('value');
 		});
+
+		$this->addExpression('check_login')->set(function($m,$q){
+			 $attan_m = $this->add("xepan\hr\Model_Employee_Attandance")
+						->addCondition('employee_id',$m->getElement('id'))
+						->addCondition('fdate',$this->app->today);
+
+			return $q->expr('IFNULL([0],0)',[$attan_m->fieldQuery('id')]);
+		})->type('int');
 		
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
