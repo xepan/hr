@@ -13,6 +13,7 @@ class page_reimbursement extends \xepan\base\Page{
 		$model = $this->add('xepan\hr\Model_Reimbursement');
 		$model->setOrder('created_at','desc');
 		$crud->setModel($model);
+		$crud->add('xepan\base\Controller_MultiDelete');
 		$crud->addRef('Details',[
 									'view_class'=>"xepan\base\CRUD",
 									'label'=>"Details",

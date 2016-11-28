@@ -36,9 +36,7 @@ class page_employee extends \xepan\base\Page {
 		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
 		$crud->grid->addPaginator(50);
 		$crud->setModel($employee);
-
-
-
+		$crud->add('xepan\base\Controller_MultiDelete');
 
 		$f = $crud->grid->addQuickSearch(['first_name','last_name']);
 
