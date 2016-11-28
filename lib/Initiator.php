@@ -155,7 +155,10 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global','title'=>'Workforce Available'];
         $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global','title'=>'Employees Average Working Hours'];
         $array[] = ['xepan\hr\Widget_LateComing','level'=>'Global','title'=>'Employees Average Late Arrivals'];
+        
+        $array[] = ['xepan\hr\Widget_MyLateComing','level'=>'Individual','title'=>'My Late Arrivals'];
         $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual','title'=>'My Communication'];
+        $array[] = ['xepan\hr\Widget_MyAverageWorkHour','level'=>'Individual','title'=>'My Average Working Hours'];
     }
 
     function exportEntities($app,&$array){
