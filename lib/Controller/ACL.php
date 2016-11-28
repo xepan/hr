@@ -16,7 +16,7 @@ class Controller_ACL extends \AbstractController {
 	
 	public $acl_m = null;
 	public $action_allowed=null;  // final array of employees ids in [status][action] key
-	public $action_allowed_raw=null; // raw text in [status][action] like 'Self Only' or "NO" or "Assigned To"
+	public $action_allowed_raw= []; // raw text in [status][action] like 'Self Only' or "NO" or "Assigned To"
 	public $permissive_acl=false;
 	public $action_btn_group=null;
 	public $view_reload_url=null;
