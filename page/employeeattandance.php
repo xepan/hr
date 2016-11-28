@@ -80,12 +80,12 @@ class page_employeeattandance extends \xepan\base\Page{
 					$emp_attandance->addCondition('fdate', $this->app->today);
 					$emp_attandance->tryLoadAny();
 
-					if(!$emp_attandance->loaded()){
+					// if(!$emp_attandance->loaded()){
 						// $emp_attandance['employee_id'] = $emp->id;
-						$emp_attandance['from_date']  = $this->app->today." ".$form['in_time_'.$emp->id];
-						$emp_attandance['to_date']  = $this->app->today." ".$form['out_time_'.$emp->id];
-						$emp_attandance->save();
-					}
+					$emp_attandance['from_date']  = $this->app->today." ".$form['in_time_'.$emp->id];
+					$emp_attandance['to_date']  = $this->app->today." ".$form['out_time_'.$emp->id];
+					$emp_attandance->save();
+					// }
 				}
 
 				if(!$form['is_present_'.$emp->id]){
