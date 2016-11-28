@@ -1,0 +1,15 @@
+.row.panel.panel-primary.panel-body
+  .col-md-6
+    .main-box.infographic-box
+      i.fa.fa-clock-o.red-bg
+      span.headline Avg Late
+      span.value
+        span.timer(data-refresh-interval='50', data-speed='1000', data-to='2562', data-from='120')
+          | {$value1}
+  .col-md-6
+    .main-box.infographic-box
+      i.fa.fa-check-square.red-bg
+      span.headline Avg Extra Work  
+      span.value
+        span.timer(data-refresh-interval='50', data-speed='1000', data-to='2562', data-from='120')
+          | {$value2}
