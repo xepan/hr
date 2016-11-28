@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class Widget_DepartmentLateComing extends \xepan\base\Widget{
+class Widget_TotalLateComing extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
@@ -12,13 +12,6 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 
 	function recursiveRender(){
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
-		$attendances->addExpression('emp_department')->set(function($m,$q){
-			$emp = $this->add('xepan\hr\Model_Employee');
-			$emp->addCondition('id',$m->getElement('employee_id'));
-			$emp->setLimit(1);
-			return $emp->fieldQuery('department_id');
-		});
-
 		$attendances->addExpression('emp_status')->set(function($m,$q){
 			$emp = $this->add('xepan\hr\Model_Employee');
 			$emp->addCondition('id',$m->getElement('employee_id'));
@@ -27,13 +20,7 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 		});
 
 		$attendances->addCondition('emp_status','Active');
-
-		if(isset($this->report->department)){			
-			$attendances->addCondition('emp_department',$this->report->department);
-		}else{
-			$attendances->addCondition('emp_department',$this->app->employee['department_id']);
-		}
-
+		
 		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('late_coming')]));
 		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('extra_work')]));
 		$attendances->_dsql()->group('employee_id');

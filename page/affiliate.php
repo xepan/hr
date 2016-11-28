@@ -16,6 +16,7 @@ class page_affiliate extends \xepan\base\Page{
 		$crud->setModel($affiliate);
 		$crud->grid->addPaginator(50);
 		$crud->add('xepan\base\Controller_Avatar');
+		$crud->add('xepan\base\Controller_MultiDelete');
 		
 		$frm=$crud->grid->addQuickSearch(['name','organization']);
 

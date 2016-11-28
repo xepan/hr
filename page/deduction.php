@@ -13,5 +13,6 @@ class page_deduction extends \xepan\base\Page{
 		$model = $this->add('xepan\hr\Model_Deduction');
 		// $model->setOrder('created_at','desc');
 		$crud->setModel($model);
+		$crud->add('xepan\base\Controller_MultiDelete');
 	}
 }
