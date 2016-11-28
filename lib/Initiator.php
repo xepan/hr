@@ -155,6 +155,7 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global','title'=>'Workforce Available'];
         $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global','title'=>'Employees Average Working Hours'];
         $array[] = ['xepan\hr\Widget_LateComing','level'=>'Global','title'=>'Employees Average Late Arrivals'];
+        $array[] = ['xepan\hr\Widget_TotalLateComing','level'=>'Global','title'=>'Companies Late Arrival And Extra Work'];
         
         $array[] = ['xepan\hr\Widget_DepartmentAvailableWorkforce','level'=>'Department','title'=>'Department Workforce Available'];
         $array[] = ['xepan\hr\Widget_DepartmentAverageWorkHour','level'=>'Department','title'=>'Department Average WorkHour'];
