@@ -9,6 +9,7 @@
   <div class="main-box-body clearfix table-responsive">
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
+        <th></th>
         <th id="{$employee_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_sort}</span></th>
         <th id="{$emp_leave_allow_sortid}"><span>Employee Leave Allow</span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$emp_leave_allow_sort}</span></th>
         <th><span>From Date</span></th>
@@ -20,6 +21,7 @@
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
+          <td>{$selected}  </td>
           <td><a href="#" data-id="{$employee_id}" class="do-view-employee">{$employee}</a></td>
           <td><span>{$emp_leave_allow}  </span></td>
           <td><span>{$from_date}</span></td>

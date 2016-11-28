@@ -12,6 +12,7 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
+                th
                 th Employee
                     {$created_by}
                 th(id="{$name_sortid}")
@@ -32,6 +33,7 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td {$selected}
                     td {$employee}
                     td {$name}
                     td {$created_at}

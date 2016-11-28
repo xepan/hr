@@ -12,6 +12,7 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
+                th
                 th Employee
                 th(id="{$name_sortid}")
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;") Reason {$name_sort}
@@ -29,6 +30,7 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td {$selected}
                     td {$employee}
                     td {$name}
                     td {$created_by}

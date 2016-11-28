@@ -56,6 +56,7 @@ class page_post extends \xepan\base\Page {
 		$crud->grid->addPaginator(50);
 		$crud->form->setLayout('form\post');
 		$crud->setModel($post);
+		$crud->add('xepan\base\Controller_MultiDelete');
 		
 		if($crud->isEditing()){
 			$crud->form->getElement('in_time')
