@@ -27,7 +27,7 @@ class page_employeeattandance extends \xepan\base\Page{
 			$c3=$col->addColumn(3)->addClass('col-md-2');
 
 			$is_present_field = $c0->addField('checkbox','is_present_'.$emp->id,'');
-			$c1->addField('Readonly','name_'.$emp->id)->set($emp['name']);
+			$c1->addField('line','name_'.$emp->id)->set($emp['name'])->setAttr('disabled','disabled');
 			$from_time_field = $c2->addField('TimePicker','in_time_'.$emp->id)->set($emp['in_time']);
 
 			$from_time_field
