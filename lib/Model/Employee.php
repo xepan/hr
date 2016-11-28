@@ -77,6 +77,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeSave',[$this,'updateEmployeeLeave']);
 	}
 
+	function getActiveEmployeeIds(){
+		$emp = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active');
+		$emp_ids = [];
+		foreach ($emp->getRows() as $emp){
+			$emp_ids [] = $emp['id'];
+		}
+
+		return $emp_ids;
+	}
+
 	function throwEmployeeUpdateHook(){
 		$this->app->hook('employee_update',[$this]);
 	}
