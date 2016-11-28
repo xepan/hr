@@ -15,7 +15,8 @@ namespace xepan\hr;
 class Controller_ACL extends \AbstractController {
 	
 	public $acl_m = null;
-	public $action_allowed=null;
+	public $action_allowed=null;  // final array of employees ids in [status][action] key
+	public $action_allowed_raw= []; // raw text in [status][action] like 'Self Only' or "NO" or "Assigned To"
 	public $permissive_acl=false;
 	public $action_btn_group=null;
 	public $view_reload_url=null;
@@ -45,30 +46,32 @@ class Controller_ACL extends \AbstractController {
 				if($status=='All' || $status=='*'){
 					if($acl === true) break;
 					if($acl === false) $acl = -1; // Shuold never be reached
-					$model->addCondition('created_by_id',$acl);
+					$model->addCondition($this->getConditionalField($status,'view'),$acl);
 					break;
 				}else{
 					if($acl==="All") continue;
 					if($acl === false) continue;
 					if($acl === true){
 						// No employee condition .. just check status
-						$where_condition[] = "([1] = \"$status\")";
+						$where_condition[] = "([status] = \"$status\")";
 					}else{
-						$where_condition[] = "( ([0] in (". implode(",", $acl) .")) AND ([1] = \"$status\") )";
+						$where_condition[] = "( ([".strtolower($status)."] in (". implode(",", $acl) .")) AND ([status] = \"$status\") )";
 					}
 				}
 			}
 			if(!empty($where_condition)){
 				$q= $this->model->dsql();
+				
+				$filler_values=['status'=>$this->model->getElement('status')];
+				foreach ($this->action_allowed_raw as $status => $actions) {
+					$filler_values[strtolower($status)]=$this->model->getElement($this->getConditionalField($status,'view'));
+				}
+
 				$this->model->addCondition(
 					$q->expr("(".implode(" OR ", $where_condition).")", 
-						[
-							$this->model->getElement('created_by_id'), 	// [0]
-							$this->model->getElement('status'),			// [2]
-						]
+							$filler_values
 						)
 					)
-					// ->debug()
 				;
 			}
 
@@ -121,7 +124,7 @@ class Controller_ACL extends \AbstractController {
 							$g->row_edit=$ids;
 							return;
 						}
-						if(!in_array($g->model['created_by_id'], $ids)){
+						if(!in_array($g->model[$this->getConditionalField($g->model['status'],'edit')], $ids)){
 							$g->row_edit = false;
 						}
 					});
@@ -137,7 +140,7 @@ class Controller_ACL extends \AbstractController {
 							$g->row_delete=$ids;
 							return;
 						}
-						if(!in_array($g->model['created_by_id'], $ids)){
+						if(!in_array($g->model[$this->getConditionalField($g->model['status'],'delete')], $ids)){
 							$g->row_delete = false;
 							return;
 						}
@@ -176,7 +179,7 @@ class Controller_ACL extends \AbstractController {
 							 continue;	
 						}
 						if(is_array($acl)){
-							if(in_array($g->model['created_by_id'], $acl))
+							if(in_array($g->model[$this->getConditionalField($g->model['status'],$action)], $acl))
 								$action_btn_list[] = $action;
 						}
 					}
@@ -409,8 +412,10 @@ class Controller_ACL extends \AbstractController {
 		 * )
 		 */
 		// echo $this->model. '<br/>';
-		if($this->action_allowed===null)
+		if($this->action_allowed===null){
 			$this->action_allowed = $this->acl_m['action_allowed'];
+			$this->action_allowed_raw = $this->acl_m['action_allowed'];
+		}
 		// echo "acl_data";
 		// var_dump($this->permissive_acl);
 		// exit;
@@ -434,12 +439,14 @@ class Controller_ACL extends \AbstractController {
 			if(!isset($this->model->actions[$status])){
 				// echo 'unsetting $this->model->actions['.$status.'] <br/>';
 				unset($this->action_allowed[$status]);
+				unset($this->action_allowed_raw[$status]);
 				continue;
 			}
 			foreach ($actions_array as $action=>$permission) {
 				if(!in_array($action,$this->model->actions[$status])){
 					// echo "in_array($action, ".print_r($this->model->actions[$status], true).' for '.$status.' -- unsetting 2 '. $action .' $this->model->actions['.$status.']['.$action.'] <br/>';
 					unset($this->action_allowed[$status][$action]);
+					unset($this->action_allowed_raw[$status][$action]);
 				}
 			}
 
@@ -452,11 +459,18 @@ class Controller_ACL extends \AbstractController {
 		return $this->action_allowed;
 	}
 
+	function getConditionalField($status,$action){
+		if($this->action_allowed_raw[$status][$action] != 'Assigned To') return 'created_by_id';
+		return isset($this->model->assigable_by_field)? $this->model->assigable_by_field: 'assigned_to_id';
+
+	}
+
 	function textToCode($text){
 		if($text ==='' || $text === null) return $this->permissive_acl;
 		if($text === 'None') return false;
 		if($text === 'All' || $text === true ) return true;
 		if($text === 'Self Only') return [$this->app->employee->id];
+		if($text === 'Assigned To') return [$this->app->employee->id];
 		return $text;
 	}
 }
