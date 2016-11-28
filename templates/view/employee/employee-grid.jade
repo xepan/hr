@@ -13,6 +13,7 @@
             thead.xepan-hover-hand
                 tr
                     {cols}{col}
+                    th
                     th(id="{$name_sortid}")
                       span User 
                       span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
@@ -31,6 +32,8 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td
+                      | {$selected}
                     td
                       {avatar}
                       img(alt='', src='{image}img/samples/scarlet-159.png{/}')
