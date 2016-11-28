@@ -1,0 +1,68 @@
+
+<div id="$_name" style="{$style}" class="{$class}">
+  <div class="row">
+    <div class="col-md-2">{action}	
+      <div style="width:100%;" class="btn-group xepan-new-document-actions">
+        <div class="btn btn-primary col-sm-9 col-xs-9">New</div>
+        <button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle col-sm-3 col-xs-3"><span class="caret"></span></button>
+        <ul role="menu" style="width:100%;" class="dropdown-menu">
+          <li data-action="folder" data-title="Add New Folder" data-documenttype="Folder" class="xepan-new-document"><a href="#" class="acl-action">Folder</a></li>
+          <li data-action="word" data-title="Add New Word File" data-documenttype="File_Word" class="xepan-new-document"><a href="#" class="acl-action">Word</a></li>
+          <li data-action="spreadsheet" data-title="Add New Spread Sheet File" data-documenttype="File_SpreadSheet" class="xepan-new-document"><a href="#" class="acl-action">Spread Sheet</a></li>
+          <li data-action="ppt" data-title="Add New PPT File" data-documenttype="File_PPT" class="xepan-new-document"><a href="#" class="acl-action">PPT</a></li>
+          <li data-action="todo" data-title="Add New To Do File" data-documenttype="File_ToDo" class="xepan-new-document"><a href="#" class="acl-action"> ToDo</a></li>
+        </ul>
+      </div>{/}
+      {$modal_popup}
+    </div>
+    <div class="col-md-10">{$header}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-3">Filter</div>
+    <div class="col-md-9">
+      <div class="main-box">
+        <header class="main-box-header clearfix">
+          <h2 class="pull-left">Folder</h2>
+        </header>
+        <div class="main-box-body clearfix">
+          {folder_lister}
+          {rows}
+          {row}
+          <div data-folderid="{$id}" class="btn-group">
+            <button type="button" class="btn btn-primary xepan-folder-open">{$name}&nbsp;</button>
+            <button type="button" class="btn btn-primary"><span class="fa fa-share xepan-folder-share"></span></button>
+          </div>{/}
+          {/}
+          {not_found}
+          {/}
+          {/}
+        </div>
+      </div>
+      <div class="main-box">
+        <header class="main-box-header clearfix">
+          <h2 class="pull-left">File</h2>
+        </header>
+        <div class="main-box-body clearfix">
+          <div class="row">
+            {file_lister}
+            {rows}
+            {row}
+            <div data-fileid="{$id}" class="col-md-3 col-sm-12">
+              <div class="main-box">
+                <header class="main-box-header clearfix">
+                  <div class="pull-left xepan-file-open">{$name}</div>
+                  <div class="icon-box pull-right xepan-file-share"><a href="#" class="btn pull-left"><i class="fa fa-share"></i></a></div>
+                </header>
+                <div class="main-box-body clearfix">{$created_at}</div>
+              </div>
+            </div>{/}
+            {/}
+            {not_found}
+            {/}
+            {/}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>{$Content}
+</div>

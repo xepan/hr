@@ -1,0 +1,67 @@
+div(id="$_name" class="{$class}" style="{$style}")
+	.row
+		.col-md-2
+			{action}	
+			.btn-group.xepan-new-document-actions(style="width:100%;")
+				.btn.btn-primary.col-sm-9.col-xs-9 New
+				button.btn.btn-primary.dropdown-toggle.col-sm-3.col-xs-3(type='button', data-toggle='dropdown')
+					span.caret
+				ul.dropdown-menu(role='menu' style="width:100%;")
+					li.xepan-new-document(data-action='folder' data-title="Add New Folder" data-documenttype="Folder")
+						a.acl-action(href='#') Folder
+					li.xepan-new-document(data-action='word' data-title="Add New Word File" data-documenttype="File_Word")
+						a.acl-action(href='#') Word
+					li.xepan-new-document(data-action='spreadsheet' data-title="Add New Spread Sheet File" data-documenttype="File_SpreadSheet")
+						a.acl-action(href='#') Spread Sheet
+					li.xepan-new-document(data-action='ppt' data-title="Add New PPT File" data-documenttype="File_PPT")
+						a.acl-action(href='#') PPT
+					li.xepan-new-document(data-action='todo' data-title="Add New To Do File" data-documenttype="File_ToDo")
+						a.acl-action(href='#')  ToDo
+			{/}
+			{$modal_popup}
+		.col-md-10
+			{$header}
+	.row
+		.col-md-3 Filter
+		.col-md-9
+			.main-box
+				header.main-box-header.clearfix
+					h2.pull-left Folder
+				.main-box-body.clearfix
+					{folder_lister}
+					{rows}
+					{row}
+					div.btn-group(data-folderid="{$id}")
+						button(type="button" class="btn btn-primary xepan-folder-open") {$name}&nbsp;
+						button(type="button" class="btn btn-primary")
+							span.fa.fa-share.xepan-folder-share
+					{/}
+					{/}
+					{not_found}
+					{/}
+					{/}
+			.main-box
+				header.main-box-header.clearfix
+					h2.pull-left File
+				.main-box-body.clearfix
+					.row
+						{file_lister}
+						{rows}
+						{row}
+						.col-md-3.col-sm-12(data-fileid="{$id}")
+							.main-box
+								header.main-box-header.clearfix
+									.pull-left.xepan-file-open
+										{$name}
+									.icon-box.pull-right.xepan-file-share
+										a(href="#" class="btn pull-left")
+											i.fa.fa-share
+								.main-box-body.clearfix
+									{$created_at}
+				
+						{/}
+						{/}
+						{not_found}
+						{/}
+						{/}
+	{$Content}
