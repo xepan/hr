@@ -22,7 +22,7 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 		$report_id = $this->api->stickyGET('report_id');
 
 		foreach ($_GET as $get=>$value) {
-			if($value){
+			if($value AND $get !='page'){
                 $this->api->stickyGET($get);
                 $this->$get = $value;
             }
