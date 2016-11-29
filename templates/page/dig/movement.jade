@@ -1,0 +1,59 @@
+.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+    {Pannel}
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        h1.text-center {$employee_name} 
+        div.filter-block( style="100%")
+            .pull-right {$grid_buttons} 
+            .form-group.pull-right.xepan-filter-form
+                span(class="form-control pull-left")|{$quick_search}
+                    i(class="fa fa-search search-icon")
+    {/Pannel}
+    .main-box-body.clearfix.table-responsive
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
+            {header}
+            thead.xepan-hover-hand
+                {cols}{col}
+                th
+                    span Direction 
+                th
+                    span Time 
+                th(data-hide="phone")
+                    span Reason
+                th
+                    span Duration
+                th 
+                {/}{/}
+            {/}
+            {$subheader}
+
+            tbody
+                {rows}{row}
+                tr(class="{$odd_even}" data-id="{$id}")
+                    {cols}
+                    td
+                      span {$direction} {$Content}  
+                    td
+                      span {$movement_at}
+                    td
+                      span {$reason}
+                    td
+                      span {$duration} 
+                    td                              
+                    {/}
+                {/}{/}
+                {not_found}
+                div.row
+                    .col-md-12.text-center.alert.alert-warning(role="alert")
+                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+                {/}
+
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
+        {$Paginator}
