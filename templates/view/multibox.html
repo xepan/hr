@@ -1,9 +1,15 @@
 
 <div class="row panel panel-primary panel-body">
   <div class="col-md-6">
-    <div class="main-box infographic-box"><i class="fa fa-clock-o red-bg"></i><span class="headline">Avg Late</span><span class="value"><span data-refresh-interval="50" data-speed="1000" data-to="2562" data-from="120" class="timer">{$value1}</span></span></div>
+    <div style="cursor:pointer; cursor: hand; max-width:600px;" class="main-box infographic-box box-average-late"><i class="fa fa-clock-o red-bg"></i><span class="headline">Avg Late</span><span class="value"><span data-refresh-interval="50" data-speed="1000" data-to="2562" data-from="120" class="timer">{$value1}</span></span></div>
   </div>
   <div class="col-md-6">
-    <div class="main-box infographic-box"><i class="fa fa-check-square red-bg"></i><span class="headline">Avg Extra Work  </span><span class="value"><span data-refresh-interval="50" data-speed="1000" data-to="2562" data-from="120" class="timer">{$value2}</span></span></div>
+    <div style="cursor:pointer; cursor: hand; max-width:600px;" class="main-box infographic-box box-average-extrahour"><i class="fa fa-check-square red-bg"></i><span class="headline">Avg Extra Work  </span><span class="value"><span data-refresh-interval="50" data-speed="1000" data-to="2562" data-from="120" class="timer">{$value2}</span></span></div>
   </div>
 </div>
+<style>
+  .main-box.infographic-box:hover
+  {
+   background-color:#fcf8e3;
+  }
+</style>
