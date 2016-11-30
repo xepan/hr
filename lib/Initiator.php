@@ -15,6 +15,13 @@ class Initiator extends \Controller_Addon {
 
         if($this->app->auth->isLoggedIn()){
 
+            if($_GET['keep_alive_signal']){
+                echo "// keep-alive";
+                $this->app->js()->execute();
+            }
+            $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),120000);
+
+
             $m = $this->app->top_menu->addMenu('HR');
             // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
             $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
