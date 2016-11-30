@@ -2,18 +2,23 @@
 
 namespace xepan\hr;
 
-class page_dig_movement extends \xepan\base\Page{
+class page_widget_movement extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
 		
 		$on_date = $this->app->stickyGET('on_date');
-		$employee_id = $this->app->stickyGET('employee_id');
+		$employee_id = $this->app->stickyGET('emp_id');
 
 		$movement_m = $this->add('xepan\hr\Model_Employee_Movement');
 		$movement_m->addCondition('employee_id',$employee_id);
-		$movement_m->addCondition('movement_at','>=',$on_date);
-		$movement_m->addCondition('movement_at','<',$this->app->nextDate($on_date));
+		
+		if($on_date){
+			$movement_m->addCondition('movement_at','>=',$on_date);
+			$movement_m->addCondition('movement_at','<',$this->app->nextDate($on_date));
+		}else{
+			$movement_m->addCondition('movement_at','>=',$this->app->today);
+		}
 
 		$movement_m->addExpression('next_movement_time')->set(function($m,$q){
 			$next_movement = $this->add('xepan\hr\Model_Employee_Movement',['table_alias'=>'next_movement'])
@@ -43,7 +48,7 @@ class page_dig_movement extends \xepan\base\Page{
 			return $q->expr('(TIMEDIFF([0],[1]))',[$m->getElement('next_movement_time'),$m->getElement('movement_at')]);
 		});
 
-		$grid = $this->add('xepan\hr\Grid',null,null,['page\dig\movement']);
+		$grid = $this->add('xepan\hr\Grid',null,null,['page\widget\movement']);
 		$grid->setModel($movement_m);
 
 		$grid->addPaginator(10);
