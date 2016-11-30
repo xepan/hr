@@ -26,4 +26,25 @@ class Model_File_Word extends \xepan\hr\Model_File
 		$new_file->save();
 		return $new_file;
 	}
+
+	function renderEdit($page){
+		if(!$this->loaded())
+			throw new \Exception("model word must loaded", 1);
+		
+		$this->getElement('content')->display(['form'=>'xepan\base\RichText']);
+		$form = $page->add('Form');
+		$form->setModel($this,['name','content']);
+		$form->addSubmit('Save');
+		if($form->isSubmitted()){
+			$form->save();
+			$form->js()->univ()->successMessage('saved')->execute();
+		}
+	}
+
+	function renderView($page){
+		if(!$this->loaded())
+			throw new \Exception("model word must loaded", 1);
+		$page->add('View')->setElement('h2')->set($this['name']);
+		$page->add('View')->setHtml($this['content']);
+	}
 }

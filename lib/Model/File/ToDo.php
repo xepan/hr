@@ -26,4 +26,12 @@ class Model_File_ToDo extends \xepan\hr\Model_File
 		$new_file->save();
 		return $new_file;
 	}
+
+	function renderEdit($page){
+		
+	}
+
+	function renderView($page){
+
+	}
 }

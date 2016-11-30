@@ -1,0 +1,42 @@
+
+<div id="{$_name}" style="{$style}" class="{$class}">{folder_lister}
+  <div id="{$_name}" class="main-box">
+    <header class="main-box-header clearfix">
+      <h2 class="pull-left">Folder</h2>{$header}
+    </header>
+    <div class="main-box-body clearfix">
+      {rows}
+      {row}
+      <div data-folderid="{$id}" class="btn-group">{$action}
+      </div>{/}
+      {/}
+      {not_found}
+      {/}
+      {not_found_message}{/}
+    </div>
+  </div>{/}
+  {file_lister}
+  <div id="{$_name}" class="main-box">
+    <header class="main-box-header clearfix">
+      <h2 class="pull-left">File</h2>{$header}
+    </header>
+    <div class="main-box-body clearfix">
+      <div class="row">
+        {rows}
+        {row}
+        <div data-fileid="{$id}" class="col-md-3 col-sm-12">
+          <div class="main-box">
+            <header class="main-box-header clearfix">{$action}
+            </header>
+            <div class="main-box-body clearfix">{$created_at}</div>
+          </div>
+        </div>{/}
+        {/}
+        {not_found}
+        {/}
+        {$not_found_message}
+        {/}
+      </div>
+    </div>
+  </div>{/}
+</div>
