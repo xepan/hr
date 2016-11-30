@@ -10,14 +10,15 @@
     <table style="width:100%" class="table user-list table-hover">{header}
       <thead>{cols}{col}
         <th><span>Employee Name</span></th>
-        <th><span>Average Value</span></th>{/}{/}
+        <th><span>Average Late</span></th>
+        <th><span>Average Extra Hours</span></th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td><span>{$employee}</span></td>
-          <td><span>{$val}</span></td>
-          <td></td>{/}
+          <td><span>{$avg_late}</span></td>
+          <td><span>{$avg_extra_work}</span></td>{/}
         </tr>{/}{/}
         {not_found}
         <div class="row">

@@ -15,7 +15,9 @@
                 th
                     span Employee Name
                 th
-                    span Average Value
+                    span Average Late
+                th
+                    span Average Extra Hours
                 {/}{/}
             {/}
             {$subheader}
@@ -27,8 +29,9 @@
                     td
                       span {$employee}
                     td
-                      span {$val}
+                      span {$avg_late}
                     td
+                      span {$avg_extra_work}
                     {/}
                 {/}{/}
                 {not_found}
