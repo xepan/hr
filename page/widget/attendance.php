@@ -15,7 +15,7 @@ class page_widget_attendance extends \xepan\base\Page{
 		$attendance_m->setOrder('fdate','desc');
 
 		if($from_date){
-			$attendance_m->addCondition('fdate','>',$from_date);
+			$attendance_m->addCondition('fdate','>=',$from_date);
 			$attendance_m->addCondition('fdate','<',$this->app->nextDate($to_date));
 		}
 			
