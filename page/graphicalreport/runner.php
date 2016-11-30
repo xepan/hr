@@ -21,8 +21,8 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 
 		$report_id = $this->api->stickyGET('report_id');
 
-		foreach ($_GET as $get=>$value) {
-			if($value){
+		foreach ($_GET as $get=>$value) {				
+			if($value AND !in_array($get, ['page','cut_object','cut_page'])){
                 $this->api->stickyGET($get);
                 $this->$get = $value;
             }
@@ -33,7 +33,7 @@ class page_graphicalreport_runner extends \xepan\base\Page {
 		$rpt = $this->add('xepan\base\Model_GraphicalReport')->load($report_id);
 
 		$this->title = $rpt['name'];
-		$report_w = $rpt->ref('xepan\base\GraphicalReport_Widget')->addCondition('is_active',true);
+		$report_w = $rpt->ref('xepan\base\GraphicalReport_Widget')->addCondition('is_active',true)->setOrder('order','asc');
 		
 		foreach ($report_w as $widget) {
 			$w = $this->add('xepan\base\Widget_Wrapper');

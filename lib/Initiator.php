@@ -19,6 +19,13 @@ class Initiator extends \Controller_Addon {
 
         if($this->app->auth->isLoggedIn()){
 
+            if($_GET['keep_alive_signal']){
+                echo "// keep-alive";
+                $this->app->js()->execute();
+            }
+            $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),120000);
+
+
             $m = $this->app->top_menu->addMenu('HR');
             // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
             $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
@@ -159,7 +166,16 @@ class Initiator extends \Controller_Addon {
         $array[] = ['xepan\hr\Widget_AvailableWorkforce','level'=>'Global','title'=>'Workforce Available'];
         $array[] = ['xepan\hr\Widget_AverageWorkHour','level'=>'Global','title'=>'Employees Average Working Hours'];
         $array[] = ['xepan\hr\Widget_LateComing','level'=>'Global','title'=>'Employees Average Late Arrivals'];
+        $array[] = ['xepan\hr\Widget_TotalLateComing','level'=>'Global','title'=>'Companies Late Arrival And Extra Work'];
+        
+        $array[] = ['xepan\hr\Widget_DepartmentAvailableWorkforce','level'=>'Department','title'=>'Department Workforce Available'];
+        $array[] = ['xepan\hr\Widget_DepartmentAverageWorkHour','level'=>'Department','title'=>'Department Average WorkHour'];
+        $array[] = ['xepan\hr\Widget_DepartmentEmployeeAttendance','level'=>'Department','title'=>'Department Employee Attendance'];
+        $array[] = ['xepan\hr\Widget_DepartmentLateComing','level'=>'Department','title'=>'Department Late Coming'];
+        
+        $array[] = ['xepan\hr\Widget_MyLateComing','level'=>'Individual','title'=>'My Late Arrivals'];
         $array[] = ['xepan\hr\Widget_MyCommunication','level'=>'Individual','title'=>'My Communication'];
+        $array[] = ['xepan\hr\Widget_MyAverageWorkHour','level'=>'Individual','title'=>'My Average Working Hours'];
     }
 
     function exportEntities($app,&$array){

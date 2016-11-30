@@ -6,6 +6,7 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
+		$this->report->enableFilterEntity('department');
      	$this->chart = $this->add('xepan\base\View_Chart');
 	}
 
@@ -17,7 +18,8 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 	    $this->chart->setType('bar')
 	    			->setModel($attendances,'employee',['avg_work_hours'])
 	    			->rotateAxis()
-	    			->setTitle('Employee Avg Work Hour');
+	    			->setTitle('Employee Avg Work Hour')
+	    			->openOnClick('xepan_hr_widget_averageworkhour');
 		
 		return parent::recursiveRender();
 	}
