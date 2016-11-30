@@ -26,7 +26,8 @@ class Widget_AvailableWorkforce extends \xepan\base\Widget{
 		
 		$this->chart->setData(['columns'=> [['present', (($present_employees/$total_employees)*100)]],'type'=>'gauge'])
      				->setTitle('Work Force Available')
-     				->setOption('color',['pattern'=>['#FF0000', '#F97600', '#F6C600', '#60B044'],'threshold'=>['values'=>[30, 60, 90, 100]]]);
+     				->setOption('color',['pattern'=>['#FF0000', '#F97600', '#F6C600', '#60B044'],'threshold'=>['values'=>[30, 60, 90, 100]]])
+     				->openOnClick('xepan_hr_widget_todaysattendance');
 		
 		return parent::recursiveRender();
 	}
