@@ -36,8 +36,7 @@ class Widget_TotalLateComing extends \xepan\base\Widget{
 		$this->view->template->trySet('value2',$total_extra_work);
 
 		
-		$this->view->js('click')->_selector('.box-average-late')->univ()->frameURL('Department Average Late',[$this->api->url('xepan_hr_widget_averageperformance'),'type'=>'late']);
-		$this->view->js('click')->_selector('.box-average-extrahour')->univ()->frameURL('Department Average Extra Work',[$this->api->url('xepan_hr_widget_averageperformance'),'type'=>'extrahour']);
+		$this->view->js('click')->_selector('.box-promptness')->univ()->frameURL('Department Promptness',[$this->api->url('xepan_hr_widget_averageperformance')]);
 		
 		return parent::recursiveRender();
 	}

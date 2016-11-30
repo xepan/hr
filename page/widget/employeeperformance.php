@@ -8,7 +8,6 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 		parent::init();
 	
 		$department_id = $this->app->stickyGET('dept_id');
-		$type = $this->app->stickyGET('type');
 		
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
 		$emp_j = $attendances->join('employee.contact_id','employee_id');
@@ -38,20 +37,7 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 		$attendances->_dsql()->group('employee_id');
 		
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\employeeperformance']);
-		
-		if($type == 'late')
-			$this->grid->setModel($attendances,['employee','avg_late']);
-		else			
-			$this->grid->setModel($attendances,['employee','avg_extra_work']);
-
-		$this->grid->addHook('formatRow',function($g)use($type){						
-			if($type =='late'){
-				$g->current_row_html['val'] = $g->model['avg_late'];
-			}else{
-				$g->current_row_html['val'] = $g->model['avg_extra_work'];
-			}
-		});
-
+		$this->grid->setModel($attendances,['employee','avg_late','avg_extra_work']);
 		$this->grid->addQuickSearch(['employee']);
 		$this->grid->addPaginator(10);			
 	}
