@@ -58,7 +58,7 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 				$g->current_row_html['dummy'] = ' ';
 		});
 
-		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_dig_attendance'),'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_widget_attendance'),'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		
 		return parent::recursiveRender();
 	}
