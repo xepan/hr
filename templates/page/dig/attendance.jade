@@ -2,49 +2,36 @@
     {Pannel}
     header.main-box-header.clearfix.atk-actions(class=" {$class} ")
         div.filter-block( style="100%")
-            .pull-right {$grid_buttons} 
+            span.pull-right {$grid_buttons}
             .form-group.pull-right.xepan-filter-form
-                span(class="form-control pull-left")|{$quick_search}
+                span(class="form-control pull-left")|{$quick_search}  
                     i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix.table-responsive
-        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
+    .main-box-body.clearfix.table
+        table.table.user-list.table-hover(style="width:100%")
             {header}
-            thead.xepan-hover-hand
+            thead
                 {cols}{col}
                 th
-                th Employee
-                    {$created_by}
-                th(id="{$name_sortid}")
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;") Name {$name_sort} 
+                    span On Date
                 th
-                    span created_at   
+                    span Late By Hours
                 th
-                    span Amount
-                th
-                    span Detail
-                th
-                    span Actions
-                th 
+                    span Extra Working Hours
                 {/}{/}
             {/}
             {$subheader}
+
             tbody
                 {rows}{row}
-                tr(class="{$odd_even}" data-id="{$id}")
+                tr.digging-employee-attendance(class="{$odd_even}" data-id="{$fdate}" style="cursor:pointer; cursor: hand; max-width:600px;")
                     {cols}
-                    td {$selected}
-                    td {$employee}
-                    td {$name}
-                    td {$created_at}
-                    td {$amount}
-                    td {$ex_Details}
-                    td {$action}
                     td
-                        div.fa.fa-paperclip(title="total attachment")
-                            {$attachments_count}
-                        {$edit}
-                        {$delete}
+                      span {$fdate}
+                    td
+                      span {$late_coming}                    
+                    td
+                      span {$extra_work}                                      
                     {/}
                 {/}{/}
                 {not_found}

@@ -7,13 +7,14 @@
                 span(class="form-control pull-left")|{$quick_search}
     {/Pannel}
     .main-box-body.clearfix.table
+        {$header}
         {$subheader}
         .main-box-body.clearfix.table
             h2.text-muted Employees Present
             .row.main-box.clearfix
             {cols}
             {rows}{row}
-            .col-md-4.small{$dummy}
+            .col-md-4.small.xepan-widget-employee-attendance(data-id="{$id}" style= "cursor:pointer; cursor: hand; max-width:600px;"){$dummy}
                 .row(style="margin-top:4px; margin-bottom:4px;")
                     .col-md-3
                         span(class="{$text-class}" style="padding-left:4px;")

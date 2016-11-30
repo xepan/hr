@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class Widget_AverageWorkHour extends \xepan\base\Widget{
+class Widget_DepartmentAverageWorkHour extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
@@ -12,6 +12,21 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 
 	function recursiveRender(){
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+		
+		$attendances->addExpression('employee_department')->set(function($m,$q){
+			return $this->add('xepan\hr\Model_Employee')
+						->addCondition('id',$m->getElement('employee_id'))
+						->setLimit(1)
+						->fieldQuery('department_id');	
+		});
+
+		if(isset($this->report->department)){
+			$attendances->addCondition('employee_department',$this->report->department);
+		}else{
+			$attendances->addCondition('employee_department',$this->app->employee['department_id']);
+		}
+
+
 		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
 		$attendances->_dsql()->group('employee_id');
      	

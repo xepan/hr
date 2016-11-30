@@ -2,18 +2,24 @@
 
 namespace xepan\hr;
 
-class Widget_EmployeeMovement extends \xepan\base\Widget {
+class Widget_DepartmentEmployeeAttendance extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();
 
+		$this->report->enableFilterEntity('department');
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movement-mini']);
 	}
 
 	function recursiveRender(){
 		$attendance_m = $this->add('xepan\hr\Model_Employee');
-		$attendance_m->addCondition('status','Active');
 		
+		if(isset($this->report->department)){
+			$attendance_m->addCondition('department_id',$this->report->department);
+		}else{
+			$attendance_m->addCondition('department_id',$this->app->employee->id);
+		}
+
 		$attendance_m->addExpression('from_date')->set(function($m,$q){
 			$att = $this->add('xepan\hr\Model_Employee_Attandance');
 			$att->addCondition('employee_id',$m->getElement('id'))
@@ -34,7 +40,7 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 
 		$attendance_m->setOrder('late_coming','desc');
 
-		$this->grid->setModel($attendance_m,['id','name','from_date','late_coming']);
+		$this->grid->setModel($attendance_m,['name','from_date','late_coming']);
 		$this->grid->addPaginator(50);
 		
 		$this->grid->addHook('formatRow',function($g){
@@ -58,8 +64,6 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 				$g->current_row_html['dummy'] = ' ';
 		});
 
-		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_dig_attendance'),'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
-		
 		return parent::recursiveRender();
 	}
 }
