@@ -34,7 +34,7 @@ class Widget_DepartmentAverageWorkHour extends \xepan\base\Widget{
 	    			->setModel($attendances,'employee',['avg_work_hours'])
 	    			->rotateAxis()
 	    			->setTitle('Employee Avg Work Hour')
-	    			->openOnClick('xepan_hr_widget_averageworkhour')
+	    			->openOnClick('xepan_hr_widget_averageworkhour');
 		
 		return parent::recursiveRender();
 	}
