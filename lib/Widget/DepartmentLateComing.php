@@ -48,7 +48,12 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 		$this->view->template->trySet('value1',$total_avg_late);
 		$this->view->template->trySet('value2',$total_extra_work);
 
-		$this->view->js('click')->_selector('.box-promptness')->univ()->frameURL('Department Promptness',[$this->api->url('xepan_hr_widget_employeeperformance'),'dept_id'=>$this->report->department]);
+		if(isset($this->report->department))
+			$dept_id = $this->report->department;
+		else
+			$dept_id = null;
+
+		$this->view->js('click')->_selector('.box-promptness')->univ()->frameURL('Department Promptness',[$this->api->url('xepan_hr_widget_employeeperformance'),'dept_id'=>$dept_id]);
 		
 		return parent::recursiveRender();
 	}
