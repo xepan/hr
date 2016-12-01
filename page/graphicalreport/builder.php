@@ -58,6 +58,37 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 			});
 
 			$p->addColumn("export", "export", "export", $c->grid);
+
+				
+			$reset_frm = $c->grid->add('Form',null,'grid_buttons',null);
+			$reset_frm->addSubmit('Reset Report')->addClass('btn btn-primary btn-sm');
+
+			if($reset_frm->isSubmitted()){
+				$this->resetReports();
+			}
+		}
+	}
+
+	function resetReports(){
+		$files = scandir("vendor/xepan/hr/defaultReports");
+		foreach($files as $file){
+			if($file == '.' or $file == '..')
+				continue;
+
+			$report_m = $this->add('xepan\base\Model_GraphicalReport');
+			foreach ($report_m as $report){
+				if($report_m['name'] == strstr($file, '.', true)){
+					$widget = $this->add('xepan\base\Model_GraphicalReport_Widget');
+					$widget->addCondition('graphical_report_id',$report_m->id);
+					
+					$widget->deleteAll();
+					$report->delete();
+				}
+			}
+
+			$json_data = file_get_contents(getcwd().'/vendor/xepan/hr/defaultReports/'.$file);			
+			$graphical_report_m = $this->add('xepan\base\Model_GraphicalReport');
+			$report_m->importJson($json_data);
 		}
 	}
 }
