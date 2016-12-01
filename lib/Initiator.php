@@ -13,6 +13,10 @@ class Initiator extends \Controller_Addon {
         ->setBaseURL('../vendor/xepan/hr/');
 
 
+        if(!$this->app->isAjaxOutput()){
+            $this->app->side_menu->addItem(['Document','icon'=>' fa fa-folder','badge'=>["0",'swatch'=>' label label-primary pull-right']],'xepan_hr_document')->setAttr(['title'=>'Documents']);
+        }
+
         if($this->app->auth->isLoggedIn()){
 
             if($_GET['keep_alive_signal']){

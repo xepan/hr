@@ -1,0 +1,45 @@
+div(id="{$_name}" class="{$class}" style="{$style}")
+	{folder_lister}
+	.main-box(id="{$_name}")
+		header.main-box-header.clearfix
+			h2.pull-left Folder
+			{$header}
+		.main-box-body.clearfix
+			{rows}
+			{row}
+			div.btn-group(data-folderid="{$id}")
+				//- button(type="button" class="btn btn-primary xepan-folder-open") {$name}&nbsp;
+				{$action}
+			{/}
+			{/}
+			{not_found}
+			{/}
+			{not_found_message}{/}
+	{/}
+	{file_lister}
+	.main-box(id="{$_name}")
+		header.main-box-header.clearfix
+			h2.pull-left File
+			{$header}
+		.main-box-body.clearfix
+			.row
+				{rows}
+				{row}
+				.col-md-3.col-sm-12(data-fileid="{$id}")
+					.main-box
+						header.main-box-header.clearfix
+							{$action}
+							//- .pull-left.xepan-file-open
+							//- 	{$name}
+							//- .icon-box.pull-right.xepan-file-share
+							//- 	a(href="#" class="btn pull-left")
+							//- 		i.fa.fa-share
+						.main-box-body.clearfix
+							{$created_at}
+				{/}
+				{/}
+				{not_found}
+				{/}
+				{$not_found_message}
+				{/}
+	{/}
