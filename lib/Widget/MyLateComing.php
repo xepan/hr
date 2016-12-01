@@ -20,7 +20,6 @@ class Widget_MyLateComing extends \xepan\base\Widget{
 		    		->setModel($attendances,'employee',['avg_late','avg_extra_work'])
 		    		->rotateAxis()
 		    		->setTitle('Employee Avg Late Coming & Extra Work');
-		
 		return parent::recursiveRender();
 	}
 }
