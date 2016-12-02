@@ -5,7 +5,7 @@ namespace xepan\hr;
 /**
 * 
 */
-class Model_Folder extends \xepan\hr\Model_Document
+class Model_File_Folder extends \xepan\hr\Model_File
 {
 	// public $table='folder';
 	public $status=['All'];
@@ -18,15 +18,10 @@ class Model_Folder extends \xepan\hr\Model_Document
 	{
 		parent::init();
 		
-		$this->addCondition('type','Folder');
+		$this->addCondition('mime','directory');
 
-		$folder_j = $this->join('folder.document_id');
-		$folder_j->hasOne('xepan\hr\ParentFolder','parent_folder_id');
-		$folder_j->addField('name')->sortable(true);
-
-		$folder_j->hasMany('xepan\hr\File','folder_id');
-		$folder_j->hasMany('xepan\hr\folder','parent_folder_id',null,'SubFolder');
-		$folder_j->hasMany('xepan\hr\DocumentShare','folder_id');
+		$this->hasMany('xepan\hr\File','parent_id');
+		$this->hasMany('xepan\hr\DocumentShare','folder_id');
 		
 		$this->is([
 				'name|to_trim|required'

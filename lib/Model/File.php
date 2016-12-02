@@ -5,26 +5,30 @@ namespace xepan\hr;
 /**
 * 
 */
-class Model_File extends \xepan\hr\Model_Document
+class Model_File extends \xepan\base\Model_Table
 {
+	public $table='file';
 	// public $table='file';
-	public $file_type = ['SpreadSheet'=>'Spread Sheet','Word'=>'Word','PPT'=>'PPT','ToDo'=>'To Do','Upload'=>'Upload'];
+	public $file_type = ['SpreadSheet'=>'Spread Sheet','Word'=>'Word','PPT'=>'PPT','ToDo'=>'To Do','Upload'=>'Upload','Folder'=>'Folder'];
 	public $status=['All'];
 	public $actions=[
 		'All'=>['share','edit','delete']
 	];
 
+	public $acl=false;
+
 	function init()
 	{
 		parent::init();
 
-		$file_j = $this->join('file.document_id');
-		$file_j->hasOne('xepan\hr\Folder','folder_id');
-		$file_j->addField('name')->sortable(true);
-		$file_j->addField('content')->type('text');
-		// $file_j->addField('content_type')->setValueList(['spreadsheet'=>'Spread Sheet','word'=>'Word','ppt'=>'PPT','todo'=>'To Do']);
+		$this->hasOne('xepan\hr\File_Folder','parent_id');
+		$this->hasOne('xepan\base\Contact','created_by_id');
+		// $file_j->addField('path')->type('text')->sortable(true);
+		$this->addField('name')->sortable(true);
+		$this->addField('content')->type('text');
+		$this->addField('mime')->setValueList($this->file_type);
 		
-		$file_j->hasMany('xepan\hr\DocumentShare','file_id');
+		// $this->hasMany('xepan\hr\DocumentShare','file_id');
 
 		$this->addHook('afterInsert',[$this,'personalShare']);
 		$this->addHook('beforeDelete',$this);
@@ -59,7 +63,7 @@ class Model_File extends \xepan\hr\Model_Document
 		$share_model->addCondition('file_id',$this->id);
 		$share_model->addCondition('shared_by_id',$this->app->employee->id);
 
-		$crud = $page->add('xepan\hr\CRUD');
+		$crud = $page->add('xepan\hr\CRUD',['pass_acl'=>true]);
 		$crud->setModel($share_model,['shared_by_id','shared_to_id','department_id','shared_type','can_edit','can_delete','can_share']);
 	}
 
@@ -85,6 +89,10 @@ class Model_File extends \xepan\hr\Model_Document
 			$this->delete();
 			return $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage("file ".$file_name." deleted successfully");
 		}
+	}
+
+	function haveChildDirectories(){
+		return $this->add('xepan\hr\Model_File_Folder')->addCondition('parent_id',$this->id)->count()->getOne();
 	}
 
 	function iCanEdit(){
