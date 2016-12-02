@@ -171,6 +171,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(!$attan_m->loaded()){
 			$attan_m['employee_id'] = $this->app->employee->id;
 			$attan_m['from_date']  = $this->app->now;
+			$attan_m['is_holiday']  = $attan_m->isHoliday($attan_m['fdate']);
 		}/*else{
 			$attan_m['to_date']  = null;
 		}*/
