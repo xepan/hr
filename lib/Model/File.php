@@ -21,12 +21,27 @@ class Model_File extends \xepan\base\Model_Table
 	{
 		parent::init();
 
-		$this->hasOne('xepan\hr\File_Folder','parent_id');
+		$this->hasOne('xepan\hr\File','parent_id');
+		$this->add('xepan\filestore\Field_Image','file_id');
 		$this->hasOne('xepan\base\Contact','created_by_id');
-		// $file_j->addField('path')->type('text')->sortable(true);
 		$this->addField('name')->sortable(true);
-		$this->addField('content')->type('text');
 		$this->addField('mime')->setValueList($this->file_type);
+		
+		// Needed ??? or just create new file with filestore and use that as file content
+		$this->addField('content')->type('text');
+		
+		$this->addExpression('size')->set(function($m,$q){
+			return $q->expr('IFNULL([0],0)',[$m->refSQL('file_id')->fieldQuery('filesize')]);
+		});
+
+		// shared with me or my file
+		$this->addExpression('read')->set('"TODO"');
+		// shared permission to write or my file
+		$this->addExpression('write')->set('"TODO"');
+		$this->addExpression('locked')->set('"TODO"');
+		$this->addExpression('hidden')->set('"TODO"');
+		$this->addExpression('width')->set('"TODO"');
+		$this->addExpression('height')->set('"TODO"');
 		
 		// $this->hasMany('xepan\hr\DocumentShare','file_id');
 
