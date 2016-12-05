@@ -9,7 +9,7 @@ class Model_File extends \xepan\base\Model_Table
 {
 	public $table='file';
 	// public $table='file';
-	public $file_type = ['SpreadSheet'=>'Spread Sheet','Word'=>'Word','PPT'=>'PPT','ToDo'=>'To Do','Upload'=>'Upload','Folder'=>'Folder'];
+	public $file_type = ['SpreadSheet'=>'Spread Sheet','Word'=>'Word','PPT'=>'PPT','ToDo'=>'To Do','Upload'=>'Upload','directory'=>'directory'];
 	public $status=['All'];
 	public $actions=[
 		'All'=>['share','edit','delete']
@@ -23,30 +23,40 @@ class Model_File extends \xepan\base\Model_Table
 	{
 		parent::init();
 
-		if(!$this->user_id) $this->user = $this->app->employee->id;
+		if(!$this->user_id) $this->user_id = $this->app->employee->id;
 
-		$this->hasOne('xepan\hr\File','parent_id');
+		$this->hasOne('xepan\hr\ParentFile','parent_id');
+
 		$this->add('xepan\filestore\Field_Image','file_id');
-		$this->hasOne('xepan\base\Contact','created_by_id');
+		$this->hasOne('xepan\base\Contact','created_by_id')->defaultValue($this->user_id);
 		$this->addField('name')->sortable(true);
 		$this->addField('mime')->setValueList($this->file_type);
 		
 		// Needed ??? or just create new file with filestore and use that as file content
 		$this->addField('content')->type('text');
 		
+		$this->hasMany('xepan\hr\ChildFile','parent_id',null,'Children');
+
 		$this->addExpression('size')->set(function($m,$q){
 			return $q->expr('IFNULL([0],0)',[$m->refSQL('file_id')->fieldQuery('filesize')]);
 		});
 
 		// shared with me or my file
-		$this->addExpression('read')->set('"TODO"');
+		$this->addExpression('read')->set('"1"');
 		// shared permission to write or my file
-		$this->addExpression('write')->set('"TODO"');
-		$this->addExpression('locked')->set('"TODO"');
-		$this->addExpression('hidden')->set('"TODO"');
-		$this->addExpression('width')->set('"TODO"');
-		$this->addExpression('height')->set('"TODO"');
+		$this->addExpression('write')->set('"1"');
+		$this->addExpression('locked')->set('"1"');
+		$this->addExpression('hidden')->set('"0"');
+		$this->addExpression('width')->set('"100"');
+		$this->addExpression('height')->set('"100"');
 		
+
+		$this->addExpression('child_directory_count')->set('"0"');//->set($this->refSQL('Children')->addCondition('mime','directory')->count())->type('int');
+		$this->addExpression('child_file_count')->set('"0"');//->set($this->refSQL('Children')->addCondition('mime','<>','directory')->count())->type('int');
+		$this->addExpression('dirs')->set(function($m,$q){
+			return $q->expr('IF([mime]="directory" AND [dir_count] > 0,1,0)',['mime'=>$m->getElement('mime'),'dir_count'=>$m->getElement('child_directory_count')]);
+		});
+
 		// $this->hasMany('xepan\hr\DocumentShare','file_id');
 
 		// $this->addHook('afterInsert',[$this,'personalShare']);

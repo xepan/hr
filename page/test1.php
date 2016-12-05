@@ -17,7 +17,8 @@ namespace xepan\hr {
 		function init(){
 			parent::init();
 
-			if(!($root_path = $this->recall('root_path',false))){
+
+			//if(!($root_path = $this->recall('root_path',false))){
 				$root_path = $this->add('xepan\hr\Model_File')
 							->addCondition('name','root')
 							->addCondition('mime','directory')
@@ -27,8 +28,9 @@ namespace xepan\hr {
 							;
 				if(!$root_path->loaded()) $root_path->save();
 				$root_path = $root_path->id;
-				$this->memorize('root_path',$root_path);
-			}
+
+			//	$this->memorize('root_path',$root_path);
+			//}
 
 
 			// Handle driver
@@ -42,6 +44,7 @@ namespace xepan\hr {
 
 				$opts = array(
 				    'locale' => '',
+				    'debug'=>true,
 				    'roots'  => array(
 				        array(
 				            'driver' => 'ATKFileStore',
@@ -63,32 +66,92 @@ namespace xepan\hr {
 
 }
 
-$x=10;
 
 namespace {
 
 	class elFinderVolumeATKFileStore extends \elFinderVolumeDriver{
 
-		protected $driverId='atk';
-		protected $sessionCaching = array('rootstat' => false, 'subdirs' => false);
+		/**
+		 * Driver id
+		 * Must be started from letter and contains [a-z0-9]
+		 * Used as part of volume id
+		 *
+		 * @var string
+		 **/
+		protected $driverId = 'atk4_';
+		
+		/**
+		 * Database object
+		 *
+		 * @var mysqli
+		 **/
+		// protected $db = null;
+		
+		/**
+		 * Tables to store files
+		 *
+		 * @var string
+		 **/
+		// protected $tbf = '';
+		
+		/**
+		 * Directory for tmp files
+		 * If not set driver will try to use tmbDir as tmpDir
+		 *
+		 * @var string
+		 **/
+		protected $tmpPath = '';
+		
+		/**
+		 * Numbers of sql requests (for debug)
+		 *
+		 * @var int
+		 **/
+		protected $sqlCnt = 0;
+		
+		/**
+		 * Last db error message
+		 *
+		 * @var string
+		 **/
+		protected $dbError = '';
 
+		/**
+		 * Constructor
+		 * Extend options with required fields
+		 *
+		 * @author Dmitry (dio) Levashov
+		 */
 		public function __construct() {
 			$opts = array(
 				'tmbPath'       => '',
 				'tmpPath'       => '',
-				'rootCssClass'  => 'elfinder-navbar-root-atk',
-				'noSessionCache' => array('hasdirs')
+				'rootCssClass'  => 'elfinder-navbar-root-sql'
 			);
 			$this->options = array_merge($this->options, $opts);
 			$this->options['mimeDetect'] = 'internal';
 			$this->api = $this->app = $GLOBALS['api'];
-
 		}
+		
+		/*********************************************************************/
+		/*                        INIT AND CONFIGURE                         */
+		/*********************************************************************/
+		
+		/**
+		 * Prepare driver before mount volume.
+		 * Connect to db, check required tables and fetch root path
+		 *
+		 * @return bool
+		 * @author Dmitry (dio) Levashov
+		 **/
+		protected function init() {
+						
+			$this->updateCache($this->options['path'], $this->_stat($this->options['path']));
 
-		function init(){			
-			// $this->updateCache($this->options['path'], $this->_stat($this->options['path']));
 			return true;
 		}
+
+
 
 		/**
 		 * Set tmp path
@@ -118,7 +181,7 @@ namespace {
 
 			$this->mimeDetect = 'internal';
 		}
-
+		
 		/**
 		 * Close connection
 		 *
@@ -126,9 +189,9 @@ namespace {
 		 * @author Dmitry (dio) Levashov
 		 **/
 		public function umount() {
-			return true;
+			// $this->db->close();
 		}
-
+		
 		/**
 		 * Return debug info for client
 		 *
@@ -137,11 +200,29 @@ namespace {
 		 **/
 		public function debug() {
 			$debug = parent::debug();
+			$debug['sqlCount'] = $this->sqlCnt;
 			if ($this->dbError) {
 				$debug['dbError'] = $this->dbError;
 			}
 			return $debug;
 		}
+
+		/**
+		 * Perform sql query and return result.
+		 * Increase sqlCnt and save error if occured
+		 *
+		 * @param  string  $sql  query
+		 * @return misc
+		 * @author Dmitry (dio) Levashov
+		 **/
+		// protected function query($sql) {
+		// 	$this->sqlCnt++;
+		// 	$res = $this->db->query($sql);
+		// 	if (!$res) {
+		// 		$this->dbError = $this->db->error;
+		// 	}
+		// 	return $res;
+		// }
 
 		/**
 		 * Create empty object with required mimetype
@@ -153,13 +234,18 @@ namespace {
 		 * @author Dmitry (dio) Levashov
 		 **/
 		protected function make($path, $name, $mime) {
-			
+			// $sql = 'INSERT INTO %s (`parent_id`, `name`, `size`, `mtime`, `mime`, `content`, `read`, `write`) VALUES 
+			// 						(\'%s\', \'%s\', 0, %d, \'%s\', \'\', \'%d\', \'%d\')';
+			// $sql = sprintf($sql, $this->tbf, $path, $this->db->real_escape_string($name), time(), $mime, $this->defaults['read'], $this->defaults['write']);
+			// // echo $sql;
+			// return $this->query($sql) && $this->db->affected_rows > 0;
+
 			$file = $this->app->add('xepan\hr\Model_File');
-			$file['parent_id']=$path;
-			$file['name']=$name;
-			$file['mime']=$mime;
+			$file['name'] = $name;
+			$file['parent_id'] = $path;
+			$file['mime'] = $mime;
 			$file->save();
-			return $file->loaded();
+			return $file->loaded()?true:false;
 		}
 
 		/*********************************************************************/
@@ -174,53 +260,210 @@ namespace {
 		 * @author Dmitry Levashov
 		 **/
 		protected function cacheDir($path) {
-			$this->dirsCache[$path] = array();
 
-			$sql = 'SELECT f.id, f.parent_id, f.name, f.size, f.mtime AS ts, f.mime, f.read, f.write, f.locked, f.hidden, f.width, f.height, IF(ch.id, 1, 0) AS dirs 
-					FROM '.$this->tbf.' AS f 
-					LEFT JOIN '.$this->tbf.' AS ch ON ch.parent_id=f.id AND ch.mime=\'directory\'
-					WHERE f.parent_id=\''.$path.'\'
-					GROUP BY f.id';
+			// $sql = 'SELECT f.id, f.parent_id, f.name, f.size, f.mtime AS ts, f.mime, f.read, f.write, f.locked, f.hidden, f.width, f.height, IF(ch.id, 1, 0) AS dirs 
+			// 		FROM '.$this->tbf.' AS f 
+			// 		LEFT JOIN '.$this->tbf.' AS ch ON ch.parent_id=f.id AND ch.mime=\'directory\'
+			// 		WHERE f.parent_id=\''.$path.'\'
+			// 		GROUP BY f.id';
 					
-			$res = $this->query($sql);
-			if ($res) {
+			// $res = $this->query($sql);
+			// if ($res) {
+			// 	while ($row = $res->fetch_assoc()) {
+			// 		// debug($row);
+			// 		$id = $row['id'];
+			// 		if ($row['parent_id']) {
+			// 			$row['phash'] = $this->encode($row['parent_id']);
+			// 		} 
+					
+			// 		if ($row['mime'] == 'directory') {
+			// 			unset($row['width']);
+			// 			unset($row['height']);
+			// 		} else {
+			// 			unset($row['dirs']);
+			// 		}
+					
+			// 		unset($row['id']);
+			// 		unset($row['parent_id']);
+					
+					
+					
+			// 		if (($stat = $this->updateCache($id, $row)) && empty($stat['hidden'])) {
+			// 			$this->dirsCache[$path][] = $id;
+			// 		}
+			// 	}
+			// }
+			
+			$this->dirsCache[$path] = array();
+			$root_file = $this->app->add('xepan\hr\Model_File')->addCondition('parent_id',$path);
+
+			foreach ($root_file->getRows() as $file) {
+				$id = $file['id'];
+				if ($file['parent_id']) {
+					$file['phash'] = $this->encode($file['parent_id']);
+				} 
+				
+				if ($file['mime'] == 'directory') {
+						unset($file['width']);
+						unset($file['height']);
+				} else {
+					unset($file['dirs']);
+				}
+				
+				unset($file['parent_id']);
+				unset($file['parent']);
+				
+				if (($stat = $this->updateCache($id, $file)) && empty($stat['hidden'])) {
+					$this->dirsCache[$path][] = $id;
+				}
+			}
+
+
+
+			return $this->dirsCache[$path];
+		}
+
+		/**
+		 * Return array of parents paths (ids)
+		 *
+		 * @param  int   $path  file path (id)
+		 * @return array
+		 * @author Dmitry (dio) Levashov
+		 **/
+		protected function getParents($path) {
+			$parents = array();
+
+			while ($path) {
+				if ($file = $this->stat($path)) {
+					array_unshift($parents, $path);
+					$path = isset($file['phash']) ? $this->decode($file['phash']) : false;
+				}
+			}
+			
+			if (count($parents)) {
+				array_pop($parents);
+			}
+			return $parents;
+		}
+
+		/**
+		 * Return correct file path for LOAD_FILE method
+		 *
+		 * @param  string $path  file path (id)
+		 * @return string
+		 * @author Troex Nevelin
+		 **/
+		protected function loadFilePath($path) {
+			$realPath = realpath($path);
+			if (DIRECTORY_SEPARATOR == '\\') { // windows
+				$realPath = str_replace('\\', '\\\\', $realPath);
+			}
+
+			return $realpath;
+			// return $this->app->db->real_escape_string($realPath);
+		}
+
+		/**
+		 * Recursive files search
+		 *
+		 * @param  string  $path   dir path
+		 * @param  string  $q      search string
+		 * @param  array   $mimes
+		 * @return array
+		 * @author Dmitry (dio) Levashov
+		 **/
+		protected function doSearch($path, $q, $mimes) {
+			$dirs = array();
+			$timeout = $this->options['searchTimeout']? $this->searchStart + $this->options['searchTimeout'] : 0;
+			
+			if ($path != $this->root) {
+				$dirs = $inpath = array(intval($path));
+				while($inpath) {
+					$in = '('.join(',', $inpath).')';
+					$inpath = array();
+					$sql = 'SELECT f.id FROM %s AS f WHERE f.parent_id IN '.$in.' AND `mime` = \'directory\'';
+					$sql = sprintf($sql, $this->tbf);
+					if ($res = $this->query($sql)) {
+						$_dir = array();
+						while ($dat = $res->fetch_assoc()) {
+							$inpath[] = $dat['id'];
+						}
+						$dirs = array_merge($dirs, $inpath);
+					}
+				}
+			}
+
+			$result = array();
+			
+			if ($mimes) {
+				$whrs = array();
+				foreach($mimes as $mime) {
+					if (strpos($mime, '/') === false) {
+						$whrs[] = sprintf('f.mime LIKE \'%s/%%\'', $this->db->real_escape_string($mime));
+					} else {
+						$whrs[] = sprintf('f.mime = \'%s\'', $this->db->real_escape_string($mime));
+					}
+				}
+				$whr = join(' OR ', $whrs);
+			} else {
+				$whr = sprintf('f.name RLIKE \'%s\'', $this->db->real_escape_string($q));
+			}
+			if ($dirs) {
+				$whr = '(' . $whr . ') AND (`parent_id` IN (' . join(',', $dirs) . '))';
+			}
+			
+			$sql = 'SELECT f.id, f.parent_id, f.name, f.size, f.mtime AS ts, f.mime, f.read, f.write, f.locked, f.hidden, f.width, f.height, 0 AS dirs 
+					FROM %s AS f 
+					WHERE %s';
+			
+			$sql = sprintf($sql, $this->tbf, $whr);
+			
+			if (($res = $this->query($sql))) {
 				while ($row = $res->fetch_assoc()) {
+					if ($timeout && $timeout < time()) {
+						$this->setError(elFinder::ERROR_SEARCH_TIMEOUT, $this->path($this->encode($path)));
+						break;
+					}
+					
+					if (!$this->mimeAccepted($row['mime'], $mimes)) {
+						continue;
+					}
 					$id = $row['id'];
 					if ($row['parent_id']) {
 						$row['phash'] = $this->encode($row['parent_id']);
 					} 
-					
+					$row['path'] = $this->_path($id);
+
 					if ($row['mime'] == 'directory') {
 						unset($row['width']);
 						unset($row['height']);
-						$row['size'] = 0;
 					} else {
 						unset($row['dirs']);
 					}
-					
+
 					unset($row['id']);
 					unset($row['parent_id']);
-					
-					
-					
+
 					if (($stat = $this->updateCache($id, $row)) && empty($stat['hidden'])) {
-						$this->dirsCache[$path][] = $id;
+						$result[] = $stat;
 					}
 				}
 			}
 			
-			return $this->dirsCache[$path];
+			return $result;
 		}
 
-		// protected function updateCache($path, $stat) {
-		// 	return;
-		// }
 
-		// ========== Abstract functions implementation
-
-		 /** @author Dmitry (dio) Levashov
+		/*********************** paths/urls *************************/
+		
+		/**
+		 * Return parent directory path
+		 *
+		 * @param  string  $path  file path
+		 * @return string
+		 * @author Dmitry (dio) Levashov
 		 **/
-		function _dirname($path){
+		protected function _dirname($path) {
 			return ($stat = $this->stat($path)) ? (!empty($stat['phash']) ? $this->decode($stat['phash']) : $this->root) : false;
 		}
 
@@ -231,8 +474,8 @@ namespace {
 		 * @return string
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _basename($path){
-			return $path;
+		protected function _basename($path) {
+			return ($stat = $this->stat($path)) ? $stat['name'] : false;
 		}
 
 		/**
@@ -244,26 +487,29 @@ namespace {
 		 * @author Dmitry (dio) Levashov
 		 **/
 		protected function _joinPath($dir, $name) {
-			$sql = 'SELECT id FROM '.$this->tbf.' WHERE parent_id=\''.$dir.'\' AND name=\''.$this->db->real_escape_string($name).'\'';
+			// $sql = 'SELECT id FROM '.$this->tbf.' WHERE parent_id=\''.$dir.'\' AND name=\''.$this->db->real_escape_string($name).'\'';
+			$file = $this->app->add('xepan\hr\Model_File');
+			$file->addCondition('parent_id',$dir)
+				->addCondition('name',$name);
 
-			if (($res = $this->query($sql)) && ($r = $res->fetch_assoc())) {
+			if (($res = $file->tryLoadAny()->loaded()) && ($r = $file->get())) {
 				$this->updateCache($r['id'], $this->_stat($r['id']));
 				return $r['id'];
 			}
 			return -1;
 		}
-
+		
 		/**
-		 * Return normalized path 
+		 * Return normalized path, this works the same as os.path.normpath() in Python
 		 *
-		 * @param  string  $path  file path
+		 * @param  string  $path  path
 		 * @return string
-		 * @author Dmitry (dio) Levashov
+		 * @author Troex Nevelin
 		 **/
-		function _normpath($path){
+		protected function _normpath($path) {
 			return $path;
 		}
-
+		
 		/**
 		 * Return file path related to root dir
 		 *
@@ -271,31 +517,40 @@ namespace {
 		 * @return string
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _relpath($path){
+		protected function _relpath($path) {
 			return $path;
 		}
 		
 		/**
 		 * Convert path related to root dir into real path
 		 *
-		 * @param  string  $path  rel file path
+		 * @param  string  $path  file path
 		 * @return string
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _abspath($path){
+		protected function _abspath($path) {
 			return $path;
 		}
 		
 		/**
-		 * Return fake path started from root dir.
-		 * Required to show path on client side.
+		 * Return fake path started from root dir
 		 *
 		 * @param  string  $path  file path
 		 * @return string
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _path($path){
-			return $path;
+		protected function _path($path) {
+			if (($file = $this->stat($path)) == false) {
+				return '';
+			}
+			
+			$parentsIds = $this->getParents($path);
+			$path = '';
+			foreach ($parentsIds as $id) {
+				$dir = $this->stat($id);
+				$path .= $dir['name'].$this->separator;
+			}
+			return $path.$file['name'];
 		}
 		
 		/**
@@ -306,12 +561,15 @@ namespace {
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _inpath($path, $parent){
-			return false;
+		protected function _inpath($path, $parent) {
+			return $path == $parent
+				? true
+				: in_array($parent, $this->getParents($path));
 		}
 		
-		
-		 /* Return stat for given path.
+		/***************** file stat ********************/
+		/**
+		 * Return stat for given path.
 		 * Stat contains following fields:
 		 * - (int)    size    file size in b. required
 		 * - (int)    ts      file modification time in unix time. required
@@ -328,46 +586,41 @@ namespace {
 		 * @param  string  $path    file path 
 		 * @return array|false
 		 * @author Dmitry (dio) Levashov
-		 */
-		 
-		function _stat($path){
+		 **/
+		protected function _stat($path) {
 			// $sql = 'SELECT f.id, f.parent_id, f.name, f.size, f.mtime AS ts, f.mime, f.read, f.write, f.locked, f.hidden, f.width, f.height, IF(ch.id, 1, 0) AS dirs
-			// 	FROM '.$this->tbf.' AS f 
-			// 	LEFT JOIN '.$this->tbf.' AS p ON p.id=f.parent_id
-			// 	LEFT JOIN '.$this->tbf.' AS ch ON ch.parent_id=f.id AND ch.mime=\'directory\'
-			// 	WHERE f.id=\''.$path.'\'
-			// 	GROUP BY f.id';
+			// 		FROM '.$this->tbf.' AS f 
+			// 		LEFT JOIN '.$this->tbf.' AS p ON p.id=f.parent_id
+			// 		LEFT JOIN '.$this->tbf.' AS ch ON ch.parent_id=f.id AND ch.mime=\'directory\'
+			// 		WHERE f.id=\''.$path.'\'
+			// 		GROUP BY f.id';
 
 			// $res = $this->query($sql);
 			
-			$res = $this->app->add('xepan\hr\Model_File');
-			$res->tryLoad($path);
+			$file = $this->app->add('xepan\hr\Model_File')
+						->addCondition('id',$path)
+						;
+			$file->tryLoadAny();
+			
+			if(!$file->loaded()) return [];
+			
+			$file = $file->get();
 
-			if ($res->loaded()) {
-				$stat = $res->get();
-				if ($stat['parent_id']) {
-					$stat['phash'] = $this->encode($stat['parent_id']);
-				} 
-				if ($stat['mime'] == 'directory') {
-					unset($stat['width']);
-					unset($stat['height']);
-					$stat['size'] = 0;
-					$stat['mime'] = 'directory';
-				} else {
-					unset($stat['dirs']);
-				}
-				unset($stat['id']);
-				unset($stat['parent_id']);
-				return $stat;
-				
+			if ($file['parent_id']) {
+				$file['phash'] = $this->encode($file['parent_id']);
+			} 
+			if ($file['mime'] == 'directory') {
+				unset($file['width']);
+				unset($file['height']);
+			} else {
+				unset($file['dirs']);
 			}
-			return array();
+			unset($file['id']);
+			unset($file['parent_id']);
+			unset($file['parent']);
+			return $file;
 		}
 		
-
-		/***************** file stat ********************/
-
-			
 		/**
 		 * Return true if path is dir and has at least one childs directory
 		 *
@@ -375,61 +628,79 @@ namespace {
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _subdirs($path){
+		protected function _subdirs($path) {
 			return ($stat = $this->stat($path)) && isset($stat['dirs']) ? $stat['dirs'] : false;
 		}
 		
 		/**
 		 * Return object width and height
-		 * Ususaly used for images, but can be realize for video etc...
+		 * Usualy used for images, but can be realize for video etc...
 		 *
 		 * @param  string  $path  file path
 		 * @param  string  $mime  file mime type
 		 * @return string
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _dimensions($path, $mime){
+		protected function _dimensions($path, $mime) {
 			return ($stat = $this->stat($path)) && isset($stat['width']) && isset($stat['height']) ? $stat['width'].'x'.$stat['height'] : '';
 		}
 		
 		/******************** file/dir content *********************/
-
+			
 		/**
-		 * Return files list in directory
+		 * Return files list in directory.
 		 *
 		 * @param  string  $path  dir path
 		 * @return array
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _scandir($path){
-			return [false];
+		protected function _scandir($path) {
 			return isset($this->dirsCache[$path])
-			? $this->dirsCache[$path]
-			: $this->cacheDir($path);
+				? $this->dirsCache[$path]
+				: $this->cacheDir($path);
 		}
-		
+			
 		/**
 		 * Open file and return file pointer
 		 *
-		 * @param  string $path file path
-		 * @param  string $mode open mode
+		 * @param  string  $path  file path
+		 * @param  string  $mode  open file mode (ignored in this driver)
 		 * @return resource|false
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _fopen($path, $mode="rb"){
-
+		protected function _fopen($path, $mode='rb') {
+			$fp = $this->tmbPath
+				? fopen($this->getTempFile($path), 'w+')
+				: tmpfile();
+			
+			
+			if ($fp) {
+				if (($res = $this->query('SELECT content FROM '.$this->tbf.' WHERE id=\''.$path.'\''))
+				&& ($r = $res->fetch_assoc())) {
+					fwrite($fp, $r['content']);
+					rewind($fp);
+					return $fp;
+				} else {
+					$this->_fclose($fp, $path);
+				}
+			}
+			
+			return false;
 		}
-		
+
 		/**
 		 * Close opened file
-		 * 
-		 * @param  resource  $fp    file pointer
-		 * @param  string    $path  file path
+		 *
+		 * @param  resource $fp file pointer
+		 * @param string $path
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
-		 **/
-		function _fclose($fp, $path=''){
-
+		 */
+		protected function _fclose($fp, $path='') {
+			fclose($fp);
+			if ($path) {
+				unlink($this->getTempFile($path));
+			}
 		}
 		
 		/********************  file/dir manipulations *************************/
@@ -442,8 +713,8 @@ namespace {
 		 * @return string|bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _mkdir($path, $name){
-			return $this->make($path,$name,'directory') ? $this->_joinPath($path, $name) : false;
+		protected function _mkdir($path, $name) {
+			return $this->make($path, $name, 'directory') ? $this->_joinPath($path, $name) : false;
 		}
 		
 		/**
@@ -454,35 +725,59 @@ namespace {
 		 * @return string|bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _mkfile($path, $name){
+		protected function _mkfile($path, $name) {
+			return $this->make($path, $name, 'text/plain') ? $this->_joinPath($path, $name) : false;
+		}
 
+		/**
+		 * Create symlink. FTP driver does not support symlinks.
+		 *
+		 * @param  string $target link target
+		 * @param  string $path symlink path
+		 * @param string $name
+		 * @return bool
+		 * @author Dmitry (dio) Levashov
+		 */
+		protected function _symlink($target, $path, $name) {
+			return false;
 		}
 		
 		/**
-		 * Create symlink
+		 * Copy file into another file
 		 *
-		 * @param  string  $source     file to link to
-		 * @param  string  $targetDir  folder to create link in
-		 * @param  string  $name       symlink name
+		 * @param  string  $source     source file path
+		 * @param  string  $targetDir  target directory path
+		 * @param  string  $name       new file name
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _symlink($source, $targetDir, $name){
+		protected function _copy($source, $targetDir, $name) {
+			$this->clearcache();
+			$id = $this->_joinPath($targetDir, $name);
 
-		}
+			// $sql = $id > 0
+			// 	? sprintf('REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height, `read`, `write`, `locked`, `hidden`) (SELECT %d, %d, name, content, size, mtime, mime, width, height, `read`, `write`, `locked`, `hidden` FROM %s WHERE id=%d)', $this->tbf, $id, $this->_dirname($id), $this->tbf, $source)
+			// 	: sprintf('INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height, `read`, `write`, `locked`, `hidden`) SELECT %d, \'%s\', content, size, %d, mime, width, height, `read`, `write`, `locked`, `hidden` FROM %s WHERE id=%d', $this->tbf, $targetDir, $this->db->real_escape_string($name), time(), $this->tbf, $source);
 
-		/**
-		 * Copy file into another file (only inside one volume)
-		 *
-		 * @param  string $source source file path
-		 * @param $targetDir
-		 * @param  string $name file name
-		 * @return bool|string
-		 * @internal param string $target target dir path
-		 * @author Dmitry (dio) Levashov
-		 */
-		function _copy($source, $targetDir, $name){
+			// return $this->query($sql);
 
+			$copy  = $this->app->add('xepan\hr\Model_File');
+			$copy->addCondition('parent_id',$source);
+			$copy->addCondition('name',$name);
+			$copy->tryLoadAny();
+			$copy_val = $copy->get();
+
+			unset($copy_val['parent_id']);
+
+			$paste = $this->app->add('xepan\hr\Model_File');
+			$paste->addCondition('parent_id',$targetDir);
+			$paste->addCondition('name',$name);
+			$paste->tryLoadAny();
+
+			return $paste->set($copy_val)->save();
+			// if not found .. just save 
+			// but if found 
+			// get values from $this->joinPath($source,$name) and fill in this new $file and save
 		}
 
 		/**
@@ -496,10 +791,32 @@ namespace {
 		 * @internal param string $target target dir path
 		 * @author Dmitry (dio) Levashov
 		 */
-		function _move($source, $targetDir, $name){
+		protected function _move($source, $targetDir, $name) {
+			// $sql = 'UPDATE %s SET parent_id=%d, name=\'%s\' WHERE id=%d LIMIT 1';
+			// $sql = sprintf($sql, $this->tbf, $targetDir, $this->db->real_escape_string($name), $source);
+			// return $this->query($sql) && $this->db->affected_rows > 0 ? $source : false;
 
+			$copy  = $this->app->add('xepan\hr\Model_File');
+			$copy->addCondition('parent_id',$source);
+			$copy->addCondition('name',$name);
+			$copy->tryLoadAny();
+
+			if(!$copy->loaded()) return false;
+			$copy_val = $copy->get();
+
+			unset($copy_val['parent_id']);
+
+			$paste = $this->app->add('xepan\hr\Model_File');
+			$paste->addCondition('parent_id',$targetDir);
+			$paste->addCondition('name',$name);
+			$paste->tryLoadAny();
+			$paste->set($copy_val)->save();
+			
+			if($copy->delete() && $paste->loaded()) return true;
+
+			return false;
 		}
-		
+			
 		/**
 		 * Remove file
 		 *
@@ -507,8 +824,14 @@ namespace {
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _unlink($path){
+		protected function _unlink($path) {
+			// return $this->query(sprintf('DELETE FROM %s WHERE id=%d AND mime!=\'directory\' LIMIT 1', $this->tbf, $path)) && $this->db->affected_rows;
+			
+			$file = $this->app->add('xepan\hr\Model_File')->addCondition('mime','<>','directory')->addCondition('id',$path)->tryLoadAny();
+			if($file->loaded())
+				return $file->delete();
 
+			return false;
 		}
 
 		/**
@@ -518,10 +841,30 @@ namespace {
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _rmdir($path){
+		protected function _rmdir($path) {
+			// return $this->query(sprintf('DELETE FROM %s WHERE id=%d AND mime=\'directory\' LIMIT 1', $this->tbf, $path)) && $this->db->affected_rows;
+			$file = $this->app->add('xepan\hr\Model_File')->addCondition('mime','directory')->addCondition('id',$path)->tryLoadAny();
+			if($file->loaded())
+				return $file->delete();
 
+			return false;
 		}
 
+		/**
+		 * undocumented function
+		 *
+		 * @param $path
+		 * @param $fp
+		 * @author Dmitry Levashov
+		 */
+		protected function _setContent($path, $fp) {
+			elFinder::rewind($fp);
+			$fstat = fstat($fp);
+			$size = $fstat['size'];
+			
+			
+		}
+		
 		/**
 		 * Create new file and write into it from file pointer.
 		 * Return new file path or false on error.
@@ -533,8 +876,61 @@ namespace {
 		 * @return bool|string
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _save($fp, $dir, $name, $stat){
+		protected function _save($fp, $dir, $name, $stat) {
+			$this->clearcache();
+			
+			$mime = $stat['mime'];
+			$w = !empty($stat['width'])  ? $stat['width']  : 0;
+			$h = !empty($stat['height']) ? $stat['height'] : 0;
+			
+			$id = $this->_joinPath($dir, $name);
+			elFinder::rewind($fp);
+			$stat = fstat($fp);
+			$size = $stat['size'];
+			
+			if (($tmpfile = tempnam($this->tmpPath, $this->id))) {
+				if (($trgfp = fopen($tmpfile, 'wb')) == false) {
+					unlink($tmpfile);
+				} else {
+					while (!feof($fp)) {
+						fwrite($trgfp, fread($fp, 8192));
+					}
+					fclose($trgfp);
+					chmod($tmpfile, 0644);
+					
+					$sql = $id > 0
+						? 'REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height) VALUES ('.$id.', %d, \'%s\', LOAD_FILE(\'%s\'), %d, %d, \'%s\', %d, %d)'
+						: 'INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height) VALUES (%d, \'%s\', LOAD_FILE(\'%s\'), %d, %d, \'%s\', %d, %d)';
+					$sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->loadFilePath($tmpfile), $size, time(), $mime, $w, $h);
 
+					$res = $this->query($sql);
+					unlink($tmpfile);
+					
+					if ($res) {
+						return $id > 0 ? $id : $this->db->insert_id;
+					}
+				}
+			}
+
+			
+			$content = '';
+			elFinder::rewind($fp);
+			while (!feof($fp)) {
+				$content .= fread($fp, 8192);
+			}
+			
+			$sql = $id > 0
+				? 'REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height) VALUES ('.$id.', %d, \'%s\', \'%s\', %d, %d, \'%s\', %d, %d)'
+				: 'INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height) VALUES (%d, \'%s\', \'%s\', %d, %d, \'%s\', %d, %d)';
+			$sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->db->real_escape_string($content), $size, time(), $mime, $w, $h);
+			
+			unset($content);
+
+			if ($this->query($sql)) {
+				return $id > 0 ? $id : $this->db->insert_id;
+			}
+			
+			return false;
 		}
 		
 		/**
@@ -544,8 +940,8 @@ namespace {
 		 * @return string|false
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _getContents($path){
-
+		protected function _getContents($path) {
+			return ($res = $this->query(sprintf('SELECT content FROM %s WHERE id=%d', $this->tbf, $path))) && ($r = $res->fetch_assoc()) ? $r['content'] : false;
 		}
 		
 		/**
@@ -556,23 +952,67 @@ namespace {
 		 * @return bool
 		 * @author Dmitry (dio) Levashov
 		 **/
-		function _filePutContents($path, $content){
+		protected function _filePutContents($path, $content) {
+			return $this->query(sprintf('UPDATE %s SET content=\'%s\', size=%d, mtime=%d WHERE id=%d LIMIT 1', $this->tbf, $this->db->real_escape_string($content), strlen($content), time(), $path));
+		}
 
+		/**
+		 * Detect available archivers
+		 *
+		 * @return void
+		 **/
+		protected function _checkArchivers() {
+			return;
+		}
+
+		/**
+		 * chmod implementation
+		 *
+		 * @param string $path
+		 * @param string $mode
+		 * @return bool
+		 */
+		protected function _chmod($path, $mode) {
+			return false;
+		}
+
+		/**
+		 * Unpack archive
+		 *
+		 * @param  string  $path  archive path
+		 * @param  array   $arc   archiver command and arguments (same as in $this->archivers)
+		 * @return void
+		 * @author Dmitry (dio) Levashov
+		 * @author Alexey Sukhotin
+		 **/
+		protected function _unpack($path, $arc) {
+			return;
+		}
+
+		/**
+		 * Recursive symlinks search
+		 *
+		 * @param  string  $path  file/dir path
+		 * @return bool
+		 * @author Dmitry (dio) Levashov
+		 **/
+		protected function _findSymlinks($path) {
+			return false;
 		}
 
 		/**
 		 * Extract files from archive
 		 *
-		 * @param  string  $path file path
-		 * @param  array   $arc  archiver options
-		 * @return bool
+		 * @param  string  $path  archive path
+		 * @param  array   $arc   archiver command and arguments (same as in $this->archivers)
+		 * @return true
 		 * @author Dmitry (dio) Levashov, 
 		 * @author Alexey Sukhotin
 		 **/
-		function _extract($path, $arc){
-
+		protected function _extract($path, $arc) {
+			return false;
 		}
-
+		
 		/**
 		 * Create archive and return its path
 		 *
@@ -584,31 +1024,8 @@ namespace {
 		 * @author Dmitry (dio) Levashov, 
 		 * @author Alexey Sukhotin
 		 **/
-		function _archive($dir, $files, $name, $arc){
-
-		}
-
-		/**
-		 * Detect available archivers
-		 *
-		 * @return void
-		 * @author Dmitry (dio) Levashov, 
-		 * @author Alexey Sukhotin
-		 **/
-		function _checkArchivers(){
-
-		}
-
-		/**
-		 * Change file mode (chmod)
-		 *
-		 * @param  string  $path  file path
-		 * @param  string  $mode  octal string such as '0755'
-		 * @return bool
-		 * @author David Bartle,
-		 **/
-		function _chmod($path, $mode){
-
+		protected function _archive($dir, $files, $name, $arc) {
+			return false;
 		}
 
 	}
