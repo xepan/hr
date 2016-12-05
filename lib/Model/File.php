@@ -17,9 +17,13 @@ class Model_File extends \xepan\base\Model_Table
 
 	public $acl=false;
 
+	public $user_id=null;
+
 	function init()
 	{
 		parent::init();
+
+		if(!$this->user_id) $this->user = $this->app->employee->id;
 
 		$this->hasOne('xepan\hr\File','parent_id');
 		$this->add('xepan\filestore\Field_Image','file_id');
@@ -45,8 +49,8 @@ class Model_File extends \xepan\base\Model_Table
 		
 		// $this->hasMany('xepan\hr\DocumentShare','file_id');
 
-		$this->addHook('afterInsert',[$this,'personalShare']);
-		$this->addHook('beforeDelete',$this);
+		// $this->addHook('afterInsert',[$this,'personalShare']);
+		// $this->addHook('beforeDelete',$this);
 
 		$this->is([
 			'name|to_trim|required'
@@ -107,7 +111,7 @@ class Model_File extends \xepan\base\Model_Table
 	}
 
 	function haveChildDirectories(){
-		return $this->add('xepan\hr\Model_File_Folder')->addCondition('parent_id',$this->id)->count()->getOne();
+		return $this->add('xepan\hr\Model_File')->addCondition('parent_id',$this->id)->addCondition('mime','directory')->count()->getOne();
 	}
 
 	function iCanEdit(){
