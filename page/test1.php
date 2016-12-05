@@ -240,19 +240,26 @@ namespace {
 			// // echo $sql;
 			// return $this->query($sql) && $this->db->affected_rows > 0;
 			$type = $this->add('xepan\filestore\Model_Type');
+			$filestore =$this->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'move','import_source'=>$path));
+	
 			if($mime != 'directory'){
-				
 				$type->addCondition('name',$name);
 				$type->addCondition('mime_type',$mime);
 				
 				if(!$type->loaded())
 					$type->save();
+
+				$filestore->addCondition('filestore_type_id', $type->id); 
+				$filestore->addCondition('original_filename', $name); 
+				$filestore->addCondition('filename',$name); 
+				if($filestore->loaded())
+					$filestore->save();
 			}
 
 			$file = $this->app->add('xepan\hr\Model_File');
 			$file['name'] = $name;
 			$file['parent_id'] = $path;
-			$file['mime'] = $type->id;
+			$file['mime'] = $filestore->id;
 			$file->save();
 			return $file->loaded()?true:false;
 		}
