@@ -239,11 +239,20 @@ namespace {
 			// $sql = sprintf($sql, $this->tbf, $path, $this->db->real_escape_string($name), time(), $mime, $this->defaults['read'], $this->defaults['write']);
 			// // echo $sql;
 			// return $this->query($sql) && $this->db->affected_rows > 0;
+			$type = $this->add('xepan\filestore\Model_Type');
+			if($mime != 'directory'){
+				
+				$type->addCondition('name',$name);
+				$type->addCondition('mime_type',$mime);
+				
+				if(!$type->loaded())
+					$type->save();
+			}
 
 			$file = $this->app->add('xepan\hr\Model_File');
 			$file['name'] = $name;
 			$file['parent_id'] = $path;
-			$file['mime'] = $mime;
+			$file['mime'] = $type->id;
 			$file->save();
 			return $file->loaded()?true:false;
 		}
