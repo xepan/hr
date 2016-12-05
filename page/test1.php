@@ -37,21 +37,20 @@ namespace xepan\hr {
 
 				// $path_asset = $this->app->pathfinder->base_location->base_path.'/websites/'.$this->app->current_website_name.'/assets';
 				// $path_www = $this->app->pathfinder->base_location->base_path.'/websites/'.$this->app->current_website_name.'/www';
-				// $path_upload = $this->app->pathfinder->base_location->base_path.'/websites/'.$this->app->current_website_name.'/upload';
+				$path_upload = $this->app->pathfinder->base_location->base_path.'/websites/'.$this->app->current_website_name.'/upload';
 				
 				// \elFinder::$netDrivers['ftp'] = 'FTP';
 				// \elFinder::$netDrivers['dropbox'] = 'Dropbox';
 
 				$opts = array(
 				    'locale' => '',
-				    'debug'=>true,
 				    'roots'  => array(
 				        array(
 				            'driver' => 'ATKFileStore',
 				            'path'   => $root_path,
+				            'tmbPath' =>$path_upload,
 				            // 'URL'    => 'websites/'.$this->app->current_website_name.'/upload',
 				            'alias'=>'MyDrive'
-
 				        )
 				    )
 				);
@@ -239,27 +238,30 @@ namespace {
 			// $sql = sprintf($sql, $this->tbf, $path, $this->db->real_escape_string($name), time(), $mime, $this->defaults['read'], $this->defaults['write']);
 			// // echo $sql;
 			// return $this->query($sql) && $this->db->affected_rows > 0;
-			$type = $this->add('xepan\filestore\Model_Type');
-			$filestore =$this->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'move','import_source'=>$path));
-	
-			if($mime != 'directory'){
-				$type->addCondition('name',$name);
-				$type->addCondition('mime_type',$mime);
-				
-				if(!$type->loaded())
-					$type->save();
-
-				$filestore->addCondition('filestore_type_id', $type->id); 
-				$filestore->addCondition('original_filename', $name); 
-				$filestore->addCondition('filename',$name); 
-				if($filestore->loaded())
-					$filestore->save();
-			}
 
 			$file = $this->app->add('xepan\hr\Model_File');
 			$file['name'] = $name;
 			$file['parent_id'] = $path;
-			$file['mime'] = $filestore->id;
+			$file['mime'] = $mime;
+			
+	
+			if($mime != 'directory'){
+				$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>false,'import_mode'=>'string','import_source'=>null));
+				
+				$type = $this->app->add('xepan\filestore\Model_Type');
+				$type->addCondition('name',$mime);
+				$type->addCondition('mime_type',$mime);
+				$type->tryLoadAny();
+
+				if(!$type->loaded())
+					$type->save();
+
+				$filestore['filestore_type_id'] =  $type->id; 
+				$filestore['original_filename']  = $name;
+				$filestore->save();
+				$file['file_id'] = $filestore->id;
+			}
+
 			$file->save();
 			return $file->loaded()?true:false;
 		}
@@ -684,7 +686,15 @@ namespace {
 		 * @return resource|false
 		 * @author Dmitry (dio) Levashov
 		 **/
-		protected function _fopen($path, $mode='rb') {
+		protected function _fopen($path, $mode='rb') {	
+			// hr file
+			$file = $this->app->add('xepan\hr\Model_File')->tryLoad($path);
+			if(!$file->loaded()) return false;
+
+			$file_path = $file->ref('file_id')->getPath();
+			var_dump($file_path);
+			die('path');
+
 			$fp = $this->tmbPath
 				? fopen($this->getTempFile($path), 'w+')
 				: tmpfile();
@@ -914,17 +924,38 @@ namespace {
 					fclose($trgfp);
 					chmod($tmpfile, 0644);
 					
-					$sql = $id > 0
-						? 'REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height) VALUES ('.$id.', %d, \'%s\', LOAD_FILE(\'%s\'), %d, %d, \'%s\', %d, %d)'
-						: 'INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height) VALUES (%d, \'%s\', LOAD_FILE(\'%s\'), %d, %d, \'%s\', %d, %d)';
-					$sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->loadFilePath($tmpfile), $size, time(), $mime, $w, $h);
-
-					$res = $this->query($sql);
-					unlink($tmpfile);
-					
-					if ($res) {
-						return $id > 0 ? $id : $this->db->insert_id;
+					// $sql = $id > 0
+					// 	? 'REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height) VALUES ('.$id.', %d, \'%s\', LOAD_FILE(\'%s\'), %d, %d, \'%s\', %d, %d)'
+					// 	: 'INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height) VALUES (%d, \'%s\', LOAD_FILE(\'%s\'), %d, %d, \'%s\', %d, %d)';
+					// $sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->loadFilePath($tmpfile), $size, time(), $mime, $w, $h);
+					// $res = $this->query($sql);
+					$file = $this->app->add('xepan\hr\Model_File')->tryLoad($id);
+					if($file->loaded()){
+						$file->ref('file_id')->delete();
 					}
+
+					if(!$file->loaded()){
+						$file['parent_id'] = $dir;
+						$file['name'] = $name;
+						$file['mime'] = $mime;
+					}
+
+					//filestore object
+					// import from tmpfile
+					// get filestore id
+					// $file['file_id'] = $filestoreid
+					//$file->save();
+					$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'copy','import_source'=>$tmpfile));
+					$filestore->performImport();
+					$filestore->save();
+					$file['file_id'] = $filestore->id;
+					$file->save();
+
+					unlink($tmpfile);
+					return $file->id;
+					// if ($res) {
+					// 	return $id > 0 ? $id : $this->db->insert_id;
+					// }
 				}
 			}
 
@@ -935,15 +966,31 @@ namespace {
 				$content .= fread($fp, 8192);
 			}
 			
-			$sql = $id > 0
-				? 'REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height) VALUES ('.$id.', %d, \'%s\', \'%s\', %d, %d, \'%s\', %d, %d)'
-				: 'INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height) VALUES (%d, \'%s\', \'%s\', %d, %d, \'%s\', %d, %d)';
-			$sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->db->real_escape_string($content), $size, time(), $mime, $w, $h);
-			
+			// $sql = $id > 0
+			// 	? 'REPLACE INTO %s (id, parent_id, name, content, size, mtime, mime, width, height) VALUES ('.$id.', %d, \'%s\', \'%s\', %d, %d, \'%s\', %d, %d)'
+			// 	: 'INSERT INTO %s (parent_id, name, content, size, mtime, mime, width, height) VALUES (%d, \'%s\', \'%s\', %d, %d, \'%s\', %d, %d)';
+			// $sql = sprintf($sql, $this->tbf, $dir, $this->db->real_escape_string($name), $this->db->real_escape_string($content), $size, time(), $mime, $w, $h);
+			$file = $this->app->add('xepan\hr\Model_File')->tryLoad($id);
+			if($file->loaded()){
+				$file->ref('file_id')->delete();
+			}
+
+			if(!$file->loaded()){
+				$file['parent_id'] = $dir;
+				$file['name'] = $name;
+				$file['mime'] = $mime;
+			}
+			$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'string','import_source'=>$content));
+			$filestore->performImport();
+			$filestore->save();
+			$file['file_id'] = $filestore->id;
+			$file->save();
+
 			unset($content);
 
-			if ($this->query($sql)) {
-				return $id > 0 ? $id : $this->db->insert_id;
+			if ($file->loaded()) {
+				return $file->id;
+			// 	return $id > 0 ? $id : $this->db->insert_id;
 			}
 			
 			return false;
@@ -957,7 +1004,12 @@ namespace {
 		 * @author Dmitry (dio) Levashov
 		 **/
 		protected function _getContents($path) {
-			return ($res = $this->query(sprintf('SELECT content FROM %s WHERE id=%d', $this->tbf, $path))) && ($r = $res->fetch_assoc()) ? $r['content'] : false;
+			$file = $this->app->add('xepan\hr\Model_File')->tryLoad($path);
+			if(!$file->loaded()) return false;
+
+			$file_path = $this->app->add('xepan\filestore\Model_File')->tryLoad($file['file_id']);
+			return   file_get_contents(getcwd().$this->separator.$file_path->getPath());
+			// return ($res = $this->query(sprintf('SELECT content FROM %s WHERE id=%d', $this->tbf, $path))) && ($r = $res->fetch_assoc()) ? $r['content'] : false;
 		}
 		
 		/**
@@ -969,7 +1021,13 @@ namespace {
 		 * @author Dmitry (dio) Levashov
 		 **/
 		protected function _filePutContents($path, $content) {
-			return $this->query(sprintf('UPDATE %s SET content=\'%s\', size=%d, mtime=%d WHERE id=%d LIMIT 1', $this->tbf, $this->db->real_escape_string($content), strlen($content), time(), $path));
+			$file = $this->app->add('xepan\hr\Model_File')->tryLoad($path);
+			if(!$file->loaded()) return false;
+
+			$file_path = $this->app->add('xepan\filestore\Model_File')->tryLoad($file['file_id']);
+			return  file_put_contents(getcwd().$this->separator.$file_path->getPath(),$content);
+
+			// return $this->query(sprintf('UPDATE %s SET content=\'%s\', size=%d, mtime=%d WHERE id=%d LIMIT 1', $this->tbf, $this->db->real_escape_string($content), strlen($content), time(), $path));
 		}
 
 		/**

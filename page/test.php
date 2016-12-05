@@ -38,6 +38,7 @@ namespace xepan\hr {
 				    elFinder.prototype.commands.share = function() {
 				        this.exec = function(hashes) {
 				             //do whatever
+				        	console.log(hashes);
 				        	alert("share");
 				        }
 				        this.getstate = function() {

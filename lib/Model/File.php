@@ -45,7 +45,7 @@ class Model_File extends \xepan\base\Model_Table
 		$this->addExpression('read')->set('"1"');
 		// shared permission to write or my file
 		$this->addExpression('write')->set('"1"');
-		$this->addExpression('locked')->set('"1"');
+		$this->addExpression('locked')->set('"0"');
 		$this->addExpression('hidden')->set('"0"');
 		$this->addExpression('width')->set('"100"');
 		$this->addExpression('height')->set('"100"');
