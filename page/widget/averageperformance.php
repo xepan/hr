@@ -39,6 +39,9 @@ class page_widget_averageperformance extends \xepan\base\Page{
 
 		$this->grid->addQuickSearch(['department_name']);
 		$this->grid->addPaginator(10);	
+
+		$this->grid->addFormatter('avg_late','gmdate');
+		$this->grid->addFormatter('avg_extra_work','gmdate');
 		
 		$this->grid->js('click')->_selector('.average-performance-digging')->univ()->frameURL('Employee Average Performance',[$this->api->url('xepan_hr_widget_employeeperformance'),'dept_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 	}

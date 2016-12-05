@@ -1,0 +1,1 @@
+{"created_by_id":"91","created_by":"Vaibhav Sharma","name":"SalesReport","permitted_post":null,"description":"contains analytics of sales ","is_system":"0","status":"All","widget":[{"graphical_report":"SalesReport","name":"Monthly Invoices","col_width":"6","order":"1","is_active":"1","class_path":"xepan\\commerce\\Widget_MonthlyInvoices"}]}

@@ -39,6 +39,9 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\employeeperformance']);
 		$this->grid->setModel($attendances,['employee','avg_late','avg_extra_work']);
 		$this->grid->addQuickSearch(['employee']);
-		$this->grid->addPaginator(10);			
+		$this->grid->addPaginator(10);
+
+		$this->grid->addFormatter('avg_late','gmdate');			
+		$this->grid->addFormatter('avg_extra_work','gmdate');
 	}
 }
