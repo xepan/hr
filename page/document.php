@@ -11,7 +11,7 @@
 
 namespace xepan\hr {
 
-	class page_document extends \Page {
+	class page_document extends \xepan\base\Page {
 		public $title='Page Title';
 
 		function init(){
