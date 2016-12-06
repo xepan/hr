@@ -334,6 +334,7 @@ namespace {
 					unset($file['dirs']);
 				}
 				
+				$file['original_file_id'] = $file['id'];
 				unset($file['id']);
 				unset($file['parent_id']);
 				unset($file['parent']);
@@ -845,10 +846,15 @@ namespace {
 		protected function _unlink($path) {
 			// return $this->query(sprintf('DELETE FROM %s WHERE id=%d AND mime!=\'directory\' LIMIT 1', $this->tbf, $path)) && $this->db->affected_rows;
 			
-			$file = $this->app->add('xepan\hr\Model_File')->addCondition('mime','<>','directory')->addCondition('id',$path)->tryLoadAny();
+			$file = $this->app->add('xepan\hr\Model_File')
+					->addCondition('mime','<>','directory')
+					->addCondition('id',$path)
+					->addCondition('created_by_id',$this->app->employee->id)
+					->tryLoadAny();
 			if($file->loaded())
 				return $file->delete();
 
+			// $this->setError('you are not authorize to delete');
 			return false;
 		}
 
@@ -861,10 +867,17 @@ namespace {
 		 **/
 		protected function _rmdir($path) {
 			// return $this->query(sprintf('DELETE FROM %s WHERE id=%d AND mime=\'directory\' LIMIT 1', $this->tbf, $path)) && $this->db->affected_rows;
-			$file = $this->app->add('xepan\hr\Model_File')->addCondition('mime','directory')->addCondition('id',$path)->tryLoadAny();
-			if($file->loaded())
+			$file = $this->app->add('xepan\hr\Model_File')
+					->addCondition('mime','directory')
+					->addCondition('id',$path)
+					->addCondition('created_by_id',$this->app->employee->id)
+					->tryLoadAny();
+			
+			if($file->loaded()){
 				return $file->delete();
+			}
 
+			// $this->setError('you are not authorize to delete');
 			return false;
 		}
 

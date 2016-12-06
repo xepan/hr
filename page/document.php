@@ -17,7 +17,7 @@ namespace xepan\hr {
 		function init(){
 			parent::init();
 
-			$file = $this->add('xepan\hr\Model_File');
+			// $file = $this->add('xepan\hr\Model_File');
 			// $conditions=[];
 			// $conditions[] = ['parent_id',59];
 			
@@ -26,7 +26,7 @@ namespace xepan\hr {
 
 			// $file->addCondition($conditions);
 
-			$this->add('Grid')->setModel($file);
+			// $this->add('Grid')->setModel($file);
 
 			// as per page 
 			// http://codepen.io/kaizoku-kuma/pen/JDxtC
