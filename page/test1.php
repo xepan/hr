@@ -691,27 +691,14 @@ namespace {
 			$file = $this->app->add('xepan\hr\Model_File')->tryLoad($path);
 			if(!$file->loaded()) return false;
 
-			$file_path = $file->ref('file_id')->getPath();
-			var_dump($file_path);
-			die('path');
-
-			$fp = $this->tmbPath
-				? fopen($this->getTempFile($path), 'w+')
-				: tmpfile();
-			
-			
-			if ($fp) {
-				if (($res = $this->query('SELECT content FROM '.$this->tbf.' WHERE id=\''.$path.'\''))
-				&& ($r = $res->fetch_assoc())) {
-					fwrite($fp, $r['content']);
-					rewind($fp);
-					return $fp;
-				} else {
-					$this->_fclose($fp, $path);
-				}
+			$file_path = $this->app->add('xepan\filestore\Model_File')->tryLoad($file['file_id']);
+			$fp = fopen(getcwd().$this->separator.$file_path->getPath(),$mode);
+			if (!$fp) {
+				$this->_fclose($fp);
+				return false;
 			}
-			
-			return false;
+				
+			return $fp;
 		}
 
 		/**
@@ -946,8 +933,10 @@ namespace {
 					// $file['file_id'] = $filestoreid
 					//$file->save();
 					$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'copy','import_source'=>$tmpfile));
-					$filestore->performImport();
+					$filestore['original_filename'] = $name;
 					$filestore->save();
+					$filestore->import($tmpfile,'copy');
+
 					$file['file_id'] = $filestore->id;
 					$file->save();
 
