@@ -6,7 +6,8 @@
   elFinder.prototype.commands.share = function() {
   this.exec = function(hashes) {
   //do whatever
-  $.univ().frameURL("Share","index.php?page=xepan_hr_share&cut_page=1&file_id="+this.files(hashes));
+  temp = this.files(hashes);
+  $.univ().frameURL("Share","index.php?page=xepan_hr_share&cut_page=1&file_id="+temp[0].id);
   // console.log(hashes);
   // alert("share");
   }

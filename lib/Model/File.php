@@ -36,6 +36,7 @@ class Model_File extends \xepan\base\Model_Table
 		$this->addField('content')->type('text');
 		
 		$this->hasMany('xepan\hr\ChildFile','parent_id',null,'Children');
+		$this->hasMany('xepan\hr\DocumentShare','file_id',null,'Share');
 
 		$this->addExpression('size')->set(function($m,$q){
 			return $q->expr('IFNULL([0],0)',[$m->refSQL('file_id')->fieldQuery('filesize')]);
@@ -44,6 +45,13 @@ class Model_File extends \xepan\base\Model_Table
 		// shared with me or my file
 		$this->addExpression('read')->set(function($m,$q){
 			return '"1"';
+		});
+
+		$this->addExpression('shared_with_me')->set(function($m,$q){
+			// ! created_by_me && shared_with_me
+			return $share = $m->refSQL('Share')
+					->addCondition('shared_to_id',$this->user_id)->count()
+					;
 		});
 		// shared permission to write or my file
 		$this->addExpression('write')->set('"1"');
@@ -67,7 +75,6 @@ class Model_File extends \xepan\base\Model_Table
 			return $q->expr('IF([mime]="directory" AND [dir_count] > 0,1,0)',['mime'=>$m->getElement('mime'),'dir_count'=>$m->getElement('child_directory_count')]);
 		});
 
-		// $this->hasMany('xepan\hr\DocumentShare','file_id');
 
 		// $this->addHook('afterInsert',[$this,'personalShare']);
 		// $this->addHook('beforeDelete',$this);

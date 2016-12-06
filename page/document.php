@@ -17,9 +17,18 @@ namespace xepan\hr {
 		function init(){
 			parent::init();
 
-			// $file = $this->add('xepan\hr\Model_File');
-			// $this->add('Grid')->setModel($file);
-				// as per page 
+			$file = $this->add('xepan\hr\Model_File');
+			// $conditions=[];
+			// $conditions[] = ['parent_id',59];
+			
+			// $shared_cond = $this->app->db->dsql()->expr('[0] > 0',[$file->getElement('shared_with_me')]);
+			// $conditions[] =[$shared_cond];
+
+			// $file->addCondition($conditions);
+
+			$this->add('Grid')->setModel($file);
+
+			// as per page 
 			// http://codepen.io/kaizoku-kuma/pen/JDxtC
 			$this->app->jui->addStylesheet('codemirror/codemirror-5.15.2/lib/codemirror');
 			$this->app->jui->addStylesheet('codemirror/codemirror-5.15.2/theme/solarized');

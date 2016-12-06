@@ -14,7 +14,6 @@ class Model_DocumentShare extends \xepan\base\Model_Table
 	{
 		parent::init();
 
-		$this->hasOne('xepan\hr\Folder','folder_id');
 		$this->hasOne('xepan\hr\File','file_id');
 		$this->hasOne('xepan\hr\Employee','shared_by_id');
 		$this->hasOne('xepan\hr\Employee','shared_to_id');
