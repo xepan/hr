@@ -42,7 +42,9 @@ class Model_File extends \xepan\base\Model_Table
 		});
 
 		// shared with me or my file
-		$this->addExpression('read')->set('"1"');
+		$this->addExpression('read')->set(function($m,$q){
+			return '"1"';
+		});
 		// shared permission to write or my file
 		$this->addExpression('write')->set('"1"');
 		$this->addExpression('locked')->set('"0"');
@@ -51,8 +53,16 @@ class Model_File extends \xepan\base\Model_Table
 		$this->addExpression('height')->set('"100"');
 		
 
-		$this->addExpression('child_directory_count')->set('"0"');//->set($this->refSQL('Children')->addCondition('mime','directory')->count())->type('int');
-		$this->addExpression('child_file_count')->set('"0"');//->set($this->refSQL('Children')->addCondition('mime','<>','directory')->count())->type('int');
+		$this->addExpression('child_directory_count')->set(function($m,$q){
+			$file = $m->add('xepan\hr\Model_File',['table_alias'=>'cdc'])->addCondition('mime','directory')->addCondition('parent_id',$m->getElement('id'));
+			return $q->expr('IFNULL([0],0)',[$file->count()]);
+		})->type('int');
+
+		$this->addExpression('child_file_count')->set(function($m,$q){
+			$file = $m->add('xepan\hr\Model_File',['table_alias'=>'cfc'])->addCondition('mime','<>','directory')->addCondition('parent_id',$m->getElement('id'));
+			return $q->expr('IFNULL([0],0)',[$file->count()]);
+		})->type('int');
+
 		$this->addExpression('dirs')->set(function($m,$q){
 			return $q->expr('IF([mime]="directory" AND [dir_count] > 0,1,0)',['mime'=>$m->getElement('mime'),'dir_count'=>$m->getElement('child_directory_count')]);
 		});

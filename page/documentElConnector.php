@@ -11,7 +11,7 @@
 
 namespace xepan\hr {
 
-	class page_test1 extends \Page {
+	class page_documentElConnector extends \Page {
 		public $title='Page Title';
 
 		function init(){
