@@ -35,12 +35,19 @@ class Model_File extends \xepan\base\Model_Table
 		// Needed ??? or just create new file with filestore and use that as file content
 		$this->addField('content')->type('text');
 		
+		$this->addField('width');
+		$this->addField('height');
+		$this->addField('size');	
+
 		$this->hasMany('xepan\hr\ChildFile','parent_id',null,'Children');
 		$this->hasMany('xepan\hr\DocumentShare','file_id',null,'Share');
 
-		$this->addExpression('size')->set(function($m,$q){
-			return $q->expr('IFNULL([0],0)',[$m->refSQL('file_id')->fieldQuery('filesize')]);
-		});
+		// $this->addExpression('size')->set(function($m,$q){
+		// 	$file_model = $m->add('xepan\filestore\Model_File')->tryLoad('id',$m->getElement('id'));
+		// 	return $q->expr('IFNULL([0],0)',[$m->refSQL('file_id')->fieldQuery('filesize')]);
+		// });
+		// $this->addExpression('width')->set('"100"');
+		// $this->addExpression('height')->set('"100"');
 
 		// shared with me or my file
 		$this->addExpression('read')->set(function($m,$q){
@@ -57,8 +64,6 @@ class Model_File extends \xepan\base\Model_Table
 		$this->addExpression('write')->set('"1"');
 		$this->addExpression('locked')->set('"0"');
 		$this->addExpression('hidden')->set('"0"');
-		$this->addExpression('width')->set('"100"');
-		$this->addExpression('height')->set('"100"');
 		
 
 		$this->addExpression('child_directory_count')->set(function($m,$q){

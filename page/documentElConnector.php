@@ -943,6 +943,10 @@ namespace {
 						$file['parent_id'] = $dir;
 						$file['name'] = $name;
 						$file['mime'] = $mime;
+						$file['width'] = $w;
+						$file['height'] = $h;
+						$file['size'] = $size;
+
 					}
 
 					//filestore object
@@ -986,6 +990,10 @@ namespace {
 				$file['parent_id'] = $dir;
 				$file['name'] = $name;
 				$file['mime'] = $mime;
+				$file['width'] = $w;
+				$file['height'] = $h;
+				$file['size'] = $size;
+
 			}
 			$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'string','import_source'=>$content));
 			$filestore->performImport();
@@ -1032,6 +1040,7 @@ namespace {
 			if(!$file->loaded()) return false;
 
 			$file_path = $this->app->add('xepan\filestore\Model_File')->tryLoad($file['file_id']);
+			$file_path['size'] = strlen($content);
 			return  file_put_contents(getcwd().$this->separator.$file_path->getPath(),$content);
 
 			// return $this->query(sprintf('UPDATE %s SET content=\'%s\', size=%d, mtime=%d WHERE id=%d LIMIT 1', $this->tbf, $this->db->real_escape_string($content), strlen($content), time(), $path));
