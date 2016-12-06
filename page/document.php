@@ -12,12 +12,12 @@
 namespace xepan\hr {
 
 	class page_document extends \xepan\base\Page {
-		public $title='Page Title';
+		public $title='Your xEpan Drive';
 
 		function init(){
 			parent::init();
 
-			$file = $this->add('xepan\hr\Model_File');
+			// $file = $this->add('xepan\hr\Model_File');
 			// $conditions=[];
 			// $conditions[] = ['parent_id',59];
 			
@@ -26,7 +26,7 @@ namespace xepan\hr {
 
 			// $file->addCondition($conditions);
 
-			$this->add('Grid')->setModel($file,['size']);
+			// $this->add('Grid')->setModel($file,['size']);
 
 			// as per page 
 			// http://codepen.io/kaizoku-kuma/pen/JDxtC
@@ -42,6 +42,18 @@ namespace xepan\hr {
 			$this->app->jui->addStaticInclude('codemirror/codemirror-5.15.2/mode/css/css');
 			$this->app->jui->addStaticInclude('codemirror/codemirror-5.15.2/mode/javascript/javascript');
 			
+			$this->js(true,'
+							tinymce.baseURL = "./vendor/tinymce/tinymce";
+        					tinymce.editors=[];
+        					tinymce.activeEditors=[];
+        		')
+				->_load('tinymce.min')
+				->_load('jquery.tinymce.min')
+				->_load('xepan-richtext-admin')
+				->_library('tinymce')
+				->init([])
+				;
+			// $this->js(true)->univ()->richtext($this,$this->options);
 
 			$this->add('View',null,null,['page\xepandocument'])->set('document ');
 			// $this->js(true,'
