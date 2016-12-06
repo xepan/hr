@@ -313,13 +313,19 @@ namespace {
 			// }
 			
 			$this->dirsCache[$path] = array();
-			$root_file = $this->app->add('xepan\hr\Model_File')->addCondition('parent_id',$path);
+			$root_file = $this->app->add('xepan\hr\Model_File')
+						->addCondition([['parent_id',$path],['shared_with_me','>',0]]);
 
 			foreach ($root_file->getRows() as $file) {
 				$id = $file['id'];
 				if ($file['parent_id']) {
 					$file['phash'] = $this->encode($file['parent_id']);
-				} 
+				}
+
+				// for shared with me
+				if($file['shared_with_me']){
+					$file['phash'] = $this->encode($this->root);
+				}
 				
 				if ($file['mime'] == 'directory') {
 						unset($file['width']);
@@ -328,6 +334,7 @@ namespace {
 					unset($file['dirs']);
 				}
 				
+				unset($file['id']);
 				unset($file['parent_id']);
 				unset($file['parent']);
 				
@@ -335,8 +342,6 @@ namespace {
 					$this->dirsCache[$path][] = $id;
 				}
 			}
-
-
 
 			return $this->dirsCache[$path];
 		}
