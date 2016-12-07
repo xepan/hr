@@ -19,13 +19,33 @@ namespace xepan\hr {
 
 		$file_id = $this->app->stickyGET('file_id');
 		
+			
 		$share_model = $this->add('xepan\hr\Model_DocumentShare');
 		$share_model->addCondition('file_id',$file_id);
-		$share_model->addCondition('shared_by_id',$this->app->employee->id);
 
 		$crud = $this->add('xepan\hr\CRUD',['pass_acl'=>true]);
-		$crud->setModel($share_model,['shared_by_id','shared_to_id','department_id','shared_type','can_edit','can_delete','can_share']);
 		
+		if($crud->isEditing()){
+
+		}
+		$crud->setModel($share_model,['shared_type','shared_to_id','department_id','department','can_edit','can_delete','can_share'],['shared_type','shared_to','department','can_edit','can_delete','can_share']);
+		if($crud->isEditing()){
+			// $form = $this->add('Form');
+			$form = $crud->form;
+			// $type_field = $form->addField('DropDown','shared_type')->setValueList(['Global'=>'Global','Department'=>'Department','Person'=>'Person']);
+			// $form->addField('DropDown','employee')->setModel('xepan\hr\Employee');
+			// $form->addField('name');
+			$type_field = $form->getElement('shared_type');
+			$type_field->js(true)->univ()->bindConditionalShow([
+					'Global'=>['can_edit','can_delete','can_share'],
+					'Department'=>['department_id','can_edit','can_delete','can_share'],
+					'Person'=>['shared_to_id','can_edit','can_delete','can_share'],
+					'*'=>[]
+				],'div.atk-form-row');
+		}
+		
+
+
 		}
 	}
 }

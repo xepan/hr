@@ -104,6 +104,8 @@ class Model_File extends \xepan\base\Model_Table
 	}
 
 	function personalShare($obj,$new_id){
+		throw new \Exception("why calling", 1);
+		
 		$share_model = $this->add('xepan\hr\Model_DocumentShare');
 		$share_model['file_id'] = $new_id;
 		$share_model['shared_by_id'] = $this->app->employee->id;
