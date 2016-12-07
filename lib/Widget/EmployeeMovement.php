@@ -6,18 +6,20 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();
-
+		$this->report->enableFilterEntity('date_range');
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movement-mini']);
 	}
 
 	function recursiveRender(){
+		$end_date = $this->report->end_date;
+
 		$attendance_m = $this->add('xepan\hr\Model_Employee');
 		$attendance_m->addCondition('status','Active');
 		
 		$attendance_m->addExpression('from_date')->set(function($m,$q){
 			$att = $this->add('xepan\hr\Model_Employee_Attandance');
 			$att->addCondition('employee_id',$m->getElement('id'))
-				->addCondition('fdate',$this->app->today)
+				->addCondition('fdate',$this->report->end_date)
 				->setLimit(1);
 
 			return $att->fieldQuery('from_date');
@@ -26,7 +28,7 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 		$attendance_m->addExpression('late_coming')->set(function($m,$q){
 			$att = $this->add('xepan\hr\Model_Employee_Attandance');
 			$att->addCondition('employee_id',$m->getElement('id'))
-				->addCondition('fdate',$this->app->today)
+				->addCondition('fdate',$this->report->end_date)
 				->setLimit(1);
 
 			return $att->fieldQuery('late_coming');
@@ -36,8 +38,10 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 
 		$this->grid->setModel($attendance_m,['id','name','from_date','late_coming']);
 		$this->grid->addPaginator(50);
-		
-		$this->grid->addHook('formatRow',function($g){
+		$this->grid->template->set('as_on',' As On : '.$end_date);
+
+		$this->grid->addHook('formatRow',function($g){			
+
 			if($g->model['from_date']== null)
 				$g->current_row_html['in_at'] = 'Not In';
 			else	
@@ -55,7 +59,7 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 			if($g->model['from_date']== null)
 				$g->current_row_html['text-class'] = 'gray';
 			else	
-				$g->current_row_html['dummy'] = ' ';
+				$g->current_row_html['dummy'] = ' ';			
 		});
 
 		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_widget_attendance'),'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
