@@ -59,15 +59,14 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 
 			$p->addColumn("export", "export", "export", $c->grid);
 
-				
-			$reset_frm = $c->grid->add('Form',null,'grid_buttons',null);
-			if($this->app->auth->model->isSuperUser())
-				$reset_frm->addSubmit('Reset Report')->addClass('btn btn-primary btn-sm');
-
-			if($reset_frm->isSubmitted()){
-				$this->resetReports();
-				$reset_frm->js(null,$c->js()->reload())->univ()->successMessage('Done')->execute();
+			if($this->app->auth->model->isSuperUser()){
+				$reset_btn=$c->grid->addButton('Reset Report')->addClass('btn btn-primary');
+				if($reset_btn->isClicked()){
+					$this->resetReports();
+					$this->js(null,$c->js()->reload())->univ()->successMessage('Done')->execute();
+				}
 			}
+				
 		}
 	}
 

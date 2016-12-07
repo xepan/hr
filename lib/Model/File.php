@@ -5,29 +5,84 @@ namespace xepan\hr;
 /**
 * 
 */
-class Model_File extends \xepan\hr\Model_Document
+class Model_File extends \xepan\base\Model_Table
 {
+	public $table='file';
 	// public $table='file';
-	public $file_type = ['SpreadSheet'=>'Spread Sheet','Word'=>'Word','PPT'=>'PPT','ToDo'=>'To Do','Upload'=>'Upload'];
+	public $file_type = ['SpreadSheet'=>'Spread Sheet','Word'=>'Word','PPT'=>'PPT','ToDo'=>'To Do','Upload'=>'Upload','directory'=>'directory'];
 	public $status=['All'];
 	public $actions=[
 		'All'=>['share','edit','delete']
 	];
 
+	public $acl=false;
+
+	public $user_id=null;
+
 	function init()
 	{
 		parent::init();
 
-		$file_j = $this->join('file.document_id');
-		$file_j->hasOne('xepan\hr\Folder','folder_id');
-		$file_j->addField('name')->sortable(true);
-		$file_j->addField('content')->type('text');
-		// $file_j->addField('content_type')->setValueList(['spreadsheet'=>'Spread Sheet','word'=>'Word','ppt'=>'PPT','todo'=>'To Do']);
-		
-		$file_j->hasMany('xepan\hr\DocumentShare','file_id');
+		if(!$this->user_id) $this->user_id = $this->app->employee->id;
 
-		$this->addHook('afterInsert',[$this,'personalShare']);
-		$this->addHook('beforeDelete',$this);
+		$this->hasOne('xepan\hr\ParentFile','parent_id');
+
+		$this->add('xepan\filestore\Field_Image','file_id');
+		$this->hasOne('xepan\base\Contact','created_by_id')->defaultValue($this->user_id);
+		$this->addField('name')->sortable(true);
+		$this->addField('mime')->setValueList($this->file_type);
+		
+		// Needed ??? or just create new file with filestore and use that as file content
+		$this->addField('content')->type('text');
+		
+		$this->addField('width');
+		$this->addField('height');
+		$this->addField('size');	
+
+		$this->hasMany('xepan\hr\ChildFile','parent_id',null,'Children');
+		$this->hasMany('xepan\hr\DocumentShare','file_id',null,'Share');
+
+		// $this->addExpression('size')->set(function($m,$q){
+		// 	$file_model = $m->add('xepan\filestore\Model_File')->tryLoad('id',$m->getElement('id'));
+		// 	return $q->expr('IFNULL([0],0)',[$m->refSQL('file_id')->fieldQuery('filesize')]);
+		// });
+		// $this->addExpression('width')->set('"100"');
+		// $this->addExpression('height')->set('"100"');
+
+		// shared with me or my file
+		$this->addExpression('read')->set(function($m,$q){
+			return '"1"';
+		});
+
+		$this->addExpression('shared_with_me')->set(function($m,$q){
+			// ! created_by_me && shared_with_me
+			return $share = $m->refSQL('Share')
+					->addCondition('shared_to_id',$this->user_id)->count()
+					;
+		});
+		// shared permission to write or my file
+		$this->addExpression('write')->set('"1"');
+		$this->addExpression('locked')->set('"0"');
+		$this->addExpression('hidden')->set('"0"');
+		
+
+		$this->addExpression('child_directory_count')->set(function($m,$q){
+			$file = $m->add('xepan\hr\Model_File',['table_alias'=>'cdc'])->addCondition('mime','directory')->addCondition('parent_id',$m->getElement('id'));
+			return $q->expr('IFNULL([0],0)',[$file->count()]);
+		})->type('int');
+
+		$this->addExpression('child_file_count')->set(function($m,$q){
+			$file = $m->add('xepan\hr\Model_File',['table_alias'=>'cfc'])->addCondition('mime','<>','directory')->addCondition('parent_id',$m->getElement('id'));
+			return $q->expr('IFNULL([0],0)',[$file->count()]);
+		})->type('int');
+
+		$this->addExpression('dirs')->set(function($m,$q){
+			return $q->expr('IF([mime]="directory" AND [dir_count] > 0,1,0)',['mime'=>$m->getElement('mime'),'dir_count'=>$m->getElement('child_directory_count')]);
+		});
+
+
+		// $this->addHook('afterInsert',[$this,'personalShare']);
+		// $this->addHook('beforeDelete',$this);
 
 		$this->is([
 			'name|to_trim|required'
@@ -59,7 +114,7 @@ class Model_File extends \xepan\hr\Model_Document
 		$share_model->addCondition('file_id',$this->id);
 		$share_model->addCondition('shared_by_id',$this->app->employee->id);
 
-		$crud = $page->add('xepan\hr\CRUD');
+		$crud = $page->add('xepan\hr\CRUD',['pass_acl'=>true]);
 		$crud->setModel($share_model,['shared_by_id','shared_to_id','department_id','shared_type','can_edit','can_delete','can_share']);
 	}
 
@@ -85,6 +140,10 @@ class Model_File extends \xepan\hr\Model_Document
 			$this->delete();
 			return $form->js(null,$form->js()->univ()->closeDialog())->univ()->successMessage("file ".$file_name." deleted successfully");
 		}
+	}
+
+	function haveChildDirectories(){
+		return $this->add('xepan\hr\Model_File')->addCondition('parent_id',$this->id)->addCondition('mime','directory')->count()->getOne();
 	}
 
 	function iCanEdit(){
