@@ -37,7 +37,7 @@ class Model_DocumentShare extends \xepan\base\Model_Table
 	function beforeSave(){
 		// check validate
 		// EITHER FILE OR FOLDER MUST REQUIRED
-		if(!$this['file_id'] && !$this['folder_id']){
+		if(!$this['file_id'] or $this['file_id'] == 'undefined'){
 			throw $this->exception('either Folder or File must select', 'ValidityCheck')->setField('file_id');
 		}
 
