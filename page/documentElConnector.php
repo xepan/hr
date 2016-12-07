@@ -745,7 +745,8 @@ namespace {
 		 * @author Dmitry (dio) Levashov
 		 **/
 		protected function _mkfile($path, $name) {
-			return $this->make($path, $name, 'text/plain') ? $this->_joinPath($path, $name) : false;
+			$mimeByName = elFinderVolumeDriver::mimetypeInternalDetect($name);
+			return $this->make($path, $name, $mimeByName) ? $this->_joinPath($path, $name) : false;
 		}
 
 		/**
