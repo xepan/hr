@@ -18,12 +18,15 @@ class Model_File extends \xepan\base\Model_Table
 	public $acl=false;
 
 	public $user_id=null;
+	public $department_id=null;
 
 	function init()
 	{
 		parent::init();
 
 		if(!$this->user_id) $this->user_id = $this->app->employee->id;
+		if(!$this->department_id) $this->department_id = $this->app->employee['department_id'];
+
 
 		$this->hasOne('xepan\hr\ParentFile','parent_id');
 
@@ -57,7 +60,11 @@ class Model_File extends \xepan\base\Model_Table
 		$this->addExpression('shared_with_me')->set(function($m,$q){
 			// ! created_by_me && shared_with_me
 			return $share = $m->refSQL('Share')
-					->addCondition('shared_to_id',$this->user_id)->count()
+					->addCondition([
+									['shared_to_id',$this->user_id],
+									['shared_type','Global'],
+									['department_id',$this->department_id]
+								])->count()
 					;
 		});
 		// shared permission to write or my file
