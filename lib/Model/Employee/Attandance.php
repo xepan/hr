@@ -122,8 +122,8 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$day = strtolower(date("l", strtotime($this->app->now)));
 	
 		if($week_day_model[$day])
-			return 1;
-		else
 			return 0;
+		else
+			return 1;
 	}
 }
