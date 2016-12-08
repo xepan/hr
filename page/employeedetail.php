@@ -213,7 +213,7 @@ class page_employeedetail extends \xepan\base\Page {
 			// $emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			// $emp_salary_view->setIdField('contact_id');
 			$o = $official_view->addMany('EmployeeSalary',['no_records_message'=>'No document found'],'EmployeeSalary',['view/employee/emp-salary-grid']);
-			$o->setModel($employee->ref('EmployeeSalary'),['salary_id','amount','unit']);
+			$o->setModel($employee->ref('EmployeeSalary'),['salary_id','salary','amount','unit']);
 
 			// $emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			// $emp_leave_view->setIdField('contact_id');

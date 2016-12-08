@@ -66,7 +66,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
 		$this->addHook('afterSave',[$this,'throwEmployeeUpdateHook']);
-		$this->addHook('afterSave',[$this,'updateTemplates']);
+		$this->addHook('afterInsert',[$this,'updateTemplates']);
 		$this->addHook('beforeDelete',[$this,'deleteQualification']);
 		$this->addHook('beforeDelete',[$this,'deleteExperience']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
@@ -93,7 +93,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function updateEmployeeSalary(){
 
-		
 		if($this->dirty['post_id']){
 			
 			$temp = $this->ref('post_id')->ref('salary_template_id');
@@ -112,7 +111,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 					$m['unit'] = $row['unit'];
 					$m->save();
 				}
-				// throw new \Exception($m->id, 1);
 			}
 		}
 	}
@@ -380,6 +378,161 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		// var_dump($support_email_array);
 		return $support_email_array ;
 
+	}
+
+	function countDays($month, $year, $ignore) {
+	    $count = 0;
+	    $counter = mktime(0, 0, 0, $month, 1, $year);
+	    while (date("n", $counter) == $month) {
+	        if (in_array(date("w", $counter), $ignore) == false) {
+	            $count++;
+	        }
+	        $counter = strtotime("+1 day", $counter);
+	    }
+	    return $count;
+	}
+
+	function getOfficialHolidays($month,$year){
+		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
+		//	getWeekdays off from config in terms of array 0 => sunday 1= Monday
+		$week_day_array = ['sunday'=>0,'monday'=>1,'tuesday'=>2,'wednesday'=>3,'thursday'=>4,'friday'=>5,'saturday'=>6];
+		$ignore_array = [];
+		$week_day_model = $this->add('xepan\base\Model_ConfigJsonModel',
+					[
+						'fields'=>[
+									'monday'=>"checkbox",
+									'tuesday'=>"checkbox",
+									'wednesday'=>"checkbox",
+									'thursday'=>"checkbox",
+									'friday'=>"checkbox",
+									'saturday'=>"checkbox",
+									'sunday'=>"checkbox"
+									],
+						'config_key'=>'HR_WORKING_WEEK_DAY',
+						'application'=>'hr'
+					]);
+		$week_day_model->tryLoadAny();
+
+		foreach ($week_day_model as $day=>$value) {
+			if(!$value)
+				$ignore_array[] = $week_day_array[$day];
+		}
+
+		$wekklyOff = $this->countDays($month, $year, $ignore_array);
+
+		return $oh_days->addCondition('month',$month)
+				->addCondition('year',$year)
+				->sum($this->dsql()->expr('IFNULL([0],0)+[1]',[$oh_days->getElement('month_holidays'),$wekklyOff]))
+				->getOne()
+				;
+	}
+
+	function getPaidLeaves($month,$year){
+
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
+		return $el_days
+				->addCondition('emp_leave_allow_id',$this->id)
+				->addCondition('month',$month)
+				->addCondition('year',$year)
+				->addCondition('leave_type','Paid')
+				->sum($this->dsql()->expr('IFNULL([0],0)',[$el_days->getElement('month_leaves')]))
+				->getOne();
+	}
+
+	function getUnPaidLeaves($month,$year){
+
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
+		return $el_days
+				->addCondition('emp_leave_allow_id',$this->id)
+				->addCondition('month',$month)
+				->addCondition('year',$year)
+				->addCondition('leave_type','Unpaid')
+				->sum($this->dsql()->expr('IFNULL([0],0)',[$el_days->getElement('month_leaves')]))
+				->getOne();
+	}
+
+	function getPresent($month,$year){
+
+		$el_days = $this->add('xepan\hr\Model_Employee_Attandance');
+		$el_days->addExpression('month','MONTH(from_date)');
+		$el_days->addExpression('year','YEAR(from_date)');
+
+		return $el_days
+				->addCondition('employee_id',$this->id)
+				->addCondition('month',$month)
+				->addCondition('is_holiday',false)
+				->addCondition('year',$year)
+				->count()->getOne();
+	}
+
+	
+	// echo countDays(2013, 1, array(0, 6)); // 23
+
+	function getSalarySlip($month,$year,$salary_sheet_id){
+
+		$TotalMonthDays = date('t',strtotime($year.'-'.$month.'-01'));
+		$OfficialHolidays = $this->getOfficialHolidays($month,$year);
+		
+		$TotalWorkDays = $TotalMonthDays - $OfficialHolidays;
+
+		$PaidLeaves = $this->getPaidLeaves($month,$year);
+		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
+		$Present = $this->getPresent($month,$year);
+
+		$calculated = [
+				'TotalWorkingDays'=>$TotalWorkDays,
+				'PaidLeaves'=>$PaidLeaves,
+				'UnPaidLeaves'=>$UnPaidLeaves,
+				'PaidDays'=>$Present + $PaidLeaves,
+				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
+			];
+		foreach ($this->ref('EmployeeSalary') as $salary) {
+			// echo "working for ". $salary['salary']. "<br/><pre>";
+			// print_r($calculated);
+			$result= $this->evalSalary($salary['amount'],$calculated);
+			$calculated[$salary['salary']] = $result;
+			// echo "</pre>got this ". $result .'<br/>';
+		}
+
+
+		// From database ... 
+		$loaded = [
+				'TotalWorkingDays'=>30,
+				'PaidLeaves'=>2,
+				'UnPaidLeavs'=>2,
+				'Absents'=>2,
+				'PaidDays'=>25
+			];
+
+		$return_array = [
+			'calculated'=>$calculated,
+			'loaded'=>$loaded
+		];
+
+		return $return_array;
+	}
+
+	// @expression = {Base} * 12 /100
+	// base_array = $calculated_array .. updated in each loop in getSalarySlip function
+	function evalSalary($expression, $base_array){
+		// solve expression by base array
+		// var_dump($expression);
+		// var_dump($base_array);
+		// echo "<br/>";
+
+		if(!$expression) return 0;
+		foreach ($base_array as $key => $value) {
+			$expression = str_replace("{".$key."}", $value, $expression);
+		}
+
+		// var_dump($expression);
+		eval('$return = '.$expression.';');
+		// echo "returning ".$return . " for expression '$expression' <br/>";
+		return $return;
+
+		// implmenet min and max functions 
+		$m = new \Webit\Util\EvalMath\EvalMath;
+		return $result = $m->evaluate($expression);
 	}
 
 }
