@@ -49,7 +49,7 @@ class View_Notification extends \CompleteLister{
 			if(!$this->app->recall('mute_all_notification',false))
 				$this->app->js(true)->_load('websocketclient')->univ()->runWebSocketClient($this->app->getConfig('websocket-server',false),$this->app->current_website_name.'_'.$this->app->employee->id);
 			
-			$this->app->js(true,'$.wakeUp(function(sleep_time){'.(string)$this->app->js()->reload().';});')->_load('jquery.wakeup');
+			// $this->app->js(true,'$.wakeUp(function(sleep_time){'.(string)$this->app->js()->reload().';});')->_load('jquery.wakeup');
 		}else{
 			// No WebSocket implemented, keep 2 minute refresh method activated
 			$this->js(true)->univ()->setInterval($this->js()->univ()->ajaxec($this->api->url('xepan_hr_notificationexec'))->_enclose(),120000);
@@ -70,7 +70,7 @@ class View_Notification extends \CompleteLister{
 		return parent::formatRow();
 	}
 
-	function render(){		
+	function render(){
 		$this->js(true)->_library('PNotify.desktop')->permission();
 		$this->js(true)->_load('xepan.pnotify')->univ()->ajaxec($this->api->url('xepan_hr_notificationexec'));
 		return parent::render();
