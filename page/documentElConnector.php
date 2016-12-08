@@ -246,7 +246,7 @@ namespace {
 			
 	
 			if($mime != 'directory'){
-				$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>false,'import_mode'=>'string','import_source'=>null));
+				$filestore = $this->app->add('xepan/filestore/Model_File',array('policy_add_new_type'=>true,'import_mode'=>'string','import_source'=>null));
 				
 				$type = $this->app->add('xepan\filestore\Model_Type');
 				$type->addCondition('name',$mime);
