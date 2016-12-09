@@ -14,6 +14,9 @@ class page_salarytemplate extends \xepan\hr\page_config{
 		$temp_crud->addRef('xepan\hr\SalaryTemplateDetails',['label'=>'Detail']);
 
 
+		$info = $this->add('View',null,'salary_view')->setElement('h2');
+		$info->setHtml('Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}');
+
 		$salary = $this->add('xepan\hr\Model_Salary');
 		$crud = $this->add('xepan\base\CRUD',null,'salary_view');
 		$crud->setModel($salary);

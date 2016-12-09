@@ -36,7 +36,8 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
             $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
             $m->addItem(['Deduction Management','icon'=>'fa fa-money'],'xepan_hr_deduction');
-            // $m->addItem(['Payroll','icon'=>'fa fa-money'],'xepan_hr_payroll');
+            $m->addItem(['Salary Sheet','icon'=>'fa fa-money'],'xepan_hr_salarysheet');
+
             $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
             $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
             $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');

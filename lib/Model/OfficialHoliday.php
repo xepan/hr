@@ -19,5 +19,9 @@ class Model_OfficialHoliday extends \xepan\base\Model_Table{
 		$this->addField('from_date')->type('date');
 		$this->addField('to_date')->type('date');
 		$this->addField('type')->setValueList(['official'=>'Official','government'=>"Government",'national'=>"National",'international'=>"International",'other'=>"Other"]);
+		
+		$this->addExpression('month')->set('MONTH(from_date)');
+		$this->addExpression('year')->set('YEAR(from_date)');
+		$this->addExpression('month_holidays')->set('DATEDIFF(to_date,from_date) + 1');
 	}
 }

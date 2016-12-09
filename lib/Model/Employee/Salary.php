@@ -10,7 +10,19 @@ class Model_Employee_Salary extends \xepan\base\Model_Table{
 
 		$this->hasOne('xepan\hr\Employee','employee_id');
 		$this->hasOne('xepan\hr\Salary','salary_id');
-		$this->addField('amount')->type('int');
+		$this->addField('amount')->hint('leave empty to get salary default value');
 		$this->addField('unit')->enum(['monthly']);
+		
+		$this->addHook('beforeSave',$this);
+	}
+
+	function beforeSave(){
+		if(!$this['amount']){
+			$salary= $this->add("xepan\hr\Model_Salary")->tryLoad($this['salary_id']);
+			if($salary->loaded()){
+				$this['amount'] = $salary['default_value'];
+			}
+		}
+		
 	}
 }
