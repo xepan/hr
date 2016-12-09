@@ -431,10 +431,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
 		return $el_days
-				->addCondition('emp_leave_allow_id',$this->id)
+				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
 				->addCondition('year',$year)
 				->addCondition('leave_type','Paid')
+				->addCondition('status','Approved')
 				->sum($this->dsql()->expr('IFNULL([0],0)',[$el_days->getElement('month_leaves')]))
 				->getOne();
 	}
@@ -443,12 +444,14 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
 		return $el_days
-				->addCondition('emp_leave_allow_id',$this->id)
+				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
 				->addCondition('year',$year)
 				->addCondition('leave_type','Unpaid')
+				->addCondition('status','Approved')
 				->sum($this->dsql()->expr('IFNULL([0],0)',[$el_days->getElement('month_leaves')]))
 				->getOne();
+		
 	}
 
 	function getPresent($month,$year){
@@ -468,12 +471,12 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	
 	// echo countDays(2013, 1, array(0, 6)); // 23
 
-	function getSalarySlip($month,$year,$salary_sheet_id){
+	function getSalarySlip($month,$year,$salary_sheet_id,$TotalWorkDays){
 
 		$TotalMonthDays = date('t',strtotime($year.'-'.$month.'-01'));
 		$OfficialHolidays = $this->getOfficialHolidays($month,$year);
 		
-		$TotalWorkDays = $TotalMonthDays - $OfficialHolidays;
+		// $TotalWorkDays = $TotalMonthDays - $OfficialHolidays;
 
 		$PaidLeaves = $this->getPaidLeaves($month,$year);
 		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
@@ -486,14 +489,18 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidDays'=>$Present + $PaidLeaves,
 				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
 			];
+		$net_amount = 0;
 		foreach ($this->ref('EmployeeSalary') as $salary) {
-			// echo "working for ". $salary['salary']. "<br/><pre>";
-			// print_r($calculated);
-			$result= $this->evalSalary($salary['amount'],$calculated);
+			$result = $this->evalSalary($salary['amount'],$calculated);
 			$calculated[$salary['salary']] = $result;
-			// echo "</pre>got this ". $result .'<br/>';
+
+			if($salary['add_deduction'] == "add")
+				$net_amount += $result;
+			if($salary['add_deduction'] == "deduction")
+				$net_amount -= $result;
 		}
 
+		$calculated['NetAmount'] = $net_amount;
 
 		// From database ... 
 		$loaded = [
@@ -501,7 +508,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidLeaves'=>2,
 				'UnPaidLeavs'=>2,
 				'Absents'=>2,
-				'PaidDays'=>25
+				'PaidDays'=>25,
+				'NetAmount'=>0
 			];
 
 		$return_array = [
@@ -533,6 +541,24 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		// implmenet min and max functions 
 		$m = new \Webit\Util\EvalMath\EvalMath;
 		return $result = $m->evaluate($expression);
+	}
+
+	/*
+	* @return = ['salary_id'=>expression]
+	*/
+	function getApplySalary(){
+		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
+		
+		$emp_salary = $this->add('xepan\hr\Model_Employee_Salary')->addCondition('employee_id',$this->id)->getRows();
+		$result_array = [];
+		foreach ($emp_salary as $key => $salary_info) {
+			$result_array[$salary_info['salary_id']] = [
+														'expression'=>$salary_info['amount']?:0,
+														'add_deduction'=>$salary_info['add_deduction']
+													];
+		}
+
+		return $result_array;
 	}
 
 }

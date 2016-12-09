@@ -13,6 +13,8 @@ class Model_Employee_Salary extends \xepan\base\Model_Table{
 		$this->addField('amount')->hint('leave empty to get salary default value');
 		$this->addField('unit')->enum(['monthly']);
 		
+		$this->addExpression('add_deduction')->set($this->refSQL('salary_id')->fieldQuery('add_deduction'));
+
 		$this->addHook('beforeSave',$this);
 	}
 

@@ -25,4 +25,85 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 
 		$this->is(['name|required','month|required','year|required']);
 	}
+
+	function addEmployeeRow($employee_id,$total_amount=null,$salary_detail=[]){
+		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
+		
+		$row = $this->add('xepan\hr\Model_EmployeeRow');
+		$row['salary_abstract_id'] = $this->id;
+		$row['employee_id'] = $employee_id;
+		$row['total_amount'] = $total_amount;
+		$row->save();
+
+		if(count($salary_detail))
+			$row->addSalaryDetail($salary_detail);
+
+		return $row;
+	}
+
+	function getOfficialHolidays($month,$year,$TotalMonthDays){
+		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
+		//	getWeekdays off from config in terms of array 0 => sunday 1= Monday
+		$week_day_array = ['sunday'=>0,'monday'=>1,'tuesday'=>2,'wednesday'=>3,'thursday'=>4,'friday'=>5,'saturday'=>6];
+		$ignore_array = [];
+		$week_day_model = $this->add('xepan\base\Model_ConfigJsonModel',
+					[
+						'fields'=>[
+									'monday'=>"checkbox",
+									'tuesday'=>"checkbox",
+									'wednesday'=>"checkbox",
+									'thursday'=>"checkbox",
+									'friday'=>"checkbox",
+									'saturday'=>"checkbox",
+									'sunday'=>"checkbox"
+									],
+						'config_key'=>'HR_WORKING_WEEK_DAY',
+						'application'=>'hr'
+					]);
+		$week_day_model->tryLoadAny();
+
+		foreach ($week_day_model as $day=>$value) {
+			if(!$value)
+				$ignore_array[] = $week_day_array[$day];
+		}
+
+		$wekklyOff = $this->countDays($month, $year, $ignore_array,$TotalMonthDays);
+
+		// throw new \Exception($oh_days
+		// 						->addCondition('month',$month)
+		// 						->addCondition('year',$year)
+		// 						->sum(
+		// 								$this->dsql()->expr('IFNULL([0],0) + [1]',[$oh_days->getElement('month_holidays'),$wekklyOff]
+		// 							)));
+		
+		return $oh_days
+					->addCondition('month',$month)
+					->addCondition('year',$year)
+					->sum(
+						$this->dsql()->expr('IFNULL([0],0)+[1]',[$oh_days->getElement('month_holidays'),$wekklyOff])
+						)
+					->getOne()
+					;
+	}
+
+	function getTotalWorkingDays($month,$year){
+		$TotalMonthDays = date('t',strtotime($year.'-'.$month.'-01'));
+		$OfficialHolidays = $this->getOfficialHolidays($month,$year,$TotalMonthDays);
+		return $TotalMonthDays - $OfficialHolidays;
+	}
+
+	function countDays($month, $year, $ignore=[],$TotalMonthDays=0){
+	    $count = 0;
+	    $counter = mktime(0, 0, 0, $month, 1, $year);
+	    while (date("n", $counter) == $month) {
+	        if (in_array(date("w", $counter), $ignore) == false) {
+	            $count++;
+	        }
+	        $counter = strtotime("+1 day", $counter);
+	    }
+	   	
+	   	if($TotalMonthDays)
+	    	return $TotalMonthDays - $count;
+	    return $count;
+	}
 }
