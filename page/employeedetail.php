@@ -295,12 +295,12 @@ class page_employeedetail extends \xepan\base\Page {
 			]);
 		$contactconfig_m->tryLoadAny();	
 
-		if($contactconfig_m['contact_no_duplcation_allowed'] != 'Duplication Allowed'){
+		if($contactconfig_m['contact_no_duplcation_allowed'] != 'duplication_allowed'){
 	        $contactphone_m = $this->add('xepan\base\Model_Contact_Phone');
 	        $contactphone_m->addCondition('id','<>',$phone_id);
 	        $contactphone_m->addCondition('value',$phone_value);
 			
-			if($contactconfig_m['contact_no_duplcation_allowed'] == 'No Duplication Allowed'){
+			if($contactconfig_m['contact_no_duplcation_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
 				$contactphone_m->addCondition('contact_type',$contact['contact_type']);
 		        $contactphone_m->tryLoadAny();
 		 	}
@@ -332,12 +332,12 @@ class page_employeedetail extends \xepan\base\Page {
 			]);
 		$emailconfig_m->tryLoadAny();
 
-		if($emailconfig_m['email_duplication_allowed'] != 'Duplication Allowed'){
+		if($emailconfig_m['email_duplication_allowed'] != 'duplication_allowed'){
 	        $email_m = $this->add('xepan\base\Model_Contact_Email');
 	        $email_m->addCondition('id','<>',$email_id);
 	        $email_m->addCondition('value',$email_value);
 			
-			if($emailconfig_m['email_duplication_allowed'] == 'No Duplication Allowed'){
+			if($emailconfig_m['email_duplication_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
 				$email_m->addCondition('contact_type',$contact['contact_type']);
 			}
 	        
