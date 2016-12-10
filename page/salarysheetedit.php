@@ -22,8 +22,21 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 		$form = $this->add('Form');
 		$all_salary = $this->add('xepan\hr\Model_Salary')->getRows();
+		
+		foreach ($all_salary as &$salary) {
+			$salary['name'] = preg_replace('/\s+/', '',$salary['name']);
+		}
 
-		$system_calculated_factor = ['PaidLeaves','UnPaidLeaves','Absents','PaidDays'];
+		$all_salary_for_js = [];
+		$all_salary_for_js[] = ['name'=>'Presents'];
+		$all_salary_for_js[] = ['name'=>'PaidLeaves'];
+		$all_salary_for_js[] = ['name'=>'UnPaidLeaves'];
+		$all_salary_for_js[] = ['name'=>'Absents'];
+		$all_salary_for_js[] = ['name'=>'PaidDays'];
+
+		$all_salary_for_js = array_merge($all_salary_for_js,$all_salary);
+
+		$system_calculated_factor = ['Presents','PaidLeaves','UnPaidLeaves','Absents','PaidDays'];
 		
 		// $salary_field_id_array = [];
 
@@ -49,7 +62,14 @@ class page_salarysheetedit extends \xepan\base\Page{
 				$field = $new_col->addField('Number',"f_".$name."_".$employee->id, $name);
 				$field->set($value);
 				$field->addClass($name."_".$employee->id);
+				$field->addClass("do-change-salarysheet-factor");
 				$field->setAttr('data-employee-salary',$name);
+				$field->setAttr('data-add_deduction',"dummy");
+				$field->setAttr('data-employee_id',$employee->id);
+
+				// $field->setAttr('data-xepan-salarysheet-expression',"");
+				if($name === "PaidDays")
+					$field->setAttr('data-xepan-salarysheet-expression','{Presents}+{PaidLeaves}');
 				// $salary_field_id_array[$name] = $field->name;
 			}
 			//for all company salary
@@ -68,8 +88,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 				$applied_expression = 0;
 				$add_deduction = "";
 				if(isset($employee_applied_salary[$salary['id']])){
-					$applied_expression = $employee_applied_salary[ $salary['id'] ]['expression'];
-					// $add_deduction = $employee_applied_salary[$salary['id']]['add_deduction'];
+					$applied_expression = preg_replace('/\s+/', '', $employee_applied_salary[ $salary['id'] ]['expression']);
+					$add_deduction = $employee_applied_salary[$salary['id']]['add_deduction'];
 				}
 
 				$new_col->addField('Number',$field_name,$salary['name'])
@@ -93,14 +113,26 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$form->addSubmit('Generate');
 		if($form->isSubmitted()){
 			try{
+
+				
 				foreach ($active_employee as $employee) {
 					$salary_amount = [];
+					
+					$calculated_array = [
+											'presents'=>$form['f_Presents_'.$employee->id],
+											'paid_leaves'=>$form['f_PaidLeaves_'.$employee->id],
+											'unpaid_leaves'=>$form['f_UnPaidLeaves_'.$employee->id],
+											'absents'=>$form['f_Absents_'.$employee->id],
+											'paiddays'=>$form['f_PaidDays_'.$employee->id],
+											'total_working_days'=>$this->TotalWorkDays
+										];
+
 					foreach ($all_salary as $key => $salary) {
 						$field = "f_".$salary['name']."_".$employee->id;
 						$salary_amount[$salary['id']] = $form[$field];
 					}
 
-					$model_sheet->addEmployeeRow($employee->id,null,$salary_amount);
+					$model_sheet->addEmployeeRow($employee->id,null,$salary_amount,$calculated_array);
 				}
 			}catch(\Exception $e){
 				throw $e;
@@ -111,8 +143,10 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$form->js()->univ()->successMessage('saved successfully')->execute();
 		}
 
+
+
 		// js change on field
 		$this->js(true)->_load('salarysheetcalculation');
-		$form->js('change')->_selector('.do-change-salarysheet-factor')->univ()->doSalarySheetCalculation($this->js(true)->_selectorThis(),$this->js(true)->_selectorThis()->data('employee_id'));
+		$form->js('change')->_selector('.do-change-salarysheet-factor')->univ()->doSalarySheetCalculation($this->js(true)->_selectorThis(),$this->js(true)->_selectorThis()->data('employee_id'),$this->TotalWorkDays,$all_salary_for_js);
 	}
 }

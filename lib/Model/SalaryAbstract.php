@@ -20,19 +20,23 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		$this->addField('year')->enum($year);
 
 		$this->addField('type')->setValueList(['SalarySheet'=>'Salary Sheet','SalaryPayment'=>'Salary Payment'])->mandatory(true);
-
 		$this->hasMany('xepan\hr\EmployeeRow','salary_abstract_id');
 
 		$this->is(['name|required','month|required','year|required']);
 	}
 
-	function addEmployeeRow($employee_id,$total_amount=null,$salary_detail=[]){
+	function addEmployeeRow($employee_id,$total_amount=null,$salary_detail=[],$calculated_field=[]){
 		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
 		
 		$row = $this->add('xepan\hr\Model_EmployeeRow');
 		$row['salary_abstract_id'] = $this->id;
 		$row['employee_id'] = $employee_id;
 		$row['total_amount'] = $total_amount;
+		
+		foreach ($calculated_field as $key=>$value) {
+			$row[$key] = $value;
+		}
+
 		$row->save();
 
 		if(count($salary_detail))
@@ -62,10 +66,13 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 					]);
 		$week_day_model->tryLoadAny();
 
-		foreach ($week_day_model as $day=>$value) {
-			if(!$value)
-				$ignore_array[] = $week_day_array[$day];
-		}
+		if(!$week_day_model['monday']) $ignore_array[] = 1;
+		if(!$week_day_model['tuesday']) $ignore_array[] = 2;
+		if(!$week_day_model['wednesday']) $ignore_array[] = 3;
+		if(!$week_day_model['thursday']) $ignore_array[] = 4;
+		if(!$week_day_model['friday']) $ignore_array[] = 5;
+		if(!$week_day_model['saturday']) $ignore_array[] = 6;
+		if(!$week_day_model['sunday']) $ignore_array[] = 0;
 
 		$wekklyOff = $this->countDays($month, $year, $ignore_array,$TotalMonthDays);
 
@@ -76,19 +83,21 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		// 								$this->dsql()->expr('IFNULL([0],0) + [1]',[$oh_days->getElement('month_holidays'),$wekklyOff]
 		// 							)));
 		
-		return $oh_days
+		$od =  $oh_days
 					->addCondition('month',$month)
 					->addCondition('year',$year)
 					->sum(
-						$this->dsql()->expr('IFNULL([0],0)+[1]',[$oh_days->getElement('month_holidays'),$wekklyOff])
+						$this->dsql()->expr('IFNULL([0],0)',[$oh_days->getElement('month_holidays')])
 						)
 					->getOne()
 					;
+
+		return $od+$wekklyOff;
 	}
 
 	function getTotalWorkingDays($month,$year){
 		$TotalMonthDays = date('t',strtotime($year.'-'.$month.'-01'));
-		$OfficialHolidays = $this->getOfficialHolidays($month,$year,$TotalMonthDays);
+		$OfficialHolidays = $this->getOfficialHolidays($month,$year,$TotalMonthDays);				
 		return $TotalMonthDays - $OfficialHolidays;
 	}
 

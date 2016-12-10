@@ -13,6 +13,15 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 
 		$this->addField('total_amount'); // used only for Salary payment 
 
+		// system calculated fields
+		$this->addField('presents');
+		$this->addField('paid_leaves');
+		$this->addField('unpaid_leaves');
+		$this->addField('absents');
+		$this->addField('paiddays');
+		$this->addField('total_working_days');
+
+
 		$this->hasMany('xepan\hr\SalaryDetail','employee_row_id',null,'SalaryDetail');
 		$this->addExpression('total_amout_add')->set(function($m,$q){
 			return $q->expr('IFNULL([0],0)',[$m->refSQL('SalaryDetail')->addCondition('calculation_type','add')->sum('amount')]);

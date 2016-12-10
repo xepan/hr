@@ -486,6 +486,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'TotalWorkingDays'=>$TotalWorkDays,
 				'PaidLeaves'=>$PaidLeaves,
 				'UnPaidLeaves'=>$UnPaidLeaves,
+				'Presents'=>$Present,
 				'PaidDays'=>$Present + $PaidLeaves,
 				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
 			];
