@@ -66,15 +66,15 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Employee');
 		$this->addHook('afterSave',[$this,'throwEmployeeUpdateHook']);
-		$this->addHook('afterInsert',[$this,'updateTemplates']);
+		// $this->addHook('afterInsert',[$this,'updateTemplates']);
 		$this->addHook('beforeDelete',[$this,'deleteQualification']);
 		$this->addHook('beforeDelete',[$this,'deleteExperience']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeDocument']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeLedger']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeMovements']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
-		$this->addHook('beforeSave',[$this,'updateEmployeeSalary']);
-		$this->addHook('beforeSave',[$this,'updateEmployeeLeave']);
+		$this->addHook('afterSave',[$this,'updateEmployeeSalary']);
+		$this->addHook('afterSave',[$this,'updateEmployeeLeave']);
 	}
 
 	function getActiveEmployeeIds(){
@@ -93,12 +93,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function updateEmployeeSalary(){
 
-		if($this->dirty['post_id']){
+		if($this->app->employee_post_id_changed){
 			
 			$temp = $this->ref('post_id')->ref('salary_template_id');
-
 			if($temp->loaded()){
-				
 				$this->ref('EmployeeSalary')->each(function($m){
 					$m->delete();
 				});
@@ -117,7 +115,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function updateEmployeeLeave(){
 		
-		if($this->dirty['post_id']){
+		if($this->app->employee_post_id_changed){
 			$temp = $this->ref('post_id')->ref('leave_template_id');
 
 
@@ -142,16 +140,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}
 	}
 
-	function updateTemplates(){
-		// copy salary and leave templates of posts
-		$post = $this->add('xepan\hr\Model_Post')->tryLoadBy('id',$this['post_id']);
+	// function updateTemplates(){
+	// 	// copy salary and leave templates of posts
+	// 	$post = $this->add('xepan\hr\Model_Post')->tryLoadBy('id',$this['post_id']);
 		
-		if(!$post->loaded())
-			return;
+	// 	if(!$post->loaded())
+	// 		return;
 		
-			$this['salary_template_id'] = $post['salary_template_id'];  
-			$this->save(); 
-	}
+	// 		$this['salary_template_id'] = $post['salary_template_id'];  
+	// 		$this->save(); 
+	// }
 
 	function afterLoginCheck(){
 		
@@ -298,7 +296,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function updateSearchString($m){
-
+		if($this->isDirty('post_id')) $this->app->employee_post_id_changed  = $this['post_id'];
 		$search_string = ' ';
 		$search_string .=" ". $this['contact_id'];
 		$search_string .=" ". $this['notified_till'];
