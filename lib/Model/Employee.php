@@ -93,7 +93,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function updateEmployeeSalary(){
 
-		if($this->app->employee_post_id_changed){
+		if(isset($this->app->employee_post_id_changed)){
 			
 			$temp = $this->ref('post_id')->ref('salary_template_id');
 			if($temp->loaded()){
@@ -115,7 +115,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function updateEmployeeLeave(){
 		
-		if($this->app->employee_post_id_changed){
+		if(isset($this->app->employee_post_id_changed)){
 			$temp = $this->ref('post_id')->ref('leave_template_id');
 
 
@@ -296,7 +296,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function updateSearchString($m){
-		if($this->isDirty('post_id')) $this->app->employee_post_id_changed  = $this['post_id'];
+
+		if($this->isDirty('post_id')) 
+			$this->app->employee_post_id_changed  = $this['post_id'];
+		
 		$search_string = ' ';
 		$search_string .=" ". $this['contact_id'];
 		$search_string .=" ". $this['notified_till'];
