@@ -29,10 +29,11 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
 		
 		$row = $this->add('xepan\hr\Model_EmployeeRow');
-		$row['salary_abstract_id'] = $this->id;
-		$row['employee_id'] = $employee_id;
+		$row->addCondition('salary_abstract_id',$this->id);
+		$row->addCondition('employee_id',$employee_id);
+		$row->tryLoadAny();
+
 		$row['total_amount'] = $total_amount;
-		
 		foreach ($calculated_field as $key=>$value) {
 			$row[$key] = $value;
 		}
