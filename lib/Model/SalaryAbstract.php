@@ -19,10 +19,12 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		$year = ['2015','2016','2017','2018'];
 		$this->addField('year')->enum($year);
 
+		$this->addField('status')->defaultValue('Draft');
 		$this->addField('type')->setValueList(['SalarySheet'=>'Salary Sheet','SalaryPayment'=>'Salary Payment'])->mandatory(true);
 		$this->hasMany('xepan\hr\EmployeeRow','salary_abstract_id');
 
 		$this->is(['name|required','month|required','year|required']);
+
 	}
 
 	function addEmployeeRow($employee_id,$total_amount=null,$salary_detail=[],$calculated_field=[]){
