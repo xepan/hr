@@ -565,7 +565,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		return $return;
 
 		// implmenet min and max functions 
-		$m = new \Webit\Util\EvalMath\EvalMath;
+		$m = new \xepan\hr\EvalMath;
 		return $result = $m->evaluate($expression);
 	}
 
