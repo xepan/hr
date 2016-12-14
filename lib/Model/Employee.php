@@ -394,6 +394,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function getOfficialHolidays($month,$year){
+		if(isset($this->app->cache[$month][$year]['OfficialHolidays'])) return $this->app->cache[$month][$year]['OfficialHolidays'];
 		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
 		//	getWeekdays off from config in terms of array 0 => sunday 1= Monday
 		$week_day_array = ['sunday'=>0,'monday'=>1,'tuesday'=>2,'wednesday'=>3,'thursday'=>4,'friday'=>5,'saturday'=>6];
@@ -421,11 +422,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$wekklyOff = $this->countDays($month, $year, $ignore_array);
 
-		return $oh_days->addCondition('month',$month)
+		$h_c=  $oh_days->addCondition('month',$month)
 				->addCondition('year',$year)
 				->sum($this->dsql()->expr('IFNULL([0],0)+[1]',[$oh_days->getElement('month_holidays'),$wekklyOff]))
 				->getOne()
 				;
+		$this->app->cache[$month][$year]['OfficialHolidays']= $h_c;
+		return $h_c;
 	}
 
 	function getPaidLeaves($month,$year){
@@ -494,6 +497,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$net_amount = 0;
 		foreach ($this->ref('EmployeeSalary') as $salary) {
 			$result = $this->evalSalary($salary['amount'],$calculated);
+			
+			$salary['salary'] = preg_replace('/\s+/', '',$salary['salary']);
+
 			$calculated[$salary['salary']] = $result;
 
 			if($salary['add_deduction'] == "add")
@@ -504,20 +510,37 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$calculated['NetAmount'] = $net_amount;
 
-		// From database ... 
+		if(!$salary_sheet_id) return ['calculated'=>$calculated,'loaded'=>[]];
+
+		$existing_m= $this->add('xepan\hr\Model_EmployeeRow');
+		$existing_m->addCondition('salary_abstract_id',$salary_sheet_id);
+		$existing_m->addCondition('employee_id',$this->id);
+		$existing_m->tryLoadAny();
+		if(!$existing_m->loaded()) return ['calculated'=>$calculated,'loaded'=>[]];
+
 		$loaded = [
-				'TotalWorkingDays'=>30,
-				'PaidLeaves'=>2,
-				'UnPaidLeavs'=>2,
-				'Absents'=>2,
-				'PaidDays'=>25,
-				'NetAmount'=>0
+				'TotalWorkingDays'=>$existing_m['total_working_days'],
+				'Presents'=>$existing_m['presents'],
+				'PaidLeaves'=>$existing_m['paid_leaves'],
+				'UnPaidLeavs'=>$existing_m['unpaid_leaves'],
+				'Absents'=>$existing_m['absents'],
+				'PaidDays'=>$existing_m['paiddays'],
+				'NetAmount'=>$existing_m['net_amount']
 			];
+
+		$sal = $this->add('xepan\hr\Model_Salary');
+		foreach ($sal->getRows() as &$s) {
+			$temp = preg_replace('/\s+/', '',$s['name']);
+			$loaded[$temp] = $existing_m[$this->app->normalizeName($s['name'])];
+		}
 
 		$return_array = [
 			'calculated'=>$calculated,
 			'loaded'=>$loaded
 		];
+
+		// echo "<pre>";
+		// print_r($return_array);
 
 		return $return_array;
 	}
@@ -531,17 +554,18 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		// echo "<br/>";
 
 		if(!$expression) return 0;
+		$expression = preg_replace('/\s+/', '',$expression);
+
 		foreach ($base_array as $key => $value) {
+			$key = preg_replace('/\s+/', '',$key);
 			$expression = str_replace("{".$key."}", $value, $expression);
 		}
-
-		// var_dump($expression);
 		eval('$return = '.$expression.';');
 		// echo "returning ".$return . " for expression '$expression' <br/>";
 		return $return;
 
 		// implmenet min and max functions 
-		$m = new \Webit\Util\EvalMath\EvalMath;
+		$m = new \xepan\hr\EvalMath;
 		return $result = $m->evaluate($expression);
 	}
 

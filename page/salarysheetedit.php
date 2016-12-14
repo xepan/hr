@@ -6,6 +6,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 	public $TotalWorkDays = 0;
 	function init(){
 		parent::init();
+
+		set_time_limit(500);
 		
 		$salary_sheet_id = $this->api->stickyGET('sheet_id');
 		$model_sheet = $this->add('xepan\hr\Model_SalaryAbstract')->load($salary_sheet_id);
@@ -16,7 +18,9 @@ class page_salarysheetedit extends \xepan\base\Page{
 		// total work days
 		$this->TotalWorkDays  = $model_sheet->getTotalWorkingDays($month,$year);
 
-		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active');
+		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active')
+			// ->setLimit(3)
+		;
 
 		$this->add('View')->setElement('h1')->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
 
@@ -27,6 +31,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$salary['name'] = preg_replace('/\s+/', '',$salary['name']);
 		}
 
+
 		$all_salary_for_js = [];
 		$all_salary_for_js[] = ['name'=>'Presents'];
 		$all_salary_for_js[] = ['name'=>'PaidLeaves'];
@@ -36,9 +41,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 		$all_salary_for_js = array_merge($all_salary_for_js,$all_salary);
 
-		$system_calculated_factor = ['Presents','PaidLeaves','UnPaidLeaves','Absents','PaidDays'];
+		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','paiddays'=>'PaidDays'];
 		
-		// $salary_field_id_array = [];
 
 		foreach ($active_employee as $employee) {
 
@@ -52,11 +56,17 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$col1->addField('line','f_employee_name_'.$employee->id,'name')->set($employee['name']);
 			$result = $employee->getSalarySlip($month,$year,$salary_sheet_id,$this->TotalWorkDays);
 
+			// echo "<pre>";
+			// print_r($result);
 			//for pre defined system calculated Factor
-			foreach ($system_calculated_factor as $name) {
-				$value = 0;
-				if(isset($result['calculated'][$name]))
+			foreach ($system_calculated_factor as $key => $name) {
+				if(isset($result['loaded'][$name]))
+					$value = $result['loaded'][$name];
+				elseif (isset($result['calculated'][$name])) {
 					$value = $result['calculated'][$name];
+				}else
+					$value = 0;
+
 
 				$new_col = $cols->addColumn(2)->addClass('col-md-2');
 				$field = $new_col->addField('Number',"f_".$name."_".$employee->id, $name);
@@ -81,6 +91,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 					$value = $result['calculated'][$salary['name']]?:0;
 				else
 					$value = 0;
+				
+				// echo $employee['name']." salary= ".$salary['name']." value= ".$value."<br/>";
 
 				$new_col = $cols->addColumn(2)->addClass('col-md-2 ');
 				$field_name  = "f_".$salary['name']."_".$employee->id;
@@ -106,15 +118,15 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$new_col = $cols->addColumn(2)->addClass('col-md-2');
 			$field_name  = "f_NetAmount_".$employee->id;
 			$field = $new_col->addField('Number',$field_name,'Net Amount');
-			$field->set($result['calculated']['NetAmount']);
+			$field->set(isset($result['loaded']['NetAmount'])?$result['loaded']['NetAmount']:$result['calculated']['NetAmount']);
 			$field->addClass('NetAmount'."_".$employee->id);
 		}
 
+		// die();
 		$form->addSubmit('Generate');
 		if($form->isSubmitted()){
 			try{
 
-				
 				foreach ($active_employee as $employee) {
 					$salary_amount = [];
 					
@@ -131,7 +143,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 						$field = "f_".$salary['name']."_".$employee->id;
 						$salary_amount[$salary['id']] = $form[$field];
 					}
-
+					
 					$model_sheet->addEmployeeRow($employee->id,null,$salary_amount,$calculated_array);
 				}
 			}catch(\Exception $e){

@@ -21,8 +21,16 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		$this->addField('paiddays');
 		$this->addField('total_working_days');
 
-
 		$this->hasMany('xepan\hr\SalaryDetail','employee_row_id',null,'SalaryDetail');
+		
+		$sal = $this->add('xepan\hr\Model_Salary');
+		foreach ($sal->getRows() as $s) {
+			$this->addExpression($this->app->normalizeName($s['name']))->set(function($m,$q)use($s){
+				return $m->refSQL('SalaryDetail')->addCondition('salary_id',$s['id'])->fieldQuery('amount');
+			});
+		}
+
+
 		$this->addExpression('total_amout_add')->set(function($m,$q){
 			return $q->expr('IFNULL([0],0)',[$m->refSQL('SalaryDetail')->addCondition('calculation_type','add')->sum('amount')]);
 		})->type('money');
@@ -35,6 +43,9 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		$this->addExpression('net_amount')->set(function($m,$q){
 			return $q->expr('[0]-[1]',[$m->getElement('total_amout_add'),$m->getElement('total_amount_deduction')]);
 		})->type('money');
+
+
+
 	}
 
 	function addSalaryDetail($salary_detail = []){
