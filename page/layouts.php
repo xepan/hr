@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class page_layouts extends \xepan\base\Page{
+class page_layouts extends \xepan\hr\page_config{
 	public $title = "Layouts";
 	function init(){
 		parent::init();
