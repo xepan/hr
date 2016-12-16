@@ -23,6 +23,6 @@ class Model_Employee_LeaveAllow extends \xepan\base\Model_Table{
 		$this->addField('no_of_leave')->type('int');
 		$this->addField('unit')->enum(['Monthly','Weekly','Quaterly','Yearly']);
 		$this->addField('allow_over_quota')->type('boolean')->defaultValue(false);
-
+		
 	}
 }

@@ -8,6 +8,7 @@
   <div class="main-box-body clearfix table-responsive">
     <table style="width:100%" class="ui table">{header}
       <thead class="xepan-hover-hand">{cols}{col}
+        <th></th>
         <th id="{$name_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
         <th id="{$production_level_sortid}" data-hide="phone"><span>Production Level </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$production_level_sort}</span></th>
         <th id="{$posts_count_sortid}" data-hide="phone"><span>Post </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$posts_count_sort}</span></th>
@@ -17,6 +18,7 @@
       </thead>{$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
+          <td>{$selected}</td>
           <td>{$name}</td>
           <td>{$production_level}</td>
           <td>a.do-view-department-post(href='#' data-id="{$id}") {$posts_count}</td>

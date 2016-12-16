@@ -1,23 +1,24 @@
-.section.attached.top(id="{$_name}" class="{$class}")
+.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
     {Pannel}
-    .section.attached(class=" {$class} ")
-        .ui.menu.right
-            {$grid_buttons}
-            a.button.icon(href="{$dept-url}")
-                i.icon.sitemap
-                | Hierarchy
-            a.button.icon(href="{$dept-url}")
-                i.icon.bard
-                | List
+    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
+        div.filter-block( style="100%")
+            .pull-right {$grid_buttons}
+            a(href="{$dept-url}")
+                .btn.btn-primary.pull-right
+                    i.fa.fa-sitemap &nbsp; Hierarchy
+            .btn.btn-primary.pull-right(href="{$dept-url}")
+                i.fa.fa-bars &nbsp; List
+
             .form-group.pull-right.xepan-filter-form
                 span(class="form-control pull-left")|{$quick_search}
                     i(class="fa fa-search search-icon")
     {/Pannel}
     .main-box-body.clearfix.table-responsive
-        table.ui.table(style="width:100%")
+        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
+                th
                 th(id="{$name_sortid}")
                     span Department 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
@@ -39,11 +40,21 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td {$name}
-                    td {$production_level}
-                    td a.do-view-department-post(href='#' data-id="{$id}") {$posts_count}
-                    td a.do-view-department-employee(href='#' data-id="{$id}") {$employee_count}
-                    td {action}Action Here{/}
+                    td
+                      | {$selected}
+                    td
+                      | {$name}
+                    td
+                      | {$production_level}
+                    td
+                      //- a(href='index.php?page=xepan_hr_post&department_id={$id}')
+                      a.do-view-department-post(href='#' data-id="{$id}")
+                        | {$posts_count}
+                    td
+                      a.do-view-department-employee(href='#' data-id="{$id}")
+                        | {$employee_count}
+                    td
+                        | {action}Action Here{/}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}

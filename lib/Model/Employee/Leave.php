@@ -20,37 +20,42 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 		parent::init();
 
 		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id);
+		$this->hasOne('xepan\hr\Employee','employee_id')->defaultValue($this->app->employee->id);
 		$this->hasOne('xepan\hr\Employee_LeaveAllow','emp_leave_allow_id');
 		$this->addField('from_date')->type('date');
 		$this->addField('to_date')->type('date');
 		$this->addField('status')->enum(['Draft','Submitted','Approved','Rejected'])->defaultValue('Draft');
 
-		$this->addExpression('no_of_leave')->set(function($m,$q){
-			return $q->expr('(DATEDIFF([0],[1]))',[$q->getField('to_date'),$q->getField('from_date')]);
-		});
+		// $this->addExpression('no_of_leave')->set(function($m,$q){
+		// 	return $q->expr('(DATEDIFF([0],[1]))',[$q->getField('to_date'),$q->getField('from_date')]);
+		// });
+		$this->addExpression('month')->set('MONTH(from_date)');
+		$this->addExpression('year')->set('YEAR(from_date)');
+		$this->addExpression('month_leaves')->set('DATEDIFF(to_date,from_date) + 1');
 
-		$this->addExpression('employee')->set($this->refSQL('created_by_id')->fieldQuery('name'));
+		$this->addExpression('leave_type')->set($this->refSQL('emp_leave_allow_id')->fieldQuery('type'));
+		$this->addExpression('employee')->set($this->refSQL('employee_id')->fieldQuery('name'));
 	}
 
 	function submit(){
 		$this['status']='Submitted';
 		$this->app->employee
-            ->addActivity("Employee '".$this->app->employee['name']."' has been Submitted Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
-            ->notifyWhoCan('activate','InActive',$this);
+            ->addActivity("Employee '".$this->app->employee['name']."' Submitted Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
+            ->notifyWhoCan('approve,reject','Submitted',$this);
 		$this->save();
 	}
 	function approve(){
 		$this['status']='Approved';
 		$this->app->employee
-            ->addActivity("Employee '".$this->app->employee['name']."' has been Approved Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
-            ->notifyWhoCan('activate','InActive',$this);
+            ->addActivity("Employee '".$this->app->employee['name']."' Approved Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
+            ->notifyWhoCan(' ','Approved',$this);
 		$this->save();
 	}
 	function reject(){
 		$this['status']='Rejected';
 		$this->app->employee
-            ->addActivity("Employee '".$this->app->employee['name']."' has been Rejected Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
-            ->notifyWhoCan('activate','InActive',$this);
+            ->addActivity("Employee '".$this->app->employee['name']."' Rejected Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
+            ->notifyWhoCan(' ','Rejected',$this);
 		$this->save();
 	}
 }

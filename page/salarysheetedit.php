@@ -1,0 +1,164 @@
+<?php
+namespace xepan\hr;
+
+class page_salarysheetedit extends \xepan\base\Page{
+	public $title = "Salary Sheet";
+	public $TotalWorkDays = 0;
+	function init(){
+		parent::init();
+
+		set_time_limit(500);
+		
+		$salary_sheet_id = $this->api->stickyGET('sheet_id');
+		$model_sheet = $this->add('xepan\hr\Model_SalaryAbstract')->load($salary_sheet_id);
+
+		$month = $model_sheet['month'];
+		$year = $model_sheet['year'];
+
+		// total work days
+		$this->TotalWorkDays  = $model_sheet->getTotalWorkingDays($month,$year);
+
+		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active')
+			// ->setLimit(3)
+		;
+
+		$this->add('View')->setElement('h1')->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
+
+		$form = $this->add('Form');
+		$all_salary = $this->add('xepan\hr\Model_Salary')->getRows();
+		
+		foreach ($all_salary as &$salary) {
+			$salary['name'] = preg_replace('/\s+/', '',$salary['name']);
+		}
+
+
+		$all_salary_for_js = [];
+		$all_salary_for_js[] = ['name'=>'Presents'];
+		$all_salary_for_js[] = ['name'=>'PaidLeaves'];
+		$all_salary_for_js[] = ['name'=>'UnPaidLeaves'];
+		$all_salary_for_js[] = ['name'=>'Absents'];
+		$all_salary_for_js[] = ['name'=>'PaidDays'];
+
+		$all_salary_for_js = array_merge($all_salary_for_js,$all_salary);
+
+		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','paiddays'=>'PaidDays'];
+		
+
+		foreach ($active_employee as $employee) {
+
+			// Get Employee Applied Salary
+			$employee_applied_salary = $employee->getApplySalary();
+
+			$view = $form->add('View')->setAttr('data-employee_id',$employee->id)->addClass('xepan-row-salarysheet-'.$employee->id);
+
+			$cols = $view->add('Columns')->addClass('row panel panel-info');
+			$col1 = $cols->addColumn(2)->addClass('col-md-2');
+			$col1->addField('line','f_employee_name_'.$employee->id,'name')->set($employee['name']);
+			$result = $employee->getSalarySlip($month,$year,$salary_sheet_id,$this->TotalWorkDays);
+
+			// echo "<pre>";
+			// print_r($result);
+			//for pre defined system calculated Factor
+			foreach ($system_calculated_factor as $key => $name) {
+				if(isset($result['loaded'][$name]))
+					$value = $result['loaded'][$name];
+				elseif (isset($result['calculated'][$name])) {
+					$value = $result['calculated'][$name];
+				}else
+					$value = 0;
+
+
+				$new_col = $cols->addColumn(2)->addClass('col-md-2');
+				$field = $new_col->addField('Number',"f_".$name."_".$employee->id, $name);
+				$field->set($value);
+				$field->addClass($name."_".$employee->id);
+				$field->addClass("do-change-salarysheet-factor");
+				$field->setAttr('data-employee-salary',$name);
+				$field->setAttr('data-add_deduction',"dummy");
+				$field->setAttr('data-employee_id',$employee->id);
+
+				// $field->setAttr('data-xepan-salarysheet-expression',"");
+				if($name === "PaidDays")
+					$field->setAttr('data-xepan-salarysheet-expression','{Presents}+{PaidLeaves}');
+				// $salary_field_id_array[$name] = $field->name;
+			}
+			//for all company salary
+			foreach ($all_salary as $key => $salary) {
+				$value = 0;
+				if(isset($result['loaded'][$salary['name']]))
+					$value = $result['loaded'][$salary['name']]?:0;
+				elseif(isset($result['calculated'][$salary['name']]))
+					$value = $result['calculated'][$salary['name']]?:0;
+				else
+					$value = 0;
+				
+				// echo $employee['name']." salary= ".$salary['name']." value= ".$value."<br/>";
+
+				$new_col = $cols->addColumn(2)->addClass('col-md-2 ');
+				$field_name  = "f_".$salary['name']."_".$employee->id;
+
+				$applied_expression = 0;
+				$add_deduction = "";
+				if(isset($employee_applied_salary[$salary['id']])){
+					$applied_expression = preg_replace('/\s+/', '', $employee_applied_salary[ $salary['id'] ]['expression']);
+					$add_deduction = $employee_applied_salary[$salary['id']]['add_deduction'];
+				}
+
+				$new_col->addField('Number',$field_name,$salary['name'])
+							->set($value)
+							->addClass('do-change-salarysheet-factor')
+							->addClass($salary['name']."_".$employee->id)
+							->setAttr('data-xepan-salarysheet-expression',$applied_expression)
+							->setAttr('data-add_deduction',$add_deduction)
+							->setAttr('data-employee_id',$employee->id)
+							->setAttr('data-employee-salary',$salary['name'])
+							;
+			}
+
+			$new_col = $cols->addColumn(2)->addClass('col-md-2');
+			$field_name  = "f_NetAmount_".$employee->id;
+			$field = $new_col->addField('Number',$field_name,'Net Amount');
+			$field->set(isset($result['loaded']['NetAmount'])?$result['loaded']['NetAmount']:$result['calculated']['NetAmount']);
+			$field->addClass('NetAmount'."_".$employee->id);
+		}
+
+		// die();
+		$form->addSubmit('Generate');
+		if($form->isSubmitted()){
+			try{
+
+				foreach ($active_employee as $employee) {
+					$salary_amount = [];
+					
+					$calculated_array = [
+											'presents'=>$form['f_Presents_'.$employee->id],
+											'paid_leaves'=>$form['f_PaidLeaves_'.$employee->id],
+											'unpaid_leaves'=>$form['f_UnPaidLeaves_'.$employee->id],
+											'absents'=>$form['f_Absents_'.$employee->id],
+											'paiddays'=>$form['f_PaidDays_'.$employee->id],
+											'total_working_days'=>$this->TotalWorkDays
+										];
+
+					foreach ($all_salary as $key => $salary) {
+						$field = "f_".$salary['name']."_".$employee->id;
+						$salary_amount[$salary['id']] = $form[$field];
+					}
+					
+					$model_sheet->addEmployeeRow($employee->id,null,$salary_amount,$calculated_array);
+				}
+			}catch(\Exception $e){
+				throw $e;
+				
+				$form->js()->univ()->errorMessage('saving error ')->execute();
+			}
+
+			$form->js()->univ()->successMessage('saved successfully')->execute();
+		}
+
+
+
+		// js change on field
+		$this->js(true)->_load('salarysheetcalculation');
+		$form->js('change')->_selector('.do-change-salarysheet-factor')->univ()->doSalarySheetCalculation($this->js(true)->_selectorThis(),$this->js(true)->_selectorThis()->data('employee_id'),$this->TotalWorkDays,$all_salary_for_js);
+	}
+}

@@ -1,0 +1,56 @@
+
+<div id="{$_name}" style="{$style}" class="{$class}">{$Content}</div>
+<script>
+  $(function(){
+  	elFinder.prototype.i18.en.messages["cmdshare"] = "Share";
+  	elFinder.prototype._options.commands.push("share");
+  	elFinder.prototype.commands.share = function() {
+  	this.exec = function(hashes) {
+  	//do whatever
+  	temp = this.files(hashes);
+  	// console.log(temp);
+  	$.univ().frameURL("Share","index.php?page=xepan_hr_share&cut_page=1&file_id="+temp[0].original_file_id);
+  	// alert("share");
+  	}
+  	this.getstate = function() {
+  	//return 0 to enable, -1 to disable icon access
+  	return 0;
+  	}
+  	}
+  	$("#{$_name}").elfinder({
+  	url: "index.php?page=xepan_hr_documentElConnector",
+  	height:450,
+  	contextmenu : {
+  	// navbarfolder menu
+  	navbar : ["open", "|", "copy", "cut", "paste", "duplicate", "|", "rm", "|", "info","|","share"],
+  	// current directory menu
+  	cwd    : ["reload", "back", "|", "upload", "mkdir", "mkfile", "paste", "|", "sort", "|", "info"],
+  	// current directory file menu
+  	files  : ["getfile", "|", "share", "quicklook", "|", "download", "|", "copy", "cut", "paste", "duplicate", "|", "rm", "|", "edit", "rename", "resize", "|", "archive", "extract", "|", "info"]
+  	},
+  	commandsOptions: {
+  	edit : {
+  	// list of allowed mimetypes to edit // if empty - any text files can be edited mimes : [],
+  	// you can have a different editor for different mimes
+  	editors : [
+  	{
+  	mimes : ["text/plain", "text/html"],
+  	load : function(textarea) {
+  	//- $.univ().richtext('#'+textarea.id);
+  	tinymce.execCommand('mceAddEditor', false, textarea.id);
+  	},
+  	close : function(textarea, instance) {
+  	tinymce.execCommand('mceRemoveEditor', false, textarea.id);
+  	},
+  	save : function(textarea, editor) {
+  	textarea.value = tinymce.get(textarea.id).getContent({format : 'html'});
+  	//- tinymce.execCommand('mceRemoveEditor', false, textarea.id);
+  	}
+  	}
+  
+  	] //editors
+  	} //edit
+  	} //commandsOptions
+  	}).elfinder("instance");
+  });
+</script>

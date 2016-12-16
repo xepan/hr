@@ -25,6 +25,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
 		
 		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));
+		$post_j->addField('permission_level')->enum(['Individual','Sibling','Department','Global'])->defaultValue('Individual');
 
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
@@ -49,10 +50,32 @@ class Model_Post extends \xepan\hr\Model_Document{
 			]);
 
 	}
+
+	function descendantPosts($include_self = true){		
+		if(!$this->loaded()) throw $this->exception('PLease call on loaded model');
+
+		$descendants = [];
+
+		if($include_self)
+			$descendants[] = $this->id;
+
+		// return $descendants;
+
+		$sub_posts = $this->add('xepan\hr\Model_Post');
+		$sub_posts->addCondition('parent_post_id',$this->id);
+		$sub_posts->addCondition('id','<>',$this->id);
+		
+		foreach ($sub_posts as $sub_post){
+			$descendants = array_merge($descendants, $sub_post->descendantPosts(true));
+		}
+
+		return $descendants;
+	}
+
 	function activate(){
 		$this['status']='Active';
 		$this->app->employee
-            ->addActivity("'".$this['name']."' post  is now active of department '".$this['department']."' ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+            ->addActivity("Post : '".$this['name']."'  now active, related to Department : '".$this['department']."' ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
             ->notifyWhoCan('deactivate','Active',$this);
 		$this->saveAndUnload();
 	}
@@ -60,7 +83,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 	function deactivate(){
 		$this['status']='InActive';
 		$this->app->employee
-            ->addActivity("'".$this['name']."' post has been deactivated in '".$this['department']."' department ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+            ->addActivity(" Post : '".$this['name']."' has been deactivated, related to Department : '".$this['department']."' ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
             ->notifyWhoCan('activate','InActive',$this);
 		$this->saveAndUnLoad();
 	}
@@ -70,6 +93,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$form = $page->add('Form');
 
 		$ass_email = $this->add('xepan\communication\Model_Communication_EmailSetting');
+		$ass_email->addCondition('is_active',true);
 		$col = $form->add('Columns')->addClass('row xepan-push');
 		foreach ($ass_email as $emails) {
 			$asso_email = $this->add('xepan\hr\Model_Post_Email_Association');
@@ -85,6 +109,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$form->addSubmit('Associate Email')->addClass('btn btn-success');
 
 		if($form->isSubmitted()){
+			$emails_added=[];
 			$this->ref('EmailPermissions')->deleteAll();
 			foreach ($ass_email as $emails) {
 				if($form['allow_email_'.$emails->id]){
@@ -98,8 +123,13 @@ class Model_Post extends \xepan\hr\Model_Document{
 						$asso_email['emailsetting_id'] =  $emails->id;
 						$asso_email->save();
 					}
+					$emails_added[] = $emails['name'];
 				}
 			}
+			$email_string = (implode(", ", $emails_added));
+			$this->app->employee
+			    ->addActivity("These Emails : '".$email_string."' associated with this Post : '".$this['name']."'", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
+				->notifyWhoCan(' ',' ',$this);
 			$this->app->page_action_result = $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Associate Emails SuccessFully');
 
 		}

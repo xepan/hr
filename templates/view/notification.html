@@ -1,8 +1,16 @@
-
-<div class="ui dropdown item icon"><i class="icon bell"></i><i class="dropdown icon"></i>
-  <div class="label">{notification_count}8{/} {$unread_notification}</div>
-  <div class="menu">{rows}{row}
-    <div class="item"><a href="#"><i class="fa fa-{icon}comment{/}"></i><span class="content">{notification}New comment on ‘Awesome P...{/}</span><span class="time xepan-padding-horizontal-xsmall"><i class="fa fa-clock-o"></i>{callback_date}13 min.{/}</span></a></div>{/}{/}              
-    <div class="item"><a href="?page=xepan_hr_notification">View all notifications</a></div>
-  </div>
-</div>
+<a data-toggle="dropdown" class="btn dropdown-toggle"><i class="fa fa-bell"></i><span class="count">{notification_count}8{/}</span></a>
+<ul class="dropdown-menu dropdown-menu-right notifications-list">
+  <li class="pointer">
+    <div class="pointer-inner">
+      <div class="arrow"></div>
+    </div>
+  </li>
+  <li class="item-header xepan-notification-view">You have {unread_notification}6{/} new notifications</li>{rows}{row}
+  <li class="item"><a href="#"><i class="fa fa-{icon}comment{/}"></i><span class="content">{notification}New comment on ‘Awesome P...{/}</span><span class="time xepan-padding-horizontal-xsmall"><i class="fa fa-clock-o"></i>{callback_date}13 min.{/}</span></a></li>{/}{/}              
+  <li class="item-footer"><a href="?page=xepan_hr_notification">View all notifications</a><a href="#"><span style="cursor:pointer; cursor: hand; max-width:600px;" class="play-pause-notifications {notif-class}fa fa-pause{/}">&nbsp;&nbsp; {notif-text}Pause Notifications{/}</span></a></li>
+</ul>
+<style>
+  .notifications-list .item a .time{
+    background:white none repeat scroll 0 0;
+  }
+</style>

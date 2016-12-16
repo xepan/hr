@@ -1,0 +1,1 @@
+{"created_by_id":"91","created_by":"Vaibhav Sharma","name":"AccountsReport","permitted_post":null,"description":"Accounts analytical report ","is_system":"0","status":"All","widget":[{"graphical_report":"AccountsReport","name":"Monthly Tax Information","col_width":"12","order":"1","is_active":"1","class_path":"xepan\\accounts\\Widget_MonthlyTaxes"}]}

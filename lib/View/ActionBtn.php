@@ -19,7 +19,7 @@ class View_ActionBtn extends \CompleteLister{
 
 		$this->setSource($temp_array);
 
-		$this->template->set('status',$this->status);
+		$this->template->setHtml('status',$this->status);
 		$this->template->set('status_label',$this->setLabelColor($this->status));
 		if($this->action_btn_group) 
 			$this->template->set('action_btn_group',$this->action_btn_group);
@@ -37,7 +37,9 @@ class View_ActionBtn extends \CompleteLister{
 					'Active' => 'success',
 					'InActive' => 'danger',
 					'Open'=>'warning',
+					'Qualified' =>'success',
 					'Converted' =>'success',
+					'NeedsAnalysis' => 'danger',
 					'Rejected' => 'danger',
 					'Draft'=>'default',
 					'Submitted' => 'warning',
@@ -45,8 +47,11 @@ class View_ActionBtn extends \CompleteLister{
 					'Rejected' => 'danger',
 					'Pending' => 'warning',
 					'Rejected'=>'danger',
+					'Lost'=>'danger',
 					'Received'=>'info',
+					'Quoted'=>'info',
 					'Forwarded'=>'success',
+					'Won'=>'success',
 					'Processing'=>'warning',
 					'Completed'=>'success',
 					'Canceled'=>'info',
@@ -62,10 +67,12 @@ class View_ActionBtn extends \CompleteLister{
 					'UnPublished'=>'danger',
 					'OnlineUnpaid'=>'warning',
 					'Running'=>'info',
+					'Inprogress'=>'warning',
 					'Pending'=>'warning',
 					'Assigned'=>'success',
 					'On-Hold'=>'danger',
 					'Onhold'=>'info',
+					'Negotiated'=>'info',
 					'Closed'=>'success'
 
 				];

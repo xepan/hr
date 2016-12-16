@@ -34,6 +34,7 @@ class page_department extends \xepan\base\Page {
 		}
 
 		$crud->setModel($department);
+		$crud->add('xepan\base\Controller_MultiDelete');
 
 		if($crud->form->model['is_system']){
 			$crud->form->getElement('production_level')->destroy();

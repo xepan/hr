@@ -13,7 +13,7 @@ namespace xepan\hr;
 
 class Model_Activity extends \xepan\base\Model_Activity{
 
-	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true){
+	function notifyWhoCan($list_of_actions,$current_statuses,$model=null,$notify_self=true, $msg=null){
 		
 		if(!$this->app->employee->loaded())
 			return;
@@ -76,7 +76,11 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		// throw new \Exception(print_r($employee_ids,true), 1);
 		
 		$this['notify_to'] = json_encode($employee_ids);
+		if($msg) $this['notification'] = $msg;
+		
 		$this->save();
+
+		// $this->pushToWebSocket($employee_ids,$this['notification']?:$this['activity']);
 		
 	}
 
@@ -93,6 +97,9 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		$this['notification'] =$notification_msg;
 		$this['notify_to'] = json_encode($employee_ids);
 		$this->save();
+
+		// $this->pushToWebSocket($employee_ids,$notification_msg);
+
 	}
 
 	function getPost($employee_id){
@@ -102,4 +109,5 @@ class Model_Activity extends \xepan\base\Model_Activity{
 
 		return $this->emp_posts[$employee_id];
 	}
+
 }

@@ -29,7 +29,7 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
 			$form->setLayout(['page/employeeprofile-compact']);			
-			$form->setModel($employee,['first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
+			$form->setModel($employee,['graphical_report_id','first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
 			$form->addField('line','email_1')->validate('email');
 			$form->addField('line','email_2');
 			$form->addField('line','email_3');
@@ -61,7 +61,6 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('password','password');
 			
 			$form->addSubmit('Add');
-
 			if($form->isSubmitted()){			
 				try{
 					$this->api->db->beginTransaction();
@@ -102,6 +101,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Official";
 						$email['value'] = trim($form['email_1']);
+						$this->checkEmail($email->id,$form['email_1'],$new_employee_model->id,$form);
 						$email->save();
 					}
 
@@ -110,6 +110,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Official";
 						$email['value'] = trim($form['email_2']);
+						$this->checkEmail($email->id,$form['email_2'],$new_employee_model->id,$form);
 						$email->save();
 					}
 
@@ -118,6 +119,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = trim($form['email_3']);
+						$this->checkEmail($email->id,$form['email_3'],$new_employee_model->id,$form);
 						$email->save();
 					}
 					if($form['email_4']){
@@ -125,6 +127,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$email['contact_id'] = $new_employee_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = trim($form['email_4']);
+						$this->checkEmail($email->id,$form['email_4'],$new_employee_model->id,$form);
 						$email->save();
 					}
 
@@ -134,6 +137,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$phone['contact_id'] = $new_employee_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_1'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_1'],$new_employee_model->id,$form);
 						$phone->save();
 					}
 
@@ -142,6 +146,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$phone['contact_id'] = $new_employee_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_2'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_2'],$new_employee_model->id,$form);
 						$phone->save();
 					}
 
@@ -150,6 +155,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$phone['contact_id'] = $new_employee_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_3'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_3'],$new_employee_model->id,$form);
 						$phone->save();
 					}
 					if($form['contact_no_4']){
@@ -157,6 +163,7 @@ class page_employeedetail extends \xepan\base\Page {
 						$phone['contact_id'] = $new_employee_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_4'];
+						$this->checkPhoneNo($phone->id,$form['contact_no_4'],$new_employee_model->id,$form);
 						$phone->save();
 					}				
 					$this->api->db->commit();
@@ -181,7 +188,7 @@ class page_employeedetail extends \xepan\base\Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['department','post','user','remark','salary_template'],['department_id','post_id','user_id','remark']);
+			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template'],['graphical_report_id','department_id','post_id','user_id','remark']);
 			$f=$portfolio_view->form;
 
 			if($f->isSubmitted()){
@@ -197,13 +204,24 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$official_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info',['view/employee/official-details']);
 			$official_view->setIdField('contact_id');
+			
 			$official_view->setModel($employee,['offer_date','doj','contract_date','leaving_date','in_time','out_time'],
 											   ['offer_date','doj','contract_date','leaving_date','in_time','out_time']);
+			if($official_view->effective_object instanceof \Form){
+				$official_view->effective_object->getElement('out_time')->setOption('showMeridian',false)
+					->setOption('defaultTime',1)
+					->setOption('minuteStep',1)
+					->setOption('showSeconds',true);
 
+				$official_view->effective_object->getElement('in_time')->setOption('showMeridian',false)
+					->setOption('defaultTime',1)
+					->setOption('minuteStep',1)
+					->setOption('showSeconds',true);
+			}
 			// $emp_salary_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			// $emp_salary_view->setIdField('contact_id');
 			$o = $official_view->addMany('EmployeeSalary',['no_records_message'=>'No document found'],'EmployeeSalary',['view/employee/emp-salary-grid']);
-			$o->setModel($employee->ref('EmployeeSalary'),['salary_id','amount','unit']);
+			$o->setModel($employee->ref('EmployeeSalary'),['salary_id','salary','amount','unit']);
 
 			// $emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			// $emp_leave_view->setIdField('contact_id');
@@ -259,4 +277,77 @@ class page_employeedetail extends \xepan\base\Page {
 	function defaultTemplate(){
 		return ['page/employee-profile'];
 	}
+
+	function checkPhoneNo($phone_id,$phone_value,$contact_id,$form){
+
+		 $contact = $this->add('xepan\base\Model_Contact');
+        
+        if($contact_id)
+	        $contact->load($contact_id);
+
+		$contactconfig_m = $this->add('xepan\base\Model_ConfigJsonModel',
+			[
+				'fields'=>[
+							'contact_no_duplcation_allowed'=>'DropDown'
+							],
+					'config_key'=>'Contact No Duplication Allowed Settings',
+					'application'=>'base'
+			]);
+		$contactconfig_m->tryLoadAny();	
+
+		if($contactconfig_m['contact_no_duplcation_allowed'] != 'duplication_allowed'){
+	        $contactphone_m = $this->add('xepan\base\Model_Contact_Phone');
+	        $contactphone_m->addCondition('id','<>',$phone_id);
+	        $contactphone_m->addCondition('value',$phone_value);
+			
+			if($contactconfig_m['contact_no_duplcation_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
+				$contactphone_m->addCondition('contact_type',$contact['contact_type']);
+		        $contactphone_m->tryLoadAny();
+		 	}
+
+	        $contactphone_m->tryLoadAny();
+	        
+	        if($contactphone_m->loaded())
+	        	for ($i=1; $i <=4 ; $i++){ 
+	        		if($phone_value == $form['contact_no_'.$i])
+			        	$form->displayError('contact_no_'.$i,'Contact No. Already Used');
+	        	}
+		}	
+    }
+
+    function checkEmail($email_id,$email_value,$contact_id,$form){
+
+    	$contact = $this->add('xepan\base\Model_Contact');
+        
+        if($contact_id)
+	        $contact->load($contact_id);
+
+		$emailconfig_m = $this->add('xepan\base\Model_ConfigJsonModel',
+			[
+				'fields'=>[
+							'email_duplication_allowed'=>'DropDown'
+							],
+					'config_key'=>'Email Duplication Allowed Settings',
+					'application'=>'base'
+			]);
+		$emailconfig_m->tryLoadAny();
+
+		if($emailconfig_m['email_duplication_allowed'] != 'duplication_allowed'){
+	        $email_m = $this->add('xepan\base\Model_Contact_Email');
+	        $email_m->addCondition('id','<>',$email_id);
+	        $email_m->addCondition('value',$email_value);
+			
+			if($emailconfig_m['email_duplication_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
+				$email_m->addCondition('contact_type',$contact['contact_type']);
+			}
+	        
+	        $email_m->tryLoadAny();
+	        
+	        if($email_m->loaded())
+	        	for ($i=1; $i <=4 ; $i++){ 
+	        		if($email_value == $form['email_'.$i])
+			        	$form->displayError('email_'.$i,'Email Already Used');
+	        	}
+		}	
+    }
 }

@@ -15,6 +15,7 @@ class page_leavemanagment extends \xepan\base\Page{
 		$emp_leave_m->addCondition('status','<>','Draft');
 		$crud = $this->add('xepan\hr\CRUD',null,null,['view/employee/leave-management-grid']);
 		$crud->setModel($emp_leave_m);
+		$crud->add('xepan\base\Controller_MultiDelete');
 		$crud->grid->addQuickSearch(['employee']);
 		if(!$crud->isEditing()){
 			$crud->grid->js('click')->_selector('.do-view-employee')->univ()->frameURL('Employee Details',[$this->api->url('xepan_hr_employeedetail'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
