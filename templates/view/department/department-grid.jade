@@ -1,80 +1,60 @@
-.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+div.ui.segment(id="{$_name}" class="{$class}")
     {Pannel}
-    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block( style="100%")
-            .pull-right {$grid_buttons}
-            a(href="{$dept-url}")
-                .btn.btn-primary.pull-right
-                    i.fa.fa-sitemap &nbsp; Hierarchy
-            .btn.btn-primary.pull-right(href="{$dept-url}")
-                i.fa.fa-bars &nbsp; List
-
-            .form-group.pull-right.xepan-filter-form
-                span(class="form-control pull-left")|{$quick_search}
-                    i(class="fa fa-search search-icon")
+    .ui.stackable.equal.width.grid
+        .column
+            {$grid_buttons}
+        .column
+            .ui.icon.buttons
+                .ui.button
+                    i.list.icon.do-show-list
+                .divider.or
+                .ui.green.button
+                    i.sitemap.right.aligned.icon.do-show-chart
+        .column
+            {$quick_search}
+            i(class="fa fa-search search-icon")
     {/Pannel}
-    .main-box-body.clearfix.table-responsive
-        table.table.user-list.table-hover.footable.toggle-circle-filled(style="width:100%")
-            {header}
-            thead.xepan-hover-hand
-                {cols}{col}
-                th
-                th(id="{$name_sortid}")
-                    span Department 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
-                th(id="{$production_level_sortid}" data-hide="phone")
-                    span Production Level 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$production_level_sort}
-                th(id="{$posts_count_sortid}" data-hide="phone")
-                    span Post 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$posts_count_sort}
-                th(id="{$emp_count_sortid}" data-hide="phone")
-                    span Employee 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$emp_count_sort}
-                th 
-                th 
-                {/}{/}
-            {$subheader}
+    table.ui.striped.table
+        {header}
+        thead.xepan-hover-hand
+            {cols}{col}
+            th(id="{$name_sortid}") Department {$name_sort}
+            th(id="{$production_level_sortid}") Production Level {$production_level_sort}
+            th(id="{$posts_count_sortid}") Post {$posts_count_sort}
+            th(id="{$emp_count_sortid}") Employee {$emp_count_sort}
+            th Action
+            th 
+            {/}{/}
+        {/}
+        {$subheader}
 
-            tbody
-                {rows}{row}
-                tr(class="{$odd_even}" data-id="{$id}")
-                    {cols}
-                    td
-                      | {$selected}
-                    td
-                      | {$name}
-                    td
-                      | {$production_level}
-                    td
-                      //- a(href='index.php?page=xepan_hr_post&department_id={$id}')
-                      a.do-view-department-post(href='#' data-id="{$id}")
-                        | {$posts_count}
-                    td
-                      a.do-view-department-employee(href='#' data-id="{$id}")
-                        | {$employee_count}
-                    td
-                        | {action}Action Here{/}
-                    td(style="width: 15%;")
-                        {$edit}
-                        {$delete}
-                        {/}
-                    
-                    {/}
-                {/}{/}
-                {not_found}
-                div.row
-                    .col-md-12.text-center.alert.alert-warning(role="alert")
-                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+        tbody
+            {rows}{row}
+            tr(class="{$odd_even}" data-id="{$id}")
+                {cols}
+                td {$name}
+                td {$production_level}
+                td
+                  a.do-view-department-post(href='#' data-id="{$id}") {$posts_count}
+                td
+                  a.do-view-department-employee(href='#' data-id="{$id}") {$employee_count}
+                td {$action}
+                td {$edit} {$delete}
                 {/}
-
-            {totals}
-            tfoot
-                tr(class="totals")
-                    {cols}{col}
-                    <td {$tdparam}>
-                    {$content}
-                    </td>
-                    {/}{/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
             {/}
-        {$Paginator}
+
+        {totals}
+        tfoot
+            tr(class="totals")
+                {cols}{col}
+                <td {$tdparam}>
+                {$content}
+                </td>
+                {/}{/}
+        {/}
+    {$Paginator}

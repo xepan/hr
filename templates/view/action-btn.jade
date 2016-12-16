@@ -1,11 +1,21 @@
-.btn-group.xepan-document-actions(class="btn-group-{$action_btn_group} {$class}" style="{$style}" )
-	.btn(class="btn-{status_label}primary{/} col-sm-{col_span}9{/} col-xs-{col_span}9{/}"){status}Current Status{/}
-	{dropdown}
-	button.btn.btn-primary.dropdown-toggle.col-sm-3.col-xs-3(type="button" data-toggle="dropdown")
-		span.caret
-	ul.dropdown-menu(role="menu")
-		{rows}{row}
-		li
-			a.acl-action(href="#" data-action="{$action}" data-id="{$row_id}") {$action_title}
-		{/}{/}
-	{/dropdown}
+.ui.buttons(class="{$status_label} {$class}" style="{$style}")
+	.ui.button {$status}
+	.ui.floating.dropdown.icon.button.xepan-document-actions
+		i.dropdown.icon
+		{dropdown}
+		.menu
+			{rows}{row}
+			.item
+				a.acl-action(href="#" data-action="{$action}" data-id="{$row_id}") {$action_title}
+			{/}{/}
+		{/dropdown}
+
+//- .ui.dropdown.xepan-document-actions(class="btn-group-{$action_btn_group} {$class}" style="{$style}" )
+//- 	.text(class="{$status_label}"){status}Current Status{/}
+//- 	{dropdown}
+//- 	.menu
+//- 		{rows}{row}
+//- 		.item
+//- 			a.acl-action(href="#" data-action="{$action}" data-id="{$row_id}") {$action_title}
+//- 		{/}{/}
+//- 	{/dropdown}

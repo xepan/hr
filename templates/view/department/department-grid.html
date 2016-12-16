@@ -1,49 +1,48 @@
 
-<div id="{$_name}" class="section attached top {$class}">{Pannel}
-  <div class="section attached  {$class} ">
-    <div class="ui menu right">{$grid_buttons}<a href="{$dept-url}" class="button icon"><i class="icon sitemap"></i>Hierarchy</a><a href="{$dept-url}" class="button icon"><i class="icon bard"></i>List</a>
-      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
+<div id="{$_name}" class="ui segment {$class}">{Pannel}
+  <div class="ui stackable equal width grid">
+    <div class="column">{$grid_buttons}</div>
+    <div class="column">
+      <div class="ui icon buttons">
+        <div class="ui button"><i class="list icon do-show-list"></i></div>
+        <div class="divider or"></div>
+        <div class="ui green button"><i class="sitemap right aligned icon do-show-chart"></i></div>
+      </div>
     </div>
+    <div class="column">{$quick_search}<i class="fa fa-search search-icon"></i></div>
   </div>{/Pannel}
-  <div class="main-box-body clearfix table-responsive">
-    <table style="width:100%" class="ui table">{header}
-      <thead class="xepan-hover-hand">{cols}{col}
-        <th></th>
-        <th id="{$name_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
-        <th id="{$production_level_sortid}" data-hide="phone"><span>Production Level </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$production_level_sort}</span></th>
-        <th id="{$posts_count_sortid}" data-hide="phone"><span>Post </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$posts_count_sort}</span></th>
-        <th id="{$emp_count_sortid}" data-hide="phone"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$emp_count_sort}</span></th>
-        <th> </th>
-        <th> </th>{/}{/}
-      </thead>{$subheader}
-      <tbody>{rows}{row}
-        <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$selected}</td>
-          <td>{$name}</td>
-          <td>{$production_level}</td>
-          <td>a.do-view-department-post(href='#' data-id="{$id}") {$posts_count}</td>
-          <td>a.do-view-department-employee(href='#' data-id="{$id}") {$employee_count}</td>
-          <td>{action}Action Here{/}</td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}
-            {/}
-          </td>{/}
-        </tr>{/}{/}
-        {not_found}
-        <div class="row">
-          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
-        </div>{/}
-      </tbody>{totals}
-      <tfoot>
-        <tr class="totals">
-          {cols}{col}
-          <td {$tdparam}>
-          {$content}
-          </td>
-          {/}{/}
-        </tr>
-      </tfoot>{/}
-    </table>{$Paginator}
-  </div>
+  <table class="ui striped table">{header}
+    <thead class="xepan-hover-hand">{cols}{col}
+      <th id="{$name_sortid}">Department {$name_sort}</th>
+      <th id="{$production_level_sortid}">Production Level {$production_level_sort}</th>
+      <th id="{$posts_count_sortid}">Post {$posts_count_sort}</th>
+      <th id="{$emp_count_sortid}">Employee {$emp_count_sort}</th>
+      <th>Action</th>
+      <th> </th>{/}{/}
+    </thead>{/}
+    {$subheader}
+    <tbody>{rows}{row}
+      <tr data-id="{$id}" class="{$odd_even}">{cols}
+        <td>{$name}</td>
+        <td>{$production_level}</td>
+        <td><a href="#" data-id="{$id}" class="do-view-department-post">{$posts_count}</a></td>
+        <td><a href="#" data-id="{$id}" class="do-view-department-employee">{$employee_count}</a></td>
+        <td>{$action}</td>
+        <td>{$edit} {$delete}</td>{/}
+      </tr>{/}{/}
+      {not_found}
+      <div class="row">
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+      </div>{/}
+    </tbody>{totals}
+    <tfoot>
+      <tr class="totals">
+        {cols}{col}
+        <td {$tdparam}>
+        {$content}
+        </td>
+        {/}{/}
+      </tr>
+    </tfoot>{/}
+  </table>{$Paginator}
 </div>

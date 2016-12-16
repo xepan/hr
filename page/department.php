@@ -26,11 +26,11 @@ class page_department extends \xepan\base\Page {
 
 		$department->setOrder('production_level','asc');
 		$crud=$this->add('xepan\hr\CRUD',null,null,['view/department/department-grid']);
-		$crud->grid->addPaginator(50);
+		$crud->grid->addPaginator(3);
 		
 		if(!$crud->isEditing()){
 			$crud->grid->template->trySet('dept-url',$this->app->url('xepan_hr_structurechart'));
-			$crud->grid->addButton('Chart')->js('click',$this->js()->redirect($this->app->url('xepan_hr_structurechart')));
+			$crud->grid->js('click',$this->js()->redirect($this->app->url('xepan_hr_structurechart')))->_selector('.do-show-chart');
 		}
 
 		$crud->setModel($department);

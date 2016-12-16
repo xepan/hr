@@ -34,8 +34,8 @@ class View_ActionBtn extends \CompleteLister{
 
 		$status_color = 
 				[
-					'Active' => 'success',
-					'InActive' => 'danger',
+					'Active' => 'green',
+					'InActive' => 'red',
 					'Open'=>'warning',
 					'Qualified' =>'success',
 					'Converted' =>'success',
