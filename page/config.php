@@ -9,6 +9,7 @@ class page_config extends \xepan\base\Page{
 		parent::init();
 		// $this->app->side_menu->addItem(['Employee Attandance','icon'=>'fa fa-percent'],'xepan_hr_employeeattandance')->setAttr(['title'=>'Employee Attandance']);
 		
+		$this->app->side_menu->addItem(['Pay Slip Layouts','icon'=>'fa fa-th'],'xepan_hr_layouts')->setAttr(['title'=>'Pay Slip Layouts']);
 		$this->app->side_menu->addItem(['Salary Template','icon'=>'fa fa-percent'],'xepan_hr_salarytemplate')->setAttr(['title'=>'Salary Template']);
 		$this->app->side_menu->addItem(['Leave Template','icon'=>'fa fa-percent'],'xepan_hr_leavetemplate')->setAttr(['title'=>'Leave Template']);
 		$this->app->side_menu->addItem(['Official Holidays','icon'=>'fa fa-calendar'],'xepan_hr_officialholiday')->setAttr(['title'=>'Official Holidays']);

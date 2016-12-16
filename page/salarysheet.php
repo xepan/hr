@@ -10,7 +10,7 @@ class page_salarysheet extends \xepan\base\Page{
 		$model_salary = $this->add('xepan\hr\Model_SalarySheet');
 
 		$crud = $this->add('xepan\hr\CRUD');
-		$crud->setModel($model_salary,['month','year','name']);
+		$crud->setModel($model_salary,['month','year','name','status']);
 
 		$crud->grid->addHook('formatRow',function($g){
 			$name = $g->model['name'];
@@ -19,6 +19,10 @@ class page_salarysheet extends \xepan\base\Page{
 			}
 			$g->current_row_html['name'] = '<a href="?page=xepan_hr_salarysheetedit&sheet_id='.$g->model->id.'">'.$name.'</a>';
 		});
+
+		if($crud->grid){
+			$crud->grid->removeColumn('attachment_icon');
+		}
 
 	}
 }
