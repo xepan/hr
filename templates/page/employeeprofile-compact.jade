@@ -9,7 +9,10 @@
           .panel-body
           .row
             .col-xs-6
-              .form-group.atk-form-row.atk-form-field {$first_name}
+              .form-group.atk-form-row.atk-form-field.ui.corner.labeled.input
+                {$first_name}
+                .ui.red.corner.label
+                  i.asterisk.icon
               .form-group.atk-form-row.atk-form-field {$last_name}
               .form-group.atk-form-row.atk-form-field {$website}
             .col-xs-6

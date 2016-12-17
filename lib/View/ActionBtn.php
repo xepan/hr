@@ -21,12 +21,12 @@ class View_ActionBtn extends \CompleteLister{
 
 		$this->template->setHtml('status',$this->status);
 		$this->template->set('status_label',$this->setLabelColor($this->status));
-		if($this->action_btn_group) 
-			$this->template->set('action_btn_group',$this->action_btn_group);
+		// if($this->action_btn_group) 
+		// 	$this->template->set('action_btn_group',$this->action_btn_group);
 
 		if(empty($temp_array)){
 			$this->template->del('dropdown');
-			$this->template->set('col_span','12');
+			// $this->template->set('col_span','12');
 		}
 	}
 
