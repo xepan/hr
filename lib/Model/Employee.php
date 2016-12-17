@@ -81,13 +81,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function checkLimits(){
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 
-        if((isset($extra_info ['specification']['user_limit'])) AND ($extra_info ['specification']['user_limit'] <> 0)){
+        if((isset($extra_info ['specification']['employee'])) AND ($extra_info ['specification']['employee'] <> 0)){
         	$emp_count = $this->add('xepan\hr\Model_Employee')->count()->getOne();
         	
-        	if($emp_count >= $extra_info ['specification']['user_limit']){
+        	if($emp_count >= $extra_info ['specification']['employee']){
         		throw $this->exception("Sorry ! You cannot add more employees. Your usage limit is over")
         				->addMoreInfo('Employee Count',$emp_count)
-        				->addMoreInfo('Employee Limit',$extra_info ['specification']['user_limit'])
+        				->addMoreInfo('Employee Limit',$extra_info ['specification']['employee'])
         			;
         	}
         }
