@@ -7,11 +7,11 @@ div.ui.segment(id="{$_name}" class="{$class}")
             {$quick_search}
             i(class="fa fa-search search-icon")
     {/Pannel}
-    .ui.equal.width.cards
+    .ui.cards
         {header}{cols}{col}{/}{/}{/}
         {$subheader}
         {rows}{row}
-        .ui.compact.card(class="{$odd_even}" data-id="{$id}")
+        .ui.four.link.card(class="{$odd_even}" data-id="{$id}")
             {cols}
             .image
                 img(src="https://pbs.twimg.com/profile_images/558109954561679360/j1f9DiJi.jpeg" onerror='this.src="./vendor/xepan/base/templates/images/avtar-default.png"')

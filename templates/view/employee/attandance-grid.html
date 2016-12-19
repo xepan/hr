@@ -1,47 +1,49 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div style="100%" class="filter-block">
-      <div class="pull-right">{$grid_buttons} </div>
-      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
-    </div>
-  </header>{/Pannel}
-  <div class="main-box-body clearfix table-responsive">
-    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
-      <thead class="xepan-hover-hand">{cols}{col}
-        <th id="{$employee_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_sort}</span></th>
-        <th id="{$direction_sortid}"><span>In Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$direction_sort}</span></th>
-        <th id="{$time_sortid}" data-hide="phone"><span>Out Time </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$time_sort}</span></th>
-        <th><span>In/Out</span></th>
-        <th></th>{/}{/}
-      </thead>{/}
-      {$subheader}
-      <tbody>{rows}{row}
-        <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$avatar}  <a href="#" data-id="{$id}" class="user-link do-view-employee-movement">{$name}  </a>
-          </td>
-          <td><strong class="text-{$in_color}">{$first_in}  </strong></td>
-          <td><strong class="text-{$out_color}">{$last_out}</strong></td>
-          <td>
-            {$is_in}
-            {$is_out}
-          </td>
-          <td>                             </td>{/}
-        </tr>{/}{/}
-        {not_found}
-        <div class="row">
-          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
-        </div>{/}
-      </tbody>{totals}
-      <tfoot>
-        <tr class="totals">
-          {cols}{col}
-          <td {$tdparam}>
-          {$content}
-          </td>
-          {/}{/}
-        </tr>
-      </tfoot>{/}
-    </table>{$Paginator}
-  </div>
+<div id="{$_name}" class="ui segment {$class}">{Pannel}
+  <div class="ui stackable equal width grid  {$class} ">
+    <div class="column">{$grid_buttons}</div>
+    <div class="right aligned column">{$quick_search}<i class="search icon"></i></div>
+  </div>{/Pannel}
+  <table class="ui striped table">{header}
+    <thead>{cols}{col}
+      <th id="{$employee_sortid}"><span>Employee {$employee_sort}</span></th>
+      <th id="{$direction_sortid}"><span>In Time {$direction_sort}</span></th>
+      <th id="{$time_sortid}" data-hide="phone"><span>Out Time {$time_sort}</span></th>
+      <th><span>In/Out</span></th>
+      <th></th>{/}{/}
+    </thead>{/}
+    {$subheader}
+    <tbody>{rows}{row}
+      <tr data-id="{$id}" class="{$odd_even}">{cols}
+        <td>
+          <h5 class="ui image header">{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}
+            <div class="content">
+              <div href="#" data-id="{$id}" class="user-link do-view-employee-movement">{$name}</div>
+            </div>
+          </h5>
+        </td>
+        <td><strong class="text-{$in_color}">{$first_in}  </strong></td>
+        <td><strong class="text-{$out_color}">{$last_out}</strong></td>
+        <td>
+          {$is_in}
+          {$is_out}
+        </td>
+        <td>                             </td>{/}
+      </tr>{/}{/}
+      {not_found}
+      <div class="row">
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+      </div>{/}
+    </tbody>{totals}
+    <tfoot>
+      <tr class="totals">
+        {cols}{col}
+        <td {$tdparam}>
+        {$content}
+        </td>
+        {/}{/}
+      </tr>
+    </tfoot>{/}
+    {$Paginator}
+  </table>
 </div>
