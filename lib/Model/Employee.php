@@ -75,6 +75,22 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('afterSave',[$this,'updateEmployeeSalary']);
 		$this->addHook('afterSave',[$this,'updateEmployeeLeave']);
+		$this->addHook('beforeInsert',[$this,'checkLimits']);
+	}
+
+	function checkLimits(){
+		$extra_info = $this->app->recall('epan_extra_info_array',false);
+
+        if((isset($extra_info ['specification']['employee'])) AND ($extra_info ['specification']['employee'] <> 0)){
+        	$emp_count = $this->add('xepan\hr\Model_Employee')->count()->getOne();
+        	
+        	if($emp_count >= $extra_info ['specification']['employee']){
+        		throw $this->exception("Sorry ! You cannot add more employees. Your usage limit is over")
+        				->addMoreInfo('Employee Count',$emp_count)
+        				->addMoreInfo('Employee Limit',$extra_info ['specification']['employee'])
+        			;
+        	}
+        }
 	}
 
 	function getActiveEmployeeIds(){

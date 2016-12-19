@@ -226,7 +226,13 @@ class page_employeedetail extends \xepan\base\Page {
 			// $emp_leave_view = $this->add('xepan\hr\View_Document',['action'=> $action],'official_info');
 			// $emp_leave_view->setIdField('contact_id');
 			$o = $official_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found'],'EmployeeLeaveAllow',['view/employee/emp-leave-grid']);
-			$o->setModel($employee->ref('EmployeeLeaveAllow'),['leave_id','type','is_yearly_carried_forward','is_unit_carried_forward','no_of_leave','unit','allow_over_quota']);
+			$o->setModel($employee->ref('EmployeeLeaveAllow'),
+										['leave_id','type','is_yearly_carried_forward',
+										'is_unit_carried_forward','no_of_leave',
+										'unit','allow_over_quota'],
+										['leave','type','is_yearly_carried_forward',
+										'is_unit_carried_forward','no_of_leave',
+										'unit','allow_over_quota']);
 
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
