@@ -1,61 +1,36 @@
 div.ui.segment(id="{$_name}" class="{$class}")
     {Pannel}
-    .ui.stackable.equal.width.grid
-        .column
+    .ui.horizontal.list
+        .item
             {$grid_buttons}
-        .column
-            .ui.icon.buttons
-                .ui.button
-                    i.list.icon.do-show-list
-                .divider.or
-                .ui.green.button
-                    i.sitemap.right.aligned.icon.do-show-chart
-        .column
+        .item
             {$quick_search}
             i(class="fa fa-search search-icon")
     {/Pannel}
-    table.ui.stripped.table
-        {header}
-        thead
-            tr
-                {cols}{col}
-                th
-                th(id="{$name_sortid}") User {$name_sort}
-                th(id="{$doj_sortid}" data-hide="phone") Date Of Joining {$doj_sort}
-                th( data-hide="phone") Email
-                th
-                th
-                {/}{/}    
-        {/}
+    .ui.cards
+        {header}{cols}{col}{/}{/}{/}
         {$subheader}
-
-        tbody
-            {rows}{row}
-            tr(class="{$odd_even}" data-id="{$id}")
-                {cols}
-                td {$selected}
-                td
-                  {avatar}
-                  img(alt='', src='{image}img/samples/scarlet-159.png{/}')
-                  {/}
-                  //- a.user-link(href='{url}index.php?page=xepan_hr_employeedetail&contact_id={$id}{/}') {$name}
-                  a.user-link.do-view-employee(href='#',data-id="{$id}") {$name}
-                  span.user-subhead {$department} / {$posts}
-                td
-                  | {doj}2013/08/08{/}
-                td
-                  a(href='#') 
-                    {emails_str}mila@kunis.com{/}
-                td
-                    {$action}
-                td {$edit}{$delete}
-                {/}
-            {/}{/}
-            {not_found}
-            div.row
-                .col-md-12.text-center.alert.alert-warning(role="alert")
-                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+        {rows}{row}
+        .card(class="{$odd_even}" data-id="{$id}")
+            {cols}
+            img.ui.image(src="{$image}")
+            .content
+            .header
+                a.user-link.do-view-employee(href='#',data-id="{$id}") {$name}
+            .meta {$department} / {$posts}
+            .extra.content
+                span.right.floated {doj}2013/08/08{/}
+                span{emails_str}mila@kunis.com{/}
+            .content
+                {$action}
+                {$edit}{$delete}
             {/}
+        {/}{/}
+        {not_found}
+        div.row
+            .col-md-12.text-center.alert.alert-warning(role="alert")
+                span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+        {/}
 
         {totals}
         tfoot

@@ -23,22 +23,24 @@ class page_employeedetail extends \xepan\base\Page {
 		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 
 		if($action=="add"){
+			$this->title = 'Add New Employee';
+			
 			$this->template->tryDel('details');
 
 			$base_validator = $this->add('xepan\base\Controller_Validator');
 
 			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
 			$form->setLayout(['page/employeeprofile-compact']);			
-			$form->setModel($employee,['graphical_report_id','first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
+			$form->setModel($employee,['graphical_report_id','first_name','last_name','address','city','country_id','state_id','pin_code','post_id','remark','department_id']);
 			$form->addField('line','email_1')->validate('email');
 			$form->addField('line','email_2');
 			$form->addField('line','email_3');
 			$form->addField('line','email_4');
 			
-			$dept_field = $form->getElement('department_id');
-			$post_field = $form->getElement('post_id');
-			$country_field =  $form->getElement('country_id');
-			$state_field = $form->getElement('state_id');
+			$dept_field = $form->getElement('department_id')->addClass('ui dropdown');
+			$post_field = $form->getElement('post_id')->addClass('ui dropdown');
+			$country_field =  $form->getElement('country_id')->addClass('ui dropdown');
+			$state_field = $form->getElement('state_id')->addClass('ui dropdown');
 
 			if($dept_id = $this->app->stickyGET('dept_id')){			
 				$post_field->getModel()->addCondition('department_id',$dept_id);
@@ -57,7 +59,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','contact_no_4');
 			$form->addField('Checkbox','want_to_add_next_employee')->set(true);
 
-			$form->addField('line','user_id')->validate('email');
+			$form->addField('line','user_id','Username (Email)')->validate('email');
 			$form->addField('password','password');
 			
 			$form->addSubmit('Add');

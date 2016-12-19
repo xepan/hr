@@ -51,7 +51,10 @@ namespace xepan\hr {
 				->_load('jquery.tinymce.min')
 				->_load('xepan-richtext-admin')
 				->_library('tinymce')
-				->init([])
+				// ->init([
+				// 	'plugins' => ["advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker  searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table contextmenu directionality emoticons template paste textcolor colorpicker imagetools"],
+				// 	'menubar'=> "edit format insert table view"
+				// 	])
 				;
 			// $this->js(true)->univ()->richtext($this,$this->options);
 

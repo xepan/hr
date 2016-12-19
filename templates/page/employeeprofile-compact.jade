@@ -1,86 +1,72 @@
-.main-box
-  header.main-box-header.clearfix.text-center
-    h1 Add New Employee
-  .main-box-body.clearfix
-    .row
-      .form-group.col-xs-8
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary General Information
-          .panel-body
-          .row
-            .col-xs-6
-              .form-group.atk-form-row.atk-form-field.ui.corner.labeled.input
-                {$first_name}
-                .ui.red.corner.label
-                  i.asterisk.icon
-              .form-group.atk-form-row.atk-form-field {$last_name}
-              .form-group.atk-form-row.atk-form-field {$website}
-            .col-xs-6
-              .form-group.atk-form-row.atk-form-field {$organization}
-              .form-group.atk-form-row.atk-form-field
-                div
-                  span.text-muted Department
-                  | {$department_id}
-              .form-group.atk-form-row.atk-form-field
-                div
-                  span.text-muted
-                    | Post
-                    | {$post_id}
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary Address
-          .panel-body
-            .row
-              .form-group.col-xs-6.atk-form-row.atk-form-field {$address}
-              .col-xs-6
-                .form-group.atk-form-row.atk-form-field
-                  | Country
-                  | {$country_id}
-                .form-group.atk-form-row.atk-form-field
-                  | State
-                  | {$state_id}
-                .form-group.atk-form-row.atk-form-field {$city}
-                .form-group.atk-form-row.atk-form-field {$pin_code}
-          .panel.panel-default(style='margin-bottom:0px;')
-            .panel.panel-heading.panle-primary Remark
-            .panel-body
-              .row
-                .form-group.col-xs-12.atk-form-row.atk-form-field
-                  | {$remark}
-          .panel.panel-default(style='margin-bottom:0px;')
-            .panel.panel-heading.panle-primary Permitted Dashboard
-            .panel-body
-              .row
-                .form-group.col-xs-12.atk-form-row.atk-form-field
-                  | {$graphical_report_id}
-      .form-group.col-xs-4
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary User Panel
-          .panel-body
-            .form-group.atk-form-row.atk-form-field
-              | {$user_id}
-              div.small.text-muted Hint : User id must be a email address
-            .form-group.atk-form-row.atk-form-field
-              | {$password}
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary Official Email
-          .panel-body
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_1}
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_2}
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary Personal Email
-          .panel-body
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_3}
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$email_4}
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary Official Contact
-          .panel-body
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_1}
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_2}
-        .panel.panel-default(style='margin-bottom:0px;')
-          .panel.panel-heading.panle-primary Personal Contact
-          .panel-body
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_3}
-            .form-group.col-xs-12.atk-form-row.atk-form-field {$contact_no_4}
-    .row
-      .form-group.col-xs-12.atk-form-row.atk-form-field {$want_to_add_next_employee}
+.ui.segment.main-box
+  .ui.two.column.grid
+    .ten.wide.column
+      h4.ui.dividing.header General Information
+      .field
+        label Name
+        .two.fields
+          .field {$first_name}
+          .field {$last_name}
+      .field
+        lable Address
+        {$address}  
+      .two.fields
+        .field
+          label City
+          {$city}
+        .field
+          label Pin code
+          {$pin_code}
+      .two.fields
+        .field.atk-form-field
+          label Country
+          {$country_id}
+        .field.atk-form-field
+          lable State
+          {$state_id}
+      h4.ui.dividing.header Official Information
+      .two.fields
+        .ui.field
+          label Department
+          {$department_id}
+        .ui.field
+          label Post
+          {$post_id}
+      .field
+        label Permitted Dashboard
+        {$graphical_report_id}
+      .field
+        lable Remark
+        {$remark}
+      .inline.field
+        {$want_to_add_next_employee}
+    .ui.vertical.divider
+    .five.wide.column
+      h4.ui.dividing.header User Information
+      .field
+        lable User
+        {$user_id}
+      .field
+        lable Password
+        {$password}
+      h4.ui.dividing.header Official Emails
+      .field
+        {$email_1}
+      .field
+        {$email_2}
+      h4.ui.dividing.header Personal Emails
+      .field
+        {$email_3}
+      .field
+        {$email_4}
+      h4.ui.dividing.header Official Contact
+      .field
+        {$contact_no_1}
+      .field
+        {$contact_no_2}
+      h4.ui.dividing.header Personal Contact
+      .field
+        {$contact_no_3}
+      .field
+        {$contact_no_4}
   | {$FormButtons}
