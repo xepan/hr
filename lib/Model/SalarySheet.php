@@ -60,7 +60,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 	           	->addActivity("Salary Sheet ".$this['name']." Approved by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg); 
 		
-		$this->app->hook('create_account_entry',[$this]);
+		// $this->app->hook('create_account_entry',[$this]);
 	}
 
 	function canceled(){
@@ -79,7 +79,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 		$this->app->employee
 	           	->addActivity("Salary Sheet ".$this['name']." Canceled by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg);
-		$this->app->hook('remove_account_entry',[$this]);
+		// $this->app->hook('remove_account_entry',[$this]);
 	}
 
 	function redraft(){
