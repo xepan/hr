@@ -4,19 +4,21 @@
     <div class="item">{$grid_buttons}</div>
     <div class="item">{$quick_search}<i class="fa fa-search search-icon"></i></div>
   </div>{/Pannel}
-  <div class="ui cards">
+  <div class="ui equal width cards">
     {header}{cols}{col}{/}{/}{/}
     {$subheader}
     {rows}{row}
-    <div data-id="{$id}" class="card {$odd_even}">{cols}
-      <div src="{$thumb_url}" class="image"></div>
-      <div class="content"></div>
-      <div class="header"><a href="#" data-id="{$id}" class="user-link do-view-employee">{$name}</a></div>
-      <div class="meta">{$department} / {$posts}</div>
-      <div class="extra content"><span class="right floated">{doj}2013/08/08{/}</span><span>{emails_str}mila@kunis.com{/}</span></div>
+    <div data-id="{$id}" class="ui compact card {$odd_even}">{cols}
+      <div class="image"><img src="https://pbs.twimg.com/profile_images/558109954561679360/j1f9DiJi.jpeg" onerror="this.src=&quot;./vendor/xepan/base/templates/images/avtar-default.png&quot;"/></div>
       <div class="content">
-        {$action}
-        {$edit}{$delete}
+        <div class="header">
+          <div data-id="{$id}" class="user-link do-view-employee">{$name}</div>
+        </div>
+        <div class="meta">{$department} / {$posts}</div>
+        <div class="meta doj">Since {$callback_date}</div>
+      </div>
+      <div class="extra content">{$action}
+        <div class="right floated">{$edit}{$delete}</div>
       </div>{/}
     </div>{/}{/}
     {not_found}

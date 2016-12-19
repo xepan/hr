@@ -42,6 +42,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Employee_Salary','employee_id',null,'EmployeeSalary');
 		$emp_j->hasMany('xepan\hr\Employee_LeaveAllow','employee_id',null,'EmployeeLeaveAllow');
 		
+
+		$this->add('misc/Field_Callback','callback_date')->set(function($m){
+			return date('M\' Y',strtotime($m['created_at']));
+		});
+
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');
         });

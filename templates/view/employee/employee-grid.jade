@@ -7,23 +7,23 @@ div.ui.segment(id="{$_name}" class="{$class}")
             {$quick_search}
             i(class="fa fa-search search-icon")
     {/Pannel}
-    .ui.cards
+    .ui.equal.width.cards
         {header}{cols}{col}{/}{/}{/}
         {$subheader}
         {rows}{row}
-        .card(class="{$odd_even}" data-id="{$id}")
+        .ui.compact.card(class="{$odd_even}" data-id="{$id}")
             {cols}
-            img.ui.image(src="{$image}")
+            .image
+                img(src="https://pbs.twimg.com/profile_images/558109954561679360/j1f9DiJi.jpeg" onerror='this.src="./vendor/xepan/base/templates/images/avtar-default.png"')
             .content
-            .header
-                a.user-link.do-view-employee(href='#',data-id="{$id}") {$name}
-            .meta {$department} / {$posts}
+                .header
+                    .user-link.do-view-employee(data-id="{$id}") {$name}
+                .meta {$department} / {$posts}
+                .meta.doj Since {$callback_date}
             .extra.content
-                span.right.floated {doj}2013/08/08{/}
-                span{emails_str}mila@kunis.com{/}
-            .content
                 {$action}
-                {$edit}{$delete}
+                .right.floated
+                    {$edit}{$delete}
             {/}
         {/}{/}
         {not_found}
