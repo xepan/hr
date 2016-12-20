@@ -1,37 +1,26 @@
-.col-lg-12
-  .panel.panel-default
-    .panel-body 
-      .col-lg-12.xepan-push
-        .col-lg-6
-          .atk-form-row.atk-form-field 
-            strong  Department :  
-            div {$department}{$department_id}
-        .col-lg-6
-          .atk-form-row.atk-form-field  
-            strong  Post :
-            div {$post}{$post_id}
-      .col-lg-12.xepan-push
-        .col-lg-6
-          .atk-form-row.atk-form-field  
-            strong User : 
+.ui.container.raised.segment.main.box
+      .field
+        .two.fields
+          .field
+              label Department
+              div {$department}{$department_id}
+          .field
+              label Post
+              div {$post}{$post_id}
+      .field
+        .two.fields
+          .field
+            label User 
             div {$user}{$user_id}
-        .col-lg-6
-          .atk-form-row.atk-form-field  
-            strong Permitted Dashboard : 
+          .field
+            label Permitted Dashboard 
             div {$graphical_report_id}
-      .col-lg-12.xepan-push
-        strong  Remarks
-        .atk-form-row.atk-form-field  {$remark}
-        //- .col-lg-12.xepan-push
-        //-   strong  Salary Template
-        //-   .atk-form-row.atk-form-field  {$salary_template}{$salary_template_id}
-        //-   span.small.text-muted If not selected, salary template of employee's post will be used.  
-      .col-lg-2.pull-right 
-        | {$FormButtons}
-.col-lg-12
-  .panel.panel-default
+      .field
+        label Remarks
+          {$remark}
+| {$FormButtons}
+.ui.container.raised.segment.main.box
     {$Qualification}
-.col-lg-12
-  .panel.panel-default
+.ui.container.raised.segment.main.box
     {$Experiences}
 

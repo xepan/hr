@@ -1,46 +1,49 @@
-.xepan-grid.clearfix(id="{$_name}" class="{$class}")
+.ui.segment(id="{$_name}" class="{$class}")
     {Pannel}
-    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block
-            .pull-right {$grid_buttons} 
-            .form-group.pull-right.xepan-filter-form
-                //- div(class="form-control pull-left")|{$quick_search}
-                //-     i(class="fa fa-search search-icon")
+    .ui.stackable.equal.width.grid(class=" {$class} ")
+        .column {$grid_buttons}
+        .right.aligned.column
+            {$quick_search}
+            i.search.icon
     {/Pannel}
-    .main-box-body.clearfix
-        .row
-            {header}{cols}{col}{/}{/}{/}
+    table.ui.very.basic.collapsing.celled.table
+        {header}
+        thead
+            {cols}{col}
+            th
+                span Previous Company
+            th
+                span Designation
+            th
+                span Department
+            th
+                span Salary
+            th
+                span Duration
+            th
+            {/}{/}
+        {/}
+        {$subheader}
+        tbody
             {rows}{row}
-            div(class="{$odd_even} col-md-{col-width}12{/}" data-id="{$id}")
+            tr(class="{$odd_even}" data-id="{$id}")
                 {cols}
-                .col-md-12.xepan-push-small
-                    .col-md-5
-                        strong Previous Company:
-                        div {$name}
-                    .col-md-4 
-                        strong Branch:
-                        div {$company_branch}
-                    .col-md-3 
-                        strong Designation:
-                        div {$designation} 
-                .col-md-12.xepan-push-small(style="margin-top:5%")
-                    .col-md-5
-                        strong Department:
-                        div {$department}  
-                    .col-md-4
-                        strong Salary:
-                        div{$salary}
-                    .col-md-3
-                        strong Duration:
-                        div{$duration}    
-                
-                .col-md-12.text-right(style="margin-bottom:3%")
-                    .com-md-3
-                    //- | {$action}
+                td.ui.image.header
+                    .content {$name}
+                        .sub.header {$company_branch}
+                td
+                     {$designation}
+                td
+                     {$department}
+                td
+                     {$salary}
+                td
+                     {$duration}
+                td
                     {$edit}
                     {$delete}
-                    
-            {/}
+                
+                {/}
             {/}{/}
             {not_found}
             div.row
@@ -48,5 +51,13 @@
                     span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
             {/}
 
-            {totals}{cols}{col}{$content}{/}{/}{/}
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
         {$Paginator}

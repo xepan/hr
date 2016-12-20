@@ -11,10 +11,10 @@ div.ui.segment(id="{$_name}" class="{$class}")
         {header}{cols}{col}{/}{/}{/}
         {$subheader}
         {rows}{row}
-        .ui.four.link.card(class="{$odd_even}" data-id="{$id}")
+        .ui.link.card.user-link(class="{$odd_even}" data-id="{$id}")
             {cols}
             .image
-                img(src="https://pbs.twimg.com/profile_images/558109954561679360/j1f9DiJi.jpeg" onerror='this.src="./vendor/xepan/base/templates/images/avtar-default.png"')
+                img(src="{$image}" onerror='this.src="./vendor/xepan/base/templates/images/avtar-default.png"')
             .content
                 .header
                     .user-link.do-view-employee(data-id="{$id}") {$name}

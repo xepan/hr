@@ -1,40 +1,30 @@
-.col-lg-12
-  .panel.panel-default
-    .panel-body 
-        .col-md-12.xepan-push
-          .col-lg-5
-          .col-lg-5.xepan-push-small
-          .col-lg-5
-            .atk-form-row
-              strong  Offer Date
-              div {$offer_date}
-          .col-lg-5
-            .atk-form-row
-              strong  Joining Date
-              div {$doj}
-        .col-md-12.xepan-push
-          .col-lg-5
-            .atk-form-row
-              strong  Contract Date
-              div {$contract_date}
-          .col-lg-5
-            .atk-form-row
-              strong  leaving Date
-              div {$leaving_date}
-        .col-md-12.xepan-push
-          .col-lg-5
-            .atk-form-row
-              strong  In_Time
-              div {$in_time}
-          .col-lg-5
-            .atk-form-row
-              strong  Out_Time
-              div {$out_time}
-        .col-lg-12.pull-right
-          | {$FormButtons}
-.col-lg-12
-  .panel.panel-default
+.ui.container.raised.segment
+  .field
+    .two.fields
+      .field
+        label Offer Date
+        {$offer_date}
+      .field
+        label Joining Date
+        {$doj}
+  .field
+    .two.fields
+      .field
+        label Contract Date
+        {$contract_date}
+      .field
+        label Leaving Date
+        {$leaving_date}
+   .field
+    .two.fields
+      .field
+        label In Time
+        {$in_time}
+      .field
+        label Out Time
+        {$out_time}
+| {$FormButtons}
+.ui.container.raised.segment
     {$EmployeeSalary}
-.col-lg-12
-  .panel.panel-default
+.ui.container.raised.segment
     {$EmployeeLeaveAllow}

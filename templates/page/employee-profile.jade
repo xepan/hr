@@ -1,32 +1,25 @@
 #user-profile
-  .col-lg-12.col-md-12.col-sm-12
-    {$contact_view_full_width}
-  .col-lg-3.col-md-4.col-sm-4
-    {$contact_view}
-  {details}  
-  .col-lg-9.col-md-8.col-sm-8
-    .main-box.clearfix
-      .tabs-wrapper.profile-tabs
-        ul.nav.nav-tabs.responsive-tabs
-          li.active
-            a(data-toggle='tab', href='#tab-portfolio') Portfolio
-          li
-            a(data-toggle='tab', href='#tab-official') Official
-          li
-            a(data-toggle='tab', href='#tab-activity') Activity
-          li
-            a(data-toggle='tab', href='#tab-documents') Documents
-          //- li
-          //-   a(data-toggle='tab', href='#tab-email') Email
-        .tab-content
-          #tab-portfolio.tab-pane.active
+  .ui.one.column.grid
+      {$contact_view_full_width}
+  .ui.two.column.grid
+    .five.wide.column
+      {$contact_view}
+    
+    {details}  
+    .eleven.wide.column
+      .ui.container.raised.segment.main.box
+        .ui.pointing.secondary.menu
+            a.active.item(data-tab='first') Portfolio
+            a.item(data-tab='second') Official
+            a.item(data-tab='third') Activity
+            a.item(data-tab='fourth') Documents
+          
+        .ui.bottom.attached.active.tab.segment(data-tab="first")
             {portfolio_view}Please Save Basic Information First{/}
-          #tab-official.tab-pane
+        .ui.bottom.attached.tab.segment(data-tab="second")
             {$official_info}
-           #tab-activity.tab-pane
+        .ui.bottom.attached.tab.segment(data-tab="third")
             {$activity_view}
-          #tab-documents.tab-pane
+        .ui.bottom.attached.tab.segment(data-tab="fourth")
             {$document_view}
-          //- #tab-email.tab-pane.fade
-          //-   {$emails}
-  {/}                       
+    {/}                       

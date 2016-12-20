@@ -1,35 +1,35 @@
-.row.xepan-push-large
-	.col-md-12
-		.col-md-4.atk-form-row.atk-form-field
-			span Name:
-			{$name}
-		.col-md-4.atk-form-row.atk-form-field
-			span Department:
-			{$department_id}
-		.col-md-4.atk-form-row.atk-form-field
-			span Parent Post:
-			{$parent_post_id}
-.row.xepan-push-large
-	.col-md-12
-		.col-md-6.atk-form-row.atk-form-field
-			span In Time(hour):
-			{$in_time}
-		.col-md-6.atk-form-row.atk-form-field 	
-			span Out Time(hour):
-			{$out_time}	 
-.row.xepan-push-large
-		.col-md-12.atk-form-row.atk-form-field  	
-			span Permission Level:
-			{$permission_level}			
-.row.xepan-push-large
-		.col-md-12.atk-form-row.atk-form-field  	
-			span Salary Template:
-			{$salary_template_id}
-.row.xepan-push-large
-		.col-md-12.atk-form-row.atk-form-field  			
-			span Leave Template:
-			{$leave_template_id}
-.row.xepan-push-large
-		.col-md-12 	
-			{$FormButtons}	
-			{$Content}
+.ui.container.raised.segment.main.box
+	.field
+		.three.fields
+			.field
+				label Name
+				{$name}
+			.field
+				label Department
+				{$department_id}
+			.field
+				label Parent Post
+				{$parent_post_id}
+.ui.container.raised.segment.main.box
+	.field
+		.two.fields
+			.field
+				label In Time(hour)
+				{$in_time}
+			.field 	
+				label Out Time(hour)
+				{$out_time}	 
+.ui.container.raised.segment.main.box
+	.field
+		.three.fields  	
+			.field
+				label Permission Level
+				{$permission_level}			
+			.field  	
+				label Salary Template
+				{$salary_template_id}
+			.field  			
+				label Leave Template
+				{$leave_template_id} 	
+|{$FormButtons}	
+|{$Content}

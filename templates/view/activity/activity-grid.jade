@@ -1,45 +1,43 @@
-.xepan-grid.main-box.clearfix.atk-table.atk-table-zebra.atk-table-bordered(id="{$_name}" class="{$class}")
+.ui.segment(id="{$_name}" class="{$class}")
     {Pannel}
-    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block( style="100%")
-            .pull-right {$grid_buttons} 
-            .form-group.pull-right.xepan-filter-form
-                span(class="form-control pull-left")|{$quick_search}
-                    i(class="fa fa-search search-icon")
+    .ui.stackable.equal.width.grid(class=" {$class} ")
+        .column {$grid_buttons}
+        .right.aligned.column
+            {$quick_search}
+            i.search.icon
     {/Pannel}
-    .main-box-body.clearfix.table-responsive
-        table.table.user-list.table-hover(style="width:100%")
+    .ui.container.raised.segment.main.box
+        .ui.feed
             {header}
-            thead
-                {cols}{col}
-                {/}{/}
+            {cols}{col}
+            {/}{/}
             {/}
             {$subheader}
-            //- {contact}Vijay mali{/} &nbsp; {related_contact} Avengers Initiative{/}
-            tbody
-                {rows}{row}
-                tr(class="{$odd_even}" data-id="{$id}")
-                    {cols}
-                    td.text-center
-                     i.fa.fa-comment
-                    td
-                     {activity}| Scarlett Johansson posted a comment in{/}&nbsp;
-                     | (created by  
-                     a(href='#'){$contact}
-                     |) 
-                     a(href='#'){$related_document} 
-                    td
-                     |{callback_date} 2014/08/08 12:08{/}
-                    td
-                     {$edit}
-                     {$delete}
-                    {/}
-                {/}{/}
-                {not_found}
-                div.row
-                    .col-md-12.text-center.alert.alert-warning(role="alert")
-                        span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {rows}{row}
+            .event(class="{$odd_even}" data-id="{$id}")
+                {cols}
+                .label
+                    img(src="http://semantic-ui.com/images/avatar/small/joe.jpg")
+                .content
+                    .summary
+                        .user    
+                             {activity}| Scarlett Johansson posted a comment in{/}&nbsp;
+                             | (created by  
+                             a(href='#'){$contact}
+                             |) 
+                             a(href='#'){$related_document} 
+                .date
+                 |{callback_date} 2014/08/08 12:08{/}
+                td
+                 {$edit}
+                 {$delete}
                 {/}
+            {/}{/}
+            {not_found}
+            div.row
+                .col-md-12.text-center.alert.alert-warning(role="alert")
+                    span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
+            {/}
 
             {totals}
             tfoot

@@ -1,44 +1,35 @@
 
-<div class="col-lg-12">
-  <div class="panel panel-default">
-    <div class="panel-body"> 
-      <div class="col-lg-12 xepan-push">
-        <div class="col-lg-6">
-          <div class="atk-form-row atk-form-field"> <strong> Department :  </strong>
-            <div>{$department}{$department_id}</div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="atk-form-row atk-form-field"> <strong> Post :</strong>
-            <div>{$post}{$post_id}</div>
-          </div>
-        </div>
+<div class="ui container raised segment main box">
+  <div class="field">
+    <div class="two fields">
+      <div class="field">
+        <label>Department</label>
+        <div>{$department}{$department_id}</div>
       </div>
-      <div class="col-lg-12 xepan-push">
-        <div class="col-lg-6">
-          <div class="atk-form-row atk-form-field"> <strong>User : </strong>
-            <div>{$user}{$user_id}</div>
-          </div>
-        </div>
-        <div class="col-lg-6">
-          <div class="atk-form-row atk-form-field"> <strong>Permitted Dashboard : </strong>
-            <div>{$graphical_report_id}</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-12 xepan-push"><strong> Remarks</strong>
-        <div class="atk-form-row atk-form-field"> {$remark}</div>
-      </div>
-      <div class="col-lg-2 pull-right">
-         
-        {$FormButtons}
+      <div class="field">
+        <label>Post</label>
+        <div>{$post}{$post_id}</div>
       </div>
     </div>
   </div>
-</div>
-<div class="col-lg-12">
-  <div class="panel panel-default">{$Qualification}</div>
-</div>
-<div class="col-lg-12">
-  <div class="panel panel-default">{$Experiences}</div>
-</div>
+  <div class="field">
+    <div class="two fields">
+      <div class="field">
+        <label>User </label>
+        <div>{$user}{$user_id}</div>
+      </div>
+      <div class="field">
+        <label>Permitted Dashboard </label>
+        <div>{$graphical_report_id}</div>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <label>
+      Remarks
+      {$remark}
+    </label>
+  </div>
+</div>{$FormButtons}
+<div class="ui container raised segment main box">{$Qualification}</div>
+<div class="ui container raised segment main box">{$Experiences}</div>

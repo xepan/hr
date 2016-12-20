@@ -1,42 +1,37 @@
-.xepan-grid.main-box.clearfix(id="{$_name}" class="{$class}")
-    //- script(type="text/javascript" src="../admin/templates/js/jquery.mousewheel-3.0.6.pack.js")
-    //- script(type="text/javascript" src="../admin/templates/js/jquery.fancybox.pack.js?v=2.1.5")
-    //- link(rel="stylesheet" href="../admin/templates/css/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen")
-    style.
-        .widget-users li{
-            height:auto!important;
-        }
-        .doc-img{
-            width:100%;
-            min-height:100px;
-            max-height:100px;
-        }
+.ui.segment(id="{$_name}" class="{$class}")
     {Pannel}
-    header.main-box-header.clearfix.atk-actions(class=" {$class} ")
-        div.filter-block
-            .pull-right {$grid_buttons} 
-            .form-group.pull-right.xepan-filter-form
-                div(class="form-control pull-left")|{$quick_search}
-                    i(class="fa fa-search search-icon")
+    .ui.stackable.equal.width.grid(class=" {$class} ")
+        .column {$grid_buttons}
+        .right.aligned.column
+            {$quick_search}
+            i.search.icon
     {/Pannel}
-    .main-box-body.clearfix
-        .row
-            {header}{cols}{col}{/}{/}{/}
+    table.ui.very.basic.collapsing.celled.table
+        {header}
+        thead
+            {cols}{col}
+            th
+                span Document Name
+            th
+            th
+            {/}{/}
+        {/}
+        {$subheader}
+        tbody
             {rows}{row}
-            div(class="{$odd_even} col-md-{col-width}3{/}" data-id="{$id}")
+            tr(class="{$odd_even}" data-id="{$id}")
                 {cols}
-                li.col-md-12
-                    .details
-                        .name
-                            a.text-center(href="{$employee_document}" download="{$name}_{$filename}") {name}Secondary Marksheet{/}
-                        .type
-                            .btn-group(role='group', aria-label='...')
-                                //- a(href="{$original_filename}" title="Bos 3 (p.vanhaastrecht)")
-                                a( href="{$employee_document}" download="{$name}_{$filename}")
-                                    embed(class="doc-img litebox-image" title="Click to Download {$name}"  src='{employee_document}img/samples/hdr/small/img_5.jpg{/}')
-                                {$edit}   
-                                {$delete}   
-            {/}
+                td
+                    a.details.name(href="{$employee_document}" download="{$name}_{$filename}") {name}Secondary Marksheet{/}  
+                td
+                    .type(role='group', aria-label='...')
+                        a( href="{$employee_document}" download="{$name}_{$filename}")
+                            embed(class="doc-img litebox-image ui small image" title="Click to Download {$name}"  src='{employee_document}img/samples/hdr/small/img_5.jpg{/}')
+                td
+                    {$edit}
+                    {$delete}
+                
+                {/}
             {/}{/}
             {not_found}
             div.row
@@ -44,12 +39,13 @@
                     span.icon-attention.fa.fa-exclamation-triangle  &nbsp;{$not_found_message}
             {/}
 
-            {totals}{cols}{col}{$content}{/}{/}{/}
+            {totals}
+            tfoot
+                tr(class="totals")
+                    {cols}{col}
+                    <td {$tdparam}>
+                    {$content}
+                    </td>
+                    {/}{/}
+            {/}
         {$Paginator}
-//- script.
-//-     $(document).ready(function() {
-//-         $(".litebox-image").fancybox({
-//-             openEffect  : 'none',
-//-             closeEffect : 'none'
-//-         });
-//-     });        

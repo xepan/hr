@@ -1,42 +1,41 @@
 
-<div id="{$_name}" class="xepan-grid clearfix {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div class="filter-block">
-      <div class="pull-right">{$grid_buttons} </div>
-    </div>
-  </header>{/Pannel}
-  <div class="main-box-body clearfix">
-    <div class="row">
-      {header}{cols}{col}
-      {/}{/}{/}
-      {rows}{row}
-      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}12{/}">{cols}
-        <div class="col-md-12">
-          <div class="col-md-5"> <strong>Qualification:</strong>
-            <div>{name} Institute name here {/name}</div>
-          </div>
-          <div class="col-md-4"><strong>Qualification Level:</strong>
-            <div>
-              {qualificaton_level}
-                Graduation/Post Graduation
-              {/qualificaton_level}  
-            </div>
-          </div>
-          <div class="col-md-3"><strong>Remaks:</strong>
-            <div>{remarks}|  7.00{/remarks}</div>
-          </div>
-        </div>
-        <div style="margin-bottom:3%" class="col-md-12 text-right">
-          <div class="com-md-3"></div>{$edit}
+<div id="{$_name}" class="ui segment {$class}">{Pannel}
+  <div class="ui stackable equal width grid  {$class} ">
+    <div class="column">{$grid_buttons}</div>
+    <div class="right aligned column">{$quick_search}<i class="search icon"></i></div>
+  </div>{/Pannel}
+  <table class="ui very basic collapsing celled table">{header}
+    <thead>{cols}{col}
+      <th><span>Qualification</span></th>
+      <th><span>Qualification Level</span></th>
+      <th><span>Remark</span></th>
+      <th></th>{/}{/}
+    </thead>{/}
+    {$subheader}
+    <tbody>{rows}{row}
+      <tr data-id="{$id}" class="{$odd_even}">{cols}
+        <td>{$name}</td>
+        <td>{$qualificaton_level}</td>
+        <td>{$remarks}</td>
+        <td>
+          {$edit}
           {$delete}
-        </div>
-      </div>{/}
-      {/}{/}
+        </td>{/}
+      </tr>{/}{/}
       {not_found}
       <div class="row">
         <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
       </div>{/}
-      {totals}{cols}{col}{$content}{/}{/}{/}
-    </div>{$Paginator}
-  </div>
+      {totals}
+      <tfoot>
+        <tr class="totals">
+          {cols}{col}
+          <td {$tdparam}>
+          {$content}
+          </td>
+          {/}{/}
+        </tr>
+      </tfoot>{/}
+    </tbody>{$Paginator}
+  </table>
 </div>

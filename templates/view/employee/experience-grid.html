@@ -1,50 +1,49 @@
 
-<div id="{$_name}" class="xepan-grid clearfix {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div class="filter-block">
-      <div class="pull-right">{$grid_buttons} </div>
-      <div class="form-group pull-right xepan-filter-form">
-      </div>
-    </div>
-  </header>{/Pannel}
-  <div class="main-box-body clearfix">
-    <div class="row">
-      {header}{cols}{col}{/}{/}{/}
-      {rows}{row}
-      <div data-id="{$id}" class="{$odd_even} col-md-{col-width}12{/}">{cols}
-        <div class="col-md-12 xepan-push-small">
-          <div class="col-md-5"><strong>Previous Company:</strong>
-            <div>{$name}</div>
+<div id="{$_name}" class="ui segment {$class}">{Pannel}
+  <div class="ui stackable equal width grid  {$class} ">
+    <div class="column">{$grid_buttons}</div>
+    <div class="right aligned column">{$quick_search}<i class="search icon"></i></div>
+  </div>{/Pannel}
+  <table class="ui very basic collapsing celled table">{header}
+    <thead>{cols}{col}
+      <th><span>Previous Company</span></th>
+      <th><span>Designation</span></th>
+      <th><span>Department</span></th>
+      <th><span>Salary</span></th>
+      <th><span>Duration</span></th>
+      <th></th>{/}{/}
+    </thead>{/}
+    {$subheader}
+    <tbody>{rows}{row}
+      <tr data-id="{$id}" class="{$odd_even}">{cols}
+        <td class="ui image header">
+          <div class="content">{$name}
+            <div class="sub header">{$company_branch}</div>
           </div>
-          <div class="col-md-4"> <strong>Branch:</strong>
-            <div>{$company_branch}</div>
-          </div>
-          <div class="col-md-3"> <strong>Designation:</strong>
-            <div>{$designation} </div>
-          </div>
-        </div>
-        <div style="margin-top:5%" class="col-md-12 xepan-push-small">
-          <div class="col-md-5"><strong>Department:</strong>
-            <div>{$department}  </div>
-          </div>
-          <div class="col-md-4"><strong>Salary:</strong>
-            <div>{$salary}</div>
-          </div>
-          <div class="col-md-3"><strong>Duration:</strong>
-            <div>{$duration}    </div>
-          </div>
-        </div>
-        <div style="margin-bottom:3%" class="col-md-12 text-right">
-          <div class="com-md-3"></div>{$edit}
+        </td>
+        <td>{$designation}</td>
+        <td>{$department}</td>
+        <td>{$salary}</td>
+        <td>{$duration}</td>
+        <td>
+          {$edit}
           {$delete}
-        </div>
-      </div>{/}
-      {/}{/}
+        </td>{/}
+      </tr>{/}{/}
       {not_found}
       <div class="row">
         <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
       </div>{/}
-      {totals}{cols}{col}{$content}{/}{/}{/}
-    </div>{$Paginator}
-  </div>
+      {totals}
+      <tfoot>
+        <tr class="totals">
+          {cols}{col}
+          <td {$tdparam}>
+          {$content}
+          </td>
+          {/}{/}
+        </tr>
+      </tfoot>{/}
+    </tbody>{$Paginator}
+  </table>
 </div>
