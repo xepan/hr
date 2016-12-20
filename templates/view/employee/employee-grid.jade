@@ -18,8 +18,9 @@ div.ui.segment(id="{$_name}" class="{$class}")
             .content
                 .header
                     .user-link.do-view-employee(data-id="{$id}") {$name}
-                .meta {$department} / {$posts}
-                .meta.doj Since {$callback_date}
+                .meta
+                    span.date {$department} / {$posts}
+                    span.right.floated.date Since {$callback_date}
             .extra.content
                 {$action}
                 .right.floated
