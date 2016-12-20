@@ -1,43 +1,38 @@
 
-<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
-  <header class="main-box-header clearfix atk-actions  {$class} ">
-    <div style="100%" class="filter-block">
-      <div class="pull-right">{$grid_buttons} </div>
-      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
-    </div>
-  </header>{/Pannel}
-  <div class="main-box-body clearfix table-responsive">
-    <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
-      <thead class="xepan-hover-hand">{cols}{col}
-        <th></th>
-        <th id="{$employee_sortid}"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_sort}</span></th>
-        <th id="{$emp_leave_allow_sortid}"><span>Employee Leave Allow</span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$emp_leave_allow_sort}</span></th>
-        <th><span>From Date</span></th>
-        <th><span>To Date</span></th>
-        <th><span>No. Of Leave</span></th>
-        <th></th>
-        <th></th>{/}{/}
-      </thead>{/}
-      {$subheader}
-      <tbody>{rows}{row}
-        <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$selected}  </td>
-          <td><a href="#" data-id="{$employee_id}" class="do-view-employee">{$employee}</a></td>
-          <td><span>{$emp_leave_allow}  </span></td>
-          <td><span>{$from_date}</span></td>
-          <td><span>{$to_date}</span></td>
-          <td><span>{$no_of_leave}</span></td>
-          <td>{$action}</td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}                             
-          </td>{/}
-        </tr>{/}{/}
-        {not_found}
-        <div class="row">
-          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
-        </div>{/}
-      </tbody>{totals}
+<div id="{$_name}" class="ui segment {$class}">{Pannel}
+  <div class="ui stackable equal width grid  {$class} ">
+    <div class="column">{$grid_buttons}</div>
+    <div class="right aligned column">{$quick_search}<i class="search icon"></i></div>
+  </div>{/Pannel}
+  <table class="ui striped table">{header}
+    <thead>{cols}{col}
+      <th><span>Employee</span></th>
+      <th><span>Employee Leave Allow</span></th>
+      <th><span>From Date </span></th>
+      <th><span>To Date</span></th>
+      <th><span>No. Of Leave</span></th>
+      <th></th>
+      <th></th>{/}{/}
+    </thead>{/}
+    {$subheader}
+    <tbody>{rows}{row}
+      <tr data-id="{$id}" class="{$odd_even}">{cols}
+        <td><a href="#" data-id="{$employee_id}" class="do-view-employee">{$employee}</a></td>
+        <td>{$emp_leave_allow} </td>
+        <td>{$from_date}</td>
+        <td>{$to_date}</td>
+        <td>{$no_of_leave}</td>
+        <td>{$action}</td>
+        <td>
+          {$edit}
+          {$delete}
+        </td>{/}
+      </tr>{/}{/}
+      {not_found}
+      <div class="row">
+        <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+      </div>{/}
+      {totals}
       <tfoot>
         <tr class="totals">
           {cols}{col}
@@ -47,6 +42,6 @@
           {/}{/}
         </tr>
       </tfoot>{/}
-    </table>{$Paginator}
-  </div>
+    </tbody>{$Paginator}
+  </table>
 </div>

@@ -1,88 +1,62 @@
 
-<div class="main-box">
-  <header class="main-box-header clearfix text-center">
-    <h1>Add New Affiliate</h1>
-  </header>
-  <div class="main-box-body clearfix">
-    <div class="row">
-      <div class="form-group col-xs-8">
-        <div style="margin-bottom:0px;" class="panel panel-default">
-          <div class="panel panel-heading panle-primary">General Information</div>
-          <div class="panel-body"></div>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="form-group atk-form-row atk-form-field">{$first_name}</div>
-              <div class="form-group atk-form-row atk-form-field">{$last_name}</div>
-              <div class="form-group atk-form-row atk-form-field">{$website}</div>
-            </div>
-            <div class="col-xs-6">
-              <div class="form-group atk-form-row atk-form-field">{$organization}</div>
-              <div class="form-group atk-form-row atk-form-field">{$post}</div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-bottom:0px;" class="panel panel-default">
-          <div class="panel panel-heading panle-primary">Address</div>
-          <div class="panel-body">
-            <div class="row">
-              <div class="form-group col-xs-6 atk-form-row atk-form-field">{$address}</div>
-              <div class="col-xs-6">
-                <div class="form-group atk-form-row atk-form-field">
-                  Country
-                  {$country_id}
-                </div>
-                <div class="form-group atk-form-row atk-form-field">
-                  State
-                  {$state_id}
-                </div>
-                <div class="form-group atk-form-row atk-form-field">{$city}</div>
-                <div class="form-group atk-form-row atk-form-field">{$pin_code}</div>
-              </div>
-            </div>
-          </div>
-          <div style="margin-bottom:0px;" class="panel panel-default">
-            <div class="panel panel-heading panle-primary">Narration  </div>
-            <div class="panel-body">
-              <div class="row">
-                <div class="form-group col-xs-12 atk-form-row atk-form-field">{$narration}</div>
-              </div>
-            </div>
-          </div>
+<div class="ui container raised segment main-box">
+  <div class="ui two column grid">
+    <div class="ten wide column">
+      <h4 class="ui dividing header">General Information</h4>
+      <div class="field">
+        <label>Name</label>
+        <div class="two fields">
+          <div class="field">{$first_name}</div>
+          <div class="field">{$last_name}</div>
         </div>
       </div>
-      <div class="form-group col-xs-4">
-        <div style="margin-bottom:0px;" class="panel panel-default">
-          <div class="panel panel-heading panle-primary">Official Email</div>
-          <div class="panel-body">
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_1}</div>
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_2}</div>
-          </div>
-        </div>
-        <div style="margin-bottom:0px;" class="panel panel-default">
-          <div class="panel panel-heading panle-primary">Personal Email</div>
-          <div class="panel-body">
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_3}</div>
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$email_4}</div>
-          </div>
-        </div>
-        <div style="margin-bottom:0px;" class="panel panel-default">
-          <div class="panel panel-heading panle-primary">Official Contact</div>
-          <div class="panel-body">
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_1}</div>
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_2}</div>
-          </div>
-        </div>
-        <div style="margin-bottom:0px;" class="panel panel-default">
-          <div class="panel panel-heading panle-primary">Personal Contact</div>
-          <div class="panel-body">
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_3}</div>
-            <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_4}</div>
-          </div>
+      <div class="field">
+        <div class="two fields">
+          <div class="field">{$organization}</div>
+          <div class="field">{$post}</div>
         </div>
       </div>
+      <div class="field">
+        <div class="field">{$website}</div>
+      </div>
+      <div class="field">
+        <label>Address</label>{$address}  
+      </div>
+      <div class="two fields">
+        <div class="field">
+          <label>City</label>{$city}
+        </div>
+        <div class="field">
+          <label>Pin code</label>{$pin_code}
+        </div>
+      </div>
+      <div class="two fields">
+        <div class="field">
+          <label>Country</label>{$country_id}
+        </div>
+        <div class="field">
+          <label>State</label>{$state_id}
+        </div>
+      </div>
+      <div class="field">
+        <label>Narration</label>{$narration}
+      </div>
+      <div class="inline field">{$want_to_add_next_affiliate}</div>
     </div>
-    <div class="row">
-      <div class="form-group col-xs-12 atk-form-row atk-form-field">{$want_to_add_next_affiliate}</div>
+    <div class="ui vertical divider"></div>
+    <div class="five wide column">
+      <h4 class="ui dividing header">Official Emails</h4>
+      <div class="field">{$email_1}</div>
+      <div class="field">{$email_2}</div>
+      <h4 class="ui dividing header">Personal Emails</h4>
+      <div class="field">{$email_3}</div>
+      <div class="field">{$email_4}</div>
+      <h4 class="ui dividing header">Official Contact</h4>
+      <div class="field">{$contact_no_1}</div>
+      <div class="field">{$contact_no_2}</div>
+      <h4 class="ui dividing header">Personal Contact</h4>
+      <div class="field">{$contact_no_3}</div>
+      <div class="field">{$contact_no_4}</div>
     </div>
   </div>{$FormButtons}
 </div>
