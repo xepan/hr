@@ -13,6 +13,7 @@ namespace xepan\hr;
 
 class page_employeedetail extends \xepan\base\Page {
 	public $title='Employee Details';
+	public $employee;
 	public $breadcrumb=['Home'=>'index','Employee'=>'xepan_hr_employee','Detail'=>'#'];
 
 	function init(){
@@ -20,7 +21,7 @@ class page_employeedetail extends \xepan\base\Page {
 
 		$action = $this->api->stickyGET('action')?:'view';
 
-		$employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
+		$this->employee = $employee= $this->add('xepan\hr\Model_Employee')->tryLoadBy('id',$this->api->stickyGET('contact_id'));
 
 		if($action=="add"){
 			$this->template->tryDel('details');
@@ -248,6 +249,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$activity->tryLoadAny();
 			$activity_view->setModel($activity);
 
+			$this->addSalaryLedger();
 			// $this->add('xepan\hr\')
 
 			// $form = $this->add('Form',null,'personal_info');
@@ -282,6 +284,50 @@ class page_employeedetail extends \xepan\base\Page {
 
 	function defaultTemplate(){
 		return ['page/employee-profile'];
+	}
+
+	function addSalaryLedger(){
+		$view = $this->add('View',null,'salary_view');
+
+		if(!$this->employee){
+			$view->add('View_Error')->set('employee not added');
+			return;
+		}
+
+		$employee_row = $this->add('xepan\hr\Model_EmployeeRow')
+						->addCondition('employee_id',$this->employee->id)
+						->setOrder('created_at','asc');
+
+		$due_field = $employee_row->getElement('net_amount');
+		$due_field->caption('Due Amount');
+		
+		$paid_field = $employee_row->getElement('total_amount');
+		$paid_field->caption('Paid Amount');
+
+		$grid = $view->add('xepan\hr\Grid');
+		$grid->addColumn('print_pay_slip');
+		$grid->setModel($employee_row,['created_at','net_amount','total_amount']);
+		$grid->addColumn('balance');
+		$this->balance = 0;
+		$grid->addHook('formatRow',function($g){
+			$paid_amount = 0;
+			$due_amount = 0;
+			if($g->model['total_amount'])
+				$g->current_row['total_amount'] = $paid_amount = $g->model['total_amount'];
+			else
+				$g->current_row['total_amount'] = 0;
+
+			if($g->model['net_amount'])
+				$g->current_row['net_amount'] = $due_amount = $g->model['net_amount'];
+			else
+				$g->current_row['net_amount'] = 0;
+
+			$this->balance = $this->balance + ($due_amount - $paid_amount);
+			$g->current_row['balance'] = $this->balance;
+
+			$g->current_row_html['print_pay_slip'] = '<a class="btn btn-primary" target="_blank" href="'.$this->app->url('xepan_hr_printpayslip',['employee_row'=>$g->model->id]).'">Print Pay Slip</a>';
+		});
+
 	}
 
 	function checkPhoneNo($phone_id,$phone_value,$contact_id,$form){
