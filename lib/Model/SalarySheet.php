@@ -47,21 +47,14 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 		$this['status'] = "Approved";
 		$this->save();
 
-		$msg = [
-				'title'=>$this['name'].' Salary Sheet Approved',
-				'message'=>'Salary Sheet Approved of MONTH: '.$this['month']." and YEAR: ".$this['year'],
-				'type'=>'success',
-				'sticky'=>false,
-				'desktop'=>strip_tags($this['description']),
-				'js'=>null
-			];
 		
 		$ss_model = $this->add('xepan\hr\Model_SalarySheet');
+
 		$sal = $this->add('xepan\hr\Model_Salary');
 		foreach ($sal->getRows() as $s) {
 			$norm_name = $this->app->normalizeName($s['name']);
 			$ss_model->addExpression($norm_name)->set(function($m,$q)use($s,$norm_name){
-				return $q->expr('sum([0])',[$m->refSQL('xepan\hr\EmployeeRow')->setLimit(1)->fieldQuery($norm_name)]);
+				return $q->expr('IFNULL([0],0)', [$m->refSQL('xepan\hr\EmployeeRow')->sum($norm_name)]);
 			});
 		}
 
@@ -80,6 +73,15 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 
 		$ss_model->load($this->id);
 		
+
+		$msg = [
+				'title'=>$this['name'].' Salary Sheet Approved',
+				'message'=>'Salary Sheet Approved of MONTH: '.$this['month']." and YEAR: ".$this['year'],
+				'type'=>'success',
+				'sticky'=>false,
+				'desktop'=>strip_tags($this['description']),
+				'js'=>null
+			];
 		$this->app->employee
 	           	->addActivity("Salary Sheet ".$this['name']." Approved by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg); 
