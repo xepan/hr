@@ -24,7 +24,15 @@ class page_layouts extends \xepan\hr\page_config{
 		$personpayslip_form = $this->add('Form',null,'personpayslip');
 		$personpayslip_form->setModel($personpayslip_m);
 
-		$personpayslip_form->getElement('payslip')->set($personpayslip_m['payslip'])->setFieldHint('{$presents},{$paid_leaves},{$unpaid_leaves},{$absents},{$paiddays},{$total_working_days}');
+		$sal = $this->add('xepan\hr\Model_Salary');
+		$all_salary = [];
+		foreach ($sal->getRows() as $s) {
+			$all_salary[] = '{$'.$this->app->normalizeName($s['name']).'}';
+		}
+		$salary_name = implode(",",$all_salary);
+		// var_dump($salary_name);
+
+		$personpayslip_form->getElement('payslip')->set($personpayslip_m['payslip'])->setFieldHint('{$company_name},{$company_address},{$company_mobile_no},{$created_at}{$employee_name},{$department},{$designation}{$date_of_joining},{$date_of_birth},{$employee_code},{$location},{$presents},{$paid_leaves},{$unpaid_leaves},{$absents},{$paiddays},{$total_working_days},'.$salary_name);
 		
 
 		$save = $personpayslip_form->addSubmit('Save')->addClass('btn btn-primary');
