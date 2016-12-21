@@ -11,7 +11,7 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\hr\SalaryAbstract','salary_abstract_id');
 		$this->hasOne('xepan\hr\Employee','employee_id');
 
-		$this->addField('total_amount'); // used only for Salary payment 
+		$this->addField('total_amount')->type('money')->defaultValue(0); // used only for Salary payment 
 
 		// system calculated fields
 		$this->addField('presents');
@@ -45,6 +45,7 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		})->type('money');
 
 
+		$this->addExpression('created_at')->set($this->refSQL('salary_abstract_id')->fieldQuery('created_at'))->type('date');
 
 	}
 

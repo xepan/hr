@@ -75,6 +75,22 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('afterSave',[$this,'updateEmployeeSalary']);
 		$this->addHook('afterSave',[$this,'updateEmployeeLeave']);
+		$this->addHook('beforeInsert',[$this,'checkLimits']);
+	}
+
+	function checkLimits(){
+		$extra_info = $this->app->recall('epan_extra_info_array',false);
+
+        if((isset($extra_info ['specification']['employee'])) AND ($extra_info ['specification']['employee'] <> 0)){
+        	$emp_count = $this->add('xepan\hr\Model_Employee')->count()->getOne();
+        	
+        	if($emp_count >= $extra_info ['specification']['employee']){
+        		throw $this->exception("Sorry ! You cannot add more employees. Your usage limit is over")
+        				->addMoreInfo('Employee Count',$emp_count)
+        				->addMoreInfo('Employee Limit',$extra_info ['specification']['employee'])
+        			;
+        	}
+        }
 	}
 
 	function getActiveEmployeeIds(){
@@ -95,12 +111,12 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		if(isset($this->app->employee_post_id_changed)){
 			
+			$this->ref('EmployeeSalary')->each(function($m){
+				$m->delete();
+			});
+
 			$temp = $this->ref('post_id')->ref('salary_template_id');
 			if($temp->loaded()){
-				$this->ref('EmployeeSalary')->each(function($m){
-					$m->delete();
-				});
-				
 				foreach ($temp->ref('xepan\hr\SalaryTemplateDetails') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_Salary');
 					$m['employee_id'] = $this->id;
@@ -118,12 +134,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(isset($this->app->employee_post_id_changed)){
 			$temp = $this->ref('post_id')->ref('leave_template_id');
 
-
+			$this->ref('EmployeeSalary')->each(function($m){
+				$m->delete();
+			});
+			
 			if($temp->loaded()){
-				$this->ref('EmployeeSalary')->each(function($m){
-					$m->delete();
-				});
-				
 				foreach ($temp->ref('xepan\hr\LeaveTemplateDetail') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
 					$m['created_by_id'] = $this->id;
@@ -384,7 +399,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function countDays($month, $year, $ignore) {
 	    $count = 0;
 	    $counter = mktime(0, 0, 0, $month, 1, $year);
+	    
+
 	    while (date("n", $counter) == $month) {
+	    	
 	        if (in_array(date("w", $counter), $ignore) == false) {
 	            $count++;
 	        }
@@ -393,12 +411,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	    return $count;
 	}
 
-	function getOfficialHolidays($month,$year){
-		if(isset($this->app->cache[$month][$year]['OfficialHolidays'])) return $this->app->cache[$month][$year]['OfficialHolidays'];
-		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
-		//	getWeekdays off from config in terms of array 0 => sunday 1= Monday
+
+	function getOffWeekDay(){
 		$week_day_array = ['sunday'=>0,'monday'=>1,'tuesday'=>2,'wednesday'=>3,'thursday'=>4,'friday'=>5,'saturday'=>6];
-		$ignore_array = [];
+		$official_off_day = [];
 		$week_day_model = $this->add('xepan\base\Model_ConfigJsonModel',
 					[
 						'fields'=>[
@@ -414,48 +430,150 @@ class Model_Employee extends \xepan\base\Model_Contact{
 						'application'=>'hr'
 					]);
 		$week_day_model->tryLoadAny();
-
-		foreach ($week_day_model as $day=>$value) {
-			if(!$value)
-				$ignore_array[] = $week_day_array[$day];
+		
+		foreach ($week_day_array as $day_name => $day_number) {
+			// echo "Value = ".$day_name." = number = ".$day_number."<br/>";
+			if(!$week_day_model[$day_name])
+				$official_off_day[] = $day_number;
 		}
 
-		$wekklyOff = $this->countDays($month, $year, $ignore_array);
-
-		$h_c=  $oh_days->addCondition('month',$month)
-				->addCondition('year',$year)
-				->sum($this->dsql()->expr('IFNULL([0],0)+[1]',[$oh_days->getElement('month_holidays'),$wekklyOff]))
-				->getOne()
-				;
-		$this->app->cache[$month][$year]['OfficialHolidays']= $h_c;
-		return $h_c;
+		return $official_off_day;
 	}
 
+	// official holiday  = oh not included (config offcial off day like sunday) + count of official off day(sunday or saturday)
+
+	function getOfficialHolidays($month,$year,$return_holiday_date_array = false){
+
+		if(isset($this->app->cache[$month][$year]['OfficialHolidays'])){
+
+			if($return_holiday_date_array)
+				return $this->app->cache[$month][$year]['OfficialHolidays']['dates'];
+			
+			return $this->app->cache[$month][$year]['OfficialHolidays']['count'];
+		}
+
+		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
+
+		$official_off_day = $this->getOffWeekDay();
+
+		$total_monthly_non_working_day = $this->countDays($month, $year, $official_off_day);
+		$req_start_date = date('Y-m-01',strtotime($year.'-'.$month.'-01'));
+		$req_end_date = date('Y-m-t',strtotime($year.'-'.$month.'-01'));
+
+		// Get Holidays that are actually crossing this $month & $year
+		$oh_days->addCondition('from_date','>=',$req_start_date) // NOT month_from-date
+				->addCondition('to_date','<=',$req_end_date);
+
+		$official_holiday_count = 0;
+		$official_holiday_date = [];
+
+		foreach ($oh_days as $model) {
+
+			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
+
+			for ($i=0; $i <= $return_data['days'] ; $i++) {
+				$holiday_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
+				
+				// if(!in_array($holiday_date, $official_holiday_date))
+				$official_holiday_date[] = $holiday_date;
+
+				$day_sequence = date('w',strtotime($holiday_date));
+				if(in_array($day_sequence, $official_off_day))
+					continue;
+
+				$official_holiday_count = $official_holiday_count + 1;
+			}
+		}
+
+		$official_holiday_count = $official_holiday_count + $total_monthly_non_working_day;
+		
+		$this->app->cache[$month][$year]['OfficialHolidays']= [
+																'count' => $official_holiday_count,
+																'dates' => $official_holiday_date
+															];
+
+		if($return_holiday_date_array) return $official_holiday_date;
+		return $official_holiday_count;
+	}
+
+	// paid
 	function getPaidLeaves($month,$year){
 
 		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
-		return $el_days
+		$el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
 				->addCondition('year',$year)
 				->addCondition('leave_type','Paid')
-				->addCondition('status','Approved')
-				->sum($this->dsql()->expr('IFNULL([0],0)',[$el_days->getElement('month_leaves')]))
-				->getOne();
+				->addCondition('status','Approved');
+
+		$official_holidays = $this->getOfficialHolidays($month,$year,true);
+		$official_off_day = $this->getOffWeekDay();
+		
+		// echo "<pre>";
+		// print_r($official_holidays);
+		// echo "</pre>";
+
+		//for each employee paid leave
+			// for loop for from to to_date
+			// if date exists in offcial holiday
+				//	continue;
+			// if date day number is in offcial off day
+				// continue;
+			//count ++;
+
+		$pl_count = 0;
+		foreach ($el_days as $model) {
+			
+			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
+
+			for ($i=0; $i <= $return_data['days'] ; $i++) {
+				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
+
+				if(in_array($leave_date, $official_holidays)) continue;
+
+				$day_sequence = date('w',strtotime($leave_date));
+
+				if(in_array($day_sequence, $official_off_day)) continue;
+
+				$pl_count = $pl_count + 1;
+			}
+
+		}
+
+		return $pl_count;
 	}
 
 	function getUnPaidLeaves($month,$year){
 
 		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
-		return $el_days
+		$el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
 				->addCondition('year',$year)
 				->addCondition('leave_type','Unpaid')
-				->addCondition('status','Approved')
-				->sum($this->dsql()->expr('IFNULL([0],0)',[$el_days->getElement('month_leaves')]))
-				->getOne();
+				->addCondition('status','Approved');
 		
+		$upl_count = 0;
+		foreach ($el_days as $model) {
+			
+			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
+
+			for ($i=0; $i <= $return_data['days'] ; $i++) {
+				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
+
+				if(in_array($leave_date, $official_holidays)) continue;
+
+				$day_sequence = date('w',strtotime($leave_date));
+
+				if(in_array($day_sequence, $official_off_day)) continue;
+
+				$upl_count = $upl_count + 1;
+			}
+
+		}
+
+		return $upl_count;	
 	}
 
 	function getPresent($month,$year){
@@ -472,8 +590,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				->count()->getOne();
 	}
 
-	
-	// echo countDays(2013, 1, array(0, 6)); // 23
 
 	function getSalarySlip($month,$year,$salary_sheet_id,$TotalWorkDays){
 
