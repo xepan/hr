@@ -31,7 +31,8 @@ $.each({
 				// if($(target).attr('data-employee-salary') === salary_name['name'])
 				// 	console.log("salary name = "+salary_name['name']);
 
-				if(obj.length && $(target).attr('data-employee-salary') != salary_name['name']){
+				if(obj.length){
+				// if(obj.length && $(target).attr('data-employee-salary') != salary_name['name']){
 
 					// continue for target field/ changed field
 					// console.log("."+salary_name['name']+"_"+employee_id);
@@ -39,10 +40,19 @@ $.each({
 					var expression = obj.attr('data-xepan-salarysheet-expression');
 					// console.log(expression);
 					
-					if(expression == undefined || expression == null || !expression.length) return true;
-
 					add_deduction = obj.attr('data-add_deduction');
+
+					if(expression == undefined || expression == null || !expression.length){
+						
+						if($(target).attr('id') === $(obj).attr('id')){
+							expression = $(target).val();
+							// $(target).attr('data-xepan-salarysheet-expression',$(target).val());
+						}else{
+							expression = $(obj).val();
+						}
+					}
 					
+
 					$.each(salaries_array,function(index,salary){
 						search_str = "{"+salary['name']+"}";
 						replace_str = $('.'+salary['name']+'_'+employee_id).val();
@@ -64,15 +74,15 @@ $.each({
 
 					if(add_deduction === "add"){
 						net_salary += parseFloat($('.'+salary_name['name']+'_'+employee_id).val());
-						console.log(net_salary);
+						// console.log(net_salary);
 					}
 
 					if(add_deduction === "deduction"){
 						net_salary -= parseFloat($('.'+salary_name['name']+'_'+employee_id).val());
-						console.log(net_salary);
+						// console.log(net_salary);
 					}
 
-					console.log(add_deduction);
+					// console.log(add_deduction);
 				}
 
 			// console.log("."+salary_name['name']+"_"+employee_id);

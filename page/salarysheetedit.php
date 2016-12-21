@@ -20,6 +20,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$this->TotalWorkDays  = $model_sheet->getTotalWorkingDays($month,$year);
 
 		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active')
+			// ->addCondition('id','661')
 			// ->setLimit(2)
 		;
 
@@ -28,10 +29,9 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$form = $this->add('Form');
 		$all_salary = $this->add('xepan\hr\Model_Salary')->getRows();
 		
-		foreach ($all_salary as &$salary) {
-			$salary['name'] = preg_replace('/\s+/', '',$salary['name']);
+		foreach ($all_salary as $key=>$salary) {
+			$all_salary[$key]['name'] = preg_replace('/\s+/', '',$salary['name']);
 		}
-
 
 		$all_salary_for_js = [];
 		$all_salary_for_js[] = ['name'=>'Presents'];
@@ -44,7 +44,6 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','paiddays'=>'PaidDays'];
 		
-
 		foreach ($active_employee as $employee) {
 
 			// echo $employee['name']."<br/>";
@@ -101,10 +100,10 @@ class page_salarysheetedit extends \xepan\base\Page{
 				$new_col = $cols->addColumn(2)->addClass('col-md-2 ');
 				$field_name  = "f_".$salary['name']."_".$employee->id;
 
-				$applied_expression = 0;
+				$applied_expression = "";
 				$add_deduction = "";
 				if(isset($employee_applied_salary[$salary['id']])){
-					$applied_expression = preg_replace('/\s+/', '', $employee_applied_salary[ $salary['id'] ]['expression']);
+					$applied_expression = preg_replace('/\s+/', '', $employee_applied_salary[ $salary['id'] ]['expression'])?:"";
 					$add_deduction = $employee_applied_salary[$salary['id']]['add_deduction'];
 				}
 
