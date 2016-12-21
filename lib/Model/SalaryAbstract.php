@@ -117,9 +117,12 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		return $od+$wekklyOff;
 	}
 
-	function getTotalWorkingDays($month,$year){
+	function getTotalWorkingDays($month,$year,$with_offcial_holiday=true){
 		$TotalMonthDays = date('t',strtotime($year.'-'.$month.'-01'));
-		$OfficialHolidays = $this->getOfficialHolidays($month,$year,$TotalMonthDays);				
+		if($with_offcial_holiday)
+		return $TotalMonthDays;
+
+ 		$OfficialHolidays = $this->getOfficialHolidays($month,$year,$TotalMonthDays);
 		return $TotalMonthDays - $OfficialHolidays;
 	}
 
