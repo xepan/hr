@@ -20,7 +20,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$this->TotalWorkDays  = $model_sheet->getTotalWorkingDays($month,$year);
 
 		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active')
-			// ->setLimit(3)
+			// ->setLimit(2)
 		;
 
 		$this->add('View')->setElement('h1')->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
@@ -47,6 +47,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 		foreach ($active_employee as $employee) {
 
+			// echo $employee['name']."<br/>";
 			// Get Employee Applied Salary
 			$employee_applied_salary = $employee->getApplySalary();
 
@@ -59,16 +60,18 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 			// echo "<pre>";
 			// print_r($result);
+			// echo "</pre>";
 			//for pre defined system calculated Factor
 			foreach ($system_calculated_factor as $key => $name) {
-				if(isset($result['loaded'][$name]))
+				// echo $name." = ";
+				if(isset($result['loaded'][$name]) AND $result['loaded'][$name] > 0)
 					$value = $result['loaded'][$name];
-				elseif (isset($result['calculated'][$name])) {
+				elseif (isset($result['calculated'][$name]) AND $result['calculated'][$name] > 0) {
 					$value = $result['calculated'][$name];
 				}else
 					$value = 0;
 
-
+				// echo $value."<br/>";
 				$new_col = $cols->addColumn(2)->addClass('col-md-2');
 				$field = $new_col->addField('Number',"f_".$name."_".$employee->id, $name);
 				$field->set($value);
@@ -86,9 +89,9 @@ class page_salarysheetedit extends \xepan\base\Page{
 			//for all company salary
 			foreach ($all_salary as $key => $salary) {
 				$value = 0;
-				if(isset($result['loaded'][$salary['name']]))
+				if(isset($result['loaded'][$salary['name']]) AND $result['loaded'][$salary['name']] > 0)
 					$value = $result['loaded'][$salary['name']]?:0;
-				elseif(isset($result['calculated'][$salary['name']]))
+				elseif(isset($result['calculated'][$salary['name']]) AND $result['calculated'][$salary['name']])
 					$value = $result['calculated'][$salary['name']]?:0;
 				else
 					$value = 0;

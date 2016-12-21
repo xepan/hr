@@ -37,6 +37,13 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 
 		$this->is(['name|required','month|required','year|required']);
 
+		$this->addHook('beforeDelete',[$this,'deleteEmpRow']);
+	}
+
+	function deleteEmpRow(){
+		foreach($this->ref('xepan\hr\EmployeeRow') as $emp_row){
+			$emp_row->delete();
+		}
 	}
 
 	function addEmployeeRow($employee_id,$total_amount=null,$salary_detail=[],$calculated_field=[]){

@@ -13,8 +13,15 @@ class page_leavemanagment extends \xepan\base\Page{
 
 		$emp_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		$emp_leave_m->addCondition('status','<>','Draft');
+
+		$emp_leave_m->getElement('status')->defaultValue('Submitted');
+
+
 		$crud = $this->add('xepan\hr\CRUD',null,null,['view/employee/leave-management-grid']);
-		$crud->setModel($emp_leave_m);
+		$crud->setModel($emp_leave_m,
+							['created_by_id','created_by','employee_id','employee','emp_leave_allow_id','emp_leave_allow','from_date','to_date'],
+							['created_by_id','created_by','employee_id','employee','emp_leave_allow_id','emp_leave_allow','from_date','to_date','status','month','year','month_leaves','leave_type','month_from_date','month_to_date','no_of_leave']
+							);
 		$crud->add('xepan\base\Controller_MultiDelete');
 		$crud->grid->addQuickSearch(['employee']);
 		if(!$crud->isEditing()){

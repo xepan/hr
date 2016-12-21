@@ -496,6 +496,36 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		return $official_holiday_count;
 	}
 
+	function getValueOfTreatHolidayBetweenLeave(){
+		if(isset($this->app->cache['TreatHolidayBetweenLeave'])){
+			return $this->app->cache['TreatHolidayBetweenLeave'];
+		}
+
+		$config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+				[
+					'fields'=>[
+								'treat_holiday_between_leave'=>"Line",
+								],
+					'config_key'=>'HR_HOLIDAY_BETWEEN_LEAVES',
+					'application'=>'hr'
+				]);
+		$config_model->tryLoadAny();
+
+		$value = "AsHoliday";
+		if($config_model['treat_holiday_between_leave']) $value = $config_model['treat_holiday_between_leave'];
+
+		$this->app->cache['treat_holiday_between_leave'] = $value;
+		return $value;
+	}
+
+	function treatLeaveAsHoliday(){
+		$value = $this->getValueOfTreatHolidayBetweenLeave();
+		if($value == "AsHoliday")
+			return true;
+
+		return false;
+	}
+
 	// paid
 	function getPaidLeaves($month,$year){
 
@@ -516,10 +546,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		//for each employee paid leave
 			// for loop for from to to_date
-			// if date exists in offcial holiday
-				//	continue;
-			// if date day number is in offcial off day
-				// continue;
+				// if treat leave as holiday
+					// if date exists in offcial holiday
+						//	continue;
+					// if date day number is in offcial off day
+						// continue;
 			//count ++;
 
 		$pl_count = 0;
@@ -530,17 +561,21 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			for ($i=0; $i <= $return_data['days'] ; $i++) {
 				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
 
-				if(in_array($leave_date, $official_holidays)) continue;
+				// echo $this['name']." = ".$leave_date;
+				// echo " Holiday = ".$this->treatLeaveAsHoliday();
+				if($this->treatLeaveAsHoliday()){
+					if(in_array($leave_date, $official_holidays)) continue;
 
-				$day_sequence = date('w',strtotime($leave_date));
+					$day_sequence = date('w',strtotime($leave_date));
 
-				if(in_array($day_sequence, $official_off_day)) continue;
-
+					if(in_array($day_sequence, $official_off_day)) continue;
+				}
 				$pl_count = $pl_count + 1;
 			}
 
 		}
 
+		// echo "PL Leaves ".$pl_count."<br/>";
 		return $pl_count;
 	}
 
@@ -562,11 +597,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			for ($i=0; $i <= $return_data['days'] ; $i++) {
 				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
 
-				if(in_array($leave_date, $official_holidays)) continue;
+				if($this->treatLeaveAsHoliday()){
+					if(in_array($leave_date, $official_holidays)) continue;
 
-				$day_sequence = date('w',strtotime($leave_date));
+					$day_sequence = date('w',strtotime($leave_date));
 
-				if(in_array($day_sequence, $official_off_day)) continue;
+					if(in_array($day_sequence, $official_off_day)) continue;
+				}
 
 				$upl_count = $upl_count + 1;
 			}

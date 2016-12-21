@@ -28,9 +28,9 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 		$this->addField('to_date')->type('date');
 		$this->addField('status')->enum(['Draft','Submitted','Approved','Rejected'])->defaultValue('Draft');
 
-		// $this->addExpression('no_of_leave')->set(function($m,$q){
-		// 	return $q->expr('(DATEDIFF([0],[1]))',[$q->getField('to_date'),$q->getField('from_date')]);
-		// });
+		$this->addExpression('no_of_leave')->set(function($m,$q){
+			return $q->expr('(DATEDIFF([0],[1]))  + 1',[$q->getField('to_date'),$q->getField('from_date')]);
+		});
 		$this->addExpression('month')->set('MONTH(from_date)');
 		$this->addExpression('year')->set('YEAR(from_date)');
 		$this->addExpression('month_leaves')->set('DATEDIFF(to_date,from_date) + 1');

@@ -47,6 +47,13 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 
 		$this->addExpression('created_at')->set($this->refSQL('salary_abstract_id')->fieldQuery('created_at'))->type('date');
 
+		$this->addHook('beforeDelete',[$this,'deleteSalaryDetail']);
+	}
+
+	function deleteSalaryDetail(){
+		foreach($this->ref('SalaryDetail') as $sl_det){
+			$sl_det->delete();
+		}
 	}
 
 	function addSalaryDetail($salary_detail = []){
