@@ -3,6 +3,7 @@ namespace xepan\hr;
 
 class page_salarysheetedit extends \xepan\base\Page{
 	public $title = "Salary Sheet";
+	public $breadcrumb=['Home'=>'index','Salary Sheet'=>'xepan_hr_salarysheet','Detail'=>'#'];
 	public $TotalWorkDays = 0;
 	function init(){
 		parent::init();
