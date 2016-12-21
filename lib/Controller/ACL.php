@@ -115,6 +115,7 @@ class Controller_ACL extends \AbstractController {
 				
 				if($grid instanceof \xepan\base\Grid){
 					$grid->addMethod('format_edit',function($g,$f){
+						if($g->row_edit === false) return;
 						if($this->dependent){
 							$ids= $this->canEdit($g->model['status']?:$this->model['status']);
 						}else{
@@ -131,6 +132,7 @@ class Controller_ACL extends \AbstractController {
 					$grid->setFormatter('edit','edit');
 
 					$grid->addMethod('format_delete2',function($g,$f){
+						if($g->row_delete === false) return;
 						if($this->dependent){
 							$ids= $this->canDelete($g->model['status']?:$this->model['status']);
 						}else{
