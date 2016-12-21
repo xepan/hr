@@ -15,9 +15,21 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		$this->addField('updated_at')->type('date')->defaultValue($this->app->now)->sortable(true);
 		
 		$this->addField('name');
-		$this->addField('month')->enum(['1','2','3','4','5','6','7','8','9','10','11','12']);
-		$year = ['2015','2016','2017','2018'];
-		$this->addField('year')->enum($year);
+		$this->addField('month')->setValueList(['1'=>"January",'2'=>"February",'3'=>"March",'4'=>"April",'5'=>"May",'6'=>"June",'7'=>"July",'8'=>"August",'9'=>"September",'10'=>"October",'11'=>"November",'12'=>"December"]);
+
+		$current_year = $this->app->monthFirstDate();
+		$year = [];
+		for ($i=5; $i > 0; $i--) {
+			$pre_year = date("Y",strtotime(date("Y-m-d", strtotime($current_year)) . " -".$i." YEAR" ));
+			$year[$pre_year] = $pre_year;
+		}
+
+		for ($i=0; $i < 5; $i++) { 
+			$next_year = date("Y",strtotime(date("Y-m-d", strtotime($current_year)) . " +".$i." YEAR" ));
+			$year[$next_year] = $next_year;
+		}
+		
+		$this->addField('year')->setValueList($year)->set(date('Y',strtotime($current_year)));
 
 		$this->addField('status')->defaultValue('Draft');
 		$this->addField('type')->setValueList(['SalarySheet'=>'Salary Sheet','SalaryPayment'=>'Salary Payment'])->mandatory(true);

@@ -56,11 +56,35 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 				'js'=>null
 			];
 		
+		$ss_model = $this->add('xepan\hr\Model_SalarySheet');
+		$sal = $this->add('xepan\hr\Model_Salary');
+		foreach ($sal->getRows() as $s) {
+			$norm_name = $this->app->normalizeName($s['name']);
+			$ss_model->addExpression($norm_name)->set(function($m,$q)use($s,$norm_name){
+				return $q->expr('sum([0])',[$m->refSQL('xepan\hr\EmployeeRow')->setLimit(1)->fieldQuery($norm_name)]);
+			});
+		}
+
+		$ss_model->addExpression('total_amout_add')->set(function($m,$q){
+			return $q->expr('IFNULL([0],0)',[$m->refSQL('xepan\hr\EmployeeRow')->sum('total_amout_add')]);
+		})->type('money');
+
+
+		$ss_model->addExpression('total_amount_deduction')->set(function($m,$q){
+			return $q->expr('IFNULL([0],0)',[$m->refSQL('xepan\hr\EmployeeRow')->sum('total_amount_deduction')]);
+		})->type('money');
+		
+		$ss_model->addExpression('net_amount')->set(function($m,$q){
+			return $q->expr('[0]-[1]',[$m->getElement('total_amout_add'),$m->getElement('total_amount_deduction')]);
+		})->type('money');
+
+		$ss_model->load($this->id);
+		
 		$this->app->employee
 	           	->addActivity("Salary Sheet ".$this['name']." Approved by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg); 
 		
-		$this->app->hook('create_account_entry',[$this]);
+		$this->app->hook('salary_sheet_approved',[$ss_model]);
 	}
 
 	function canceled(){
@@ -79,7 +103,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 		$this->app->employee
 	           	->addActivity("Salary Sheet ".$this['name']." Canceled by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg);
-		$this->app->hook('remove_account_entry',[$this]);
+		$this->app->hook('salary_sheet_canceled',[$this]);
 	}
 
 	function redraft(){

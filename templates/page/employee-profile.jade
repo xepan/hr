@@ -9,15 +9,15 @@
       .tabs-wrapper.profile-tabs
         ul.nav.nav-tabs.responsive-tabs
           li.active
-            a(data-toggle='tab', href='#tab-portfolio') Portfolio
+            a(data-toggle='tab' href='#tab-portfolio') Portfolio
           li
-            a(data-toggle='tab', href='#tab-official') Official
+            a(data-toggle='tab' href='#tab-official') Official
           li
-            a(data-toggle='tab', href='#tab-activity') Activity
+            a(data-toggle='tab' href='#tab-activity') Activity
           li
-            a(data-toggle='tab', href='#tab-documents') Documents
-          //- li
-          //-   a(data-toggle='tab', href='#tab-email') Email
+            a(data-toggle='tab' href='#tab-documents') Documents
+          li
+            a(data-toggle="tab" href='#tab-salary') Salary Ledger
         .tab-content
           #tab-portfolio.tab-pane.active
             {portfolio_view}Please Save Basic Information First{/}
@@ -27,6 +27,6 @@
             {$activity_view}
           #tab-documents.tab-pane
             {$document_view}
-          //- #tab-email.tab-pane.fade
-          //-   {$emails}
+          #tab-salary.tab-pane
+            {$salary_view}
   {/}                       
