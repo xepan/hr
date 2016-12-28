@@ -28,11 +28,13 @@ class View_GraphicalReport_Runner extends \View{
 
 		if($report_id == null)
 			$report_id = $this->report_id;
-		
-		$rpt = $this->add('xepan\base\Model_GraphicalReport')->load($report_id);
+				
+		$rpt = $this->add('xepan\base\Model_GraphicalReport')->tryLoadBy('id',$report_id);
 
-		if(!$rpt->loaded())
+		if(!$rpt->loaded()){
 			$this->add('View')->set('Sorry! No dashboard found');
+			return;
+		}
 		
 		$this->title = $rpt['name'];
 		$report_w = $rpt->ref('xepan\base\GraphicalReport_Widget')->addCondition('is_active',true)->setOrder('order','asc');
