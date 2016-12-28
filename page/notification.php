@@ -87,5 +87,12 @@ class page_notification extends \xepan\base\Page{
 
 		$g->setModel($activity);
 		$g->addPaginator(50);
+
+		$this->add('xepan\hr\Model_Employee')
+						->load($this->app->employee->id)
+						->set('notified_till',$this->add('xepan\hr\Model_Activity')->setOrder('id','desc')->tryLoadAny()->get('id'))
+						->save();
+				$this->app->employee->reload();
+				$this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
 	}
 }
