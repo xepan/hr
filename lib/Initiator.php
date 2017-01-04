@@ -105,6 +105,7 @@ class Initiator extends \Controller_Addon {
         
         
         $contact_email->addCondition($or);
+        $contact_email->addCondition('status','Received');
         $contact_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
         $contact_count=$contact_email->count()->getOne();
 
