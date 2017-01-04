@@ -124,26 +124,22 @@ class Initiator extends \Controller_Addon {
         $all_count=$all_email->count()->getOne();
        
        /*Message Count*/
-        // $total_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
-        // $total_msg_m->addCondition([
-        //     ['from_raw','like','%"'.$this->app->employee->id.'"%'],
-        //     ['to_raw','like','%"'.$this->app->employee->id.'"%']
-        //     ]);
-        // $total_emp_message_count = $total_msg_m->count()->getOne();
 
+        $msg_view = $this->app->layout->add('xepan\base\View_Message',null,'message_view');
         $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
         $unread_msg_m->addCondition([
-            ['from_raw','like','%"'.$this->app->employee->id.'"%'],
+            ['cc_raw','like','%"'.$this->app->employee->id.'"%'],
             ['to_raw','like','%"'.$this->app->employee->id.'"%']
             ]);
         $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+        $unread_msg_m->setLimit(3);
+        $msg_view->setModel($unread_msg_m);
+
         $unread_emp_message_count = $unread_msg_m->count()->getOne();
-
-
-        $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
         $this->app->js(true)->html($unread_emp_message_count)->_selector('.contact-and-all-message-count a span.atk-swatch-');
-        
-        $this->app->layout->template->trySet('message_count',$unread_emp_message_count);
+        $this->app->js(true)->html($unread_emp_message_count)->_selector('.inter-msg-count');
+        /*================================*/
+        $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
         // $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
