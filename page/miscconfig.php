@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class page_miscconfig extends \xepan\hr\page_config{
+class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 	public $title="Misc Configuration";
 
 	function init(){
@@ -20,16 +20,17 @@ class page_miscconfig extends \xepan\hr\page_config{
 
 		$form = $this->add('Form');
 		$field = $form->addField('Dropdown','treat_holiday_between_leave')
-				->setValueList(['AsHoliday'=>'As a Holiday','AsLeave'=>'As a Leave']);
+				->setValueList(['AsHoliday'=>'As a Holiday','AsLeave'=>'As a Leave'])
+				->setEmptyText('Please select..');
 
 		if($config_model['treat_holiday_between_leave'])
 			$field->set($config_model['treat_holiday_between_leave']);
 
-		$form->addSubmit("Save");
+		$form->addSubmit("Save")->addClass('btn btn-primary');
 		if($form->isSubmitted()){
 			$config_model['treat_holiday_between_leave'] = $form['treat_holiday_between_leave'];
 			$config_model->save();
-			$form->js(null,$form->js()->univ()->successMessage('Saved'))->reload()->execute();
+			$form->js(null,$form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
 		}
 
 	}
