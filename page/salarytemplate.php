@@ -1,30 +1,19 @@
 <?php
+
 namespace xepan\hr;
 
-class page_salarytemplate extends \xepan\hr\page_config{
-	public $title = "Salary Template";
+class page_salarytemplate extends \xepan\base\Page {
+	
+	function page_index(){
 
-	function init(){
-		parent::init();
-		
 		$salary_template_m = $this->add('xepan\hr\Model_SalaryTemplate');
-		$temp_crud = $this->add('xepan\base\CRUD',null,'salary_template_view');
-		// $temp_crud = $this->add('xepan\base\CRUD',null,'salary_template_view',['page/config/salarytemplate']);
+		$temp_crud = $this->add('xepan\hr\CRUD',null,null,['page/config/salarytemplate']);
 		
 		$temp_crud->setModel($salary_template_m);
 
-		// $temp_crud->grid->addColumn('expander','Detail');
-		$temp_crud->addRef('xepan\hr\SalaryTemplateDetails',['label'=>'Detail']);
-
-
-		$info = $this->add('View',null,'salary_view')->setElement('h2');
-		$info->setHtml('Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}');
-
-		$salary = $this->add('xepan\hr\Model_Salary');
-		$crud = $this->add('xepan\base\CRUD',null,'salary_view',['page/config/salarydetail']);
-		$crud->setModel($salary);
-
-
+		$temp_crud->grid->addColumn('expander','Detail');
+		$temp_crud->grid->addPaginator(5);
+		$temp_crud->grid->addQuickSearch(['name']);
 	}
 
 	function page_Detail(){
@@ -33,12 +22,8 @@ class page_salarytemplate extends \xepan\hr\page_config{
 
 		$salary_template_detail=$salary_template_m->ref('xepan\hr\SalaryTemplateDetails');
 
-		$crud=$this->add('xepan\base\CRUD',null,null,['page/config/salarytemplatedetail']);
+		$crud=$this->add('xepan\hr\CRUD',null,null,['page/config/salarytemplatedetail']);
 		$crud->setModel($salary_template_detail);
-		// $crud->grid->addQuickSearch(['leave']);
 	}
 
-	function defaultTemplate(){
-		return ['page/salarytemplate'];
-	}
 }
