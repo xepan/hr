@@ -1,27 +1,18 @@
 <?php
+
 namespace xepan\hr;
 
-class page_leavetemplate extends \xepan\hr\page_config{
-	public $title = "Leave Template";
-
-	function init(){
-		parent::init();
+class page_leavetemplate extends \xepan\base\Page {
+	
+	function page_index(){
 
 		$leave_template_m = $this->add('xepan\hr\Model_LeaveTemplate');
-		$temp_crud = $this->add('xepan\base\CRUD',null,'leave_template_view');
-		// $temp_crud = $this->add('xepan\base\CRUD',null,'leave_template_view',['page/config/empleavetemplate']);
+		$temp_crud = $this->add('xepan\hr\CRUD',null,null,['page/config/empleavetemplate']);
 		$temp_crud->setModel($leave_template_m);
 
-		// $temp_crud->grid->addColumn('expander','Detail');
-		$temp_crud->addRef('xepan\hr\LeaveTemplateDetail',['label'=>'Detail']);
-
-
-		$leave = $this->add('xepan\hr\Model_Leave');
-		// $crud = $this->add('xepan\base\CRUD',null,'leave_view');
-		$crud = $this->add('xepan\base\CRUD',null,'leave_view',['page/config/leavedetail']);
-		$crud->setModel($leave);
-
-
+		$temp_crud->grid->addColumn('expander','Detail');
+		$temp_crud->grid->addPaginator(5);
+		$temp_crud->grid->addQuickSearch(['name']);
 	}
 
 	function page_Detail(){
@@ -30,12 +21,9 @@ class page_leavetemplate extends \xepan\hr\page_config{
 
 		$leave_template_detail=$leave_template_m->ref('xepan\hr\LeaveTemplateDetail');
 
-		$crud=$this->add('xepan\base\CRUD',null,null,['page/config/empleavetemplatedetail']);
+		$crud=$this->add('xepan\hr\CRUD',null,null,['page/config/empleavetemplatedetail']);
 		$crud->setModel($leave_template_detail);
 		// $crud->grid->addQuickSearch(['leave']);
 	}
 
-	function defaultTemplate(){
-		return ['page/leavetemplate'];
-	}
 }

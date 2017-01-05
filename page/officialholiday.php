@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class page_officialholiday extends \xepan\hr\page_config{
+class page_officialholiday extends \xepan\hr\page_configurationsidebar{
 	public $title="Official Holidays";
 	function init(){
 		parent::init();

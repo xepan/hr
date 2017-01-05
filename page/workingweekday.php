@@ -2,7 +2,7 @@
 
 namespace xepan\hr;
 
-class page_workingweekday extends \xepan\hr\page_config{
+class page_workingweekday extends \xepan\hr\page_configurationsidebar{
 	public $title="Working Week Day";
 	function init(){
 		parent::init();
@@ -25,7 +25,7 @@ class page_workingweekday extends \xepan\hr\page_config{
 
 		$form = $this->add('Form');
 		$form->setModel($week_day_model);
-		$form->addSubmit("Save");
+		$form->addSubmit("Save")->addClass("btn btn-primary");
 		if($form->isSubmitted()){			
 			$week_day_model['monday'] = $form['monday'];
 			$week_day_model['tuesday'] = $form['tuesday'];
@@ -35,7 +35,7 @@ class page_workingweekday extends \xepan\hr\page_config{
 			$week_day_model['saturday'] = $form['saturday'];
 			$week_day_model['sunday'] = $form['sunday'];
 			$week_day_model->save();
-			$form->js(null,$form->js()->univ()->successMessage('Saved'))->reload()->execute();
+			$form->js(null,$form->js()->univ()->successMessage('Working Week Days Updated'))->reload()->execute();
 		}
 
 	}

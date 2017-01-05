@@ -4,12 +4,12 @@
       .tabs-wrapper.profile-tabs
         ul.nav.nav-tabs.responsive-tabs
           li.active
-            a(data-toggle='tab', href='#tab-leave-temp') Leave Template
-          li
             a(data-toggle='tab', href='#tab-leave') Leave
+          li
+            a(data-toggle='tab', href='#tab-leave-temp') Leave Template
         
         .tab-content
-          #tab-leave-temp.tab-pane.active
-            {leave_template_view}Please Save Basic Information First{/}
-          #tab-leave.tab-pane
+          #tab-leave.tab-pane.active
+            {leave_template_view}{/}
+          #tab-leave-temp.tab-pane
             {$leave_view}
