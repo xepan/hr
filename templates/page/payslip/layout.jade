@@ -1,17 +1,12 @@
-.col-md-10
+.col-md-12
   .main-box.clearfix
     .tabs-wrapper.profile-tabs
       ul.nav.nav-tabs.responsive-tabs
         li.active
-          a(data-toggle='tab', href='#tab-personpayslip') Individual Person Pay Slip
-        li
-          a(data-toggle='tab', href='#tab-employees') All Employee Pay Slip List  
+          a(data-toggle='tab', href='#tab-payslip') Pay Slip
       .tab-content
-        
-         #tab-personpayslip.tab-pane.active
+         #tab-payslip.tab-pane.active
            {$personpayslip}
-         #tab-employees.tab-pane
-           {$employees}
 //- script.
 //-   $('.responsive-tabs').responsiveTabs({
 //-         accordionOn: ['xs', 'sm']
