@@ -9,8 +9,8 @@ class page_salarysheet extends \xepan\base\Page{
 		
 		$model_salary = $this->add('xepan\hr\Model_SalarySheet');
 
-		$crud = $this->add('xepan\hr\CRUD');
-		$crud->setModel($model_salary,['month','year','name','status']);
+		$crud = $this->add('xepan\hr\CRUD',null,null,['view/salarysheet/grid']);
+		$crud->setModel($model_salary);
 
 		$crud->grid->addHook('formatRow',function($g){
 			$name = $g->model['name'];
