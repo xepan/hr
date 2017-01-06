@@ -12,10 +12,13 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
+                th
                 th(id="{$name_sortid}")
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;") Name {$name_sort} 
                 th
-                    span created at   
+                    span Date   
+                th
+                    span Narration   
                 th
                     span Amount
                 th
@@ -28,14 +31,12 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td {$selected}
                     td {$name}
-                    td {$created_at}
+                    td {$date}
+                    td {$narration}
                     td {$amount}
-                    td {$Detail}
-                    td {$action}
                     td
-                        div.fa.fa-paperclip(title="total attachment")
-                            {$attachments_count}
                         {$edit}
                         {$delete}
                     {/}
