@@ -31,6 +31,12 @@
                 th(id="{$employee_count_sortid}" data-hide="phone")
                     span Employee 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_count_sort}
+                th(id="" data-hide="all")
+                    span Permission Level 
+                th(id="" data-hide="all")
+                    span Salary Template 
+                th(id="" data-hide="all")
+                    span Leave Template 
                 th
                 th
                 {/}{/}
@@ -61,6 +67,12 @@
                       //- a(href='index.php?page=xepan_hr_employee&post_id={$id}')
                       a.do-view-post-employees(href='#' data-id="{$id}")
                         |  {$employee_count}
+                    td
+                         {$permission_level}
+                    td
+                         {$salary_template}
+                    td
+                         {$leave_template}
                     td
                         | {$action}
                     td(style="width: 15%;")

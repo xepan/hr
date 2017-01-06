@@ -26,11 +26,15 @@
                     span Production Level 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$production_level_sort}
                 th(id="{$posts_count_sortid}" data-hide="phone")
-                    span Post 
+                    span Posts
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$posts_count_sort}
-                th(id="{$emp_count_sortid}" data-hide="phone")
-                    span Employee 
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$emp_count_sort}
+                th(id="{$employee_count_sortid}" data-hide="phone")
+                    span Employees 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_count_sort}
+                th(data-hide="phone")
+                    span Is Outosurced 
+                th(data-hide="phone")
+                    span Simultaneous No. Process Allowed 
                 th 
                 th 
                 {/}{/}
@@ -53,6 +57,10 @@
                     td
                       a.do-view-department-employee(href='#' data-id="{$id}")
                         | {$employee_count}
+                    td
+                        | {$is_outsourced}
+                    td.text-center
+                        | {$simultaneous_no_process_allowed}
                     td
                         | {action}Action Here{/}
                     td(style="width: 15%;")

@@ -14,8 +14,10 @@
         <th></th>
         <th id="{$name_sortid}"><span>Department </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
         <th id="{$production_level_sortid}" data-hide="phone"><span>Production Level </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$production_level_sort}</span></th>
-        <th id="{$posts_count_sortid}" data-hide="phone"><span>Post </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$posts_count_sort}</span></th>
-        <th id="{$emp_count_sortid}" data-hide="phone"><span>Employee </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$emp_count_sort}</span></th>
+        <th id="{$posts_count_sortid}" data-hide="phone"><span>Posts</span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$posts_count_sort}</span></th>
+        <th id="{$employee_count_sortid}" data-hide="phone"><span>Employees </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$employee_count_sort}</span></th>
+        <th data-hide="phone"><span>Is Outosurced </span></th>
+        <th data-hide="phone"><span>Simultaneous No. Process Allowed </span></th>
         <th> </th>
         <th> </th>{/}{/}
       </thead>{$subheader}
@@ -27,6 +29,8 @@
           <td><a href="#" data-id="{$id}" class="do-view-department-post">{$posts_count}</a>
           </td>
           <td><a href="#" data-id="{$id}" class="do-view-department-employee">{$employee_count}</a></td>
+          <td>{$is_outsourced}</td>
+          <td class="text-center">{$simultaneous_no_process_allowed}</td>
           <td>{action}Action Here{/}</td>
           <td style="width: 15%;">
             {$edit}
