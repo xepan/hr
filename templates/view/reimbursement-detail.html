@@ -10,12 +10,9 @@
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
         <th></th>
-        <th>
-          Employee
-          {$created_by}
-        </th>
         <th id="{$name_sortid}"><span style="cursor:pointer; cursor: hand; max-width:600px;">Name {$name_sort} </span></th>
-        <th><span>created_at   </span></th>
+        <th><span>Date   </span></th>
+        <th><span>Narration   </span></th>
         <th><span>Amount</span></th>
         <th></th>
         <th></th>
@@ -25,14 +22,12 @@
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>{$selected}</td>
-          <td>{$employee}</td>
           <td>{$name}</td>
-          <td>{$created_at}</td>
+          <td>{$date}</td>
+          <td>{$narration}</td>
           <td>{$amount}</td>
-          <td>{$Detail}</td>
-          <td>{$action}</td>
           <td>
-            <div title="total attachment" class="fa fa-paperclip">{$attachments_count}</div>{$edit}
+            {$edit}
             {$delete}
           </td>{/}
         </tr>{/}{/}

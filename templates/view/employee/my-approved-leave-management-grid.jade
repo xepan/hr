@@ -13,36 +13,46 @@
             thead.xepan-hover-hand
                 {cols}{col}
                 th
-                th Employee
-                    {$created_by}
-                th(id="{$name_sortid}")
-                    span(style= "cursor:pointer; cursor: hand; max-width:600px;") Name {$name_sort} 
+                th(id="{$employee_sortid}")
+                    span Employee 
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_sort}
+                th(id="{$emp_leave_allow_sortid}")
+                    span Leave Name
+                    span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$emp_leave_allow_sort}
                 th
-                    span created_at   
+                    span From Date
                 th
-                    span Amount
+                    span To Date
                 th
+                    span No. Of Leave
                 th
-                th 
+                    span Month Leaves
+                th
+                    span Leave Type
                 {/}{/}
             {/}
             {$subheader}
+
             tbody
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
-                    td {$selected}
-                    td {$employee}
-                    td {$name}
-                    td {$created_at}
-                    td {$amount}
-                    td {$Detail}
-                    td {$action}
                     td
-                        div.fa.fa-paperclip(title="total attachment")
-                            {$attachments_count}
-                        {$edit}
-                        {$delete}
+                      {$selected}  
+                    td
+                      span {$employee}  
+                    td
+                      span {$emp_leave_allow}  
+                    td
+                      span {$from_date}
+                    td
+                      span {$to_date}
+                    td
+                      span {$no_of_leave}
+                    td
+                      span {$month_leaves}
+                    td
+                      span {$leave_type}
                     {/}
                 {/}{/}
                 {not_found}
