@@ -26,7 +26,7 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 							->where('permitted_post','like','%"'.$this->app->employee['post_id'].'"%'));			
 		
 		$c = $this->add('xepan\hr\CRUD',null,null,['view\graphicalreportbuilder']);
-		$c->setModel($m,['name','description','is_system']);
+		$c->setModel($m,['name','description','is_system','status']);
 		if(!$c->isEditing()){
 			$c->grid->addHook('formatRow',function($g)use($c){
 				if($g->model['is_system']){
