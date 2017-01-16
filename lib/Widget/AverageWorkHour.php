@@ -7,11 +7,16 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 		parent::init();
 
 		$this->report->enableFilterEntity('department');
+		$this->report->enableFilterEntity('employee');
      	$this->chart = $this->add('xepan\base\View_Chart');
 	}
 
 	function recursiveRender(){
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+
+		if(isset($this->report->employee))
+			$attendances->addCondition('employee_id',$this->report->employee);
+
 		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
 		$attendances->_dsql()->group('employee_id');
      	

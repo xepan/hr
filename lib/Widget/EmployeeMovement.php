@@ -7,6 +7,7 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 	function init(){
 		parent::init();
 		$this->report->enableFilterEntity('date_range');
+		$this->report->enableFilterEntity('employee');
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movement-mini']);
 	}
 
@@ -15,6 +16,9 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 
 		$attendance_m = $this->add('xepan\hr\Model_Employee');
 		$attendance_m->addCondition('status','Active');
+
+		if(isset($this->report->employee))
+			$attendance_m->addCondition('id',$this->report->employee);
 		
 		$attendance_m->addExpression('from_date')->set(function($m,$q){
 			$att = $this->add('xepan\hr\Model_Employee_Attandance');
