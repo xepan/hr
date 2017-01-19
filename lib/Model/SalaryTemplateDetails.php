@@ -7,7 +7,9 @@ namespace xepan\hr;
 */
 class Model_SalaryTemplateDetails extends \xepan\base\Model_Table{
 	public $table = "salary_template_details";
-	
+	public $actions = ['*'=>['view','edit','delete']];
+ 	public $acl_type = "SalaryTemplateDetails";
+
 	function init(){
 		parent::init();
 
