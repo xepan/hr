@@ -72,7 +72,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$id],$msg);
+		->notifyTo($id,$msg);
 		$this->save();
 	}
 
@@ -100,7 +100,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$id],$msg);
+		->notifyTo($id,$msg);
 		$this->save();
 	}
 
@@ -128,7 +128,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$id],$msg);
+		->notifyTo($id,$msg);
 		$this->save();
 	}	
 
@@ -156,7 +156,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyTo([$id],$msg);
+		->notifyTo($id,$msg);
 		$this->save();
 	}
 }
