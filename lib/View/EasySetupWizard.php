@@ -139,5 +139,94 @@ class View_EasySetupWizard extends \View{
 			->setHelpMessage('Need help ! click on the help icon')
 			->setHelpURL('#')
 			->setAction('Click Here',$action,$isDone);	
+	
+		/**************************************************************************
+			MISC CONFIGURATION WIZARD FOR TREAT HOLIDAY BETWEEN LEAVE
+		**************************************************************************/	
+		if($_GET[$this->name.'_treat_holiday_between_leave']){
+			$this->js(true)->univ()->frameURL("HR Misc Configuration",$this->app->url('xepan_hr_miscconfig'));
+		}
+
+		$isDone = false;
+
+		$action = $this->js()->reload([$this->name.'_treat_holiday_between_leave'=>1]);
+		$config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'treat_holiday_between_leave'=>"Line",
+										],
+							'config_key'=>'HR_HOLIDAY_BETWEEN_LEAVES',
+							'application'=>'hr'
+						]);
+		$config_model->tryLoadAny();
+
+		if($config_model['treat_holiday_between_leave']){
+			$isDone = true;
+			$action = $this->js()->univ()->dialogOK("Already have Data",' You already have updated the hr misc configuration settings, visit page ? <a href="'. $this->app->url('xepan_hr_miscconfig')->getURL().'"> click here to go </a>');
+		}	
+
+		$misc_config_view = $this->add('xepan\base\View_Wizard_Step');
+
+		$misc_config_view->setAddOn('Application - HR')
+			->setTitle('Update Hr Misc Configuration')
+			->setMessage('Update configuration accoding your organization norms.')
+			->setHelpMessage('Need help ! click on the help icon')
+			->setHelpURL('#')
+			->setAction('Click Here',$action,$isDone);
+
+		/**************************************************************************
+			PAYSLIP LAYOUT CONFIGURATION
+		**************************************************************************/	
+		if($_GET[$this->name.'_payslip_layouts']){
+			$personpayslip_m = $this->add('xepan\base\Model_ConfigJsonModel',
+			[
+				'fields'=>[
+							'payslip'=>'xepan\base\RichText',
+							],
+					'config_key'=>'PERSONPAYSLIP_LAYOUT',
+					'application'=>'hr'
+			]);
+			$personpayslip_m->tryLoadAny();
+			
+			$payslip_layout_template = file_get_contents(realpath(getcwd().'/vendor/xepan/hr/templates/view/payslip-templates/duplicate-payslip-person.html'));
+
+			if(!$personpayslip_m['payslip']){
+				$personpayslip_m['payslip'] = $payslip_layout_template;
+			}
+
+			$personpayslip_m->save();
+
+			$this->js(true)->univ()->frameURL("Payslip Layouts",$this->app->url('xepan_hr_layouts'));
+		}
+
+		$isDone = false;
+		$action = $this->js()->reload([$this->name.'_payslip_layouts'=>1]);
+
+		$personpayslip_m = $this->add('xepan\base\Model_ConfigJsonModel',
+			[
+				'fields'=>[
+							'payslip'=>'xepan\base\RichText',
+							],
+					'config_key'=>'PERSONPAYSLIP_LAYOUT',
+					'application'=>'hr'
+			]);
+		$personpayslip_m->tryLoadAny();
+		
+		if(!$personpayslip_m['payslip']){
+			$isDone = false;
+		}else{
+			$isDone = true;
+			$action = $this->js()->univ()->dialogOK("Already have Templates",' You have already updated documents layouts for printing, visit page ? <a href="'. $this->app->url('xepan_commerce_layouts')->getURL().'"> click here to go </a>');
+		}
+
+		$payslip_layouts_view = $this->add('xepan\base\View_Wizard_Step')
+			->setAddOn('Application - HR')
+			->setTitle('Set Payslip Layouts For Genrate Pdf For Printing')
+			->setMessage('Please set payslip layouts for generate pdf for prints of payslip.')
+			->setHelpMessage('Need help ! click on the help icon')
+			->setHelpURL('#')
+			->setAction('Click Here',$action,$isDone);
+
+
 	}
 }
