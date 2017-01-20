@@ -16,6 +16,7 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 							'config_key'=>'HR_HOLIDAY_BETWEEN_LEAVES',
 							'application'=>'hr'
 						]);
+		$config_model->add('xepan\hr\Controller_ACL');
 		$config_model->tryLoadAny();
 
 		$form = $this->add('Form');
