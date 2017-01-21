@@ -222,7 +222,7 @@ class View_EasySetupWizard extends \View{
 		$payslip_layouts_view = $this->add('xepan\base\View_Wizard_Step')
 			->setAddOn('Application - HR')
 			->setTitle('Set Payslip Layouts For Genrate Pdf For Printing')
-			->setMessage('Please set payslip layouts for generate pdf for prints of payslip.')
+			->setMessage('Please set payslip layouts for generate pdf & take print of payslip.')
 			->setHelpMessage('Need help ! click on the help icon')
 			->setHelpURL('#')
 			->setAction('Click Here',$action,$isDone);
