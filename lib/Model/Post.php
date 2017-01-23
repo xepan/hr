@@ -36,6 +36,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$this->addCondition('type','Post');
 
 		$this->addHook('beforeSave',[$this,'changeEmployeeInOutTimes']);
+		$this->addHook('beforeSave',[$this,'validateInOutTime']);
 		$this->addHook('beforeDelete',$this);
 		$this->addHook('beforeDelete',[$this,'deleteEmailAssociation']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
@@ -49,6 +50,11 @@ class Model_Post extends \xepan\hr\Model_Document{
 			'department_id|required'
 			]);
 
+	}
+
+	function validateInOutTime(){
+		if($this['out_time'] <= $this['in_time'])
+			throw $this->exception('In Time must be smaller then out time','ValidityCheck')->setField('in_time');
 	}
 
 	function descendantPosts($include_self = true){		
