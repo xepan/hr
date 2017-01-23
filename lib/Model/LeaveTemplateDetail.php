@@ -7,6 +7,9 @@ namespace xepan\hr;
 */
 class Model_LeaveTemplateDetail extends \xepan\base\Model_Table{
 	public $table ="leave_template_detail";
+	public $actions = ['*'=>['view','edit','delete']];
+ 	public $acl_type = "LeaveTemplateDetail";
+
 	function init(){
 		parent::init();
 
