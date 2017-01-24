@@ -125,19 +125,19 @@ class Initiator extends \Controller_Addon {
        
        /*Message Count*/
 
-        $msg_view = $this->app->layout->add('xepan\base\View_Message',null,'message_view');
-        $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
-        $unread_msg_m->addCondition([
-            ['cc_raw','like','%"'.$this->app->employee->id.'"%'],
-            ['to_raw','like','%"'.$this->app->employee->id.'"%']
-            ]);
-        $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
-        $unread_msg_m->setLimit(3);
-        $msg_view->setModel($unread_msg_m);
+        // $msg_view = $this->app->layout->add('xepan\base\View_Message',null,'message_view');
+        // $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
+        // $unread_msg_m->addCondition([
+        //     ['cc_raw','like','%"'.$this->app->employee->id.'"%'],
+        //     ['to_raw','like','%"'.$this->app->employee->id.'"%']
+        //     ]);
+        // $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+        // $unread_msg_m->setLimit(3);
+        // $msg_view->setModel($unread_msg_m);
 
-        $unread_emp_message_count = $unread_msg_m->count()->getOne();
-        $this->app->js(true)->html($unread_emp_message_count)->_selector('.contact-and-all-message-count a span.atk-swatch-');
-        $this->app->js(true)->html($unread_emp_message_count)->_selector('.inter-msg-count');
+        // $unread_emp_message_count = $unread_msg_m->count()->getOne();
+        // $this->app->js(true)->html($unread_emp_message_count)->_selector('.contact-and-all-message-count a span.atk-swatch-');
+        // $this->app->js(true)->html($unread_emp_message_count)->_selector('.inter-msg-count');
         /*================================*/
         $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
 
