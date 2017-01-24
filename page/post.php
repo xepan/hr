@@ -60,12 +60,12 @@ class page_post extends \xepan\base\Page {
 		
 		if($crud->isEditing()){
 			$crud->form->getElement('in_time')
-					   ->setOption('showMeridian',true)
+					   ->setOption('showMeridian',false)
 					   ->setOption('minuteStep',5)
 					   ->setOption('showSeconds',false);
 
 			$crud->form->getElement('out_time')
-					   ->setOption('showMeridian',true)
+					   ->setOption('showMeridian',false)
 					   ->setOption('minuteStep',5)
 					   ->setOption('showSeconds',false);		   
 		}
