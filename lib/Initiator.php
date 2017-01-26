@@ -71,6 +71,7 @@ class Initiator extends \Controller_Addon {
                 $this->api->employee->afterLoginCheck();
             }
             $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
+            $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');
@@ -88,63 +89,12 @@ class Initiator extends \Controller_Addon {
         $search_department = $this->add('xepan\hr\Model_Department');
         $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
+        $this->getEmailAndMsgCount();
 
-        // $my_email=$this->add('xepan\hr\Model_Post_Email_MyEmails');
-        // $my_email->addExpression('post_email')->set(function($m,$q){
-        //  return $q->getField('email_username');
-        // });
-
-        // $contact_email=$this->add('xepan\communication\Model_Communication_Email_ContactReceivedEmail');
-        // $or = $contact_email->dsql()->orExpr();
-        // $i=0;
-        //  foreach ($my_email as $email) {
-        //      $or->where('mailbox','like',$email['post_email'].'%');
-        //      $i++;
-        //  }
-        //  if($i == 0) $or->where('mailbox',-1);       
-        
-        
-        // $contact_email->addCondition($or);
-        // $contact_email->addCondition('status','Received');
-        // $contact_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
-        // $contact_count=$contact_email->count()->getOne();
-
-        // $all_email=$this->add('xepan\communication\Model_Communication_Email_Received');
-        // $or = $all_email->dsql()->orExpr();
-        // $i=0;
-        //  foreach ($my_email as $email) {
-        //      $or->where('mailbox','like',$email['post_email'].'%');
-        //      $i++;
-        //  }
-        //  if($i == 0) $or->where('mailbox',-1);       
-        
-        
-        // $all_email->addCondition($or);
-        // $all_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
-        // $all_count=$all_email->count()->getOne();
-       
-       /*Message Count*/
-
-        // $msg_view = $this->app->layout->add('xepan\base\View_Message',null,'message_view');
-        // $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
-        // $unread_msg_m->addCondition([
-        //     ['cc_raw','like','%"'.$this->app->employee->id.'"%'],
-        //     ['to_raw','like','%"'.$this->app->employee->id.'"%']
-        //     ]);
-        // $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
-        // $unread_msg_m->setLimit(3);
-        // $msg_view->setModel($unread_msg_m);
-
-        // $unread_emp_message_count = $unread_msg_m->count()->getOne();
-        // $this->app->js(true)->html($unread_emp_message_count)->_selector('.contact-and-all-message-count a span.atk-swatch-');
-        // $this->app->js(true)->html($unread_emp_message_count)->_selector('.inter-msg-count');
         /*================================*/
-        // $this->app->js(true)->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
-
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
         $this->app->addHook('entity_collection',[$this,'exportEntities']);
-
         return $this;
     }
 
@@ -155,6 +105,68 @@ class Initiator extends \Controller_Addon {
         $this->app->employee = $this->add('xepan\hr\Model_Employee');
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         return $this;
+    }
+
+    function getEmailAndMsgCount(){
+
+        if($this->app->stickyGET('update_email_message_counts')){
+            // collect and run js()->execute()
+            // to update various divs
+            $my_email=$this->add('xepan\hr\Model_Post_Email_MyEmails');
+            $my_email->addExpression('post_email')->set(function($m,$q){
+             return $q->getField('email_username');
+            });
+
+            $contact_email=$this->add('xepan\communication\Model_Communication_Email_ContactReceivedEmail');
+            $or = $contact_email->dsql()->orExpr();
+            $i=0;
+             foreach ($my_email as $email) {
+                 $or->where('mailbox','like',$email['post_email'].'%');
+                 $i++;
+             }
+             if($i == 0) $or->where('mailbox',-1);       
+            
+            
+            $contact_email->addCondition($or);
+            $contact_email->addCondition('status','Received');
+            $contact_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+            $contact_count=$contact_email->count()->getOne();
+
+            $all_email=$this->add('xepan\communication\Model_Communication_Email_Received');
+            $or = $all_email->dsql()->orExpr();
+            $i=0;
+             foreach ($my_email as $email) {
+                 $or->where('mailbox','like',$email['post_email'].'%');
+                 $i++;
+             }
+             if($i == 0) $or->where('mailbox',-1);       
+            
+            
+            $all_email->addCondition($or);
+            $all_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+            $all_count=$all_email->count()->getOne();
+       
+            /*Message Count*/
+
+            $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
+            $unread_msg_m->addCondition([
+                ['cc_raw','like','%"'.$this->app->employee->id.'"%'],
+                ['to_raw','like','%"'.$this->app->employee->id.'"%']
+                ]);
+            $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+            $unread_emp_message_count = $unread_msg_m->count()->getOne();
+
+            /*================================*/
+            $js=[];
+            $js[] = $this->app->js()->html($unread_emp_message_count)->_selector('.contact-and-all-message-count a span.atk-swatch-');
+            $js[] = $this->app->js()->html($unread_emp_message_count)->_selector('.inter-msg-count');
+            $js[] = $this->app->js()->html($contact_count." / ". $all_count)->_selector('.contact-and-all-email-count a span.atk-swatch-');
+            $this->app->js(null,$js)->execute();
+        }
+
+        if(!$this->app->isAjaxOutput()){
+            $this->app->js(true)->univ()->ajaxec($this->api->url('.',['update_email_message_counts'=>true,'cut_page']));
+        }        
     }
 
     function exportWidgets($app,&$array){
