@@ -89,7 +89,8 @@ class Initiator extends \Controller_Addon {
         $search_department = $this->add('xepan\hr\Model_Department');
         $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
-        $this->getEmailAndMsgCount();
+        
+        // $this->getEmailAndMsgCount();
 
         /*================================*/
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
