@@ -71,7 +71,7 @@ class Initiator extends \Controller_Addon {
                 $this->api->employee->afterLoginCheck();
             }
             $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
-            $this->app->layout->add('xepan\base\View_Message',null,'message_view');
+            // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');
