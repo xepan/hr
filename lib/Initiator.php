@@ -71,7 +71,7 @@ class Initiator extends \Controller_Addon {
                 $this->api->employee->afterLoginCheck();
             }
             $this->app->layout->add('xepan\hr\View_Notification',null,'notification_view');
-            // $this->app->layout->add('xepan\base\View_Message',null,'message_view');
+            $this->app->layout->add('xepan\base\View_Message',null,'message_view');
 
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');
@@ -90,7 +90,7 @@ class Initiator extends \Controller_Addon {
         $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         
-        // $this->getEmailAndMsgCount();
+        $this->getEmailAndMsgCount();
 
         /*================================*/
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
@@ -130,9 +130,10 @@ class Initiator extends \Controller_Addon {
             
             $contact_email->addCondition($or);
             $contact_email->addCondition('status','Received');
-            $contact_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+            $contact_email->addCondition('is_read',false);
             $contact_count=$contact_email->count()->getOne();
-
+            // throw new \Exception($contact_email['is_read_contact'], 1);
+            
             $all_email=$this->add('xepan\communication\Model_Communication_Email_Received');
             $or = $all_email->dsql()->orExpr();
             $i=0;
@@ -144,17 +145,13 @@ class Initiator extends \Controller_Addon {
             
             
             $all_email->addCondition($or);
-            $all_email->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+            $contact_email->addCondition('is_read',false);
             $all_count=$all_email->count()->getOne();
        
             /*Message Count*/
 
             $unread_msg_m = $this->add('xepan\communication\Model_Communication_AbstractMessage');
-            $unread_msg_m->addCondition([
-                ['cc_raw','like','%"'.$this->app->employee->id.'"%'],
-                ['to_raw','like','%"'.$this->app->employee->id.'"%']
-                ]);
-            $unread_msg_m->addCondition('extra_info','not like','%'.$this->app->employee->id.'%');
+            $unread_msg_m->addCondition('is_read',false);
             $unread_emp_message_count = $unread_msg_m->count()->getOne();
 
             /*================================*/
