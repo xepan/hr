@@ -133,20 +133,20 @@ class Initiator extends \Controller_Addon {
             $contact_email->addCondition('is_read',false);
             $contact_count=$contact_email->count()->getOne();
             // throw new \Exception($contact_email['is_read_contact'], 1);
-            
             $all_email=$this->add('xepan\communication\Model_Communication_Email_Received');
-            $or = $all_email->dsql()->orExpr();
+            $or =$all_email->dsql()->orExpr();
             $i=0;
-             foreach ($my_email as $email) {
-                 $or->where('mailbox','like',$email['post_email'].'%');
-                 $i++;
-             }
-             if($i == 0) $or->where('mailbox',-1);       
+                foreach ($my_email as $email) {
+                    $or->where('mailbox','like',$email['post_email'].'%');
+                    $i++;
+                }
+                if($i == 0) $or->where('mailbox',-1);       
             
             
             $all_email->addCondition($or);
-            $contact_email->addCondition('is_read',false);
+            $all_email->addCondition('is_read',false);
             $all_count=$all_email->count()->getOne();
+            
        
             /*Message Count*/
 
