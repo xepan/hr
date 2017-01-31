@@ -8,8 +8,7 @@ class page_activityreport extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$report_view = $this->add('CompleteLister',null,'report_view');
-		$result_array = [];
+		$report_view = $this->add('View',null,'report_view');
 
 		$form = $this->add('Form',null,'filter_form');
 		$date_range_field = $form->addField('DateRangePicker','date_range')
@@ -25,11 +24,9 @@ class page_activityreport extends \xepan\base\Page{
 			$start_date = $_GET['from_date'];
 			$end_date = $_GET['to_date'];
 
-			$this->app->hook('activity_report',[$emp_id,$start_date,$end_date,&$result_array]);
+			$this->app->hook('activity_report',[$report_view,$emp_id,$start_date,$end_date]);
 		}	
 		
-		$report_view->setSource($result_array);
-
 		if($form->isSubmitted()){
 			$from_date = $date_range_field->getStartDate();
 			$to_date = $date_range_field->getEndDate();
