@@ -12,7 +12,7 @@ class Model_SalaryTemplateDetails extends \xepan\base\Model_Table{
 
 	function init(){
 		parent::init();
-
+		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id);
 		$this->hasOne('xepan\hr\SalaryTemplate','salary_template_id');
 		$this->hasOne('xepan\hr\Salary','salary_id');
 
