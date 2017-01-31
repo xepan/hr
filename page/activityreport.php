@@ -4,7 +4,8 @@ namespace xepan\hr;
 
 class page_activityreport extends \xepan\base\Page{
 	public $title = "Activity Report";
-	
+	public $breadcrumb=['Home'=>'index','Activities'=>'xepan_hr_activity','Activity Report'=>'#'];
+
 	function init(){
 		parent::init();
 
@@ -19,7 +20,7 @@ class page_activityreport extends \xepan\base\Page{
 		$employee_field->setModel('xepan\hr\Model_Employee_Active');
 		$form->addSubmit('Fetch Report')->addClass('btn btn-primary xepan-push');
 			
-		if($_GET['search_xepan']){
+		if($_GET['search_xepan'] And $_GET['employee']){
 			$emp_id = $_GET['employee'];
 			$start_date = $_GET['from_date'];
 			$end_date = $_GET['to_date'];
