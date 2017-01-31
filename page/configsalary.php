@@ -12,6 +12,7 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 
 
 		$salary = $this->add('xepan\hr\Model_Salary');
+		$salary->acl = 'xepan\hr\Model_SalaryTemplate';
 		$crud = $salary_tab->add('xepan\hr\CRUD',null,null,['page/config/salarydetail']);
 		$crud->setModel($salary);
 
