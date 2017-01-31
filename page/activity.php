@@ -4,6 +4,7 @@ namespace xepan\hr;
 
 class page_activity extends \xepan\base\Page{
 	public $title="Activities";
+	public $breadcrumb=['Home'=>'index','Activities'=>'#','Activity Report'=>'xepan_hr_activityreport'];
 	public $descendants = [];
 	public $model;
 
