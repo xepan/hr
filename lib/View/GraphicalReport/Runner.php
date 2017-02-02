@@ -7,7 +7,7 @@ class View_GraphicalReport_Runner extends \View{
 	public $entity_list;
 	public $filter_form;
 	public $report_id;
-	public $report_type='Chart';
+	public $report_type='chart';
 
 	function init(){
 		parent::init();
@@ -43,7 +43,7 @@ class View_GraphicalReport_Runner extends \View{
 		foreach ($report_w as $widget) {
 			$w = $this->add('xepan\base\Widget_Wrapper');
 			$w->addClass('widget');
-			if($this->report_type==='Chart')
+			if($this->report_type==='chart')
 				$w->addClass('col-md-'.$widget['col_width']);
 			$widget = $w->add($widget['class_path'],['report'=>$this]);
 			$widget->setFilterForm($this->filter_form);
@@ -61,12 +61,11 @@ class View_GraphicalReport_Runner extends \View{
 			$this->js()->reload($form_result)->execute();
 		}
 
-		if(@$this->report_type === 'Chart')
+		if(@$this->report_type === 'chart')
 			$this->js(true)->_load('masonry.pkgd.min')->masonry(['itemSelector'=>'.widget'])->_selector('.widget-grid');
 	}
 
 	function enableFilterEntity($filter_entity){
-		
 		if(!in_array($filter_entity ,array_keys($this->entity_list)))
 			throw $this->exception('Required entity is not exported by any application')
 						->addMoreInfo('required_entity',$filter_entity)
