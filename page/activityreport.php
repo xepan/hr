@@ -9,6 +9,10 @@ class page_activityreport extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		$emp_id = $this->app->stickyGET('employee');
+		$start_date = $this->app->stickyGET('from_date');
+		$end_date = $this->app->stickyGET('to_date');
+
 		$report_view = $this->add('View',null,'report_view');
 
 		$form = $this->add('Form',null,'filter_form');
