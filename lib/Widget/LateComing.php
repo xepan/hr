@@ -12,6 +12,14 @@ class Widget_LateComing extends \xepan\base\Widget{
 	function recursiveRender(){
 		
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+		$attendances->addExpression('employee_status')->set(function($m,$q){
+			return $this->add('xepan\hr\Model_Employee')
+						->addCondition('id',$m->getElement('employee_id'))
+						->setLimit(1)
+						->fieldQuery('status');
+		});
+
+		$attendances->addCondition('employee_status','Active');
 		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('late_coming')]));
 		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('extra_work')]));
 		$attendances->_dsql()->group('employee_id');

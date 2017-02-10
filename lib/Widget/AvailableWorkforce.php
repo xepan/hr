@@ -14,7 +14,7 @@ class Widget_AvailableWorkforce extends \xepan\base\Widget{
 		$employee = $this->add('xepan\hr\Model_Employee_Active');
 		$total_employees = $employee->count()->getOne();
 		
-		$employee = $this->add('xepan\hr\Model_Employee');
+		$employee = $this->add('xepan\hr\Model_Employee_Active');
 		$employee->addExpression('present_today')->set(function($m,$q){
 			return $m->refSQL('Attendances')
 					->addCondition('employee_id',$q->getField('id'))
