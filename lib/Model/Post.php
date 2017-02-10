@@ -53,7 +53,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 	}
 
 	function validateInOutTime(){
-		if($this['out_time'] <= $this['in_time'])
+		if(strtotime($this['out_time']) <= strtotime($this['in_time']))
 			throw $this->exception('In Time must be smaller then out time','ValidityCheck')->setField('in_time');
 	}
 
