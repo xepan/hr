@@ -13,6 +13,15 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 
 	function recursiveRender(){
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+		
+		$attendances->addExpression('employee_status')->set(function($m,$q){
+			return $this->add('xepan\hr\Model_Employee')
+						->addCondition('id',$m->getElement('employee_id'))
+						->setLimit(1)
+						->fieldQuery('status');
+		});
+
+		$attendances->addCondition('employee_status','Active');
 
 		if(isset($this->report->employee))
 			$attendances->addCondition('employee_id',$this->report->employee);
@@ -20,6 +29,7 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
 		$attendances->_dsql()->group('employee_id');
      	
+     	$this->add('Grid')->setModel($attendances);
 	    $this->chart->setType('bar')
 	    			->setModel($attendances,'employee',['avg_work_hours'])
 	    			->rotateAxis()

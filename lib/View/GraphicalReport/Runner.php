@@ -26,7 +26,7 @@ class View_GraphicalReport_Runner extends \View{
 		}
 		
 		$this->filter_form = $this->add('Form',null,'filter_form');
-
+		
 		if($report_id == null)
 			$report_id = $this->report_id;
 				
@@ -76,7 +76,11 @@ class View_GraphicalReport_Runner extends \View{
 		$fld = $this->filter_form->addField($this->entity_list[$filter_entity]['type'],$filter_entity,$this->entity_list[$filter_entity]['caption']?:null);
 		
 		if($this->entity_list[$filter_entity]['model']){
-			$fld->setModel($this->entity_list[$filter_entity]['model']);
+			$model = $fld->setModel($this->entity_list[$filter_entity]['model']);
+			
+			if($model instanceof \xepan\hr\Model_Employee)
+				$model->addCondition('status','Active');
+
 			if($fld->hasMethod('setEmptyText'))
                 $fld->setEmptyText('Please select');
 		}

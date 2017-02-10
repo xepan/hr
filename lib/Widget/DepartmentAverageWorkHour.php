@@ -13,6 +13,15 @@ class Widget_DepartmentAverageWorkHour extends \xepan\base\Widget{
 	function recursiveRender(){
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
 		
+		$attendances->addExpression('employee_status')->set(function($m,$q){
+			return $this->add('xepan\hr\Model_Employee')
+						->addCondition('id',$m->getElement('employee_id'))
+						->setLimit(1)
+						->fieldQuery('status');
+		});
+
+		$attendances->addCondition('employee_status','Active');
+
 		$attendances->addExpression('employee_department')->set(function($m,$q){
 			return $this->add('xepan\hr\Model_Employee')
 						->addCondition('id',$m->getElement('employee_id'))
