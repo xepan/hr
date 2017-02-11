@@ -24,8 +24,7 @@ class page_widget_attendance extends \xepan\base\Page{
 		$grid->addPaginator(20);
 		$grid->addQuickSearch('fdate');
 		$grid->addFormatter('extra_work','gmdate');
-		$grid->addFormatter('late_coming','gmdate');
-		
+				
 		$form = $grid->add('Form',null,'grid_buttons',['form\horizontal']);
 		$date_range_field = $form->addField('DateRangePicker','date_range','')
 								 ->setStartDate($this->app->now)
