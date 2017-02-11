@@ -29,7 +29,6 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
 		$attendances->_dsql()->group('employee_id');
      	
-     	$this->add('Grid')->setModel($attendances);
 	    $this->chart->setType('bar')
 	    			->setModel($attendances,'employee',['avg_work_hours'])
 	    			->rotateAxis()
