@@ -24,7 +24,7 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 
 		$draft_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		$draft_leave_m->addCondition('created_by_id',$this->app->employee->id);
-		$draft_leave_m->addCondition('status',"Draft");
+		$draft_leave_m->addCondition('status','<>',"Approved");
 		$draft_grid = $new_leave_tab->add('xepan\hr\CRUD',null,null,['view/employee/my-leave-management-grid']);
 		$draft_grid->setModel($draft_leave_m);
 		// $draft_grid->addQuickSearch(['employee']);
