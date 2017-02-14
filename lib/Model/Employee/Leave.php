@@ -63,6 +63,7 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 														]);
 		})->type('date');
 
+		$this->addHook('beforeSave',$this);
 	}
 
 	function submit(){
@@ -85,5 +86,10 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
             ->addActivity("Employee '".$this->app->employee['name']."' Rejected Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
             ->notifyWhoCan(' ','Rejected',$this);
 		$this->save();
+	}
+
+	function beforeSave(){
+		if($this['to_date'] < $this['from_date'])
+			throw $this->exception('"From Date " should be less than from "To Date" of Leave','ValidityCheck')->setField('to_date');
 	}
 }

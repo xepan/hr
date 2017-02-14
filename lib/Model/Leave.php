@@ -12,6 +12,8 @@ class Model_Leave extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
+		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id);
+	
 		$this->addField('name');
 		$this->addField('is_yearly_carried_forward')->type('boolean')->defaultValue(false);
 		$this->addField('type')->enum(['Paid','Unpaid']);
