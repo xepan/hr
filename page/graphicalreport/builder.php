@@ -28,15 +28,15 @@ class page_graphicalreport_builder extends \xepan\base\Page {
 		$c = $this->add('xepan\hr\CRUD',null,null,['view\graphicalreportbuilder']);
 		$c->setModel($m,['name','description','is_system','status']);
 		if(!$c->isEditing()){
-			$c->grid->addHook('formatRow',function($g)use($c){
-				if($g->model['is_system']){
-					$g->row_edit = false;
-					$g->row_delete = false;
-				}else{
-					$g->row_edit = true;					
-					$g->row_delete = true;					
-				}
-			});
+			// $c->grid->addHook('formatRow',function($g)use($c){
+			// 	if($g->model['is_system']){
+			// 		$g->row_edit = false;
+			// 		$g->row_delete = false;
+			// 	}else{
+			// 		$g->row_edit = true;					
+			// 		$g->row_delete = true;					
+			// 	}
+			// });
 
 			$import_btn=$c->grid->addButton('import')->addClass('btn btn-primary');
 
