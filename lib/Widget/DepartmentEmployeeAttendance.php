@@ -47,7 +47,8 @@ class Widget_DepartmentEmployeeAttendance extends \xepan\base\Widget {
 		$attendance_m->setOrder('late_coming','desc');
 
 		$this->grid->setModel($attendance_m,['name','from_date','late_coming']);
-		$this->grid->addPaginator(50);
+		$this->grid->addPaginator(25);
+		
 		$this->grid->template->set('as_on',' As On : '.$end_date);
 
 		$this->grid->addHook('formatRow',function($g){

@@ -24,15 +24,15 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 		$attendances->addCondition('emp_status','Active');
 		$attendances->addCondition('department_id',$department_id);
 
-		// // if($_GET['start_date'])
-		// // 	$attendances->addCondition('from_date','>=',$_GET['start_date']);
-		// // else
-		// // 	$attendances->addCondition('from_date','>=',$this->app->today);
+		if($_GET['start_date'])
+			$attendances->addCondition('from_date','>=',$_GET['start_date']);
+		else
+			$attendances->addCondition('from_date','>=',$this->app->today);
 
-		// // if($_GET['end_date'])
-		// // 	$attendances->addCondition('from_date','<',$this->app->nextDate($_GET['end_date']));
-		// // else
-		// // 	$attendances->addCondition('from_date','<',$this->app->nextDate($this->app->today));
+		if($_GET['end_date'])
+			$attendances->addCondition('from_date','<',$this->app->nextDate($_GET['end_date']));
+		else
+			$attendances->addCondition('from_date','<',$this->app->nextDate($this->app->today));
 
 
 		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('CONCAT(ROUND(AVG([0])/60)," Hours")',[$attendances->getElement('late_coming')]));
@@ -42,7 +42,7 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\employeeperformance']);
 		$this->grid->setModel($attendances,['employee','avg_late','avg_extra_work']);
 		$this->grid->addQuickSearch(['employee']);
-		$this->grid->addPaginator(10);
+		$this->grid->addPaginator(25);
 
 		$this->grid->addHook('formatRow',function($g){			
 			if($g->model['avg_late'] < 0 )

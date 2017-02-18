@@ -26,12 +26,12 @@ class page_widget_todaysattendance extends \xepan\base\Page{
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['page/widget/todaysattendance']);
 		$grid->setModel($attendance_m,['employee_id','employee','fdate','late_coming','extra_work']);
-		$grid->addPaginator(20);
+		$grid->addPaginator(25);
 		$grid->addQuickSearch('employee');
 
 		$grid->js('click')->_selector('.digging-employee-attendance')->univ()->frameURL('Employee Movement',[$this->api->url('xepan_hr_widget_movement'),'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		
-		$grid->addHook('formatRow',function($g){
+		$grid->addHook('formatRow',function($g){			
 			if($g->model['late_coming'] < 0 )
 				$g->current_row_html['late_coming'] = abs($g->model['late_coming']).' Minutes Early';
 			else	
