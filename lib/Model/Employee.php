@@ -234,6 +234,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function communicationCreatedNotify($app,$comm){
+
+		if(isset($this->app->skipActivityCreate) && $this->app->skipActivityCreate) return;
+
 		if(($comm['direction']=='In' && !$comm['from_id']) || ($comm['direction']=='Out' && !$comm['to_id']))
 			return;
 
