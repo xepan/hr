@@ -6,8 +6,8 @@ class page_widget_todaysattendance extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		$department_id = $this->app->stickyGET('department_id');
-		
+		$department_id = $this->app->stickyGET('department');
+
 		$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
 		$attendance_m->addExpression('department_id')->set(function($m,$q){
 			$emp = $this->add('xepan\hr\Model_Employee');
@@ -17,6 +17,7 @@ class page_widget_todaysattendance extends \xepan\base\Page{
 		});
 
 		$attendance_m->addCondition('fdate',$this->app->today);
+		
 		
 		if($department_id)
 			$attendance_m->addCondition('department_id',$department_id);
