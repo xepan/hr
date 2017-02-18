@@ -41,12 +41,12 @@ class page_widget_attendance extends \xepan\base\Page{
 			if($g->model['late_coming'] < 0 )
 				$g->current_row_html['late_coming'] = abs($g->model['late_coming']).' Minutes Early';
 			else	
-				$g->current_row_html['late_coming'] = $g->model['late_coming'].' Minutes Late';
+				$g->current_row_html['late_coming'] = abs($g->model['late_coming']).' Minutes Late';
 			
 			if($g->model['extra_work'] < 0 )
 				$g->current_row_html['extra_work'] = 'No Logout Registration';
 			else
-				$g->current_row_html['extra_work'] = $g->model['extra_work'].' Minutes';
+				$g->current_row_html['extra_work'] = abs($g->model['extra_work']).' Minutes';
 		});
 	}
 }

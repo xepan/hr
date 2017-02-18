@@ -36,7 +36,7 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 
 
 		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('CONCAT(ROUND(AVG([0])/60)," Hours")',[$attendances->getElement('late_coming')]));
-		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('CONCAT(ROUND(AVG([0])/60), " Hours")',[$attendances->getElement('extra_work')]));
+		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('CONCAT(ROUND(AVG([0])/60), " Hours")',[$attendances->getElement('extra_work')]));
 		$attendances->_dsql()->group('employee_id');
 			
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\employeeperformance']);
@@ -44,7 +44,16 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 		$this->grid->addQuickSearch(['employee']);
 		$this->grid->addPaginator(10);
 
-		// $this->grid->addFormatter('avg_late','gmdate');			
-		// $this->grid->addFormatter('avg_extra_work','gmdate');
+		$this->grid->addHook('formatRow',function($g){
+			if($g->model['avg_late'] < 0 )
+				$g->current_row_html['avg_late'] = abs($g->model['avg_late']).' Minutes Early';
+			else	
+				$g->current_row_html['avg_late'] = abs($g->model['avg_late']).' Minutes Late';
+			
+			if($g->model['avg_extra_work'] < 0 )
+				$g->current_row_html['avg_extra_work'] = 'Negative value';
+			else
+				$g->current_row_html['avg_extra_work'] = abs($g->model['avg_extra_work']).' Minutes';
+		});
 	}
 }

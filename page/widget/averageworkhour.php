@@ -15,17 +15,16 @@ class page_widget_averageworkhour extends \xepan\base\Page{
 		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
 		$attendances->addCondition('employee',$x_axis);
 		$attendances->setOrder('fdate','desc');
-
-		if($from_date){
-			$attendances->addCondition('fdate','>=',$from_date);
-			$attendances->addCondition('fdate','<',$this->app->nextDate($to_date));
-		}
-
+		
 		if($_GET['start_date'])
 			$attendances->addCondition('fdate','>=',$_GET['start_date']);
-			
+		else
+			$attendances->addCondition('fdate','>=',$this->app->today);
+
 		if($_GET['end_date'])
 			$attendances->addCondition('fdate','<',$this->app->nextDate($_GET['end_date']));
+		else
+			$attendances->addCondition('fdate','<',$this->app->nextDate($this->app->today));
 
 		$grid = $this->add('xepan\hr\Grid',null,null,['page\widget\averagework']);
 		$grid->setModel($attendances,['employee','fdate','working_hours']);

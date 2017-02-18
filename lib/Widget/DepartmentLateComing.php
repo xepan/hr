@@ -47,7 +47,10 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 
 		$total_avg_late = 0;
 		$total_extra_work = 0;
-		foreach ($attendances as $att){
+		foreach ($attendances as $att){			
+			if($att['avg_extra_work'] < 0 )
+				$att['avg_extra_work'] = 0;
+
 			$total_avg_late += $att['avg_late'];
 			$total_extra_work += $att['avg_extra_work'];
 		}
