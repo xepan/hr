@@ -13,8 +13,10 @@ class Widget_DepartmentEmployeeAttendance extends \xepan\base\Widget {
 	}
 
 	function recursiveRender(){
+		$start_date = $this->report->start_date;
 		$end_date = $this->report->end_date;
 
+		
 		$attendance_m = $this->add('xepan\hr\Model_Employee');
 		$attendance_m->addCondition('status','Active');
 		
@@ -69,7 +71,7 @@ class Widget_DepartmentEmployeeAttendance extends \xepan\base\Widget {
 				$g->current_row_html['dummy'] = ' ';
 		});
 
-		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_widget_attendance'),'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_widget_attendance'),'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id'),['from_date'=>$start_date,'to_date'=>$end_date]]);
 		
 		return parent::recursiveRender();
 	}
