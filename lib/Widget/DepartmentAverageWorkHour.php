@@ -6,7 +6,9 @@ class Widget_DepartmentAverageWorkHour extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
+		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('department');
+
      	$this->chart = $this->add('xepan\base\View_Chart');
 	}
 
@@ -35,7 +37,12 @@ class Widget_DepartmentAverageWorkHour extends \xepan\base\Widget{
 			$attendances->addCondition('employee_department',$this->app->employee['department_id']);
 		}
 
-
+		if(isset($this->report->start_date))
+			$attendances->addCondition('from_date','>=',$this->report->start_date);
+		
+		if(isset($this->report->end_date))
+			$attendances->addCondition('from_date','<',$this->app->nextDate($this->report->end_date));
+		
 		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
 		$attendances->_dsql()->group('employee_id');
      	
