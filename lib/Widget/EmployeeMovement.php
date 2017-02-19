@@ -6,12 +6,14 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();
+		
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('employee');
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movement-mini']);
 	}
 
 	function recursiveRender(){
+		$start_date = $this->report->start_date;
 		$end_date = $this->report->end_date;
 
 		$attendance_m = $this->add('xepan\hr\Model_Employee');
@@ -65,8 +67,8 @@ class Widget_EmployeeMovement extends \xepan\base\Widget {
 			else	
 				$g->current_row_html['dummy'] = ' ';			
 		});
-
-		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_widget_attendance'),'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
+		
+		$this->grid->js('click')->_selector('.xepan-widget-employee-attendance')->univ()->frameURL('Attendance Detail',[$this->api->url('xepan_hr_widget_attendance'),'from_date'=>$start_date,'to_date'=>$end_date,'emp_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		
 		return parent::recursiveRender();
 	}

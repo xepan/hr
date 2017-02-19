@@ -1,17 +1,13 @@
-.xepan-grid(id="{$_name}" class="{$class}")
+div(id="{$_name}" class="{$class}")
     {Pannel}
-    header.main-box-header.atk-actions(class=" {$class} ")
-        div.filter-block( style="100%")
-            .pull-right {$grid_buttons} 
-            .form-group.pull-right.xepan-filter-form
-                span(class="form-control pull-left")|{$quick_search}
+    div(class=" {$class} "){$grid_buttons} {$quick_search}
     {/Pannel}
     .main-box-body.clearfix.table
         {$header}
         {$subheader}
         .main-box-body.clearfix.table
-            h2.text-muted Employees Present 
-            span.text-muted {$as_on}
+            h2(style="margin-left:15px; margin-top:20px;") Employees Present 
+            span.text-muted(style="margin-left:15px;") {$as_on}
             .row.main-box.clearfix
             {cols}
             {rows}{row}
@@ -29,6 +25,7 @@
                                 span.headline.text-small.text-muted.text-center(style="font-size: 11px; font-weight:5px;") {$name}
             {/}
             {/}{/}
+            .row(style="margin-bottom:20px;")
             {not_found}
             div.row
                 .col-md-12.text-center.alert.alert-warning(role="alert")

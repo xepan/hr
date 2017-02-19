@@ -6,6 +6,7 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
+		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('department');
 		$this->view = $this->add('View',null,null,['view\multibox']);
 	}
@@ -34,13 +35,22 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 			$attendances->addCondition('emp_department',$this->app->employee['department_id']);
 		}
 
-		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('late_coming')]));
-		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('extra_work')]));
+		if(isset($this->report->start_date))
+			$attendances->addCondition('from_date','>=',$this->report->start_date);
+		
+		if(isset($this->report->end_date))
+			$attendances->addCondition('from_date','<',$this->app->nextDate($this->report->end_date));
+
+		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('ROUND(AVG([0])/60)',[$attendances->getElement('late_coming')]));
+		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('ROUND(AVG([0])/60)',[$attendances->getElement('extra_work')]));		
 		$attendances->_dsql()->group('employee_id');
 
 		$total_avg_late = 0;
 		$total_extra_work = 0;
-		foreach ($attendances as $att){
+		foreach ($attendances as $att){			
+			if($att['avg_extra_work'] < 0 )
+				$att['avg_extra_work'] = 0;
+
 			$total_avg_late += $att['avg_late'];
 			$total_extra_work += $att['avg_extra_work'];
 		}
@@ -51,9 +61,9 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 		if(isset($this->report->department))
 			$dept_id = $this->report->department;
 		else
-			$dept_id = null;
+			$dept_id = $attendances['emp_department'];
 
-		$this->view->js('click')->_selector('.box-promptness')->univ()->frameURL('Department Promptness',[$this->api->url('xepan_hr_widget_employeeperformance'),'dept_id'=>$dept_id]);
+		$this->view->js('click')->_selector('.box-promptness')->univ()->frameURL('Department Promptness',$this->api->url('xepan_hr_widget_employeeperformance',['dept_id'=>$dept_id]));
 		
 		return parent::recursiveRender();
 	}
