@@ -221,7 +221,8 @@ class Controller_ACL extends \AbstractController {
 							 continue;	
 						}
 						if(is_array($acl)){
-							if(in_array($this->model['created_by_id'], $acl))
+							// if(in_array($this->model['created_by_id'], $acl))  // Replaced line, not tested, in case if there is error just sap again
+							if(in_array($this->model[$this->getConditionalField($this->model['status'],$action)], $acl))
 								$action_btn_list[] = $action;
 						}
 					}
