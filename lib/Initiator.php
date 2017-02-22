@@ -91,8 +91,10 @@ class Initiator extends \Controller_Addon {
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         
         // $this->getEmailAndMsgCount();
+        $acl_m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>['access_level'=>'DropDown'],'config_key'=>'ACLMode','application'=>'hr']);
+        $acl_m->tryLoadAny();
 
-        $this->app->ACLModel=true;
+        $this->app->ACLModel = $acl_m['access_level'];
 
         /*================================*/
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
