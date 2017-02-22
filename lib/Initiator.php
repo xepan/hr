@@ -300,13 +300,36 @@ class Initiator extends \Controller_Addon {
     }
 
     function addAppFunctions(){
-        $this->app->addMethod('immediateAppove',function($app){
+        $this->app->addMethod('immediateAppove',function($app,$namesapce=null){
             if($this->app->employee['scope'] !== 'SuperUser')
                 return true;
             if($this->app->ACLModel === "none")
                 return true;
-            // if($this->app->ACLModel === "Departmental")
-            
+            if($this->app->ACLModel === "Departmental"){
+
+                $id= 0;
+                if($namesapce instanceof \xepan\base\Model_Epan_InstalledApplication)
+                    $id = $namesapce->id;
+                elseif (is_string($namesapce)) {
+                    $m = $this->add('xepan\base\Model_Epan_InstalledApplication')
+                    ->addCondition('application_namespace',$namesapce)
+                    ->tryLoadAny();
+
+                    if($m->loaded()){
+                        $id = $m->id;
+                    }else
+                        $id = 0;
+                }elseif (is_int($namesapce)) {
+                    $id = $namesapce;
+                }
+
+                $install_app = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
+                $install_app->addCondition('employee_id',$this->app->employee->id);
+                $install_app->addCondition('installed_app_id',$id);
+
+                return $install_app->count()->getOne();
+            }
+            return false;
         });
     }    
 }

@@ -52,7 +52,7 @@ class page_aclmanagement extends \xepan\base\Page {
 		// form 2
 		$form = $this->add('Form');
 		if($_GET['post_id'] OR $_GET['employee_id']){
-			$app_permission = $this->getPermission($_GET['post_id'],$_GET['employee_id']);
+			$app_permission = $this->getInstalledAppPermission($_GET['post_id'],$_GET['employee_id']);
 			
 			foreach ($install_app as  $app) {
 				$app_field = $form->addField('Checkbox',$this->app->normalizeName($app['application_namespace']));
@@ -233,7 +233,7 @@ class page_aclmanagement extends \xepan\base\Page {
 		
 	}
 
-	function getPermission($post_id=null,$emp_id=null){
+	function getInstalledAppPermission($post_id=null,$emp_id=null){
 		$allow_app_m = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
 			if($_GET['employee_id']){
 				$allow_app_m->addCondition('employee_id',$emp_id);
