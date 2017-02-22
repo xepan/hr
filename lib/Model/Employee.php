@@ -33,6 +33,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual'])->defaultValue('Web Login');
 		$emp_j->addField('in_time')->display(array('form' => 'TimePicker'));
 		$emp_j->addField('out_time')->display(array('form' => 'TimePicker'));
+		$emp_j->addField('finacial_permit_limit')->type('text');
 
 		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
 		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');
@@ -41,6 +42,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->hasMany('xepan\hr\Employee_Movement','employee_id',null,'EmployeeMovements');
 		$emp_j->hasMany('xepan\hr\Employee_Salary','employee_id',null,'EmployeeSalary');
 		$emp_j->hasMany('xepan\hr\Employee_LeaveAllow','employee_id',null,'EmployeeLeaveAllow');
+		$emp_j->hasMany('xepan\hr\EmployeeDepartmentalAclAssociation','employee_id');
 		
 		$this->addExpression('posts')->set(function($m){
             return $m->refSQL('post_id')->fieldQuery('name');

@@ -13,9 +13,95 @@ namespace xepan\hr;
 
 class page_aclmanagement extends \xepan\base\Page {
 	public $title='Access Control Management';
-
 	function init(){
 		parent::init();
+
+		if($this->app->ACLModel === "none")
+			$this->manageAllowACL();
+		if($this->app->ACLModel === "Departmental")
+			$this->manageDepartmentalACL();
+		if($this->app->ACLModel === "Documentbase")
+			$this->manageDocumentbaseACL();
+
+	}
+	function manageAllowACL(){
+		$this->add('H1')->set('ACL Mode Granted Level');
+	}
+
+	function manageDepartmentalACL(){
+		$this->add('H1')->set('ACL Mode Departmental Level ');
+		
+		$post_id = $this->api->stickyGET('post_id');
+		$emp_id = $this->api->stickyGET('employee_id');
+		
+		//form 1
+		$f = $this->add('Form');
+		$post_field = $f->addField('xepan\base\DropDown','post');
+		$post_field->setEmptyText('Please Select Post');
+		$post_field->setModel('xepan\hr\Post');
+		
+		$emp_field = $f->addField('xepan\base\DropDown','employee');
+		$emp_field->setEmptyText('Please Select Employee');
+		$emp_field->setModel('xepan\hr\Employee');
+		
+
+		$f->addSubmit('Go');
+
+		$install_app = $this->add('xepan\base\Model_Epan_InstalledApplication')->addCondition('is_active',true);
+		
+		// form 2
+		$form = $this->add('Form');
+		if($_GET['post_id'] OR $_GET['employee_id']){
+			$app_permission = $this->getPermission($_GET['post_id'],$_GET['employee_id']);
+			
+			foreach ($install_app as  $app) {
+				$app_field = $form->addField('Checkbox',$this->app->normalizeName($app['application_namespace']));
+				if(in_array($app->id, $app_permission)){
+					$app_field->set(true);
+				}
+			}
+			$form->addSubmit('Update');
+		}
+
+
+		//second form submit
+		if($form->isSubmitted()){
+			foreach ($install_app as  $app) {
+				if($form[$this->app->normalizeName($app['application_namespace'])]){
+					$emp_dept_asso_m = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
+					$emp_dept_asso_m->addCondition('employee_id', $emp_id);
+					$emp_dept_asso_m->addCondition('post_id', $post_id);
+					$emp_dept_asso_m->addCondition('installed_app_id', $app['application_id']);
+					$emp_dept_asso_m->tryLoadAny();
+					if(!$emp_dept_asso_m->loaded()){
+						$emp_dept_asso_m->save();
+					}
+				}
+
+				if(!$form[$this->app->normalizeName($app['application_namespace'])]){
+					$del_emp_dept_asso_m = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
+					$del_emp_dept_asso_m->addCondition('employee_id', $emp_id);
+					$del_emp_dept_asso_m->addCondition('post_id', $post_id);
+					$del_emp_dept_asso_m->addCondition('installed_app_id', $app['application_id']);
+					$del_emp_dept_asso_m->tryLoadAny();
+					if($del_emp_dept_asso_m->loaded()){
+						$del_emp_dept_asso_m->delete();
+					}
+				}
+			}
+
+			$form->js()->reload()->execute();
+		}
+
+
+		// first form submit
+		if($f->isSubmitted()){
+			$f->js(null,$form->js()->reload(['employee_id'=>$f['employee']?:0,'post_id'=>$f['post']?:0]))->execute();
+		}
+
+	}
+
+	function manageDocumentbaseACL(){
 
 		// if(!$this->api->auth->model->isSuperUser()){
 		// 	$this->add('View_Error')->set('Sorry, you are not permitted to handle acl, Ask respective authority');
@@ -147,7 +233,35 @@ class page_aclmanagement extends \xepan\base\Page {
 		
 	}
 
+	function getPermission($post_id=null,$emp_id=null){
+		$allow_app_m = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
+			if($_GET['employee_id']){
+				$allow_app_m->addCondition('employee_id',$emp_id);
+				$allow_app_m->tryLoadAny();
+				if(!$allow_app_m->loaded()){
+					$emp_model = $this->add('xepan\hr\Model_Employee')->load($emp_id);
+					$emp_post_id =  $emp_model['post_id'];
+
+					$allow_app_m = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
+					$allow_app_m->addCondition('post_id',$emp_post_id);
+						// if loaded the apply this condiiton
+						// if not 
+							// get employee post id 
+							// check condition
+				}
+			}elseif($_GET['post_id']){
+				$allow_app_m->addCondition('post_id',$post_id);
+			}
+			
+			$associated_app = $allow_app_m->_dsql()->del('fields')->field('installed_app_id')->getAll();
+
+			$app_permission = iterator_to_array(new \RecursiveIteratorIterator(new \RecursiveArrayIterator($associated_app)),false);
+
+		return $app_permission;
+	}
+
 	function defaultTemplate(){
 		return ['page/aclmanagement'];
 	}
+
 }

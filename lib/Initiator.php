@@ -7,7 +7,7 @@ class Initiator extends \Controller_Addon {
     public $addon_name = 'xepan_hr';
 
     function setup_admin(){
-
+        $this->addAppFunctions();
         $this->routePages('xepan_hr');
         $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
         ->setBaseURL('../vendor/xepan/hr/');
@@ -298,4 +298,15 @@ class Initiator extends \Controller_Addon {
                 ->tryLoadAny()
                 ->save();
     }
+
+    function addAppFunctions(){
+        $this->app->addMethod('immediateAppove',function($app){
+            if($this->app->employee['scope'] !== 'SuperUser')
+                return true;
+            if($this->app->ACLModel === "none")
+                return true;
+            // if($this->app->ACLModel === "Departmental")
+            
+        });
+    }    
 }

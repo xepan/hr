@@ -26,7 +26,8 @@ class Model_Post extends \xepan\hr\Model_Document{
 		
 		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));
 		$post_j->addField('permission_level')->enum(['Individual','Sibling','Department','Global'])->defaultValue('Individual');
-
+		$post_j->addField('finacial_permit_limit')->type('text');
+		
 		$post_j->hasMany('xepan\hr\Post','parent_post_id',null,'ParentPosts');
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
 		$post_j->hasMany('xepan\hr\Employee','post_id',null,'Employees');
