@@ -469,6 +469,14 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function textToCode($text){
+		// if config to department
+			// $class = new \ReflectionClass($this->model);
+			// 	$ns = $class->getNamespaceName();
+			// if $ns is allowed to me return [$this->app->employee->id];
+				// else
+						// return false;
+
+
 		if($text ==='' || $text === null) return $this->permissive_acl;
 		if($text === 'None') return false;
 		if($text === 'All' || $text === true ) return true;

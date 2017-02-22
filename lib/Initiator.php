@@ -92,6 +92,8 @@ class Initiator extends \Controller_Addon {
         
         // $this->getEmailAndMsgCount();
 
+        $this->app->ACLModel=true;
+
         /*================================*/
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
