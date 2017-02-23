@@ -174,19 +174,24 @@ class page_aclmanagement extends \xepan\base\Page {
 
 			foreach ($m->actions as $status => $actions) {
 				$status = $status=='*'?'All':$status;	
-				$greeting_card = $af->add('View', null, null, ['view/acllist']);
+				$greeting_card = $af->add('View', null, null, ['view/acllist1']);
 				foreach ($actions as $action) {
 					$greeting_card->template->set('action',$status);					
-					$greeting_card->addField('DropDown',$status.'_'.$action,$action)
+					// $greeting_card->addField('DropDown',$status.'_'.$action,$action)
+					$tf = $greeting_card->addField('xepan\base\RadioButton',$status.'_'.$action,$action)
 						->setValueList($value_list)
-						->setEmptyText('Please select ACL')
+						// ->setEmptyText('Please select ACL')
 						->validate('required?Acl must be provided or will work based on global permisible setting')
-						->addClass('form-control')
+						->addClass('form-control xepan-custom-radio-btn-field')
 						->set($existing_acl['action_allowed'][$status][$action]);
 					;
+
+					$tf->template->set('row_class','xepan-radio-btn-form-field');
 				}
 			}
-			$af->addSubmit('Update')->addClass('btn btn-success');
+
+			$af->addSubmit('Update')->addClass('btn btn-success xepan-margin-top-small');
+			$af->template->set('buttons_class','xepan-radio-btn-form-field-clear');
 		}
 
 		$af->onSubmit(function($f)use($post,$ns,$dt){
