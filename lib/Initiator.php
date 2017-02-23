@@ -301,7 +301,7 @@ class Initiator extends \Controller_Addon {
 
     function addAppFunctions(){
         $this->app->addMethod('immediateAppove',function($app,$namesapce=null){
-            if($this->app->employee['scope'] !== 'SuperUser')
+            if($this->app->employee['scope'] === 'SuperUser')
                 return true;
             if($this->app->ACLModel === "none")
                 return true;
