@@ -302,7 +302,8 @@ class Initiator extends \Controller_Addon {
     function addAppFunctions(){
         $this->app->addMethod('immediateAppove',function($app,$namesapce=null){
             if($this->app->employee['scope'] === 'SuperUser')
-                return true;
+                if($this->app->getConfig('all_rights_to_superuser',true))
+                    return true;
             if($this->app->ACLModel === "none")
                 return true;
             if($this->app->ACLModel === "Departmental"){
