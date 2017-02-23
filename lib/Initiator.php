@@ -280,6 +280,8 @@ class Initiator extends \Controller_Addon {
         $post = $this->add('xepan\hr\Model_Post')
                     ->addCondition('name','CEO')
                     ->addCondition('department_id',$dept->id)
+                    ->addCondition('in_time','10:00:00')
+                    ->addCondition('out_time','18:00:00')
                     ->tryLoadAny()
                     ->save();
 

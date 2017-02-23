@@ -18,8 +18,8 @@ class Widget_MyLateComing extends \xepan\base\Widget{
 		else
 			$attendances->addCondition('employee_id',$this->app->employee->id);
 
-		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('late_coming')]));
-		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('AVG([0])/60',[$attendances->getElement('extra_work')]));
+		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('ROUND(AVG(([0])/60),2)',[$attendances->getElement('late_coming')]));
+		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('ROUND((AVG([0])/60),2)',[$attendances->getElement('extra_work')]));
 		$attendances->_dsql()->group('employee_id');
      	
 		$this->chart->setType('bar')
