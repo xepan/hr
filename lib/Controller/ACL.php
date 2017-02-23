@@ -21,15 +21,22 @@ class Controller_ACL extends \AbstractController {
 	public $action_btn_group=null;
 	public $view_reload_url=null;
 	public $dependent = false;
+	public $model_class=null;
+	public $model_ns = null;
 
 	function init(){
 		parent::init();
 		
 		if(isset($this->app->muteACL) && $this->app->muteACL) return; 
+
 		
 		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
 		$this->model = $model = $this->getModel();
+		$this->model_class = new \ReflectionClass($this->model);
+		$this->model_ns = $this->model_class->getNamespaceName();
+		
+		if($this->app->immediateAppove($this->model_ns)) $this->permissive_acl = true;
 
 		$this->canDo();
 
@@ -50,7 +57,10 @@ class Controller_ACL extends \AbstractController {
 					break;
 				}else{
 					if($acl==="All") continue;
-					if($acl === false) continue;
+					if($acl === false){
+						$where_condition[] = "(false)";
+						continue;
+					}
 					if($acl === true){
 						// No employee condition .. just check status
 						$where_condition[] = "([status] = \"$status\")";
@@ -272,7 +282,11 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function canAdd(){
-		return ($this->api->auth->model->isSuperUser() && $this->app->getConfig('all_rights_to_superuser',true))?true:($this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add']);
+		return (
+					($this->app->ACLModel === 'Departmental' &&  $this->app->immediateAppove($this->model_ns))
+					||
+					$this->app->ACLModel ==='none'
+				)?true:($this->acl_m['allow_add']===null?$this->permissive_acl:$this->acl_m['allow_add']);
 	}
 
 	function canEdit($status=null){
@@ -470,12 +484,13 @@ class Controller_ACL extends \AbstractController {
 
 	function textToCode($text){
 		// if config to department
-			// $class = new \ReflectionClass($this->model);
-			// 	$ns = $class->getNamespaceName();
+		
 			// if $ns is allowed to me return [$this->app->employee->id];
 				// else
 						// return false;
-
+		if($this->app->ACLModel ==='Departmental' &&  !$this->app->immediateAppove($this->model_ns)){	
+			return false;	
+		} 
 
 		if($text ==='' || $text === null) return $this->permissive_acl;
 		if($text === 'None') return false;
