@@ -35,8 +35,8 @@ class page_widget_employeeperformance extends \xepan\base\Page{
 			$attendances->addCondition('from_date','<',$this->app->nextDate($this->app->today));
 
 
-		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('CONCAT(ROUND(AVG([0])/60)," Hours")',[$attendances->getElement('late_coming')]));
-		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('CONCAT(ROUND(AVG([0])/60), " Hours")',[$attendances->getElement('extra_work')]));
+		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('CONCAT(ROUND((AVG([0])/60),2)," Hours")',[$attendances->getElement('late_coming')]));
+		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('CONCAT(ROUND((AVG([0])/60),2), " Hours")',[$attendances->getElement('extra_work')]));
 		$attendances->_dsql()->group('employee_id');
 			
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['page\widget\employeeperformance']);
