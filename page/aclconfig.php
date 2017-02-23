@@ -25,7 +25,7 @@ class page_aclconfig extends \xepan\hr\page_configurationsidebar{
 		$form->setModel($acl_m);
 
 		$acl_mode_field=$form->getElement('access_level')->set($acl_m['access_level']);
-		$acl_mode_field->setValueList(['none'=>'Allow','Departmental'=>'Departmental','Documentbase'=>'Documentbase']);
+		$acl_mode_field->setValueList(['none'=>'Allow ALL (No ACL)','Departmental'=>'Department Based Permissions (All Permissions in Department)','Documentbase'=>'Advanced ACL (Document & Contact Based ACL)']);
 		$form->addSubmit('Update')->addClass('btn btn-primary');
 
 		if($form->isSubmitted()){
