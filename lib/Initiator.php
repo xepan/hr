@@ -194,6 +194,16 @@ class Initiator extends \Controller_Addon {
         $array['employee'] = ['caption'=>'Employee', 'type'=>'xepan\base\Basic','model'=>'xepan\hr\Model_Employee'];
         $array['department'] = ['caption'=>'Department', 'type'=>'DropDown','model'=>'xepan\hr\Model_Department'];
         $array['post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
+        $array['Affiliate'] =['caption'=>'Affiliate','type'=>'DropDown','model'=>'xepan\hr\Model_Affiliate'];
+        // $array['ACLMode'] = ['caption'=>'ACLMode','type'=>'DropDown','model'=>'xepan\hr\Model_Affiliate'];
+        $array['Deduction'] = ['caption'=>'Deduction','type'=>'DropDown','model'=>'xepan\hr\Model_Deduction'];
+        $array['LeaveTemplate'] = ['caption'=>'LeaveTemplate','type'=>'DropDown','model'=>'xepan\hr\Model_LeaveTemplate'];
+        $array['LeaveTemplateDetail'] = ['caption'=>'LeaveTemplate','type'=>'DropDown','model'=>'xepan\hr\Model_LeaveTemplate'];
+        $array['Leave'] = ['caption'=>'Leave','type'=>'DropDown','model'=>'xepan\hr\Model_Leave'];
+        $array['Employee_Leave'] = ['caption'=>'Employee_Leave','type'=>'DropDown','model'=>'xepan\hr\Model_Employee_Leave'];
+        $array['SalarySheet'] = ['caption'=>'SalarySheet','type'=>'DropDown','model'=>'xepan\hr\Model_SalarySheet'];
+        $array['Reimbursement'] = ['caption'=>'Reimbursement','type'=>'DropDown','model'=>'xepan\hr\Model_Reimbursement'];
+        $array['OfficialHoliday'] = ['caption'=>'OfficialHoliday','type'=>'DropDown','model'=>'xepan\hr\Model_OfficialHoliday'];
     }
 
     // function epanDashboard($app,$page){
