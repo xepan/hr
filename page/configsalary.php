@@ -17,7 +17,10 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 		$crud->setModel($salary);
 
 		$info = $crud->grid->add('View',null,'salary_view')->setElement('h2');
-		$info->setHtml('Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}');
+		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}';
+		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {$Reimbursement}, {$Deduction} and {your_define_salary_names}';
+		
+		$info->setHtml($html);
 		
 		$tabs->addTabURL('xepan_hr_salarytemplate','Salary Templates');
 	}

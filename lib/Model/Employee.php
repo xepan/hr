@@ -652,6 +652,17 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidDays'=>$Present + $PaidLeaves,
 				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
 			];
+
+		$reimbursment_on_salary = 0;
+		if($reimbursment_on_salary){
+			$calculated['Reimbursement']=$this->getReimbursement($month,$year);
+		}
+
+		$deduction_on_salary = 0;
+		if($deduction_on_salary){
+			$calculated['Deduction']=$this->getDeduction($month,$year);
+		}
+
 		$net_amount = 0;
 		foreach ($this->ref('EmployeeSalary') as $salary) {
 			$result = $this->evalSalary($salary['amount'],$calculated);
@@ -743,6 +754,14 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}
 
 		return $result_array;
+	}
+
+	function getReimbursement($month,$year){
+		return 0;
+	}
+
+	function getDeduction($month,$year){
+		return 0;
 	}
 
 }
