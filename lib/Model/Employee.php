@@ -745,4 +745,25 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		return $result_array;
 	}
 
+	function ledger(){
+		$account = $this->add('xepan\accounts\Model_Ledger')
+				->addCondition('contact_id',$this->id)
+				->addCondition('group_id',$this->add('xepan\accounts\Model_Group')->load("Sundry Creditor")->get('id'));
+		$account->tryLoadAny();
+		if(!$account->loaded()){
+			$account['name'] = $this['unique_name'];
+			$account['LedgerDisplayName'] = $this['unique_name'];
+			$account['ledger_type'] = 'Employee';
+			$account->save();
+		}else{
+			if($account['name'] != $this['unique_name']){
+				$account['name'] = $this['unique_name'];
+				$account['updated_at'] = $this->app->now;
+				$account->save();
+			}
+		}
+
+		return $account;
+
+	}
 }
