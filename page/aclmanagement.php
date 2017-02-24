@@ -13,8 +13,21 @@ namespace xepan\hr;
 
 class page_aclmanagement extends \xepan\base\Page {
 	public $title='Access Control Management';
+	public $widget_list = [];
+	public $entity_list = [];
 	function init(){
 		parent::init();
+		$this->app->hook('entity_collection',[&$this->entity_list]);
+
+		foreach ($this->entity_list as $key => $entity) {
+			
+			if(!array_key_exists("model", $entity))
+				unset($this->entity_list[$key]);
+		// 	$this->array_list[] = ['type'=>$entity['caption']."[".$entity['model']." ]"];
+		}
+			// echo "<pre>";
+			// print_r($this->entity_list);
+			// echo "</pre>";
 
 		if($this->app->ACLModel === "none")
 			$this->manageAllowACL();
@@ -111,7 +124,7 @@ class page_aclmanagement extends \xepan\base\Page {
 		$post = $this->api->stickyGET('post_id');
 		$ns = $this->api->stickyGET('namespace');
 		$dt = $this->api->stickyGET('type');
-
+		
 		$acl_m = $this->add('xepan\hr\Model_ACL');
 		$acl_m->_dsql()->group('name');
 
@@ -123,17 +136,21 @@ class page_aclmanagement extends \xepan\base\Page {
 
 		$form = $this->add('Form',null,null,['form/empty']);
 		$form->setLayout('form/aclpost');
+		$array_list=[];
+		foreach ($this->entity_list as  $a) {
+			$string_count = strpos($a['model'], '\Model_');
+			$model_namespace = substr($a['model'],0,$string_count);
+			$str = $a['caption'].'['.$model_namespace.']';
+			$array_list[$str] = $str;
+		}
 
+		
 		$form->addField('DropDown','post')->addClass('form-control')->setModel($post_m)->set($post);
 		$form->addField('DropDown','type')
 									->addClass('form-control')
-									->setModel($acl_m);
+									// ->setModel($acl_m);
+									->setValueList($array_list);
 									;
-
-		$form->addSubmit('Go')->addClass('btn btn-success');
-
-		$af = $this->add('Form');
-
 
 		if($dt){
 			$is_config= false;
@@ -231,8 +248,18 @@ class page_aclmanagement extends \xepan\base\Page {
 			return "Done";
 		});
 
+		
+
 		$form->onSubmit(function($f)use($af){
-			$acl_m = $this->add('xepan\hr\Model_ACL')->load($f['type']);
+
+			$type = explode("[", $f['type']);
+			$ns	=trim($type[1],']');
+			
+			$acl_m = $this->add('xepan\hr\Model_ACL')
+					->addCondition('type',$type[0])
+					->addCondition('namespace',$ns)
+					->tryLoadAny()
+					;												
 			return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $acl_m['type']]);
 		});
 		
