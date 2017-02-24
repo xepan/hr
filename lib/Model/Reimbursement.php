@@ -11,7 +11,8 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 			'Submitted'=>['view','edit','delete','inprogress','cancel','redraft','approve','manage_attachments'],
 			'InProgress'=>['view','edit','delete','approve','cancel','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
-			'Approved'=>['view','edit','delete','manage_attachments']
+			'Approved'=>['view','edit','delete','paid','cancel','manage_attachments'],
+			'Paid'=>['view','edit','delete','cancel','manage_attachments']
 		];
 
 	function init(){
@@ -73,7 +74,30 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
+		$this->updateTransaction();
 		$this->save();
+	}
+
+	function deleteTransactions(){
+		$rimburs_model = $this->add('xepan\hr\Model_Reimbursement');
+		$rimburs_model->load($this->id);
+
+		$this->app->hook('reimbursement_canceled',[$rimburs_model]);
+	}
+
+	function updateTransaction($delete_old=true,$create_new=true){		
+		$rimburs_model = $this->add('xepan\hr\Model_Reimbursement');
+		$rimburs_model->load($this->id);
+
+		if($delete_old){			
+		// reimbursement model transaction have always one entry in transaction
+			$old_amount = $this->app->hook('reimbursement_canceled',[$rimburs_model]);
+		}
+
+		if($create_new){
+			$this->app->hook('reimbursement_approved',[$rimburs_model]);
+		}
+		
 	}
 
 	function inprogress(){
@@ -129,6 +153,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
+		$this->deleteTransactions();
 		$this->save();
 	}	
 
@@ -150,6 +175,68 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this->app->employee
 		->addActivity(
 					"Reimbursement ( ".$this['name']." ) Re-Draft",
+					$this->id/* Related Document ID*/,
+					$this['contact_id'] /*Related Contact ID*/,
+					null,
+					null,
+					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
+				)
+		->notifyTo($id,$msg);
+		$this->save();
+	}
+
+	function page_paid($page){
+		$application_mdl = $this->add('xepan\base\Model_Epan_InstalledApplication');
+        $application_mdl->addCondition('application_namespace','xepan\accounts');
+        $application_mdl->tryLoadAny();
+
+        if(!$application_mdl->loaded()){
+			$page->add('View')->set("This services is not available for you")->addClass('project-box-header green-bg well-sm')->setstyle('color','green');
+        } 
+        else
+        {
+        	$tabs = $page->add('Tabs');
+	        $cash_tab = $tabs->addTab('Cash Payment');
+	        $bank_tab = $tabs->addTab('Bank Payment');
+	        
+	        $ledger = $this->employee()->ledger();
+	        $pre_filled =[
+	            1 => [
+	                'party' => ['ledger'=>$ledger,'amount'=>$this['amount'],'currency'=>$this->app->epan->default_currency->id]
+	            ]
+	        ];
+
+	        $et = $this->add('xepan\accounts\Model_EntryTemplate');
+	        $et->loadBy('unique_trnasaction_template_code','PARTYCASHPAYMENT');
+
+	        $view_cash = $cash_tab->add('View');
+	        $et->manageForm($view_cash,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
+
+	        $et_bank = $this->add('xepan\accounts\Model_EntryTemplate');
+	        $et_bank->loadBy('unique_trnasaction_template_code','PARTYBANKPAYMENT');
+
+	        $view_bank = $bank_tab->add('View');
+	        $et_bank->manageForm($view_bank,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
+        	// $this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
+        }
+        	$this->paid();
+    }
+
+    function employee(){
+        return $this->add('xepan\hr\Model_Employee')->tryLoad($this['employee_id']);
+    }
+
+	function paid(){
+
+		$this['status']='Paid';
+		$this->save();
+		$id = [];
+		$id = [$this['employee_id'],$this['updated_by_id']];
+		
+		$msg = " Reimbursement ( ".$this['name']." ) successfully paid to Employee : ".$this['employee']." ";
+		$this->app->employee
+		->addActivity(
+					"Reimbursement ( ".$this['name']." ) of ".$this['employee']." Paid",
 					$this->id/* Related Document ID*/,
 					$this['contact_id'] /*Related Contact ID*/,
 					null,

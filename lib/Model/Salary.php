@@ -38,8 +38,15 @@ class Model_Salary extends \xepan\base\Model_Table{
 										'UnPaidLeaves'=>'UnPaidLeaves',
 										'Absents'=>'Absents',
 										'PaidDays'=>'PaidDays',
-										'TotalWorkingDays'=>'TotalWorkingDays'
+										'TotalWorkingDays'=>'TotalWorkingDays',
 									];
+		$reimbersement_is_salary_efected = 0;
+		$deduction_is_salary_efected = 0;
+		if($reimbersement_is_salary_efected){
+			$system_calculated_factor['Reimbursement']= 'Reimbursement';
+		}
+		if($deduction_is_salary_efected)
+			$system_calculated_factor['Deduction']= 'Deduction';
 
 		foreach ($all_match[1] as $key => $name) {
 			$name = trim($name);
