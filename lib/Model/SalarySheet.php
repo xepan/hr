@@ -85,8 +85,12 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 		$this->app->employee
 	           	->addActivity("Salary Sheet ".$this['name']." Approved by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg); 
-		
+		$this->reimbursementpaid();
 		$this->app->hook('salary_sheet_approved',[$ss_model]);
+	}
+
+	function reimbursementpaid(){
+		
 	}
 
 	function canceled(){

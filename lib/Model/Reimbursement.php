@@ -11,6 +11,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','paid','cancel','manage_attachments'],
+			// 'PartiallyPaid'=>['view','edit','delete','paid','cancel','manage_attachments'],
 			'Paid'=>['view','edit','delete','cancel','manage_attachments']
 		];
 
@@ -198,22 +199,46 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 	        $et = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et->loadBy('unique_trnasaction_template_code','PARTYCASHPAYMENT');
 
+	  //       $et->addHook('afterExecute',function($et,$transaction,$total_amount,$row_data){
+			// 	$this->partiallypaid($row_data[0]['rows']['party']['amount'],$this->id);
+
+			// 	$this->app->page_action_result = $et->form->js()->univ()->closeDialog();
+			// });
+
 	        $view_cash = $cash_tab->add('View');
 	        $et->manageForm($view_cash,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
-
+	        
 	        $et_bank = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et_bank->loadBy('unique_trnasaction_template_code','PARTYBANKPAYMENT');
 
+	  //       $et_bank->addHook('afterExecute',function($et_bank,$transaction,$total_amount,$row_data){
+			// 	$this->partiallypaid($row_data[0]['rows']['party']['amount'],$this->id);
+
+			// 	$this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
+			// });
+
 	        $view_bank = $bank_tab->add('View');
 	        $et_bank->manageForm($view_bank,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
-        	// $this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
         }
-        	$this->paid();
+        $this->paid();
     }
 
     function employee(){
         return $this->add('xepan\hr\Model_Employee')->tryLoad($this['employee_id']);
     }
+
+  //   function partiallypaid($amount,$id){
+  //   	$rimburs_model = $this->add('xepan\hr\Model_Reimbursement');
+		// $rimburs_model->load($id);
+
+  //   	if($rimburs_model['amount'] != $amount){
+  //   		$this['status'] = 'PartiallyPaid';
+	 //    	$this->save();
+  //   	}else{
+  //   		return;
+  //   	}
+
+  //   }
 
 	function paid(){
 
