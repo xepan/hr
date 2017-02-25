@@ -84,7 +84,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 						]);
 		$reimbursement_config_model->tryLoadAny();
 
-		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "no")
 			$this->updateTransaction();
 		
 		$this->save();
@@ -140,7 +140,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 						]);
 		$reimbursement_config_model->tryLoadAny();
 
-		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "no")
 			$this->deleteTransactions();
 		
 		$this->save();

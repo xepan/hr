@@ -72,7 +72,7 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 						]);
 		$deduction_config_model->tryLoadAny();
 
-		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
+		if($deduction_config_model['is_deduction_affect_salary'] === "no")
 			$this->updateTransaction();
 
 		$this->save();
@@ -121,7 +121,7 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 						]);
 		$deduction_config_model->tryLoadAny();
 
-		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
+		if($deduction_config_model['is_deduction_affect_salary'] === "no")
 			$this->deleteTransactions();
 	
 		$this->save();
