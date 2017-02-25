@@ -85,19 +85,11 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 		$this->app->hook('deduction_canceled',[$deduction_model]);
 	}
 
-	function updateTransaction($delete_old=true,$create_new=true){		
+	function updateTransaction($create_new=true){		
 		$deduction_model = $this->add('xepan\hr\Model_Deduction');
 		$deduction_model->load($this->id);
 
-		if($delete_old){			
-		// reimbursement model transaction have always one entry in transaction
-			$old_amount = $this->app->hook('deduction_canceled',[$deduction_model]);
-		}
-
-		if($create_new){
-			$this->app->hook('deduction_approved',[$deduction_model]);
-		}
-		
+		$this->app->hook('deduction_approved',[$deduction_model]);
 	}
 
 	function cancel(){

@@ -97,19 +97,11 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this->app->hook('reimbursement_canceled',[$rimburs_model]);
 	}
 
-	function updateTransaction($delete_old=true,$create_new=true){		
+	function updateTransaction($create_new=true){		
 		$rimburs_model = $this->add('xepan\hr\Model_Reimbursement');
 		$rimburs_model->load($this->id);
 
-		if($delete_old){			
-		// reimbursement model transaction have always one entry in transaction
-			$old_amount = $this->app->hook('reimbursement_canceled',[$rimburs_model]);
-		}
-
-		if($create_new){
-			$this->app->hook('reimbursement_approved',[$rimburs_model]);
-		}
-		
+		$this->app->hook('reimbursement_approved',[$rimburs_model]);
 	}
 
 	function cancel(){
