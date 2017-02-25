@@ -19,11 +19,18 @@ class Model_Salary extends \xepan\base\Model_Table{
 		$this->addField('unit')->enum(['Month','Leave']);
 		$this->addField('order')->type('int');
 		$this->addField('default_value');
-
+		$this->addField('is_reimbursement')->type('boolean')->hint('Please select,If this salary type is reimbursement. For get the value of approved reimbursement of an employee')->defaultValue(false);
+		$this->addField('is_deduction')->type('boolean')->hint('Please select, if this salary type is deduction. For get the value of deduction which is charged to an employee')->defaultValue(false);
+		
 		$this->hasMany('xepan\hr\SalaryTemplateDetails','salary_id');
 		$this->hasMany('xepan\hr\Employee_Salary','salary_id');
 		
 		$this->setOrder('order','asc');
+
+		$this->is([
+			'is_reimbursement|unique_in_epan_for_type',
+			'is_deduction|unique_in_epan_for_type'
+			]);
 
 		$this->addHook('beforeSave',$this);
 	}

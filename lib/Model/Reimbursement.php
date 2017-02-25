@@ -5,11 +5,10 @@ namespace xepan\hr;
 class Model_Reimbursement extends \xepan\hr\Model_Document{
 	// public $table = "reimbursement";
 
-	public $status = ['Draft','Submitted','Redesign','Approved','InProgress','Canceled','Completed'];
+	public $status = ['Draft','Submitted','Approved','Canceled','Paid'];
 	public $actions = [
 			'Draft'=>['view','edit','delete','submit','manage_attachments'],
-			'Submitted'=>['view','edit','delete','inprogress','cancel','redraft','approve','manage_attachments'],
-			'InProgress'=>['view','edit','delete','approve','cancel','manage_attachments'],
+			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','paid','cancel','manage_attachments'],
 			'Paid'=>['view','edit','delete','cancel','manage_attachments']
@@ -46,7 +45,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyWhoCan('inprogress,cancel,redraft,approve','Submitted',$this);
+		->notifyWhoCan('cancel,redraft,approve','Submitted',$this);
 		$this->save();
 	}
 
@@ -98,34 +97,6 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 			$this->app->hook('reimbursement_approved',[$rimburs_model]);
 		}
 		
-	}
-
-	function inprogress(){
-		$this['status']='InProgress';
-		$this->save();
-
-		if($this['employee_id'] == $this['updated_by_id']){
-			$id = [];
-			$id = [$this['employee_id']];
-			$msg = " Your Reimbursement ( ".$this['name']." ) is In-Progress";
-		}
-		else{
-			$id = [];
-			$id = [$this['employee_id'],$this['updated_by_id']];
-			$msg = "Reimbursement ( ".$this['name']." ) is In-Progress, Related To : ".$this['employee']."";
-		}
-
-		$this->app->employee
-		->addActivity(
-					"Reimbursement ( ".$this['name']." ) is Inprogress",
-					$this->id/* Related Document ID*/,
-					$this['contact_id'] /*Related Contact ID*/,
-					null,
-					null,
-					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
-				)
-		->notifyTo($id,$msg);
-		$this->save();
 	}
 
 	function cancel(){
@@ -191,7 +162,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
         $application_mdl->tryLoadAny();
 
         if(!$application_mdl->loaded()){
-			$page->add('View')->set("This services is not available for you")->addClass('project-box-header green-bg well-sm')->setstyle('color','green');
+			$page->add('View')->set("This services is not available in your available packagein your ")->addClass('project-box-header green-bg well-sm')->setstyle('color','green');
         } 
         else
         {
