@@ -151,6 +151,9 @@ class page_aclmanagement extends \xepan\base\Page {
 									// ->setModel($acl_m);
 									->setValueList($array_list);
 									;
+		$form->addSubmit('Go')->addClass('btn btn-success');
+
+		$af = $this->add('Form');							
 
 		if($dt){
 			$is_config= false;
