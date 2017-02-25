@@ -28,8 +28,8 @@ class Model_Salary extends \xepan\base\Model_Table{
 		$this->setOrder('order','asc');
 
 		$this->is([
-			'is_reimbursement|unique_in_epan_for_type',
-			'is_deduction|unique_in_epan_for_type'
+			'is_reimbursement|unique',
+			'is_deduction|unique'
 			]);
 
 		$this->addHook('beforeSave',$this);
@@ -47,12 +47,31 @@ class Model_Salary extends \xepan\base\Model_Table{
 										'PaidDays'=>'PaidDays',
 										'TotalWorkingDays'=>'TotalWorkingDays',
 									];
-		$reimbersement_is_salary_efected = 0;
-		$deduction_is_salary_efected = 0;
-		if($reimbersement_is_salary_efected){
-			$system_calculated_factor['Reimbursement']= 'Reimbursement';
-		}
-		if($deduction_is_salary_efected)
+		
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'is_reimbursement_affect_salary'=>"Line",
+						],
+			'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+			'application'=>'hr'
+		]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+				$system_calculated_factor['Reimbursement']= 'Reimbursement';
+
+		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'is_deduction_affect_salary'=>"Line",
+						],
+			'config_key'=>'HR_DEDUCTION_SALARY_EFFECT',
+			'application'=>'hr'
+		]);
+		$deduction_config_model->tryLoadAny();
+
+		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
 			$system_calculated_factor['Deduction']= 'Deduction';
 
 		foreach ($all_match[1] as $key => $name) {

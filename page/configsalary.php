@@ -18,7 +18,36 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 
 		$info = $crud->grid->add('View',null,'salary_view')->setElement('h2');
 		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}';
-		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {$Reimbursement}, {$Deduction} and {your_define_salary_names}';
+		
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'is_reimbursement_affect_salary'=>"Line",
+						],
+			'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+			'application'=>'hr'
+		]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Reimbursement} and {your_define_salary_names}';
+
+		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'is_deduction_affect_salary'=>"Line",
+						],
+			'config_key'=>'HR_DEDUCTION_SALARY_EFFECT',
+			'application'=>'hr'
+		]);
+		$deduction_config_model->tryLoadAny();
+
+		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
+			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Deduction} and {your_define_salary_names}';
+
+		if($deduction_config_model['is_deduction_affect_salary'] === "yes" && 
+			$reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+				$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Reimbursement}, {Deduction} and {your_define_salary_names}';
 		
 		$info->setHtml($html);
 		
