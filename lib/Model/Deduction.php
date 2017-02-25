@@ -10,7 +10,7 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 			'Draft'=>['view','edit','delete','submit','manage_attachments'],
 			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
-			'Approved'=>['view','edit','delete','recieved','cancel','manage_attachments'],
+			'Approved'=>['view','edit','delete','received','cancel','manage_attachments'],
 			'Recieved'=>['view','edit','delete','cancel','manage_attachments']
 		];
 
@@ -61,7 +61,20 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 					"xepan_hr_deduction&deduction_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
-		$this->updateTransaction();
+
+		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_deduction_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_DEDUCTION_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$deduction_config_model->tryLoadAny();
+
+		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
+			$this->updateTransaction();
+
 		$this->save();
 	}
 
@@ -105,7 +118,20 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 					"xepan_hr_deduction&deduction_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
-		$this->deleteTransactions();
+
+		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_deduction_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_DEDUCTION_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$deduction_config_model->tryLoadAny();
+
+		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
+			$this->deleteTransactions();
+	
 		$this->save();
 	}	
 
@@ -151,13 +177,13 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 	        ];
 
 	        $et = $this->add('xepan\accounts\Model_EntryTemplate');
-	        $et->loadBy('unique_trnasaction_template_code','PARTYCASHRECEIVED');
+	        $et->loadBy('unique_trnasaction_template_code','ANYPARTYCASHRECEIVED');
 
 	        $view_cash = $cash_tab->add('View');
 	        $et->manageForm($view_cash,$this->id,'xepan\hr\Model_Deduction',$pre_filled);
 
 	        $et_bank = $this->add('xepan\accounts\Model_EntryTemplate');
-	        $et_bank->loadBy('unique_trnasaction_template_code','PARTYBANKRECEIVED');
+	        $et_bank->loadBy('unique_trnasaction_template_code','ANYPARTYBANKRECEIVED');
 
 	        $view_bank = $bank_tab->add('View');
 	        $et_bank->manageForm($view_bank,$this->id,'xepan\hr\Model_Deduction',$pre_filled);

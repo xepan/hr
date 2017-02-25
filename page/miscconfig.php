@@ -66,5 +66,33 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 			$reimbursement_config_model->save();
 			$reibursement_form->js(null,$reibursement_form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
 		}
+
+		// Deduction Configuration
+		$deduction_config = $tabs->addTab('Deduction Configuration');
+		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_deduction_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_DEDUCTION_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$deduction_config_model->add('xepan\hr\Controller_ACL');
+		$deduction_config_model->tryLoadAny();
+
+		$deduction_form = $deduction_config->add('Form');
+		$field = $deduction_form->addField('Dropdown','is_deduction_affect_salary')
+				->setValueList(['yes'=>'Yes','no'=>'No'])
+				->setEmptyText('Please select..');
+
+		if($deduction_config_model['is_deduction_affect_salary'])
+			$field->set($deduction_config_model['is_deduction_affect_salary']);
+
+		$deduction_form->addSubmit("Save")->addClass('btn btn-primary');
+		if($deduction_form->isSubmitted()){
+			$deduction_config_model['is_deduction_affect_salary'] = $deduction_form['is_deduction_affect_salary'];
+			$deduction_config_model->save();
+			$deduction_form->js(null,$deduction_form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
+		}
 	}
 }

@@ -73,7 +73,20 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
-		$this->updateTransaction();
+
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_reimbursement_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+			$this->updateTransaction();
+		
 		$this->save();
 	}
 
@@ -124,7 +137,20 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
-		$this->deleteTransactions();
+
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_reimbursement_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+			$this->deleteTransactions();
+		
 		$this->save();
 	}	
 
