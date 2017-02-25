@@ -652,6 +652,34 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidDays'=>$Present + $PaidLeaves,
 				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
 			];
+
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'is_reimbursement_affect_salary'=>"Line",
+						],
+			'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+			'application'=>'hr'
+		]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
+			$calculated['Reimbursement']= $this->getReimbursement($month,$year);
+
+		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		[
+			'fields'=>[
+						'is_deduction_affect_salary'=>"Line",
+						],
+			'config_key'=>'HR_DEDUCTION_SALARY_EFFECT',
+			'application'=>'hr'
+		]);
+		$deduction_config_model->tryLoadAny();
+
+		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
+			$calculated['Deduction']= $this->getDeduction($month,$year);
+
+
 		$net_amount = 0;
 		foreach ($this->ref('EmployeeSalary') as $salary) {
 			$result = $this->evalSalary($salary['amount'],$calculated);
@@ -660,8 +688,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 			$calculated[$salary['salary']] = $result;
 
-			if($salary['add_deduction'] == "add")
+			if($salary['add_deduction'] == "add"){
 				$net_amount += $result;
+			}
 			if($salary['add_deduction'] == "deduction")
 				$net_amount -= $result;
 		}
@@ -743,6 +772,58 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}
 
 		return $result_array;
+	}
+
+	function getReimbursement($month,$year){
+		
+		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
+		
+		$reimburs_mdl = $this->add('xepan\hr\Model_Reimbursement');
+		$reimburs_mdl->addCondition('employee_id',$this->id)
+					->addCondition('status','Approved');
+		
+		$l_date = date('Y-m-t',strtotime($year.'-'.$month.'-01'));
+
+		$total_amount = 0;
+		foreach ($reimburs_mdl as $rd) {
+			$reimburs_mdl_detail = $this->add('xepan\hr\Model_ReimbursementDetail')
+									->addCondition('reimbursement_id',$rd->id)
+									->addCondition('date','<=',$l_date);
+
+			foreach ($reimburs_mdl_detail as $amount_mdl) {
+				$count = $amount_mdl->count()->getOne();
+					for ($i=0; $i < $count ; $i++) {
+						$amount = 0;
+						$amount = $amount_mdl['amount'];
+					}
+				$total_amount += $amount;
+			}		
+		}
+		return $total_amount;
+	}
+
+	function getDeduction($month,$year){
+		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
+		
+		$last_month_date =  date('Y-m-t',strtotime($year.'-'.$month.'-01'));
+		
+		$total_amount = 0;
+		$deduction_mdl = $this->add('xepan\hr\Model_Deduction')
+					->addCondition('employee_id',$this->id)
+					->addCondition('status','Approved')
+					->addCondition([['created_at','<',$last_month_date],['updated_at','<',$last_month_date]]);
+		
+		foreach ($deduction_mdl as $amount_mdl) {
+
+			$count = $amount_mdl->count()->getOne();
+				for ($i=0; $i < $count ; $i++) {
+					$amount = 0;
+					$amount = $amount_mdl['amount'];
+				}
+			$total_amount += $amount;
+		}		
+		
+		return $total_amount;
 	}
 
 	function ledger(){
