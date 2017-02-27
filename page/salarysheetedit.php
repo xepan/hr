@@ -147,7 +147,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 						$salary_amount[$salary['id']] = $form[$field];
 					}
 					
-					$model_sheet->addEmployeeRow($employee->id,null,$salary_amount,$calculated_array);
+					$model_sheet->addEmployeeRow($employee->id,$form['f_NetAmount_'.$employee->id],$salary_amount,$calculated_array);
 				}
 			}catch(\Exception $e){
 				throw $e;
