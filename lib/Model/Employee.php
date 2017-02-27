@@ -783,11 +783,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 					->addCondition('status','Approved');
 		
 		$l_date = date('Y-m-t',strtotime($year.'-'.$month.'-01'));
+		$s_date = date('Y-m-d',strtotime($year.'-'.$month.'-01'));
 
 		$total_amount = 0;
 		foreach ($reimburs_mdl as $rd) {
 			$reimburs_mdl_detail = $this->add('xepan\hr\Model_ReimbursementDetail')
 									->addCondition('reimbursement_id',$rd->id)
+									->addCondition('date','>=',$s_date)
 									->addCondition('date','<=',$l_date);
 
 			foreach ($reimburs_mdl_detail as $amount_mdl) {
