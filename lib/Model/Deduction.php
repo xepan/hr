@@ -11,7 +11,7 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','received','cancel','manage_attachments'],
-			'Recieved'=>['view','edit','delete','cancel','manage_attachments']
+			'Recieved'=>['view','edit','delete','manage_attachments']
 		];
 
 	function init(){
@@ -22,7 +22,12 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 		$deduction_j->addField('name')->caption('Reason');
 		$deduction_j->addField('amount')->type('money');
 		$deduction_j->addField('narration')->type('text');
+		$deduction_j->addField('received_amount')->type('money');
 		
+		$this->addExpression('due_amount',function($m,$q){
+			return $q->expr('IFNULL([0],0) - IFNULL([1],0)',[$m->getElement('amount'),$m->getElement('received_amount')]);
+		});
+
 		$this->getElement('created_by');
 		$this->getElement('created_by_id')->system(true)->visible(true);
 		$this->getElement('status')->defaultValue('Draft');

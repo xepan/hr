@@ -21,6 +21,20 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		$this->addField('paiddays');
 		$this->addField('total_working_days');
 
+		$this->addExpression('reimbursement_amount',function($m,$q){
+			return $m->add('xepan\hr\Model_SalaryDetail')
+					->addCondition('employee_row_id',$m->getElement('id'))
+					->addCondition('is_reimbursement',true)
+				->sum('amount');
+		});
+
+		$this->addExpression('deduction_amount',function($m,$q){
+			return $m->add('xepan\hr\Model_SalaryDetail')
+					->addCondition('employee_row_id',$m->getElement('id'))
+					->addCondition('is_deduction',true)
+				->sum('amount');
+		});
+
 		$this->hasMany('xepan\hr\SalaryDetail','employee_row_id',null,'SalaryDetail');
 		
 		$sal = $this->add('xepan\hr\Model_Salary');

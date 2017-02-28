@@ -12,8 +12,8 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 					'Approved'=>['view','edit','delete','canceled'],
 					'Canceled'=>['view','edit','delete','redraft']
 					];
-
 	function init(){
+
 		parent::init();
 
 		$this->addCondition('type','SalarySheet');
@@ -46,10 +46,8 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 	function approved(){
 		$this['status'] = "Approved";
 		$this->save();
-
 		
 		$ss_model = $this->add('xepan\hr\Model_SalarySheet');
-
 		$sal = $this->add('xepan\hr\Model_Salary');
 		foreach ($sal->getRows() as $s) {
 			$norm_name = $this->app->normalizeName($s['name']);
@@ -82,15 +80,15 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 				'desktop'=>strip_tags($this['description']),
 				'js'=>null
 			];
+		// $this->app->hook('salary_sheet_approved',[$ss_model]);
+		
+		// PAID REIMBURSEMENT
+		$this->paidReimbursement();
+		$this->deductionReceived();
+
 		$this->app->employee
 	           	->addActivity("Salary Sheet ".$this['name']." Approved by ".$this->app->employee['name'],null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg); 
-		$this->reimbursementpaid();
-		$this->app->hook('salary_sheet_approved',[$ss_model]);
-	}
-
-	function reimbursementpaid(){
-		
 	}
 
 	function canceled(){
@@ -129,4 +127,91 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 	           	->addActivity("Re-Draft Salary Sheet [".$this['name']."] you submitted",null, $this['created_by_id'] /*Related Contact ID*/,null,null,null)
 	            ->notifyWhoCan(null,null,false,$msg);
 	}
+
+	function paidReimbursement(){
+
+		if(!$this->loaded()) throw new \Exception("model mst loaded", 1);
+		// for loop of Employee Rowse
+			//if reimbursement_amount > 0
+				// add model reimbursemnt detail add conodit employee_id == $emplo_row['employe_id'] set order asc
+				// eimnbursemnt_amount = 
+				// for loop of rimbursement_detail
+
+					// if( due_amount > 0)
+						//if reimnbursemnt_amount >= due_amount (10,000 > 3000)
+							// paid_ampunt = [paid_amount] + due_amount
+							// eimnbursemnt_amount = eimnbursemnt_amount - due_amount
+						//else 3000 10000
+							// paid_ampunt = [paid_amount] + eimnbursemnt_amount
+							// eimnbursemnt_amount = eimnbursemnt_amount - eimnbursemnt_amount
+			// if deduction amount > 0
+
+		$emp_row = $this->add('xepan\hr\Model_EmployeeRow')
+				->addCondition('salary_abstract_id',$this->id);
+		
+		$reimbursement_amount = 0;
+		foreach ($emp_row as $e_row){
+
+			$reimbursement_amount = $e_row['reimbursement_amount'];
+
+			$reimbursemnt_dtl = $this->add('xepan\hr\Model_ReimbursementDetail');
+			$reimbursemnt_dtl->addExpression('status',function($m,$q){
+				return $m->refSQL('reimbursement_id')->fieldQuery('status');
+			});
+			$reimbursemnt_dtl->addCondition('employee_id',$e_row['employee_id']);
+			$reimbursemnt_dtl->addCondition('status',"Approved");
+			$reimbursemnt_dtl->addCondition('due_amount','>',0);
+			$reimbursemnt_dtl->setOrder('date','asc');
+
+			foreach ($reimbursemnt_dtl as $r_dtl) {
+				if($reimbursement_amount <= 0) break;
+				
+				// may be removed
+				$temp =  $this->add('xepan\hr\Model_ReimbursementDetail')->load($r_dtl['id']);
+
+				if($reimbursement_amount >= $temp['due_amount']){
+					$temp['paid_amount'] += $temp['due_amount'];
+					$reimbursement_amount -= $temp['due_amount'];
+				}else{
+					$temp['paid_amount'] += $reimbursement_amount;
+					$reimbursement_amount -= $reimbursement_amount;
+				}
+				$temp->save();
+			}
+		}
+
+
+	}
+
+	function deductionReceived(){
+		if(!$this->loaded()) throw new \Exception("model mst loaded", 1);
+
+		$emp_row = $this->add('xepan\hr\Model_EmployeeRow')
+				->addCondition('salary_abstract_id',$this->id);
+		
+		$deduction_amount = 0;
+		foreach ($emp_row as $e_row){
+			$deduction_amount = $e_row['deduction_amount'];
+
+			$deduction_mdl = $this->add('xepan\hr\Model_Deduction')
+							->addCondition('employee_id',$e_row['employee_id'])
+							->addCondition('status','Approved');
+			
+			foreach ($deduction_mdl as $mdl) {
+				if($deduction_amount <= 0) continue;
+
+				if($deduction_amount >= $mdl['due_amount']){
+					$mdl['received_amount'] += $mdl['due_amount'];
+					$deduction_amount -= $mdl['due_amount'];
+					$mdl['status'] = "Recieved";
+				}else{
+					$mdl['received_amount'] += $deduction_amount;
+					$deduction_amount -= $deduction_amount;
+				}
+					$mdl->saveAndUnload();
+			}
+		}
+	}
+
+	
 }

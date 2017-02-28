@@ -12,7 +12,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','paid','cancel','manage_attachments'],
 			// 'PartiallyPaid'=>['view','edit','delete','paid','cancel','manage_attachments'],
-			'Paid'=>['view','edit','delete','cancel','manage_attachments']
+			'Paid'=>['view','edit','delete','manage_attachments']
 		];
 
 	function init(){
@@ -29,6 +29,13 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this->addCondition('type','Reimbursement');
 
 		$this->addExpression('amount',$this->_dsql()->expr('IFNULL([0],0)',[$this->refSQL('Details')->sum('amount')]));
+
+		$this->addExpression('amount_to_be_paid',function($m,$q){
+			return $this->add('xepan\hr\Model_ReimbursementDetail')
+						->addCondition('reimbursement_id',$m->getElement('id'))
+						->sum('due_amount');
+		})->type('money');
+
 	}
 
 	function newNumber(){
