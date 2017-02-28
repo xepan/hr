@@ -780,7 +780,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 		$reimburs_mdl = $this->add('xepan\hr\Model_Reimbursement');
 		$reimburs_mdl->addCondition('employee_id',$this->id)
-					->addCondition('status','Approved');
+					->addCondition([['status',"Approved"],['status',"PartiallyPaid"]]);
 		
 		$l_date = date('Y-m-t',strtotime($year.'-'.$month.'-01'));
 
@@ -794,7 +794,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				$count = $amount_mdl->count()->getOne();
 					for ($i=0; $i < $count ; $i++) {
 						$amount = 0;
-						$amount = $amount_mdl['amount'];
+						$amount = $amount_mdl['due_amount'];
 					}
 				$total_amount += $amount;
 			}		
@@ -810,7 +810,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$total_amount = 0;
 		$deduction_mdl = $this->add('xepan\hr\Model_Deduction')
 					->addCondition('employee_id',$this->id)
-					->addCondition('status','Approved')
+					->addCondition([['status','Approved'],['status','PartiallyRecieved']])
 					->addCondition([['created_at','<=',$last_month_date],['updated_at','<=',$last_month_date]]);
 		
 		foreach ($deduction_mdl as $amount_mdl) {
@@ -818,7 +818,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$count = $amount_mdl->count()->getOne();
 				for ($i=0; $i < $count ; $i++) {
 					$amount = 0;
-					$amount = $amount_mdl['amount'];
+					$amount = $amount_mdl['due_amount'];
 				}
 			$total_amount += $amount;
 		}		

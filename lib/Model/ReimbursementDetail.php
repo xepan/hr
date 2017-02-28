@@ -33,18 +33,17 @@ class Model_ReimbursementDetail extends \xepan\base\Model_Table{
 
 	function afterSave(){		
 		
-		if($this['due_amount'] == 0){
-			$reim = $this->add('xepan\hr\Model_Reimbursement');
-			$reim->load($this['reimbursement_id']);
-
-			if($reim['amount_to_be_paid'] == 0){
-				$reim['status'] = "Paid";
-				$reim->save();
-			}elseif($reim['amount_paid'] != $reim['amount']){
+		$reim = $this->add('xepan\hr\Model_Reimbursement');
+		$reim->load($this['reimbursement_id']);
+		
+		if($this['due_amount'] == 0 && $reim['amount_to_be_paid'] == 0)
+				$reim->paid();
+		elseif($reim['amount_paid'] > 0 && 
+				$reim['amount_paid'] != $reim['amount'])
+			{
 				$reim['status'] = "PartiallyPaid";
 				$reim->save();
 			}
-		}
 	}
 
 }
