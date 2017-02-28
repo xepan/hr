@@ -131,20 +131,6 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 	function paidReimbursement(){
 
 		if(!$this->loaded()) throw new \Exception("model mst loaded", 1);
-		// for loop of Employee Rowse
-			//if reimbursement_amount > 0
-				// add model reimbursemnt detail add conodit employee_id == $emplo_row['employe_id'] set order asc
-				// eimnbursemnt_amount = 
-				// for loop of rimbursement_detail
-
-					// if( due_amount > 0)
-						//if reimnbursemnt_amount >= due_amount (10,000 > 3000)
-							// paid_ampunt = [paid_amount] + due_amount
-							// eimnbursemnt_amount = eimnbursemnt_amount - due_amount
-						//else 3000 10000
-							// paid_ampunt = [paid_amount] + eimnbursemnt_amount
-							// eimnbursemnt_amount = eimnbursemnt_amount - eimnbursemnt_amount
-			// if deduction amount > 0
 
 		$emp_row = $this->add('xepan\hr\Model_EmployeeRow')
 				->addCondition('salary_abstract_id',$this->id);
@@ -159,13 +145,13 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 				return $m->refSQL('reimbursement_id')->fieldQuery('status');
 			});
 			$reimbursemnt_dtl->addCondition('employee_id',$e_row['employee_id']);
-			$reimbursemnt_dtl->addCondition('status',"Approved");
+			$reimbursemnt_dtl->addCondition([['status',"Approved"],['status',"PartiallyPaid"]]);
 			$reimbursemnt_dtl->addCondition('due_amount','>',0);
 			$reimbursemnt_dtl->setOrder('date','asc');
-
+			
 			foreach ($reimbursemnt_dtl as $r_dtl) {
 				if($reimbursement_amount <= 0) break;
-				
+
 				// may be removed
 				$temp =  $this->add('xepan\hr\Model_ReimbursementDetail')->load($r_dtl['id']);
 
@@ -195,7 +181,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 
 			$deduction_mdl = $this->add('xepan\hr\Model_Deduction')
 							->addCondition('employee_id',$e_row['employee_id'])
-							->addCondition('status','Approved');
+							->addCondition([['status','Approved'],['status','PartiallyRecieved']]);
 			
 			foreach ($deduction_mdl as $mdl) {
 				if($deduction_amount <= 0) continue;
@@ -207,6 +193,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 				}else{
 					$mdl['received_amount'] += $deduction_amount;
 					$deduction_amount -= $deduction_amount;
+					$mdl['status'] = "PartiallyRecieved";
 				}
 					$mdl->saveAndUnload();
 			}

@@ -11,6 +11,7 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','received','cancel','manage_attachments'],
+			'PartiallyRecieved'=>['view','edit','delete','received','manage_attachments'],
 			'Recieved'=>['view','edit','delete','manage_attachments']
 		];
 
@@ -176,22 +177,58 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 	        $et = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et->loadBy('unique_trnasaction_template_code','ANYPARTYCASHRECEIVED');
 
+	        $et->addHook('afterExecute',function($et,$transaction,$total_amount,$row_data){
+				$this->deductionReceived($row_data[0]['rows']['party']['amount'],$this['employee_id']);
+
+				$this->app->page_action_result = $et->form->js()->univ()->closeDialog();
+			});
+
 	        $view_cash = $cash_tab->add('View');
 	        $et->manageForm($view_cash,$this->id,'xepan\hr\Model_Deduction',$pre_filled);
 
 	        $et_bank = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et_bank->loadBy('unique_trnasaction_template_code','ANYPARTYBANKRECEIVED');
 
+	        $et_bank->addHook('afterExecute',function($et_bank,$transaction,$total_amount,$row_data){
+				$this->deductionReceived($row_data[0]['rows']['party']['amount'],$this['employee_id']);
+
+				$this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
+			});
+
 	        $view_bank = $bank_tab->add('View');
 	        $et_bank->manageForm($view_bank,$this->id,'xepan\hr\Model_Deduction',$pre_filled);
         	// $this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
         }
-        	$this->received();
     }
 
     function employee(){
         return $this->add('xepan\hr\Model_Employee')->tryLoad($this['employee_id']);
     }
+
+    function deductionReceived($amount,$emp_id){
+		
+		$deduction_amount = 0;
+		$deduction_amount = $amount;
+		
+		$deduction_mdl = $this->add('xepan\hr\Model_Deduction')
+							->addCondition('employee_id',$emp_id)
+							->addCondition([['status','Approved'],['status','PartiallyRecieved']]);
+			
+		foreach ($deduction_mdl as $mdl) {
+			if($deduction_amount <= 0) continue;
+
+			if($deduction_amount >= $mdl['due_amount']){
+				$mdl['received_amount'] += $mdl['due_amount'];
+				$deduction_amount -= $mdl['due_amount'];
+				$mdl['status'] = "Recieved";
+			}else{
+				$mdl['received_amount'] += $deduction_amount;
+				$deduction_amount -= $deduction_amount;
+				$mdl['status'] = "PartiallyRecieved";
+			}
+				$mdl->saveAndUnload();
+		}
+	}
 
 	function received(){
 

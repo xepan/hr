@@ -11,7 +11,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','paid','cancel','manage_attachments'],
-			// 'PartiallyPaid'=>['view','edit','delete','paid','cancel','manage_attachments'],
+			'PartiallyPaid'=>['view','edit','delete','paid','manage_attachments'],
 			'Paid'=>['view','edit','delete','manage_attachments']
 		];
 
@@ -34,6 +34,12 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 			return $this->add('xepan\hr\Model_ReimbursementDetail')
 						->addCondition('reimbursement_id',$m->getElement('id'))
 						->sum('due_amount');
+		})->type('money');
+
+		$this->addExpression('amount_paid',function($m,$q){
+			return $this->add('xepan\hr\Model_ReimbursementDetail')
+						->addCondition('reimbursement_id',$m->getElement('id'))
+						->sum('paid_amount');
 		})->type('money');
 
 	}
@@ -206,11 +212,11 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 	        $et = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et->loadBy('unique_trnasaction_template_code','PARTYCASHPAYMENT');
 
-	  //       $et->addHook('afterExecute',function($et,$transaction,$total_amount,$row_data){
-			// 	$this->partiallypaid($row_data[0]['rows']['party']['amount'],$this->id);
+	        $et->addHook('afterExecute',function($et,$transaction,$total_amount,$row_data){
+				$this->paidReimbursement($row_data[0]['rows']['party']['amount'],$this['employee_id']);
 
-			// 	$this->app->page_action_result = $et->form->js()->univ()->closeDialog();
-			// });
+				$this->app->page_action_result = $et->form->js()->univ()->closeDialog();
+			});
 
 	        $view_cash = $cash_tab->add('View');
 	        $et->manageForm($view_cash,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
@@ -218,34 +224,51 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 	        $et_bank = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et_bank->loadBy('unique_trnasaction_template_code','PARTYBANKPAYMENT');
 
-	  //       $et_bank->addHook('afterExecute',function($et_bank,$transaction,$total_amount,$row_data){
-			// 	$this->partiallypaid($row_data[0]['rows']['party']['amount'],$this->id);
+	        $et_bank->addHook('afterExecute',function($et_bank,$transaction,$total_amount,$row_data){
+				$this->paidReimbursement($row_data[0]['rows']['party']['amount'],$this['employee_id']);
 
-			// 	$this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
-			// });
+				$this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
+			});
 
 	        $view_bank = $bank_tab->add('View');
 	        $et_bank->manageForm($view_bank,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
         }
-        $this->paid();
     }
 
     function employee(){
         return $this->add('xepan\hr\Model_Employee')->tryLoad($this['employee_id']);
     }
 
-  //   function partiallypaid($amount,$id){
-  //   	$rimburs_model = $this->add('xepan\hr\Model_Reimbursement');
-		// $rimburs_model->load($id);
+    function paidReimbursement($amount,$emp_id){
+		
+		$reimbursement_amount = 0;
+		$reimbursement_amount = $amount;
+		
+		$reimbursemnt_dtl = $this->add('xepan\hr\Model_ReimbursementDetail');
+		$reimbursemnt_dtl->addExpression('status',function($m,$q){
+			return $m->refSQL('reimbursement_id')->fieldQuery('status');
+		});
+		$reimbursemnt_dtl->addCondition('employee_id',$emp_id);
+		$reimbursemnt_dtl->addCondition([['status',"Approved"],['status',"PartiallyPaid"]]);
+		$reimbursemnt_dtl->addCondition('due_amount','>',0);
+		$reimbursemnt_dtl->setOrder('date','asc');
 
-  //   	if($rimburs_model['amount'] != $amount){
-  //   		$this['status'] = 'PartiallyPaid';
-	 //    	$this->save();
-  //   	}else{
-  //   		return;
-  //   	}
+		foreach ($reimbursemnt_dtl as $r_dtl) {
+			if($reimbursement_amount <= 0) break;
+			
+			// may be removed
+			$temp =  $this->add('xepan\hr\Model_ReimbursementDetail')->load($r_dtl['id']);
 
-  //   }
+			if($reimbursement_amount >= $temp['due_amount']){
+				$temp['paid_amount'] += $temp['due_amount'];
+				$reimbursement_amount -= $temp['due_amount'];
+			}else{
+				$temp['paid_amount'] += $reimbursement_amount;
+				$reimbursement_amount -= $reimbursement_amount;
+			}
+			$temp->save();
+		}
+	}
 
 	function paid(){
 
