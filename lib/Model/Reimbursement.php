@@ -5,14 +5,14 @@ namespace xepan\hr;
 class Model_Reimbursement extends \xepan\hr\Model_Document{
 	// public $table = "reimbursement";
 
-	public $status = ['Draft','Submitted','Redesign','Approved','InProgress','Canceled','Completed'];
+	public $status = ['Draft','Submitted','Approved','Canceled','Paid'];
 	public $actions = [
 			'Draft'=>['view','edit','delete','submit','manage_attachments'],
-			'Submitted'=>['view','edit','delete','inprogress','cancel','redraft','approve','manage_attachments'],
-			'InProgress'=>['view','edit','delete','approve','cancel','manage_attachments'],
+			'Submitted'=>['view','edit','delete','cancel','redraft','approve','manage_attachments'],
 			'Canceled'=>['view','edit','delete','redraft','manage_attachments'],
 			'Approved'=>['view','edit','delete','paid','cancel','manage_attachments'],
-			'Paid'=>['view','edit','delete','cancel','manage_attachments']
+			'PartiallyPaid'=>['view','edit','delete','paid','manage_attachments'],
+			'Paid'=>['view','edit','delete','manage_attachments']
 		];
 
 	function init(){
@@ -29,6 +29,19 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this->addCondition('type','Reimbursement');
 
 		$this->addExpression('amount',$this->_dsql()->expr('IFNULL([0],0)',[$this->refSQL('Details')->sum('amount')]));
+
+		$this->addExpression('amount_to_be_paid',function($m,$q){
+			return $this->add('xepan\hr\Model_ReimbursementDetail')
+						->addCondition('reimbursement_id',$m->getElement('id'))
+						->sum('due_amount');
+		})->type('money');
+
+		$this->addExpression('amount_paid',function($m,$q){
+			return $this->add('xepan\hr\Model_ReimbursementDetail')
+						->addCondition('reimbursement_id',$m->getElement('id'))
+						->sum('paid_amount');
+		})->type('money');
+
 	}
 
 	function newNumber(){
@@ -46,7 +59,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					null,
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
-		->notifyWhoCan('inprogress,cancel,redraft,approve','Submitted',$this);
+		->notifyWhoCan('cancel,redraft,approve','Submitted',$this);
 		$this->save();
 	}
 
@@ -74,7 +87,20 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
-		$this->updateTransaction();
+
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_reimbursement_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "no")
+			$this->updateTransaction();
+		
 		$this->save();
 	}
 
@@ -85,47 +111,11 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 		$this->app->hook('reimbursement_canceled',[$rimburs_model]);
 	}
 
-	function updateTransaction($delete_old=true,$create_new=true){		
+	function updateTransaction($create_new=true){		
 		$rimburs_model = $this->add('xepan\hr\Model_Reimbursement');
 		$rimburs_model->load($this->id);
 
-		if($delete_old){			
-		// reimbursement model transaction have always one entry in transaction
-			$old_amount = $this->app->hook('reimbursement_canceled',[$rimburs_model]);
-		}
-
-		if($create_new){
-			$this->app->hook('reimbursement_approved',[$rimburs_model]);
-		}
-		
-	}
-
-	function inprogress(){
-		$this['status']='InProgress';
-		$this->save();
-
-		if($this['employee_id'] == $this['updated_by_id']){
-			$id = [];
-			$id = [$this['employee_id']];
-			$msg = " Your Reimbursement ( ".$this['name']." ) is In-Progress";
-		}
-		else{
-			$id = [];
-			$id = [$this['employee_id'],$this['updated_by_id']];
-			$msg = "Reimbursement ( ".$this['name']." ) is In-Progress, Related To : ".$this['employee']."";
-		}
-
-		$this->app->employee
-		->addActivity(
-					"Reimbursement ( ".$this['name']." ) is Inprogress",
-					$this->id/* Related Document ID*/,
-					$this['contact_id'] /*Related Contact ID*/,
-					null,
-					null,
-					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
-				)
-		->notifyTo($id,$msg);
-		$this->save();
+		$this->app->hook('reimbursement_approved',[$rimburs_model]);
 	}
 
 	function cancel(){
@@ -153,7 +143,20 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 					"xepan_hr_reimbursement&reimbursement_id=".$this->id.""
 				)
 		->notifyTo($id,$msg);
-		$this->deleteTransactions();
+
+		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_reimbursement_affect_salary'=>"Line",
+										],
+							'config_key'=>'HR_REIMBURSEMENT_SALARY_EFFECT',
+							'application'=>'hr'
+						]);
+		$reimbursement_config_model->tryLoadAny();
+
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "no")
+			$this->deleteTransactions();
+		
 		$this->save();
 	}	
 
@@ -191,7 +194,7 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
         $application_mdl->tryLoadAny();
 
         if(!$application_mdl->loaded()){
-			$page->add('View')->set("This services is not available for you")->addClass('project-box-header green-bg well-sm')->setstyle('color','green');
+			$page->add('View')->set("This services is not available in your available packagein your ")->addClass('project-box-header green-bg well-sm')->setstyle('color','green');
         } 
         else
         {
@@ -209,22 +212,63 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 	        $et = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et->loadBy('unique_trnasaction_template_code','PARTYCASHPAYMENT');
 
+	        $et->addHook('afterExecute',function($et,$transaction,$total_amount,$row_data){
+				$this->paidReimbursement($row_data[0]['rows']['party']['amount'],$this['employee_id']);
+
+				$this->app->page_action_result = $et->form->js()->univ()->closeDialog();
+			});
+
 	        $view_cash = $cash_tab->add('View');
 	        $et->manageForm($view_cash,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
-
+	        
 	        $et_bank = $this->add('xepan\accounts\Model_EntryTemplate');
 	        $et_bank->loadBy('unique_trnasaction_template_code','PARTYBANKPAYMENT');
 
+	        $et_bank->addHook('afterExecute',function($et_bank,$transaction,$total_amount,$row_data){
+				$this->paidReimbursement($row_data[0]['rows']['party']['amount'],$this['employee_id']);
+
+				$this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
+			});
+
 	        $view_bank = $bank_tab->add('View');
 	        $et_bank->manageForm($view_bank,$this->id,'xepan\hr\Model_Reimbursement',$pre_filled);
-        	// $this->app->page_action_result = $et_bank->form->js()->univ()->closeDialog();
         }
-        	$this->paid();
     }
 
     function employee(){
         return $this->add('xepan\hr\Model_Employee')->tryLoad($this['employee_id']);
     }
+
+    function paidReimbursement($amount,$emp_id){
+		
+		$reimbursement_amount = 0;
+		$reimbursement_amount = $amount;
+		
+		$reimbursemnt_dtl = $this->add('xepan\hr\Model_ReimbursementDetail');
+		$reimbursemnt_dtl->addExpression('status',function($m,$q){
+			return $m->refSQL('reimbursement_id')->fieldQuery('status');
+		});
+		$reimbursemnt_dtl->addCondition('employee_id',$emp_id);
+		$reimbursemnt_dtl->addCondition([['status',"Approved"],['status',"PartiallyPaid"]]);
+		$reimbursemnt_dtl->addCondition('due_amount','>',0);
+		$reimbursemnt_dtl->setOrder('date','asc');
+
+		foreach ($reimbursemnt_dtl as $r_dtl) {
+			if($reimbursement_amount <= 0) break;
+			
+			// may be removed
+			$temp =  $this->add('xepan\hr\Model_ReimbursementDetail')->load($r_dtl['id']);
+
+			if($reimbursement_amount >= $temp['due_amount']){
+				$temp['paid_amount'] += $temp['due_amount'];
+				$reimbursement_amount -= $temp['due_amount'];
+			}else{
+				$temp['paid_amount'] += $reimbursement_amount;
+				$reimbursement_amount -= $reimbursement_amount;
+			}
+			$temp->save();
+		}
+	}
 
 	function paid(){
 

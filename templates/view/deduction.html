@@ -12,9 +12,11 @@
         <th></th>
         <th>Employee</th>
         <th id="{$name_sortid}"><span style="cursor:pointer; cursor: hand; max-width:600px;">Reason {$name_sort}</span></th>
+        <th><span>Created At</span></th>
         <th><span>Created By</span></th>
         <th><span>Amount</span></th>
         <th><span>Narration</span></th>
+        <th> </th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
@@ -23,9 +25,11 @@
           <td>{$selected}</td>
           <td>{$employee}</td>
           <td>{$name}</td>
-          <td>{$created_by}<br/>{$created_at}</td>
+          <td>{$created_at}</td>
+          <td>{$created_by}</td>
           <td>{$amount}</td>
           <td>{$narration}</td>
+          <td>{$action}</td>
           <td>
             {$edit}
             {$delete}

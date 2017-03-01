@@ -19,8 +19,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 		// total work days
 		$this->TotalWorkDays  = $model_sheet->getTotalWorkingDays($month,$year);
 
-		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active')
-			// ->addCondition('id','661')
+		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active');
+			// ->addCondition('id','29776');
 			// ->setLimit(2)
 		;
 
@@ -147,7 +147,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 						$salary_amount[$salary['id']] = $form[$field];
 					}
 					
-					$model_sheet->addEmployeeRow($employee->id,null,$salary_amount,$calculated_array);
+					$model_sheet->addEmployeeRow($employee->id,$form['f_NetAmount_'.$employee->id],$salary_amount,$calculated_array);
 				}
 			}catch(\Exception $e){
 				throw $e;
