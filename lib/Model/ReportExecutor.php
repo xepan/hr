@@ -20,6 +20,8 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$this->addField('widget')->display(['form'=>'xepan\base\NoValidateDropDown']);		
 		$this->addField('starting_from_date')->type('date');
 		$this->addField('schedule_date')->type('date');
+		$this->addField('data_from_date')->type('date');
+		$this->addField('data_to_date')->type('date');
 		
 		$data_range_field = $this->addField('data_range');
 		$data_range_field->display(['form'=>'xepan\base\NoValidateDropDown']);
@@ -97,24 +99,107 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		if($this['starting_from_date'] == null)
 			throw $this->exception('Please fill starting date','ValidityCheck')->setField('starting_from_date');
 		
-		if(($this['time_span'] == 'Fortnight' OR $this['time_span'] == 'Monthly') AND $this['data_range'] == null)
+		if($this['starting_from_date'] < $this->app->today)
+			throw $this->exception('Starting date cannot be smaller then today','ValidityCheck')->setField('starting_from_date');	
+		
+		if(($this['time_span'] == 'Monthly') AND $this['data_range'] == null)
 			throw $this->exception('Please select data range','ValidityCheck')->setField('data_range');	
 		
 		if(($this['time_span'] == 'Quarterly' OR $this['time_span'] == 'Halferly' OR $this['time_span'] == 'Yearly') AND $this['financial_month_start'] == null)
 			throw $this->exception('Please select financial month start','ValidityCheck')->setField('financial_month_start');	
 	}
 
-	function upgradeSchedule(){
-		// daily  =  +1 day [start_date = -1 day, end-date = +0 day]
-		// weekely = +7 day [start_date = -7 day, end-date = +0 day]
-		// fortnight = +14 day [{depending on data_range}] 
-		// monthly = +1 month [{depending on data_range}]
-		// quarterly = +4 months [{depending on financial year} ]
-		// halfyearly = +6 months [{depending on financial year}]
-		// yearly = +12 months [{depending on financial yaer}]
+	function upgradeSchedule(){		
+		// if($this['schedule_date'] == null){
+		// 	$new_schedule = $this['starting_from_date'];
+
+		// 	switch ($this['time_span']) {
+		// 		case 'Daily':
+		// 			$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
+		// 			$new_data_to_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
+		// 			break;
+		// 		case 'Weekely':
+		// 			$new_data_from_date = date("Y-m-d", strtotime('- 1 Weeks', strtotime($this['starting_from_date'])));
+		// 			$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date'])));
+		// 			break;
+		// 		case 'Fortnight':
+		// 			$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($this['starting_from_date'])));
+		// 			$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date']))); 
+		// 			break;
+		// 		case 'Monthly':
+		// 			if($this['data_range'] == 'Current')
+		// 				$new_data_from_date =  date("Y-m-01", strtotime($this['starting_from_date']));
+		// 				$new_data_to_date = date("Y-m-t", strtotime($this['starting_from_date']));
+		// 			else
+		// 				$new_data_from_date = date("Y-m-01", strtotime('- 1 months', strtotime($this['starting_from_date'])));
+		// 				$new_data_to_date = date("Y-m-t", strtotime('- 1 months', strtotime($this['starting_from_date']))); 
+		// 			break;
+		// 		case 'Quarterly':
+		// 			// current quarter
+		// 				//  
+		// 		 	// previous quarter
+		// 				// 
+		// 			break;
+		// 		case 'Halferly':
+		// 			// current half-yaer
+		// 				//  
+		// 		 	// previous half-year
+		// 				// 
+		// 			break;
+		// 		case 'Yearly':
+		// 			// current half-yaer
+		// 				//  
+		// 		 	// previous half-year
+		// 				// 
+		// 			break;
+		// 		default:
+		// 			# code...
+		// 			break;
+		// 	}
+		// }else{
+		// 	switch ($this['time_span']) {
+		// 		case 'Daily':
+		// 			break;
+		// 		case 'Weekely':
+		// 			break;
+		// 		case 'Fortnight':
+		// 			break;
+		// 		case 'Monthly':
+		// 			break;
+		// 		case 'Quarterly':
+		// 			break;
+		// 		case 'Halferly':
+		// 			break;
+		// 		case 'Yearly':
+		// 			break;
+		// 		default:
+		// 			# code...
+		// 			break;
+		// 	}
+		// }
+
+		// $this['schedule_date'] = $new_schedule;
+		// $this['data_from_date'] = $new_data_from_date;
+		// $this['data_to_date'] = $new_data_to_date;
+		// $this->save();
 	}
 
 	function sendReport(){
+		$report_executor_m = $this->add('xepan\hr\Model_ReportExecutor');
+		$report_executor_m->addCondition('schedule_date',$this->app->today);
 
+		foreach ($report_executor_m as $report) {
+			$employee_array = explode(',', $employee_array);
+			// employee array
+			// post employee array
+			// department employee arrays
+			// merge arrays with distinct values
+			// make widget array
+			// for each widget call render function which returns HTML CODE
+			// add that html in body 
+			// add employees in TO
+			// AND SEND
+			// RUN THIS FUNCTION IN CRON ONLY ONCE PER DAY
+		}
 	}
 }

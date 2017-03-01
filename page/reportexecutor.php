@@ -69,7 +69,7 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 		$time_span_field->js(true)->univ()->bindConditionalShow([
 				'Daily'=>['starting_from_date'],
 				'Weekely'=>['starting_from_date'],
-				'Fortnight'=>['starting_from_date','data_range'],
+				'Fortnight'=>['starting_from_date'],
 				'Monthly'=>['starting_from_date','data_range'],
 				'Quarterly'=>['starting_from_date','financial_month_start'],
 				'Halferly'=>['starting_from_date','financial_month_start'],
