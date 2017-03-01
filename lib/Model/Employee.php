@@ -221,7 +221,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	}
 
-	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null,$document_url=null){
+	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null,$document_url=null,$score=0){
 		if(!$contact_id) $contact_id = $this->id;
 		$activity = $this->add('xepan\hr\Model_Activity');
 		$activity['contact_id'] = $contact_id;
@@ -230,6 +230,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$activity['related_document_id'] = $related_document_id;
 		$activity['details'] = $details;
 		$activity['document_url'] = $document_url;
+		$activity['score'] = $score;
 
 		$activity->save();
 		return $activity;
@@ -253,7 +254,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$comm_model = $comm->ref('to_id');
 		}
 
-		$activity  = $this->addActivity($msg,null,$related_contact_id,null,$this->id,'xepan_communication_viewer&comm_id='.$comm->id);
+		$activity  = $this->addActivity($msg,null,$related_contact_id,null,$this->id,'xepan_communication_viewer&comm_id='.$comm->id,$comm['score']);
 		$activity->notifyWhoCan('communication','Active,InActive' ,$comm_model);
 	}
 
