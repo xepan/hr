@@ -204,6 +204,7 @@ class Initiator extends \Controller_Addon {
         $array['SalarySheet'] = ['caption'=>'SalarySheet','type'=>'DropDown','model'=>'xepan\hr\Model_SalarySheet'];
         $array['Reimbursement'] = ['caption'=>'Reimbursement','type'=>'DropDown','model'=>'xepan\hr\Model_Reimbursement'];
         $array['OfficialHoliday'] = ['caption'=>'OfficialHoliday','type'=>'DropDown','model'=>'xepan\hr\Model_OfficialHoliday'];
+        $array['Report_Executor'] = ['caption'=>'Report_Executor','type'=>'DropDown','model'=>'xepan\hr\Model_ReportExecutor'];
     }
 
     // function epanDashboard($app,$page){
