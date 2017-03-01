@@ -10,6 +10,8 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 						'Active'=>['view','edit','delete','deactivate'],
 						'InActive'=>['view','edit','delete','activate']
 					  ];
+	public $employee_array = [];
+	public $widget_html_array = [];
 
 	function init(){
 		parent::init();
@@ -189,17 +191,77 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$report_executor_m->addCondition('schedule_date',$this->app->today);
 
 		foreach ($report_executor_m as $report) {
-			$employee_array = explode(',', $employee_array);
-			// employee array
-			// post employee array
-			// department employee arrays
-			// merge arrays with distinct values
-			// make widget array
-			// for each widget call render function which returns HTML CODE
-			// add that html in body 
-			// add employees in TO
-			// AND SEND
-			// RUN THIS FUNCTION IN CRON ONLY ONCE PER DAY
+			$this->employee_array = explode(',', $report['employee']);
+			$post_array = explode(',', $report['post']);
+			$department_array = explode(',', $report['department']);
+
+			foreach ($post_array as $post){
+				$this->findPostEmployees($post);
+			}
+
+			foreach ($department_array as $department){
+				$this->findDepartmentEmployees($department);
+			}
+
+			$widget_array = explode(',', $report['widget']);
+
+			foreach ($widget_array as $widget) {
+				$this->extractHTML($widget);
+			}
+
+			// ONLY DISTINCT VALUES IN EMPLOYEE ARRAY
+			$emails = [];
+			foreach ($this->employee_array as $employee) {
+				$emp = $this->add('xepan\hr\Model_Employee')->load($employee);
+				if($emp['status'] != 'Active') continue;
+				array_push($emails, $emp['first_email']);
+			} 
+
+			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting');
+			$email_settings->addCondition('is_active',true);
+			$email_settings->tryLoadAny();
+
+			$mail = $this->add('xepan\hr\Model_ReportMail');	
+			
+			$email_subject = "Please .'"$report['time_span']"'. Find The Report Inside";
+			
+			// ADD HTML INTO BODY HERE
+			// $email_body = 
+
+			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
+			foreach ($emails as  $email) {
+				$mail->addTo($email);
+			}
+					
+			// $mail->setSubject();
+			// $mail->setBody();
+			try{
+				$mail->send($email_settings);
+			}catch(\Exception $e){
+				throw $e;
+			}
 		}
+	}
+
+	function findPostEmployees($post){
+		$employee_m = $this->add('xepan\hr\Model_Employee');
+		$employee_m->addCondition('post_id',$post);
+
+		foreach ($employee_m as $emp) {
+			$this->employee_array [] = $emp->id;
+		}
+	}
+
+	function findDepartmentEmployees($department){
+		$employee_m = $this->add('xepan\hr\Model_Employee');
+		$employee_m->addCondition('department_id',$department);
+
+		foreach ($employee_m as $emp) {
+			$this->employee_array [] = $emp->id;
+		}
+	}
+
+	function extractHTML($widget){
+		$this->widget_html_array [] = $widget->getHtml(); 
 	}
 }
