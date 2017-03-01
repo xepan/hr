@@ -9,21 +9,15 @@
   <div class="main-box-body clearfix table-responsive">
     <table style="width:100%" class="table user-list table-hover footable toggle-circle-filled">{header}
       <thead class="xepan-hover-hand">{cols}{col}
-        <th><span>Schedule Time </span></th>
         <th><span>Time Gap</span></th>
-        <th><span>Employee</span></th>
-        <th><span>Post</span></th>
-        <th><span>Department</span></th>
+        <th><span>Employee Count</span></th>
         <th> </th>{/}{/}
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
-          <td>{$schedule_time}</td>
           <td>{$time_span}</td>
-          <td>{$employee}    </td>
-          <td>{$post}    </td>
-          <td>{$department}    </td>
+          <td>{$total_count}     </td>
           <td>{$action}</td>
           <td style="width: 15%;">
             {$edit}

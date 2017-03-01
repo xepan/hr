@@ -13,6 +13,6 @@ class page_configurationsidebar extends \xepan\base\Page{
 		$this->app->side_menu->addItem(['Misc Config','icon'=>'fa fa-cog fa-spin'],'xepan_hr_miscconfig')->setAttr(['title'=>'Misc Config']);
 		$this->app->side_menu->addItem(['Pay Slip Layouts','icon'=>'fa fa-th'],'xepan_hr_layouts')->setAttr(['title'=>'Pay Slip Layouts']);
 		$this->app->side_menu->addItem(['ACL Level','icon'=>'fa fa-th'],'xepan_hr_aclconfig')->setAttr(['title'=>'ACL Level']);
-		$this->app->side_menu->addItem(['Report Schedule','icon'=>'fa fa-th'],'xepan_hr_reportschedule')->setAttr(['title'=>'Report Schedule']);
+		$this->app->side_menu->addItem(['Report Executor','icon'=>'fa fa-th'],'xepan_hr_reportexecutor')->setAttr(['title'=>'Report Executor']);
 	}
 }

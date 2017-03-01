@@ -13,15 +13,9 @@
             thead.xepan-hover-hand
                 {cols}{col}
                 th
-                    span Schedule Time 
-                th
                     span Time Gap
                 th
-                    span Employee
-                th
-                    span Post
-                th
-                    span Department
+                    span Employee Count
                 th 
                 {/}{/}
             {/}
@@ -32,21 +26,14 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
-                        {$schedule_time}
-                    td
                         {$time_span}
                     td
-                        {$employee}    
-                    td
-                        {$post}    
-                    td
-                        {$department}    
+                        {$total_count}     
                     td
                         {$action}
                     td(style="width: 15%;")
                         {$edit}
                         {$delete}
-                    
                     {/}
                 {/}{/}
                 {not_found}
