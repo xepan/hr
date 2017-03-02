@@ -8,6 +8,6 @@ class page_test extends \xepan\base\Page{
 		parent::init();
 
 		$report_executor_m = $this->add('xepan\hr\Model_ReportExecutor');
-		// $report_executor_m->sendReport();
+		$report_executor_m->sendReport();
 	}
 }

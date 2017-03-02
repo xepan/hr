@@ -45,6 +45,9 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 		if($crud->isEditing()){
 			$this->bindConditionalShow($crud->form);
 
+			if($crud->model->id)
+				$this->setValuesInField($crud->model->id,$crud);
+
 			$employee_field = $crud->form->getElement('employee');
 			$employee_field->validate_values=false;
 			$employee_field->setAttr(['multiple'=>'multiple']);
@@ -62,6 +65,26 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 			$widget_field->setAttr(['multiple'=>'multiple']);			
 			$widget_field->setModel('xepan\base\Model_GraphicalReport_Widget');
 		}
+	}
+
+	function setValuesInField($id,$crud){
+		$report_executor_m = $this->add('xepan\hr\Model_ReportExecutor')->load($id);
+		$temp = [];
+		$temp = explode(',', $report_executor_m['employee']);	
+
+		$temp1 = [];
+		$temp1 = explode(',', $report_executor_m['post']);																																														
+
+		$temp2 = [];
+		$temp2 = explode(',', $report_executor_m['department']);
+
+		$temp3 = [];
+		$temp3 = explode(',', $report_executor_m['widget']);
+		
+		$crud->form->getElement('employee')->set($temp)->js(true)->trigger('changed');
+		$crud->form->getElement('post')->set($temp1)->js(true)->trigger('changed');
+		$crud->form->getElement('department')->set($temp2)->js(true)->trigger('changed');
+		$crud->form->getElement('widget')->set($temp3)->js(true)->trigger('changed');
 	}
 
 	function bindConditionalShow($form){

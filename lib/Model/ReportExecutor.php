@@ -11,7 +11,9 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 						'InActive'=>['view','edit','delete','activate']
 					  ];
 	public $employee_array = [];
-	public $widget_html_array = [];
+	public $widget_html;
+	public $start_date;
+	public $end_date;
 
 	function init(){
 		parent::init();
@@ -68,7 +70,8 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$this->addField('status')->defaultValue('Active');
 
 		$this->addHook('beforeSave',[$this,'validateFields']);
-		$this->addHook('beforeSave',[$this,'calculateScheduleDate']);
+		$this->addHook('beforeSave',[$this,'setInitialSchedule']);
+		$this->addHook('beforeSave',[$this,'upgradeSchedule']);
 	}
 
 	function activate(){
@@ -111,101 +114,52 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 			throw $this->exception('Please select financial month start','ValidityCheck')->setField('financial_month_start');	
 	}
 
-	function upgradeSchedule(){		
-		if($this['schedule_date'] == null){
-			$new_schedule = $this['starting_from_date'];
+	function setInitialSchedule(){
+		$new_schedule = $this['starting_from_date'];
 
-			switch ($this['time_span']) {
-				case 'Daily':
-					$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
-					$new_data_to_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
-					break;
-				case 'Weekely':
-					$new_data_from_date = date("Y-m-d", strtotime('- 1 Weeks', strtotime($this['starting_from_date'])));
-					$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date'])));
-					break;
-				case 'Fortnight':
-					$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($this['starting_from_date'])));
-					$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date']))); 
-					break;
-				case 'Monthly':
-					if($this['data_range'] == 'Current'){
-						$new_data_from_date =  date("Y-m-01", strtotime($this['starting_from_date']));
-						$new_data_to_date = date("Y-m-t", strtotime($this['starting_from_date']));
-					}else{
-						$new_data_from_date = date("Y-m-01", strtotime('- 1 months', strtotime($this['starting_from_date'])));
-						$new_data_to_date = date("Y-m-t", strtotime('- 1 months', strtotime($this['starting_from_date']))); 
-					}
-					break;
-				case 'Quarterly':
-					// current quarter
-						//  
-				 	// previous quarter
-						// 
-					break;
-				case 'Halferly':
-					// current half-year
-						//  
-				 	// previous half-year
-						// 
-					break;
-				case 'Yearly':
-					// current year
-						//  
-				 	// previous year
-						// 
-					break;
-				default:
-					# code...
-					break;
-			}
-		}else{
-			switch ($this['time_span']) {
-				case 'Daily':
-					$new_schedule = date("Y-m-d", strtotime('+ 1 day', strtotime($this['schedule_date'])));
-					$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($new_schedule)));
-					$new_data_to_date = date("Y-m-d", strtotime('- 1 day', strtotime($new_schedule)));
-					break;
-				case 'Weekely':
-					$new_schedule = date("Y-m-d", strtotime('+ 1 Weeks', strtotime($this['schedule_date'])));
-					$new_data_from_date = date("Y-m-d", strtotime('- 1 Weeks', strtotime($new_schedule)));
-					$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($new_schedule)));
-					break;
-				case 'Fortnight':
-					$new_schedule = date("Y-m-d", strtotime('+ 2 Weeks', strtotime($this['schedule_date'])));
-					$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($new_schedule)));
-					$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($new_schedule))); 
-					break;
-				case 'Monthly':
-					$new_schedule = date("Y-m-d", strtotime('+ 1 months', strtotime($this['schedule_date'])));
-					if($this['data_range'] == 'Current'){
-						$new_data_from_date =  date("Y-m-01", strtotime($new_schedule));
-						$new_data_to_date = date("Y-m-t", strtotime($new_schedule));
-					}else{
-						$new_data_from_date = date("Y-m-01", strtotime('- 1 months', strtotime($new_schedule)));
-						$new_data_to_date = date("Y-m-t", strtotime('- 1 months', strtotime($new_schedule)));
-					}
-					break;
-				case 'Quarterly':
-					// Current Quarter
-						// 
-					// Previous Quarter
-					break;
-				case 'Halferly':
-					// Current Half Year
-						// 
-					// Previous Half Year
-					break;
-				case 'Yearly':
-					// Current Year
-						// 
-					// Previous year
-						// 
-					break;
-				default:
-					# code...
-					break;
-	s		}
+		switch ($this['time_span']) {
+			case 'Daily':
+				$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
+				$new_data_to_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
+				break;
+			case 'Weekely':
+				$new_data_from_date = date("Y-m-d", strtotime('- 1 Weeks', strtotime($this['starting_from_date'])));
+				$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date'])));
+				break;
+			case 'Fortnight':
+				$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($this['starting_from_date'])));
+				$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date']))); 
+				break;
+			case 'Monthly':
+				if($this['data_range'] == 'Current'){
+					$new_data_from_date =  date("Y-m-01", strtotime($this['starting_from_date']));
+					$new_data_to_date = date("Y-m-t", strtotime($this['starting_from_date']));
+				}else{
+					$new_data_from_date = date("Y-m-01", strtotime('- 1 months', strtotime($this['starting_from_date'])));
+					$new_data_to_date = date("Y-m-t", strtotime('- 1 months', strtotime($this['starting_from_date']))); 
+				}
+				break;
+			case 'Quarterly':
+				// current quarter
+					//  
+			 	// previous quarter
+					// 
+				break;
+			case 'Halferly':
+				// current half-year
+					//  
+			 	// previous half-year
+					// 
+				break;
+			case 'Yearly':
+				// current year
+					//  
+			 	// previous year
+					// 
+				break;
+			default:
+				# code...
+				break;
 		}
 
 		$this['schedule_date'] = $new_schedule;
@@ -214,11 +168,66 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$this->save();
 	}
 
+	function upgradeSchedule($report){		
+		switch ($report['time_span']) {
+			case 'Daily':
+				$new_schedule = date("Y-m-d", strtotime('+ 1 day', strtotime($report['schedule_date'])));
+				$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($new_schedule)));
+				$new_data_to_date = date("Y-m-d", strtotime('- 1 day', strtotime($new_schedule)));
+				break;
+			case 'Weekely':
+				$new_schedule = date("Y-m-d", strtotime('+ 1 Weeks', strtotime($report['schedule_date'])));
+				$new_data_from_date = date("Y-m-d", strtotime('- 1 Weeks', strtotime($new_schedule)));
+				$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($new_schedule)));
+				break;
+			case 'Fortnight':
+				$new_schedule = date("Y-m-d", strtotime('+ 2 Weeks', strtotime($report['schedule_date'])));
+				$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($new_schedule)));
+				$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($new_schedule))); 
+				break;
+			case 'Monthly':
+				$new_schedule = date("Y-m-d", strtotime('+ 1 months', strtotime($report['schedule_date'])));
+				if($this['data_range'] == 'Current'){
+					$new_data_from_date =  date("Y-m-01", strtotime($new_schedule));
+					$new_data_to_date = date("Y-m-t", strtotime($new_schedule));
+				}else{
+					$new_data_from_date = date("Y-m-01", strtotime('- 1 months', strtotime($new_schedule)));
+					$new_data_to_date = date("Y-m-t", strtotime('- 1 months', strtotime($new_schedule)));
+				}
+				break;
+			case 'Quarterly':
+				// Current Quarter
+					// 
+				// Previous Quarter
+				break;
+			case 'Halferly':
+				// Current Half Year
+					// 
+				// Previous Half Year
+				break;
+			case 'Yearly':
+				// Current Year
+					// 
+				// Previous year
+					// 
+				break;
+			default:
+				# code...
+				break;
+		}
+
+		$report['schedule_date'] = $new_schedule;
+		$report['data_from_date'] = $new_data_from_date;
+		$report['data_to_date'] = $new_data_to_date;
+		$report->save();
+	}
+
 	function sendReport(){
 		$report_executor_m = $this->add('xepan\hr\Model_ReportExecutor');
 		$report_executor_m->addCondition('schedule_date',$this->app->today);
 
 		foreach ($report_executor_m as $report) {
+			
 			$this->employee_array = explode(',', $report['employee']);
 			$post_array = explode(',', $report['post']);
 			$department_array = explode(',', $report['department']);
@@ -234,16 +243,21 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 			$widget_array = explode(',', $report['widget']);
 
 			foreach ($widget_array as $widget) {
-				$this->extractHTML($widget);
+				$this->extractHTML($widget,$report);
 			}
+			
+			// echo "<pre>";
+			// print($this->widget_html);
+			// exit;
+			
 
-			// ONLY DISTINCT VALUES IN EMPLOYEE ARRAY
 			$emails = [];
-			foreach ($this->employee_array as $employee) {
+			foreach (array_unique($this->employee_array) as $employee) {
 				$emp = $this->add('xepan\hr\Model_Employee')->load($employee);
 				if($emp['status'] != 'Active') continue;
 				array_push($emails, $emp['first_email']);
 			} 
+
 
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting');
 			$email_settings->addCondition('is_active',true);
@@ -251,24 +265,24 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 
 			$mail = $this->add('xepan\hr\Model_ReportMail');	
 			
-			// ADD EMAIL SUBJECT HERE [MAYBE FROM CONFIG]
-			// $email_subject = "";
-			
-			// ADD HTML INTO BODY HERE
-			// $email_body = 
+			$email_subject = "Please find epan reports inside";			
+			$email_body = $this->widget_html; 
 
 			$mail->setfrom($email_settings['from_email'],$email_settings['from_name']);
 			foreach ($emails as  $email) {
 				$mail->addTo($email);
 			}
 					
-			// $mail->setSubject();
-			// $mail->setBody();
+			$mail->setSubject($email_subject);
+			$mail->setBody($email_body);
+			
 			try{
 				$mail->send($email_settings);
 			}catch(\Exception $e){
 				throw $e;
 			}
+
+			$report->upgradeSchedule($report);
 		}
 	}
 
@@ -290,7 +304,20 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		}
 	}
 
-	function extractHTML($widget){
-		$this->widget_html_array [] = $widget->getHtml(); 
+	function extractHTML($widget,$report){
+		$this->start_date = $report['data_from-date'];
+		$this->end_date = $report['data_to_date'];
+
+		$widget_m = $this->add('xepan\base\Model_GraphicalReport_Widget');
+		$widget_m->load($widget);
+
+		$controller = $this->add('AbstractController');
+		$html = $controller->add($widget_m['class_path'],['report'=>$this])->getHTML();
+
+		$this->widget_html .= $html."<br>"; 
+	}
+
+	function enableFilterEntity(){
+		// dummy function to let widget proceed
 	}
 }
