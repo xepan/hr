@@ -3,6 +3,7 @@ namespace xepan\hr;
 
 class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 	public $title = "Report Executor";
+	public $widget_list = [];
 
 	function init(){
 		parent::init();
@@ -63,7 +64,7 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 			
 			$widget_field = $crud->form->getElement('widget');
 			$widget_field->setAttr(['multiple'=>'multiple']);			
-			$widget_field->setModel('xepan\base\Model_GraphicalReport_Widget');
+			$widget_field->setValueList($this->collectWidgets());
 		}
 	}
 
@@ -98,5 +99,36 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 				'Halferly'=>['starting_from_date','financial_month_start'],
 				'Yearly'=>['starting_from_date','financial_month_start']
 			],'div.atk-form-row');
+	}
+
+	function collectWidgets(){
+		$this->app->hook('widget_collection',[&$this->widget_list]);
+		$emp_scope = $this->app->employee->ref('post_id')->get('permission_level');
+
+		$enum_array=[];
+		foreach ($this->widget_list as $widget) {
+			$to_add=false;
+			switch($emp_scope) {
+				case 'Global':
+					$to_add =true;					
+					break;
+				case 'Department':
+					if(in_array($widget['level'], ['Individual','Department'])) $to_add=true;
+					break;
+				case 'Sibling':
+					if(in_array($widget['level'], ['Individual','Sibling'])) $to_add=true;
+					break;
+				case 'Individual':															
+					if(in_array($widget['level'], ['Individual'])) $to_add=true;
+					break;
+			}
+
+			if($to_add){
+				$enum_array[$widget[0]] = $widget['title'];
+			}				
+				
+		}
+
+		return $enum_array;
 	}
 }

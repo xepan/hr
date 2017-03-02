@@ -71,7 +71,6 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 
 		$this->addHook('beforeSave',[$this,'validateFields']);
 		$this->addHook('beforeSave',[$this,'setInitialSchedule']);
-		$this->addHook('beforeSave',[$this,'upgradeSchedule']);
 	}
 
 	function activate(){
@@ -244,12 +243,7 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 
 			foreach ($widget_array as $widget) {
 				$this->extractHTML($widget,$report);
-			}
-			
-			// echo "<pre>";
-			// print($this->widget_html);
-			// exit;
-			
+			}			
 
 			$emails = [];
 			foreach (array_unique($this->employee_array) as $employee) {
@@ -257,7 +251,6 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 				if($emp['status'] != 'Active') continue;
 				array_push($emails, $emp['first_email']);
 			} 
-
 
 			$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting');
 			$email_settings->addCondition('is_active',true);
@@ -304,17 +297,14 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		}
 	}
 
-	function extractHTML($widget,$report){
+	function extractHTML($widget,$report){		
 		$this->start_date = $report['data_from-date'];
 		$this->end_date = $report['data_to_date'];
 
-		$widget_m = $this->add('xepan\base\Model_GraphicalReport_Widget');
-		$widget_m->load($widget);
-
 		$controller = $this->add('AbstractController');
-		$html = $controller->add($widget_m['class_path'],['report'=>$this])->getHTML();
+		$html = $controller->add($widget,['report'=>$this])->getHTML();
 
-		$this->widget_html .= $html."<br>"; 
+		$this->widget_html .= $html."<br><br><br><hr>"; 
 	}
 
 	function enableFilterEntity(){
