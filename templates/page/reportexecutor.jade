@@ -13,10 +13,12 @@
             thead.xepan-hover-hand
                 {cols}{col}
                 th
-                    span Time Gap
+                    span Report Type
                 th
-                    span Employee Count
+                    span Next Schedule
                 th 
+                    span Date Range
+                th
                 {/}{/}
             {/}
             {$subheader}
@@ -28,7 +30,9 @@
                     td
                         {$time_span}
                     td
-                        {$total_count}     
+                        {$schedule_date}     
+                    td
+                        span {$data_from_date} To {$data_to_date}
                     td
                         {$action}
                     td(style="width: 15%;")

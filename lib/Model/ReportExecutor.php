@@ -114,8 +114,10 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 	}
 
 	function setInitialSchedule(){
-		$new_schedule = $this['starting_from_date'];
+		if($this['schedule_date'] != null)
+			return;
 
+		$new_schedule = $this['starting_from_date'];
 		switch ($this['time_span']) {
 			case 'Daily':
 				$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($this['starting_from_date'])));
@@ -129,7 +131,7 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 				$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($this['starting_from_date'])));
 				$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($this['starting_from_date']))); 
 				break;
-			case 'Monthly':
+			case 'Monthly':				
 				if($this['data_range'] == 'Current'){
 					$new_data_from_date =  date("Y-m-01", strtotime($this['starting_from_date']));
 					$new_data_to_date = date("Y-m-t", strtotime($this['starting_from_date']));
@@ -151,10 +153,13 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 					// 
 				break;
 			case 'Yearly':
-				// current year
-					//  
-			 	// previous year
-					// 
+				if($this['data_range'] == 'Current'){
+					$new_data_from_date =  date("Y-01-01", strtotime($this['starting_from_date']));
+					$new_data_to_date = date("Y-12-31", strtotime($this['starting_from_date']));
+				}else{
+					$new_data_from_date = date("Y-01-01", strtotime('- 12 months', strtotime($this['starting_from_date'])));
+					$new_data_to_date = date("Y-12-31", strtotime('- 12 months', strtotime($this['starting_from_date']))); 
+				}
 				break;
 			default:
 				# code...
@@ -167,10 +172,11 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$this->save();
 	}
 
-	function upgradeSchedule($report){		
+	function upgradeSchedule($rpt){						
+		$report = $rpt;
 		switch ($report['time_span']) {
 			case 'Daily':
-				$new_schedule = date("Y-m-d", strtotime('+ 1 day', strtotime($report['schedule_date'])));
+				$new_schedule = date("Y-m-d", strtotime('+ 1 day', strtotime($report['schedule_date'])));				
 				$new_data_from_date = date("Y-m-d", strtotime('- 1 day', strtotime($new_schedule)));
 				$new_data_to_date = date("Y-m-d", strtotime('- 1 day', strtotime($new_schedule)));
 				break;
@@ -184,9 +190,10 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 				$new_data_from_date = date("Y-m-d", strtotime('- 2 Weeks', strtotime($new_schedule)));
 				$new_data_to_date = date("Y-m-d", strtotime('- 0 day', strtotime($new_schedule))); 
 				break;
-			case 'Monthly':
-				$new_schedule = date("Y-m-d", strtotime('+ 1 months', strtotime($report['schedule_date'])));
-				if($this['data_range'] == 'Current'){
+			case 'Monthly':													
+				$new_schedule = date("Y-m-d", strtotime('+ 1 months', strtotime($report['schedule_date'])));				
+				
+				if($report['data_range'] === 'Current'){					
 					$new_data_from_date =  date("Y-m-01", strtotime($new_schedule));
 					$new_data_to_date = date("Y-m-t", strtotime($new_schedule));
 				}else{
@@ -205,10 +212,13 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 				// Previous Half Year
 				break;
 			case 'Yearly':
-				// Current Year
-					// 
-				// Previous year
-					// 
+				if($this['data_range'] == 'Current'){
+					$new_data_from_date =  date("Y-01-01", strtotime($this['starting_from_date']));
+					$new_data_to_date = date("Y-12-31", strtotime($this['starting_from_date']));
+				}else{
+					$new_data_from_date = date("Y-01-01", strtotime('- 12 months', strtotime($this['starting_from_date'])));
+					$new_data_to_date = date("Y-12-31", strtotime('- 12 months', strtotime($this['starting_from_date']))); 
+				}
 				break;
 			default:
 				# code...
@@ -218,15 +228,14 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$report['schedule_date'] = $new_schedule;
 		$report['data_from_date'] = $new_data_from_date;
 		$report['data_to_date'] = $new_data_to_date;
-		$report->save();
+		$report->saveAs('xepan\hr\Model_ReportExecutor');
 	}
 
 	function sendReport(){
 		$report_executor_m = $this->add('xepan\hr\Model_ReportExecutor');
 		$report_executor_m->addCondition('schedule_date',$this->app->today);
 
-		foreach ($report_executor_m as $report) {
-			
+		foreach ($report_executor_m as $report) {			
 			$this->employee_array = explode(',', $report['employee']);
 			$post_array = explode(',', $report['post']);
 			$department_array = explode(',', $report['department']);
@@ -269,13 +278,13 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 			$mail->setSubject($email_subject);
 			$mail->setBody($email_body);
 			
-			try{
-				$mail->send($email_settings);
-			}catch(\Exception $e){
-				throw $e;
-			}
+			// try{
+			// 	$mail->send($email_settings);
+			// }catch(\Exception $e){
+			// 	throw $e;
+			// }
 
-			$report->upgradeSchedule($report);
+			$this->upgradeSchedule($report);
 		}
 	}
 

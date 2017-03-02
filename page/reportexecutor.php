@@ -9,31 +9,6 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 		parent::init();
 
 		$report_executor = $this->add('xepan\hr\Model_ReportExecutor');
-		$report_executor->addExpression('total_count')->set(function($m,$q){
-			return "'0'";
-			// employee_count
-			$emp  = $m->add('xepan\hr\Model_Employee',['table_alias'=>'xe'])->_dsql()
-					->where($q->expr('find_in_set(xe.id,[0])',[$m->getElement('employee')]));
-			$emp_count = $emp->count();	
-			// post employee_count
-			$post_emp  = $m->add('xepan\hr\Model_Employee',['table_alias'=>'xep'])->_dsql()
-				->where($q->expr('find_in_set(post_id,[0])',[$m->getElement('post')]))
-				->where($q->expr('(xep.id not in [0])',[$emp->fieldQuery('id')]));
-			$post_emp_count = $post_emp->count();
-			// department_employee_count
-			$department_emp_count  = $m->add('xepan\hr\Model_Employee',['table_alias'=>'xed'])->_dsql()
-						->where($q->expr('find_in_set(department_id,[0])',[$m->getElement('department')]))
-						->where($q->expr('(xed.id not in [0])',[$emp->fieldQuery('id')]))
-						->where($q->expr('(xed.id not in [0])',[$post_emp->fieldQuery('id')]))
-						;
-			
-			return $q->expr('(IFNULL([0],0)+IFNULL([1],0)+IFNULL([2],0))',[
-					$emp_count,
-					$post_emp_count,
-					$department_emp_count
-				]);
-
-		});
 
 		$crud = $this->add('xepan\hr\CRUD',null,null,['page\reportexecutor']);
 		
@@ -41,7 +16,7 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 			$crud->form->setLayout('form\reportexecutor');
 		}
 
-		$crud->setModel($report_executor,['employee','post','department','widget','time_span','financial_month_start','starting_from_date','data_range'],['time_span','total_count','status']);		
+		$crud->setModel($report_executor,['employee','post','department','widget','time_span','financial_month_start','starting_from_date','data_range'],['time_span','schedule_date','data_from_date','data_to_date','status']);		
 		
 		if($crud->isEditing()){
 			$this->bindConditionalShow($crud->form);
