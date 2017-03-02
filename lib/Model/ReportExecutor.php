@@ -39,18 +39,18 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		$financial_month_start_field->display(['form'=>'xepan\base\NoValidateDropDown']);
 		$financial_month_start_field->setValueList(
 								[
-									'January'=>'January',
-									'February'=>'February',
-									'March'=>'March',
-									'April'=>'April',
-									'may'=>'May',
-									'June'=>'June',
-									'July'=>'July',
-									'August'=>'August',
-									'September'=>'September',
-									'October'=>'October',
-									'November'=>'November',
-									'December'=>'December'
+									'01'=>'January',
+									'02'=>'February',
+									'03'=>'March',
+									'04'=>'April',
+									'05'=>'May',
+									'06'=>'June',
+									'07'=>'July',
+									'08'=>'August',
+									'09'=>'September',
+									'10'=>'October',
+									'11'=>'November',
+									'12'=>'December'
 								]);
 
 		$time_span_field = $this->addField('time_span');
@@ -141,25 +141,15 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 				}
 				break;
 			case 'Quarterly':
-				// current quarter
-					//  
-			 	// previous quarter
-					// 
+				# code...
 				break;
 			case 'Halferly':
-				// current half-year
-					//  
-			 	// previous half-year
-					// 
+				# code...
 				break;
 			case 'Yearly':
-				if($this['data_range'] == 'Current'){
-					$new_data_from_date =  date("Y-01-01", strtotime($this['starting_from_date']));
-					$new_data_to_date = date("Y-12-31", strtotime($this['starting_from_date']));
-				}else{
-					$new_data_from_date = date("Y-01-01", strtotime('- 12 months', strtotime($this['starting_from_date'])));
-					$new_data_to_date = date("Y-12-31", strtotime('- 12 months', strtotime($this['starting_from_date']))); 
-				}
+				$previous_year = date("Y",strtotime("-1 year"));
+				$new_data_from_date = date($previous_year."-".$this['financial_month_start']."-01",strtotime($this['starting_from_date']));
+				$new_data_to_date = date("Y-m-t",strtotime($new_data_from_date));
 				break;
 			default:
 				# code...
@@ -202,23 +192,17 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 				}
 				break;
 			case 'Quarterly':
-				// Current Quarter
-					// 
-				// Previous Quarter
+				# code...
 				break;
 			case 'Halferly':
-				// Current Half Year
-					// 
-				// Previous Half Year
+				# code...
 				break;
 			case 'Yearly':
-				if($this['data_range'] == 'Current'){
-					$new_data_from_date =  date("Y-01-01", strtotime($this['starting_from_date']));
-					$new_data_to_date = date("Y-12-31", strtotime($this['starting_from_date']));
-				}else{
-					$new_data_from_date = date("Y-01-01", strtotime('- 12 months', strtotime($this['starting_from_date'])));
-					$new_data_to_date = date("Y-12-31", strtotime('- 12 months', strtotime($this['starting_from_date']))); 
-				}
+				// $new_schedule = date("Y-m-d", strtotime('+ 12 months', strtotime($report['schedule_date'])));				
+				// $previous_year = date("Y",strtotime("-1 year",strtotime($new_schedule)));				
+				// $new_data_from_date = date($previous_year."-".$report['financial_month_start']."-01",strtotime($report['schedule_date']));
+				// // BUGGY
+				// $new_data_to_date = date("Y-m-t",strtotime($new_data_from_date));
 				break;
 			default:
 				# code...
@@ -233,6 +217,7 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 
 	function sendReport(){
 		$report_executor_m = $this->add('xepan\hr\Model_ReportExecutor');
+		$report_executor_m->addCondition('status','Active');
 		$report_executor_m->addCondition('schedule_date',$this->app->today);
 
 		foreach ($report_executor_m as $report) {			
@@ -320,3 +305,17 @@ class Model_ReportExecutor extends \xepan\base\Model_Table{
 		// dummy function to let widget proceed
 	}
 }
+
+
+/*
+	Yearly 
+	1. Current Year
+		Depending Upon Financial Year
+		starting = Y-fmonth-01
+		end = starting + 12 months (y-m-l)
+
+	2. Previous Year
+		Depending Upon Financial Year
+		starting = previous year - fmonth - 01
+		ending	= starting = 12 months (y-m-l) 
+*/
