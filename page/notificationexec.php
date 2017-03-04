@@ -30,12 +30,17 @@ class page_notificationexec extends \xepan\base\Page{
 
 					if($nt['notification']){
 						if($this->isJson($nt['notification'])) $nt['notification'] = json_decode($nt['notification'],true);
-						$message=$nt['notification']['message'];
-						$title= $nt['notification']['tite']?:'Notification';
-						$type= $nt['notification']['type']?:'notice';
-						$desktop = $nt['notification']['desktop']?true:false;
-						$sticky = $nt['notification']['sticky']?true:false;
-						$icon = $nt['notification']['icon']?:null;
+						try{
+							$message=$nt['notification']['message'];
+							$title= $nt['notification']['tite']?:'Notification';
+							$type= $nt['notification']['type']?:'notice';
+							$desktop = $nt['notification']['desktop']?true:false;
+							$sticky = $nt['notification']['sticky']?true:false;
+							$icon = $nt['notification']['icon']?:null;
+						}catch(\Exception $e){
+							var_dump($nt->data);
+							throw $e;
+						}
 					}
 
 					$js[] = $p->js()->univ()->notify($title, $message, $type, $desktop, null, $sticky, $icon);
