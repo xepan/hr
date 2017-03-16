@@ -1,0 +1,22 @@
+.col-md-12
+  .main-box.clearfix
+    .tabs-wrapper.profile-tabs
+      ul.nav.nav-tabs.responsive-tabs
+        li.active
+          a(data-toggle='tab', href='#tab-day') Day
+        li
+          a(data-toggle='tab', href='#tab-week') Week 
+        li
+          a(data-toggle='tab', href='#tab-month') Month
+      .tab-content
+        
+         #tab-day.tab-pane.active
+           {$day}
+         #tab-week.tab-pane
+           {$week}
+         #tab-month.tab-pane
+           {$month}
+//- script.
+//-   $('.responsive-tabs').responsiveTabs({
+//-         accordionOn: ['xs', 'sm']
+//-   });

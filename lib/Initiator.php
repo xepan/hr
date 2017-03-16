@@ -32,6 +32,7 @@ class Initiator extends \Controller_Addon {
             $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
             $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
             $m->addItem(['Employee Attandance','icon'=>'fa fa-check-square-o'],'xepan_hr_employeeattandance');
+            $m->addItem(['Import Employee Attandance','icon'=>'fa fa-file-excel-o'],'xepan_hr_importattandance');
             $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
             $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
             $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
