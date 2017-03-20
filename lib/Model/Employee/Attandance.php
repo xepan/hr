@@ -126,4 +126,43 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		else
 			return 1;
 	}
+	
+	function insertAttendanceFromCSV($present_employee_list){
+		if(!is_array($present_employee_list) or !count($present_employee_list)) throw new \Exception("must pass array with present employee", 1);
+
+		foreach ($present_employee_list as $employee_id => $data) {
+			
+			try{
+				$this->api->db->beginTransaction();
+				
+				$emp_att_m = $this->add('xepan\hr\Model_Employee_Attandance');
+
+				$emp_m = $this->add('xepan\hr\Model_Employee')
+							->addCondition('id',$employee_id)
+							->tryLoadAny();
+
+				if(!$emp_m->loaded())
+					continue;
+
+				$emp_att_m['employee_id'] = $emp_m->id;
+
+				foreach ($data as $date => $value) {
+					$emp_att_m['from_date'] = $date;
+				} 
+
+				$emp_att_m->save();
+				$emp_att_m->unload();
+
+				$this->api->db->commit();
+			}catch(\Exception $e){
+				echo $e->getMessage()."<br/>";
+				continue;
+			}
+		}
+	}
+
+	function insertAttendanceFromCSVForWeek($present_employee_list){
+		
+	}
+
 }
