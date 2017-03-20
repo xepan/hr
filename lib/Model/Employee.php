@@ -34,7 +34,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('in_time')->display(array('form' => 'TimePicker'));
 		$emp_j->addField('out_time')->display(array('form' => 'TimePicker'));
 		$emp_j->addField('finacial_permit_limit')->type('text');
-		$emp_j->addField('salary_payment_type')->enum(['production_unit','monthly','hourly'])->defaultValue('monthly')->display(array('form' => 'xepan\commerce\DropDown'));
+		$emp_j->addField('salary_payment_type')->enum(['production_unit','monthly','hourly'])->defaultValue('monthly');
 
 		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
 		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');

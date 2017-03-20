@@ -14,26 +14,27 @@ class page_importattandance extends \xepan\base\Page{
 
 		$tabs = $this->add('Tabs');
 		$day_tab = $tabs->addTab('Days');
-		
-		//For month dates
-		// $month_start_date = $this->app->stickyGET('month_start_date');
-		// $month_end_date = $this->app->stickyGET('month_end_date');
 
 		/**
-		
 		=========== Days ===============
-		
 		*/
-		$day_attendance_form = $day_tab->add('Form');
+		$col = $day_tab->add('Columns')->addClass('row');
+		$left_col = $col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
+		$import_column  = $left_col->add('View')->addClass('well well-sm');
 
-		$department = $day_attendance_form->addField('xepan\base\DropDownNormal','department')->setEmptyText('All Department');
-		$department->setModel('xepan\hr\Department');
+		$import_column->add('View')->setElement('h3')->set('Import CSV File');
+
+		$right_col = $col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
+		$download_column  = $right_col->add('View')->addClass('well well-sm');
+		$download_column->add('View')->setElement('h3')->set('Downlload Sample CSV File');
+
+		$day_attendance_form = $download_column->add('Form');
+
+		$dept_field = $day_attendance_form->addField('xepan\base\DropDownNormal','department')->setEmptyText('All Department');
+		$dept_field->setModel('xepan\hr\Department');
 		
-		$post = $day_attendance_form->addField('xepan\base\DropDownNormal','post')->setEmptyText('All Post');
-		$post->setModel('xepan\hr\Post');
-
-		$dept_field = $day_attendance_form->getElement('department');
-		$post_field = $day_attendance_form->getElement('post');
+		$post_field = $day_attendance_form->addField('xepan\base\DropDownNormal','post')->setEmptyText('All Post');
+		$post_field->setModel('xepan\hr\Post');
 
 		if($dept_id = $this->app->stickyGET('dept')){			
 			$post_mdl = $post_field->getModel()->addCondition('department_id',$dept_id);
@@ -45,7 +46,6 @@ class page_importattandance extends \xepan\base\Page{
 
 		if($_GET['download_sample_csv_file']){
 			$emp_mdl = $this->add('xepan\hr\Model_Employee_Active');
-
 			if($department_id && (!$post_id) )
 				$emp_mdl->addCondition('department_id',$department_id);
 			
@@ -57,7 +57,7 @@ class page_importattandance extends \xepan\base\Page{
 				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post'],'present_type'=>$mdl['salary_payment_type']];
 			}
 
-			$header = ['id','name','department','post','present_type','present'];
+			$header = ['id','name','department','post','working_type_unit','unit_count'];
 
 		    $fp = fopen("php://output", "w");
 		    fputcsv ($fp, $header, "\t");
@@ -76,8 +76,8 @@ class page_importattandance extends \xepan\base\Page{
 			}
 		}
 
-		$day_importer_form = $day_tab->add('Form');
-
+		// day attandance importer
+		$day_importer_form = $import_column->add('Form');
 		$day_importer_form->addField('DatePicker','date');
 		$day_importer_form->addField('Upload','day_attendance_csv_file')->setModel('xepan\filestore\File');
 		$import_btn_for_day = $day_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
@@ -91,23 +91,27 @@ class page_importattandance extends \xepan\base\Page{
 			$csv_data = $importer->get();
 			$date = $day_importer_form['date'];
 			
-			//  data of present day only
+			// data of present day only
 			$present_emp_list = [];
 			foreach ($csv_data as $key => $emp_attandance) {
-				if(!$emp_attandance['present']) continue;
+				if(!$emp_attandance['unit_count']) continue;
 				
 				$present_emp_list[$emp_attandance['id']] = [
 														$date=>[
-															'present_type'=>$emp_attandance['present_type'],
-															'present'=>$emp_attandance['present']
+															'working_type_unit'=>$emp_attandance['working_type_unit'],
+															'unit_count'=>$emp_attandance['unit_count']
 															]
 													];
 			}
 
 			$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
+			
+
 			$attendance_m->insertAttendanceFromCSV($present_emp_list);
 			$day_importer_form->js()->univ()->successMessage('Done')->execute();
 		}
+
+
 		/**
 		
 		=========== Week ===============

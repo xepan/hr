@@ -15,7 +15,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addField('from_date')->type('datetime');
 		$this->addField('to_date')->type('datetime')->defaultValue(null);
 		$this->addField('is_holiday')->type('boolean');
-		$this->addField('present_unit');
+		$this->addField('working_unit_count');
 
 		$this->addExpression('fdate')->set('DATE(from_date)');
 		$this->addExpression('tdate')->set('DATE(to_date)');
@@ -145,23 +145,46 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				if(!$emp_m->loaded())
 					continue;
 
+				$emp_in_time = $emp_m['in_time'];
+				$emp_out_time = $emp_m['out_time'];
+
+
 				$emp_att_m['employee_id'] = $emp_m->id;
 
 				foreach ($data as $date => $value) {
-					$present_type = $value['present_type'];
-					$present_value = $value['present'];
-
-					$in_time = $emp_m->getPresenceInTime($date,$emp_m->id,$present_value,$present_type);
-					$out_time = $emp_m->getPresenceOutTime($date,$emp_m->id,$present_value,$present_type);
 					
-					$emp_att_m['from_date'] = $in_time;
-					$emp_att_m['to_date'] = $out_time;
-					$emp_att_m['present_unit'] = $present_value;
+					$working_type = $value['working_type_unit'];
+					$unit_count = $value['unit_count'];
+									
+					$in_date_time = date("Y-m-d H:i:s", strtotime($date." ".$emp_in_time));
+					$in_date_time_in_seconds = strtotime($in_date_time);
+
+					$out_time = $emp_out_time;
+					$working_time_in_sec = (strtotime($emp_m['out_time']) - strtotime($emp_m['in_time']));
+
+					$out_date_time = $out_time;
+					switch ($working_type) {
+						case 'production_unit':
+							$out_date_time = date("Y-m-d H:i:s", strtotime($date." ".$out_time));
+							break;
+						case 'monthly':
+							$total_working_time_in_sec = $working_time_in_sec * $unit_count?:1;
+							$new_time = $total_working_time_in_sec + $in_date_time_in_seconds;
+							$out_date_time = date("Y-m-d H:i:s",$new_time);
+							break;
+						case 'hourly':
+							$new_time = $in_date_time_in_seconds + ($unit_count * 60 * 60);
+							// echo "In date Time = ".$in_date_time." unit count".$unit_count;
+							$out_date_time = date("Y-m-d H:i:s",$new_time);
+							break;
+					}
+
+					$emp_att_m['from_date'] = $in_date_time;
+					$emp_att_m['to_date'] = $out_date_time;
+					$emp_att_m['working_unit_count'] = $unit_count;
 				} 
 
 				$emp_att_m->save();
-				$emp_att_m->unload();
-
 				$this->api->db->commit();
 			}catch(\Exception $e){
 				echo $e->getMessage()."<br/>";
