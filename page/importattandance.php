@@ -54,10 +54,10 @@ class page_importattandance extends \xepan\base\Page{
 
 			$emp_arr = [];	
 			foreach ($emp_mdl as $mdl) {
-				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post']];
+				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post'],'present_type'=>$mdl['salary_payment_type']];
 			}
 
-			$header = ['id','name','department','post','is_present'];
+			$header = ['id','name','department','post','present_type','present'];
 
 		    $fp = fopen("php://output", "w");
 		    fputcsv ($fp, $header, "\t");
@@ -94,21 +94,16 @@ class page_importattandance extends \xepan\base\Page{
 			//  data of present day only
 			$present_emp_list = [];
 			foreach ($csv_data as $key => $emp_attandance) {
-				if(!$emp_attandance['is_present']) continue;
+				if(!$emp_attandance['present']) continue;
 				
 				$present_emp_list[$emp_attandance['id']] = [
 														$date=>[
-															'in_time'=>'',
-															'out_time'=>'',
-															'present'=>$emp_attandance['is_present']
+															'present_type'=>$emp_attandance['present_type'],
+															'present'=>$emp_attandance['present']
 															]
 													];
 			}
 
-			echo "<pre>";
-			print_r($present_emp_list);
-			echo "</pre>";
-			exit;
 			$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
 			$attendance_m->insertAttendanceFromCSV($present_emp_list);
 			$day_importer_form->js()->univ()->successMessage('Done')->execute();
@@ -149,12 +144,12 @@ class page_importattandance extends \xepan\base\Page{
 
 			$emp_arr = [];	
 			foreach ($emp_mdl as $mdl) {
-				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post']];
+				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post'],'present_type'=>$mdl['salary_payment_type']];
 			}
 
 			$this->getWorkingDays();
 
-			$header = ['id','name','department','post'];
+			$header = ['id','name','department','post','present_type'];
 
 			//merging array of days and header
 			$header = array_merge($header,$this->days_array);
@@ -271,7 +266,7 @@ class page_importattandance extends \xepan\base\Page{
 
 			$emp_arr = [];	
 			foreach ($emp_mdl as $mdl) {
-				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post']];
+				$emp_arr [] = ['id'=>$mdl['id'],'name'=>$mdl['name'],'department'=>$mdl['department'],'post'=>$mdl['post'],'present_type'=>$mdl['salary_payment_type']];
 			}
 
 		    $dates = [];

@@ -634,6 +634,41 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				->count()->getOne();
 	}
 
+	function getPresenceInTime($date,$emp_id,$present_value,$present_type){
+
+		$emp_m = $this->add('xepan\hr\Model_Employee');
+		$emp_m->addExpression('official_date')->set('DATE("'.$date.'")');
+
+		$emp_m->addExpression('official_day_start')->set(function($m,$q){
+			return $q->expr('CONCAT([0]," ",[1])',[
+					$m->getElement('official_date'),
+					$m->getElement('in_time')
+				]);
+		});
+
+		$emp_m->load($emp_id);
+		
+		return $emp_m['official_day_start'];
+		
+	}
+
+	function getPresenceOutTime($date,$emp_id,$present_value,$present_type){
+
+		$emp_m = $this->add('xepan\hr\Model_Employee');
+		$emp_m->addExpression('official_date')->set('DATE("'.$date.'")');
+
+		$emp_m->addExpression('official_day_end')->set(function($m,$q){
+			return $q->expr('CONCAT([0]," ",[1])',[
+					$m->getElement('official_date'),
+					$m->getElement('out_time')
+				]);
+		});
+
+		$emp_m->load($emp_id);
+		
+		return $emp_m['official_day_end'];
+		
+	}
 
 	function getSalarySlip($month,$year,$salary_sheet_id,$TotalWorkDays){
 

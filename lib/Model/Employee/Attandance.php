@@ -15,6 +15,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addField('from_date')->type('datetime');
 		$this->addField('to_date')->type('datetime')->defaultValue(null);
 		$this->addField('is_holiday')->type('boolean');
+		$this->addField('present_unit');
 
 		$this->addExpression('fdate')->set('DATE(from_date)');
 		$this->addExpression('tdate')->set('DATE(to_date)');
@@ -129,12 +130,12 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	
 	function insertAttendanceFromCSV($present_employee_list){
 		if(!is_array($present_employee_list) or !count($present_employee_list)) throw new \Exception("must pass array with present employee", 1);
-
+		
 		foreach ($present_employee_list as $employee_id => $data) {
 			
 			try{
 				$this->api->db->beginTransaction();
-				
+
 				$emp_att_m = $this->add('xepan\hr\Model_Employee_Attandance');
 
 				$emp_m = $this->add('xepan\hr\Model_Employee')
@@ -147,7 +148,15 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				$emp_att_m['employee_id'] = $emp_m->id;
 
 				foreach ($data as $date => $value) {
-					$emp_att_m['from_date'] = $date;
+					$present_type = $value['present_type'];
+					$present_value = $value['present'];
+
+					$in_time = $emp_m->getPresenceInTime($date,$emp_m->id,$present_value,$present_type);
+					$out_time = $emp_m->getPresenceOutTime($date,$emp_m->id,$present_value,$present_type);
+					
+					$emp_att_m['from_date'] = $in_time;
+					$emp_att_m['to_date'] = $out_time;
+					$emp_att_m['present_unit'] = $present_value;
 				} 
 
 				$emp_att_m->save();
