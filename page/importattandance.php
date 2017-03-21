@@ -211,27 +211,17 @@ class page_importattandance extends \xepan\base\Page{
 			$importer = new \xepan\base\CSVImporter($path,true,',');
 			$csv_data = $importer->get();
 
-
-
-			// $count = 0;
-			// $outer_count = 0;
-			// foreach ($csv_data as $key => $value){
-			// 	foreach ($value as $key1 => $value1){
-			// 		if($key1 ==='id' || $key1 ==='name' || $key1 ==='post' || $key1 ==='department' || $key1 ==='working_type_unit')
-			// 			continue;
-
-			// 		unset($csv_data[$outer_count] [$key1]); 				
-			// 		$csv_data[$outer_count] [$date_array[$count]]= ['unit_count'=>$value1]; 
-			// 		$count++;
-			// 	}
-			// 	$count = 0;
-			// 	$outer_count++;
-			// }
-
-			// echo "<pre>";
-			// print_r($csv_data);
-			// echo "</pre>";
-			// exit;
+			// date_array
+			// csv_data
+			$count = 0;
+			$present_emp_list = [];
+			foreach ($csv_data as $emp){
+				foreach ($date_array as $date){
+					$present_emp_list [$emp['id']][$date] = ['working_type_unit'=>$emp['working_type_unit'],'unit_count'=>$emp[$this->days_array[$count]]];
+					$count+=1;
+				}
+				$count=0;
+			}			
 
 			$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
 			$attendance_m->insertAttendanceFromCSV($present_emp_list);
@@ -323,6 +313,24 @@ class page_importattandance extends \xepan\base\Page{
 		$month_importer_form->addField('Upload','day_attendance_csv_file')->setModel('xepan\filestore\File');
 		$month_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
 		if($month_importer_form->isSubmitted()){			
+			
+			if($month_importer_form['date'] == null)
+				$month_importer_form->displayError('date','Date selection compulsory, currently no date is selected');	
+
+			$month = date("m",strtotime($month_importer_form['date']));
+			$year = date("Y",strtotime($month_importer_form['date']));
+
+			$start_date = "01-".$month."-".$year;
+			$start_time = strtotime($start_date);
+
+			$end_time = strtotime("+1 month", $start_time);
+
+			$date_array_for_month = [];
+			
+			for($i=$start_time; $i<$end_time; $i+=86400)
+			{
+			   $date_array_for_month[] = date('Y-m-d', $i);
+			}
 
 			$file_m = $this->add('xepan\filestore\Model_File')->load($month_importer_form['day_attendance_csv_file']);
 			$path = $file_m->getPath();		
@@ -330,10 +338,27 @@ class page_importattandance extends \xepan\base\Page{
 			$importer = new \xepan\base\CSVImporter($path,true,',');
 			$csv_data = $importer->get();
 
-			echo "<pre>";
-			print_r($csv_data);
-			echo "</pre>";
-			exit;
+			$dates = [];
+		    $current = '1';
+		    $last = '31';
+		    
+		    while($current <= $last ) { 
+	            $dates[] = $current;
+		        $current += 1;
+		    }
+		    
+			// date_array
+			// csv_data
+			$count = 0;
+			$present_emp_list = [];
+			foreach ($csv_data as $emp){
+				foreach ($date_array_for_month as $date){
+					$present_emp_list [$emp['id']][$date] = ['working_type_unit'=>$emp['working_type_unit'],'unit_count'=>$emp[$dates[$count]]];
+					$count+=1;
+				}
+				$count=0;
+			}			
+
 
 			$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
 			$attendance_m->insertAttendanceFromCSV($present_emp_list);

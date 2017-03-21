@@ -148,9 +148,6 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				$emp_in_time = $emp_m['in_time'];
 				$emp_out_time = $emp_m['out_time'];
 
-
-				$emp_att_m['employee_id'] = $emp_m->id;
-
 				foreach ($data as $date => $value) {
 					
 					$working_type = $value['working_type_unit'];
@@ -179,12 +176,14 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 							break;
 					}
 
+					$emp_att_m['employee_id'] = $emp_m->id;
 					$emp_att_m['from_date'] = $in_date_time;
 					$emp_att_m['to_date'] = $out_date_time;
 					$emp_att_m['working_unit_count'] = $unit_count;
+					$emp_att_m->save();
+					$emp_att_m->unload();
 				} 
 
-				$emp_att_m->save();
 				$this->api->db->commit();
 			}catch(\Exception $e){
 				echo $e->getMessage()."<br/>";
