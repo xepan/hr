@@ -26,7 +26,7 @@ class page_importattandance extends \xepan\base\Page{
 
 		$right_col = $col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
 		$download_column  = $right_col->add('View')->addClass('well well-sm');
-		$download_column->add('View')->setElement('h3')->set('Downlload Sample CSV File');
+		$download_column->add('View')->setElement('h3')->set('Download Sample CSV File');
 
 		$day_attendance_form = $download_column->add('Form');
 
@@ -117,17 +117,26 @@ class page_importattandance extends \xepan\base\Page{
 		=========== Week ===============
 		
 		*/
+
 		$week_tab = $tabs->addTab('Week');
-		$week_attendance_form = $week_tab->add('Form');
 
-		$department = $week_attendance_form->addField('xepan\base\DropDownNormal','department')->setEmptyText('All Department');
-		$department->setModel('xepan\hr\Department');
+		$week_col = $week_tab->add('Columns')->addClass('row');
+		$left_colm = $week_col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
+		$import_colum  = $left_colm->add('View')->addClass('well well-sm');
+
+		$import_colum->add('View')->setElement('h3')->set('Import CSV File');
+
+		$right_colm = $week_col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
+		$download_colum  = $right_colm->add('View')->addClass('well well-sm');
+		$download_colum->add('View')->setElement('h3')->set('Download Sample CSV File');
+
+		$week_attendance_form = $download_colum->add('Form');
+
+		$dept_field = $week_attendance_form->addField('xepan\base\DropDownNormal','department')->setEmptyText('All Department');
+		$dept_field->setModel('xepan\hr\Department');
 		
-		$post = $week_attendance_form->addField('xepan\base\DropDownNormal','post')->setEmptyText('All Post');
-		$post->setModel('xepan\hr\Post');
-
-		$dept_field = $week_attendance_form->getElement('department');
-		$post_field = $week_attendance_form->getElement('post');
+		$post_field = $week_attendance_form->addField('xepan\base\DropDownNormal','post')->setEmptyText('All Post');
+		$post_field->setModel('xepan\hr\Post');
 
 		if($dept_id = $this->app->stickyGET('dept')){			
 			$post_mdl = $post_field->getModel()->addCondition('department_id',$dept_id);
@@ -153,7 +162,7 @@ class page_importattandance extends \xepan\base\Page{
 
 			$this->getWorkingDays();
 
-			$header = ['id','name','department','post','present_type'];
+			$header = ['id','name','department','post','working_type_unit'];
 
 			//merging array of days and header
 			$header = array_merge($header,$this->days_array);
@@ -165,7 +174,7 @@ class page_importattandance extends \xepan\base\Page{
 		    }
 		    fclose($fp);
 			header("Content-type: text/csv");
-		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import.csv\"");
+		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import_for_week.csv\"");
 		    exit;
 		}
 
@@ -175,7 +184,7 @@ class page_importattandance extends \xepan\base\Page{
 			}
 		}
 
-		$week_importer_form = $week_tab->add('Form');
+		$week_importer_form = $import_colum->add('Form');
 
 		$date_field = $week_importer_form->addField('DatePicker','date');
 		$week_importer_form->addField('Upload','day_attendance_csv_file')->setModel('xepan\filestore\File');
@@ -201,36 +210,31 @@ class page_importattandance extends \xepan\base\Page{
 
 			$importer = new \xepan\base\CSVImporter($path,true,',');
 			$csv_data = $importer->get();
-			
-			// echo "<pre>";
-			// print_r($date_array);
-			// echo "</pre>";
+
+
+
+			// $count = 0;
+			// $outer_count = 0;
+			// foreach ($csv_data as $key => $value){
+			// 	foreach ($value as $key1 => $value1){
+			// 		if($key1 ==='id' || $key1 ==='name' || $key1 ==='post' || $key1 ==='department' || $key1 ==='working_type_unit')
+			// 			continue;
+
+			// 		unset($csv_data[$outer_count] [$key1]); 				
+			// 		$csv_data[$outer_count] [$date_array[$count]]= ['unit_count'=>$value1]; 
+			// 		$count++;
+			// 	}
+			// 	$count = 0;
+			// 	$outer_count++;
+			// }
 
 			// echo "<pre>";
 			// print_r($csv_data);
 			// echo "</pre>";
+			// exit;
 
-			$count = 0;
-			$outer_count = 0;
-			foreach ($csv_data as $key => $value){
-				foreach ($value as $key1 => $value1){
-					if($key1 ==='id' || $key1 ==='name' || $key1 ==='post' || $key1 ==='department')
-						continue;
-
-					unset($csv_data[$outer_count] [$key1]); 				
-					$csv_data[$outer_count] [$date_array[$count]]= [$key1=>$value1]; 
-					$count++;
-				}
-				$count = 0;
-				$outer_count++;
-			}
-
-			// echo "<pre>";
-			// print_r($csv_data);
-			// echo "</pre>";			
-			exit;
 			$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
-			$attendance_m->insertAttendanceFromCSVForWeek($present_emp_list);
+			$attendance_m->insertAttendanceFromCSV($present_emp_list);
 			$week_importer_form->js()->univ()->successMessage('Done')->execute();
 		}
 
@@ -239,17 +243,26 @@ class page_importattandance extends \xepan\base\Page{
 		=========== Month ===============
 		
 		*/
+
 		$month_tab = $tabs->addTab('Month');
-		$month_attendance_form = $month_tab->add('Form');
 
-		$department = $month_attendance_form->addField('xepan\base\DropDownNormal','department')->setEmptyText('All Department');
-		$department->setModel('xepan\hr\Department');
+		$month_col = $month_tab->add('Columns')->addClass('row');
+		$left_colmn = $month_col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
+		$import_colmn  = $left_colmn->add('View')->addClass('well well-sm');
+
+		$import_colmn->add('View')->setElement('h3')->set('Import CSV File');
+
+		$right_colmn = $month_col->addColumn('6')->addClass('col-md-6 col-sm-6 col-xs-6 col-lg-6');
+		$download_colmn  = $right_colmn->add('View')->addClass('well well-sm');
+		$download_colmn->add('View')->setElement('h3')->set('Download Sample CSV File');
+
+		$month_attendance_form = $download_colmn->add('Form');
+
+		$dept_field = $month_attendance_form->addField('xepan\base\DropDownNormal','department')->setEmptyText('All Department');
+		$dept_field->setModel('xepan\hr\Department');
 		
-		$post = $month_attendance_form->addField('xepan\base\DropDownNormal','post')->setEmptyText('All Post');
-		$post->setModel('xepan\hr\Post');
-
-		$dept_field = $month_attendance_form->getElement('department');
-		$post_field = $month_attendance_form->getElement('post');
+		$post_field = $month_attendance_form->addField('xepan\base\DropDownNormal','post')->setEmptyText('All Post');
+		$post_field->setModel('xepan\hr\Post');
 
 		if($dept_id = $this->app->stickyGET('dept')){			
 			$post_mdl = $post_field->getModel()->addCondition('department_id',$dept_id);
@@ -282,7 +295,7 @@ class page_importattandance extends \xepan\base\Page{
 		        $current += 1;
 		    }
 
-			$header = ['id','name','department','post'];
+		    $header = ['id','name','department','post','working_type_unit'];
 
 			//merging array of days and header
 			$header = array_merge($header,$dates);
@@ -304,7 +317,7 @@ class page_importattandance extends \xepan\base\Page{
 			}
 		}
 
-		$month_importer_form = $month_tab->add('Form');
+		$month_importer_form = $import_colmn->add('Form');
 
 		$month_importer_form->addField('DatePicker','date');
 		$month_importer_form->addField('Upload','day_attendance_csv_file')->setModel('xepan\filestore\File');
