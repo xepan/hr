@@ -130,7 +130,10 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	
 	function insertAttendanceFromCSV($present_employee_list){
 		if(!is_array($present_employee_list) or !count($present_employee_list)) throw new \Exception("must pass array with present employee", 1);
-		
+		// echo "<pre>";
+		// print_r($present_employee_list);
+		// echo "</pre>";
+		// exit;
 		foreach ($present_employee_list as $employee_id => $data) {
 			
 			try{
@@ -191,9 +194,4 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 			}
 		}
 	}
-
-	function insertAttendanceFromCSVForWeek($present_employee_list){
-		
-	}
-
 }
