@@ -307,7 +307,7 @@ class page_importattandance extends \xepan\base\Page{
 		    }
 		    fclose($fp);
 			header("Content-type: text/csv");
-		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import.csv\"");
+		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import_for_month.csv\"");
 		    exit;
 		}
 
@@ -322,6 +322,24 @@ class page_importattandance extends \xepan\base\Page{
 		$month_importer_form->addField('DatePicker','date');
 		$month_importer_form->addField('Upload','day_attendance_csv_file')->setModel('xepan\filestore\File');
 		$month_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
+		if($month_importer_form->isSubmitted()){			
+
+			$file_m = $this->add('xepan\filestore\Model_File')->load($month_importer_form['day_attendance_csv_file']);
+			$path = $file_m->getPath();		
+
+			$importer = new \xepan\base\CSVImporter($path,true,',');
+			$csv_data = $importer->get();
+
+			echo "<pre>";
+			print_r($csv_data);
+			echo "</pre>";
+			exit;
+
+			$attendance_m = $this->add('xepan\hr\Model_Employee_Attandance');
+			$attendance_m->insertAttendanceFromCSV($present_emp_list);
+			$month_importer_form->js()->univ()->successMessage('Done')->execute();
+		}
+
 	}	
 
 	function getWorkingDays(){
