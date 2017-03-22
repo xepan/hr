@@ -84,6 +84,9 @@ class page_importattandance extends \xepan\base\Page{
 		
 		if($day_importer_form->isSubmitted()){
 			
+			if($day_importer_form['date'] == null)
+				$day_importer_form->displayError('date','Date selection compulsory, currently no date is selected');	
+
 			$file_m = $this->add('xepan\filestore\Model_File')->load($day_importer_form['day_attendance_csv_file']);
 			$path = $file_m->getPath();		
 
