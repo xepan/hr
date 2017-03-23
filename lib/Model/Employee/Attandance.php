@@ -15,7 +15,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addField('from_date')->type('datetime');
 		$this->addField('to_date')->type('datetime')->defaultValue(null);
 		$this->addField('is_holiday')->type('boolean');
-		$this->addField('working_unit_count');
+		$this->addField('working_unit_count')->defaultValue(1);
 
 		$this->addExpression('fdate')->set('DATE(from_date)');
 		$this->addExpression('tdate')->set('DATE(to_date)');

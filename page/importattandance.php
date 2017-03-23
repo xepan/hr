@@ -79,6 +79,7 @@ class page_importattandance extends \xepan\base\Page{
 		// day attandance importer
 		$day_importer_form = $import_column->add('Form');
 		$day_importer_form->addField('DatePicker','date');
+
 		$day_importer_form->addField('Upload','day_attendance_csv_file')->setModel('xepan\filestore\File');
 		$import_btn_for_day = $day_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
 		
@@ -189,7 +190,7 @@ class page_importattandance extends \xepan\base\Page{
 
 		$week_importer_form = $import_colum->add('Form');
 
-		$date_field = $week_importer_form->addField('DatePicker','date');
+		$date_field = $week_importer_form->addField('DatePicker','date','Please select starting date of week, Day of date should be Monday ');
 		$week_importer_form->addField('Upload','week_attendance_csv_file')->setModel('xepan\filestore\File');
 		$week_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
 
@@ -317,6 +318,10 @@ class page_importattandance extends \xepan\base\Page{
 		$month_importer_form = $import_colmn->add('Form');
 
 		$month_importer_form->addField('DatePicker','date');
+		// $date_field->options = ['format'=> "mm-yyyy",
+		// 						'startView'=>"months",
+		// 						'minViewMode'=>"months"];
+
 		$month_importer_form->addField('Upload','month_attendance_csv_file')->setModel('xepan\filestore\File');
 		$month_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
 		if($month_importer_form->isSubmitted()){			
@@ -326,7 +331,7 @@ class page_importattandance extends \xepan\base\Page{
 
 			$month = date("m",strtotime($month_importer_form['date']));
 			$year = date("Y",strtotime($month_importer_form['date']));
-			
+
 			$last_date = date("t",strtotime($month_importer_form['date']));
 
 			$file_m = $this->add('xepan\filestore\Model_File')->load($month_importer_form['month_attendance_csv_file']);
