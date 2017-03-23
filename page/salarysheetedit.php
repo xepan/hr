@@ -56,6 +56,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$col1 = $cols->addColumn(2)->addClass('col-md-2');
 			$col1->addField('line','f_employee_name_'.$employee->id,'name')->set($employee['name']);
 			$result = $employee->getSalarySlip($month,$year,$salary_sheet_id,$this->TotalWorkDays);
+			$col1->add('View')->set("Working Mode : ".$employee['salary_payment_type']);
 
 			// echo "<pre>";
 			// print_r($result);
