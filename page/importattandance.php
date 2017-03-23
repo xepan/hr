@@ -317,10 +317,10 @@ class page_importattandance extends \xepan\base\Page{
 		// importer form
 		$month_importer_form = $import_colmn->add('Form');
 
-		$month_importer_form->addField('DatePicker','date');
-		// $date_field->options = ['format'=> "mm-yyyy",
-		// 						'startView'=>"months",
-		// 						'minViewMode'=>"months"];
+		$date_field = $month_importer_form->addField('DatePicker','date');
+		$date_field->options = ['format'=> "yyyy-mm",
+								'startView'=>"months",
+								'minViewMode'=>"months"];
 
 		$month_importer_form->addField('Upload','month_attendance_csv_file')->setModel('xepan\filestore\File');
 		$month_importer_form->addSubmit('Import Attendance')->addClass('btn btn-primary');
@@ -333,7 +333,7 @@ class page_importattandance extends \xepan\base\Page{
 			$year = date("Y",strtotime($month_importer_form['date']));
 
 			$last_date = date("t",strtotime($month_importer_form['date']));
-
+			
 			$file_m = $this->add('xepan\filestore\Model_File')->load($month_importer_form['month_attendance_csv_file']);
 			$path = $file_m->getPath();		
 
