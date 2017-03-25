@@ -150,6 +150,12 @@ class page_salarysheetedit extends \xepan\base\Page{
 					
 					$model_sheet->addEmployeeRow($employee->id,$form['f_NetAmount_'.$employee->id],$salary_amount,$calculated_array);
 				}
+					
+					$salary_sheet = $this->add('xepan\hr\Model_SalarySheet');
+
+					if($model_sheet->loaded() && $model_sheet['status'] === "Approved")
+						$salary_sheet->load($model_sheet->id)->approved();
+
 			}catch(\Exception $e){
 				throw $e;
 				
