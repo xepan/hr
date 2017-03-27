@@ -10,7 +10,10 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 		
 		$tabs = $this->add('Tabs');
 		
-		// Holiday Between Leave Configuration 
+		/** 
+		Holiday Between Leave Configuration
+		**/ 
+
 		$holiday_between_leave = $tabs->addTab('Holiday Between Leave Configuration');
 		$config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 						[
@@ -39,7 +42,9 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 		}
 
 		
-		// Reimbursement Configuration
+		/**
+		Reimbursement Configuration
+		**/
 		$reimbursement_config = $tabs->addTab('Reimbursement Configuration');
 		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 						[
@@ -67,7 +72,9 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 			$reibursement_form->js(null,$reibursement_form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
 		}
 
-		// Deduction Configuration
+		/**
+		Deduction Configuration
+		**/
 		$deduction_config = $tabs->addTab('Deduction Configuration');
 		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 						[
@@ -93,6 +100,36 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 			$deduction_config_model['is_deduction_affect_salary'] = $deduction_form['is_deduction_affect_salary'];
 			$deduction_config_model->save();
 			$deduction_form->js(null,$deduction_form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
+		}
+
+		/**
+		Salary Due Entry Configuration 
+		**/
+		$sal_due_config = $tabs->addTab('SalaryDueEntry');
+		$sal_due_entry_config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'is_salary_due_entry_afftect_employee_ledger'=>"Line",
+										],
+							'config_key'=>'HR_SALARY_DUE_ENTRY_AFFECT_EMPLOYEE_LEDGER',
+							'application'=>'hr'
+						]);
+		$sal_due_entry_config_m->add('xepan\hr\Controller_ACL');
+		$sal_due_entry_config_m->tryLoadAny();
+
+		$sal_due_entry_form = $sal_due_config->add('Form');
+		$field = $sal_due_entry_form->addField('Dropdown','is_salary_due_entry_afftect_employee_ledger')
+				->setValueList(['yes'=>'Yes','no'=>'No'])
+				->setEmptyText('Please select..');
+
+		if($sal_due_entry_config_m['is_salary_due_entry_afftect_employee_ledger'])
+			$field->set($sal_due_entry_config_m['is_salary_due_entry_afftect_employee_ledger']);
+
+		$sal_due_entry_form->addSubmit("Save")->addClass('btn btn-primary');
+		if($sal_due_entry_form->isSubmitted()){
+			$sal_due_entry_config_m['is_salary_due_entry_afftect_employee_ledger'] = $sal_due_entry_form['is_salary_due_entry_afftect_employee_ledger'];
+			$sal_due_entry_config_m->save();
+			$sal_due_entry_form->js(null,$sal_due_entry_form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
 		}
 	}
 }
