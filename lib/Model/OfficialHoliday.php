@@ -5,10 +5,10 @@ namespace xepan\hr;
 class Model_OfficialHoliday extends \xepan\base\Model_Table{
 	public $table ="official_holiday";
 	
-	public $status=['all'];
+	public $status=['All'];
 	public $acl_type = "OfficialHoliday";
 	public $actions = [
-		'all'=>['edit','delete']
+		'All'=>['edit','delete']
 	];
 	public $month;
 	public $year;
