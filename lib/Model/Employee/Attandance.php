@@ -15,7 +15,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addField('from_date')->type('datetime');
 		$this->addField('to_date')->type('datetime')->defaultValue(null);
 		$this->addField('is_holiday')->type('boolean');
-		$this->addField('working_unit_count');
+		$this->addField('working_unit_count')->defaultValue(1);
 
 		$this->addExpression('fdate')->set('DATE(from_date)');
 		$this->addExpression('tdate')->set('DATE(to_date)');
@@ -130,21 +130,13 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	
 	function insertAttendanceFromCSV($present_employee_list){
 		if(!is_array($present_employee_list) or !count($present_employee_list)) throw new \Exception("must pass array with present employee", 1);
-		// echo "<pre>";
-		// print_r($present_employee_list);
-		// echo "</pre>";
-		// exit;
-		foreach ($present_employee_list as $employee_id => $data) {
-			
-			try{
-				$this->api->db->beginTransaction();
-
-				$emp_att_m = $this->add('xepan\hr\Model_Employee_Attandance');
-
+		
+		$att_query = "INSERT IGNORE into employee_attandance (employee_id,from_date,to_date,working_unit_count) VALUES ";
+		
+		foreach ($present_employee_list as $employee_id => $data) {	
 				$emp_m = $this->add('xepan\hr\Model_Employee')
 							->addCondition('id',$employee_id)
 							->tryLoadAny();
-
 				if(!$emp_m->loaded())
 					continue;
 
@@ -152,7 +144,6 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				$emp_out_time = $emp_m['out_time'];
 
 				foreach ($data as $date => $value) {
-					
 					$working_type = $value['working_type_unit'];
 					$unit_count = $value['unit_count'];
 									
@@ -179,19 +170,15 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 							break;
 					}
 
-					$emp_att_m['employee_id'] = $emp_m->id;
-					$emp_att_m['from_date'] = $in_date_time;
-					$emp_att_m['to_date'] = $out_date_time;
-					$emp_att_m['working_unit_count'] = $unit_count;
-					$emp_att_m->save();
-					$emp_att_m->unload();
-				} 
-
-				$this->api->db->commit();
-			}catch(\Exception $e){
-				echo $e->getMessage()."<br/>";
-				continue;
-			}
+					$emp_att_m = $this->add('xepan\hr\Model_Employee_Attandance');
+					
+					$att_query .= "('".$emp_m->id."', '".$in_date_time."','". $out_date_time."', '".$unit_count."'),";
+				}
 		}
+
+		$att_query = trim($att_query,",");
+		$att_query .= ";";
+		$this->app->db->dsql()->expr($att_query)->execute();
+
 	}
 }

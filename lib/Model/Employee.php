@@ -629,9 +629,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		return $el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
-				->addCondition('is_holiday',false)
+				->addCondition([['is_holiday',false],['is_holiday',null]])
 				->addCondition('year',$year)
-				->count()->getOne();
+				->sum('working_unit_count')->getOne();
 	}
 
 	function getPresenceInTime($date,$emp_id,$present_value,$present_type){
@@ -680,7 +680,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$PaidLeaves = $this->getPaidLeaves($month,$year);
 		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
 		$Present = $this->getPresent($month,$year);
-
+		
 		$calculated = [
 				'TotalWorkingDays'=>$TotalWorkDays,
 				'PaidLeaves'=>$PaidLeaves,

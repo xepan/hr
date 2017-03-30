@@ -5,10 +5,10 @@ namespace xepan\hr;
 class Model_OfficialHoliday extends \xepan\base\Model_Table{
 	public $table ="official_holiday";
 	
-	public $status=['all'];
+	public $status=['All'];
 	public $acl_type = "OfficialHoliday";
 	public $actions = [
-		'all'=>['edit','delete']
+		'All'=>['edit','delete']
 	];
 	public $month;
 	public $year;
@@ -21,7 +21,7 @@ class Model_OfficialHoliday extends \xepan\base\Model_Table{
 		$this->addField('from_date')->type('date');
 		$this->addField('to_date')->type('date');
 		$this->addField('type')->setValueList(['official'=>'Official','government'=>"Government",'national'=>"National",'international'=>"International",'other'=>"Other"]);
-		
+		$this->addField('status');
 		$this->addExpression('month')->set('MONTH(from_date)');
 		$this->addExpression('year')->set('YEAR(from_date)');
 		$this->addExpression('month_holidays')->set('DATEDIFF(to_date,from_date) + 1');

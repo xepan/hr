@@ -80,7 +80,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 				'desktop'=>strip_tags($this['description']),
 				'js'=>null
 			];
-		// $this->app->hook('salary_sheet_approved',[$ss_model]);
+		$this->app->hook('salary_sheet_approved',[$ss_model]);
 		
 		// PAID REIMBURSEMENT
 		$this->paidReimbursement();
