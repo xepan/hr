@@ -253,7 +253,7 @@ class Controller_ACL extends \AbstractController {
 
 	function getModel(){
 		$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;		
-		if(strpos($model->acl, 'xepan\\')===0 or $model->acl instanceof \Model){
+		if(is_string($model->acl) or $model->acl instanceof \Model){
 			if(is_string($model->acl)){
 				$this->dependent=$model;
 				$model = $this->add($model->acl);
