@@ -13,7 +13,7 @@ class Initiator extends \Controller_Addon {
         ->setBaseURL('../vendor/xepan/hr/');
 
 
-        if(!$this->app->isAjaxOutput()){
+        if(!$this->app->isAjaxOutput() && !$this->app->getConfig('hidden_xepan_hr',false)){
             $this->app->side_menu->addItem(['Document','icon'=>' fa fa-folder','badge'=>["0",'swatch'=>' label label-primary pull-right']],'xepan_hr_document')->setAttr(['title'=>'Documents']);
         }
 
@@ -25,23 +25,28 @@ class Initiator extends \Controller_Addon {
             }
             $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),120000);
 
+            if(!$this->app->getConfig('hidden_xepan_hr',false)){
+                $m = $this->app->top_menu->addMenu('HR');
+                // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
+                $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
+                $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
+                $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
+                
+                if(!$this->app->getConfig('base_hr_only',false)){   
+                    $m->addItem(['Employee Attandance','icon'=>'fa fa-check-square-o'],'xepan_hr_attandance');
+                    $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
+                    $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
+                    $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
+                    $m->addItem(['Deduction Management','icon'=>'fa fa-money'],'xepan_hr_deduction');
+                    $m->addItem(['Salary Sheet','icon'=>'fa fa-money'],'xepan_hr_salarysheet');
 
-            $m = $this->app->top_menu->addMenu('HR');
-            // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
-            $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
-            $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
-            $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
-            $m->addItem(['Employee Attandance','icon'=>'fa fa-check-square-o'],'xepan_hr_attandance');
-            $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
-            $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
-            $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
-            $m->addItem(['Deduction Management','icon'=>'fa fa-money'],'xepan_hr_deduction');
-            $m->addItem(['Salary Sheet','icon'=>'fa fa-money'],'xepan_hr_salarysheet');
-
-            $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
-            $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
-            $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
-            $m->addItem(['Configuration','icon'=>'fa fa-cog fa-spin'],'xepan_hr_workingweekday');
+                    $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
+                    $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
+                    $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
+                    $m->addItem(['Configuration','icon'=>'fa fa-cog fa-spin'],'xepan_hr_workingweekday');
+                }
+                
+            }
             
             if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
