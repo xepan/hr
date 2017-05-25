@@ -53,7 +53,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Official";
 						$email['value'] = trim($form['email_1']);
-						$this->checkEmail($email->id,$form['email_1'],$new_affiliate_model->id,$form);
+						$this->checkEmail($email,$form['email_1'],$new_affiliate_model,$form);
 						$email->save();
 					}
 
@@ -62,7 +62,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Official";
 						$email['value'] = trim($form['email_2']);
-						$this->checkEmail($email->id,$form['email_2'],$new_affiliate_model->id,$form);
+						$this->checkEmail($email,$form['email_2'],$new_affiliate_model,$form);
 						$email->save();
 					}
 
@@ -71,7 +71,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = trim($form['email_3']);
-						$this->checkEmail($email->id,$form['email_3'],$new_affiliate_model->id,$form);
+						$this->checkEmail($email,$form['email_3'],$new_affiliate_model,$form);
 						$email->save();
 					}
 					if($form['email_4']){
@@ -79,7 +79,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = trim($form['email_4']);
-						$this->checkEmail($email->id,$form['email_4'],$new_affiliate_model->id,$form);
+						$this->checkEmail($email,$form['email_4'],$new_affiliate_model,$form);
 						$email->save();
 					}
 
@@ -89,7 +89,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_1'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_1'],$new_affiliate_model->id,$form);
+						$this->checkPhoneNo($phone,$form['contact_no_1'],$new_affiliate_model,$form);
 						$phone->save();
 					}
 
@@ -98,7 +98,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_2'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_2'],$new_affiliate_model->id,$form);
+						$this->checkPhoneNo($phone,$form['contact_no_2'],$new_affiliate_model,$form);
 						$phone->save();
 					}
 
@@ -107,7 +107,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_3'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_3'],$new_affiliate_model->id,$form);
+						$this->checkPhoneNo($phone,$form['contact_no_3'],$new_affiliate_model,$form);
 						$phone->save();
 					}
 					if($form['contact_no_4']){
@@ -115,7 +115,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_4'];
-						$this->checkPhoneNo($phone->id,$form['contact_no_4'],$new_affiliate_model->id,$form);
+						$this->checkPhoneNo($phone,$form['contact_no_4'],$new_affiliate_model,$form);
 						$phone->save();
 					}				
 					$this->api->db->commit();
