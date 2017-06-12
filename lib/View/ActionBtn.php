@@ -9,6 +9,7 @@ class View_ActionBtn extends \CompleteLister{
 	public $status= 'StatusHERE';
 	public $id;
 	public $action_btn_group=null;
+	public $status_color = [];
 
 	function init(){
 		parent::init();
@@ -76,6 +77,8 @@ class View_ActionBtn extends \CompleteLister{
 					'Closed'=>'success'
 
 				];
+		
+		$status_color = array_merge($status_color,$this->status_color);
 
 		return $status_color[$status];
 	}

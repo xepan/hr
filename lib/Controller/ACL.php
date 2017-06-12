@@ -23,7 +23,7 @@ class Controller_ACL extends \AbstractController {
 	public $dependent = false;
 	public $model_class=null;
 	public $model_ns = null;
-
+	public $status_color = [];
 	function init(){
 		parent::init();
 		
@@ -196,7 +196,7 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 					if(!isset($g->current_row_html['action']))
-						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status'],'action_btn_group'=>$this->action_btn_group])->getHTML();
+						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status'],'action_btn_group'=>$this->action_btn_group,'status_color'=>$this->status_color])->getHTML();
 				});
 				$view->setFormatter('action','action');
 				if(!isset($this->app->acl_action_added[$view->name])){
@@ -237,7 +237,7 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 
-					$view->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$this->model->id,'status'=>$this->model['status'],'action_btn_group'=>'xs'],'action')->getHTML();
+					$view->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$this->model->id,'status'=>$this->model['status'],'action_btn_group'=>'xs','status_color'=>$this->status_color],'action')->getHTML();
 					if(!isset($this->app->acl_action_added[$view->name])){
 						if(!isset($this->app->acl_action_added[$view->name]))
 							$view->effective_object=$view;

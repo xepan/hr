@@ -55,8 +55,10 @@ class Model_Activity extends \xepan\base\Model_Activity{
 						case 'All':
 							# code...
 							# include all employees under $acl->post_id
-							foreach ($acl->ref('post_id')->ref('Employees')->addCondition('status','Active') as $emp) {
-								$employee_ids [] = $emp->id;
+							if($acl->ref('post_id')->count()->getOne() && $acl->ref('post_id')->ref('Employees')){
+								foreach ($acl->ref('post_id')->ref('Employees')->addCondition('status','Active') as $emp) {
+									$employee_ids [] = $emp->id;
+								}
 							}
 							break;
 						case 'None':
