@@ -139,7 +139,9 @@ class Controller_ACL extends \AbstractController {
 							$g->row_edit = false;
 						}
 					});
-					$grid->setFormatter('edit','edit');
+					if($grid->hasColumn('edit')){
+						$grid->setFormatter('edit','edit');
+					}
 
 					$grid->addMethod('format_delete2',function($g,$f){
 						if($g->row_delete === false) return;
@@ -159,7 +161,10 @@ class Controller_ACL extends \AbstractController {
 
 						$g->row_delete = true;
 					});
-					$grid->setFormatter('delete','delete2');
+
+					if($grid->hasColumn('delete')){
+						$grid->setFormatter('delete','delete2');
+					}
 				}
 			}
 		}
