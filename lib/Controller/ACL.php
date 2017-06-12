@@ -252,8 +252,10 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function getModel(){
-		$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;		
-		if(is_string($model->acl) or $model->acl instanceof \Model){
+		$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;
+		// model->acl property contain '\' to define namespace\model as base acl then add that 
+		if(strpos($model->acl, '\\')!==false or $model->acl instanceof \Model){
+		// if(is_string($model->acl) or $model->acl instanceof \Model){
 			if(is_string($model->acl)){
 				$this->dependent=$model;
 				$model = $this->add($model->acl);
