@@ -166,12 +166,12 @@ class page_affiliatedetails extends \xepan\base\Page {
 		return ['page/affiliateprofile'];
 	}
 
-	function checkPhoneNo($phone_id,$phone_value,$contact_id,$form){
+	function checkPhoneNo($phone,$phone_value,$contact,$form){
 
 		 $contact = $this->add('xepan\base\Model_Contact');
         
-        if($contact_id)
-	        $contact->load($contact_id);
+        if($contact->id)
+	        $contact->load($contact->id);
 
 		$contactconfig_m = $this->add('xepan\base\Model_ConfigJsonModel',
 			[
@@ -185,7 +185,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 
 		if($contactconfig_m['contact_no_duplcation_allowed'] != 'duplication_allowed'){
 	        $contactphone_m = $this->add('xepan\base\Model_Contact_Phone');
-	        $contactphone_m->addCondition('id','<>',$phone_id);
+	        $contactphone_m->addCondition('id','<>',$phone->id);
 	        $contactphone_m->addCondition('value',$phone_value);
 			
 			if($contactconfig_m['contact_no_duplcation_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
@@ -203,12 +203,12 @@ class page_affiliatedetails extends \xepan\base\Page {
 		}	
     }
 
-    function checkEmail($email_id,$email_value,$contact_id,$form){
+    function checkEmail($email,$email_value,$contact,$form){
 
     	$contact = $this->add('xepan\base\Model_Contact');
         
-        if($contact_id)
-	        $contact->load($contact_id);
+        if($contact->id)
+	        $contact->load($contact->id);
 
 		$emailconfig_m = $this->add('xepan\base\Model_ConfigJsonModel',
 			[
@@ -222,7 +222,7 @@ class page_affiliatedetails extends \xepan\base\Page {
 
 		if($emailconfig_m['email_duplication_allowed'] != 'duplication_allowed'){
 	        $email_m = $this->add('xepan\base\Model_Contact_Email');
-	        $email_m->addCondition('id','<>',$email_id);
+	        $email_m->addCondition('id','<>',$email->id);
 	        $email_m->addCondition('value',$email_value);
 			
 			if($emailconfig_m['email_duplication_allowed'] == 'no_duplication_allowed_for_same_contact_type'){
