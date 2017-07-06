@@ -113,7 +113,10 @@ class Initiator extends \Controller_Addon {
         $this->routePages('xepan_hr');
         $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
         ->setBaseURL('./vendor/xepan/hr/');
-        $this->app->employee = $this->add('xepan\hr\Model_Employee');
+        
+        if(!isset($this->app->employee)) 
+            $this->app->employee = $this->add('xepan\hr\Model_Employee');
+
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
         $acl_m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>['access_level'=>'DropDown'],'config_key'=>'ACLMode','application'=>'hr']);
         $acl_m->tryLoadAny();
