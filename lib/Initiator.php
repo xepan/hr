@@ -108,19 +108,27 @@ class Initiator extends \Controller_Addon {
         return $this;
     }
 
+    function setup_pre_frontend(){
+        if($this->app->auth->isLoggedIn()){   
+            $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
+            // $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);        
+        }else{
+            $this->app->employee = $this->add('xepan\hr\Model_Employee');
+        }
+        return $this;
+    }
+
     function setup_frontend(){
         $this->addAppFunctions();
         $this->routePages('xepan_hr');
         $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
         ->setBaseURL('./vendor/xepan/hr/');
-        
-        if(!isset($this->app->employee)) 
-            $this->app->employee = $this->add('xepan\hr\Model_Employee');
 
-        $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
+        if(isset($this->app->employee)){
+            $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
+        }
         $acl_m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>['access_level'=>'DropDown'],'config_key'=>'ACLMode','application'=>'hr']);
         $acl_m->tryLoadAny();
-
         $this->app->ACLModel = $acl_m['access_level'];
         return $this;
     }
