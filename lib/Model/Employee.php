@@ -316,40 +316,45 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$assign_to_emp->addCondition('id','<>',$this->id);
 		$assign_to_emp->addCondition('status',"Active");
 		$form = $page->add('Form');
-		$action_field = $form->addField('DropDown','action')
-								->setvalueList(['mark_complete'=>'AllTask Mark Complete','reasign'=>'Re-Assign Task to Another Employee'])->setEmptyText('Please Select Action')->validate('required');
-		$form->addField('xepan\base\Basic','employee')->setModel($assign_to_emp);						
-		$action_field->js(true)->univ()->bindConditionalShow([
-			'reasign'=>['employee'],
-			'*'=>['action']
-		],'div.atk-form-row');
+		if($total_uncomplete_task){
+			$action_field = $form->addField('DropDown','action')
+									->setvalueList(['mark_complete'=>'AllTask Mark Complete','reasign'=>'Re-Assign Task to Another Employee'])->setEmptyText('Please Select Action')->validate('required');
+			$form->addField('xepan\base\Basic','employee')->setModel($assign_to_emp);						
+			$action_field->js(true)->univ()->bindConditionalShow([
+				'reasign'=>['employee'],
+				'*'=>['action']
+			],'div.atk-form-row');
+		}
 		
-		$form->addSubmit('Submit')->addClass('btn btn-primary');
+		$form->addSubmit('Deactivate Account')->addClass('btn btn-primary');
 
 		if($form->isSubmitted()){
-			if($form['action']=='mark_complete'){
-				foreach ($task as  $complete_task) {
-					$new_task =$page->add('xepan\projects\Model_Task');
-					$new_task->load($complete_task->id);
-					$new_task['status']='Completed';
-					$new_task['updated_at']=$this->app->now;
-					$new_task['completed_at']=$this->app->now;
-					$new_task->save();
-					
-				}
-			}else{
-				if(!$form['employee'])
-					$form->displayError('employee','Employee Must be select');
+			if($total_uncomplete_task){
+				if($form['action']=='mark_complete'){
+					foreach ($task as  $complete_task) {
+						$new_task =$page->add('xepan\projects\Model_Task');
+						$new_task->load($complete_task->id);
+						$new_task['status']='Completed';
+						$new_task['updated_at']=$this->app->now;
+						$new_task['completed_at']=$this->app->now;
+						$new_task->save();
+						
+					}
+				}else{
+					if(!$form['employee'])
+						$form->displayError('employee','Employee Must be select');
 
-				foreach ($task as  $assign_task) {
-					$this->add('xepan\projects\Model_Task')
-							->load($assign_task->id)
-							->set('assign_to_id',$form['employee'])
-							->save();
+					foreach ($task as  $assign_task) {
+						$this->add('xepan\projects\Model_Task')
+								->load($assign_task->id)
+								->set('assign_to_id',$form['employee'])
+								->save();
+					}
 				}
-
 			}
-
+			$my_emails = $this->add('xepan\hr\Model_Post_Email_MyEmails');
+			$my_emails->addCondition('id',$this['to_id']);
+			$my_emails->tryLoadAny();
 			$emp = $this->add('xepan\hr\Model_Employee');
 			$emp->addCondition('post_id',$my_emails['post_id']);
 			$post_employee=[];
