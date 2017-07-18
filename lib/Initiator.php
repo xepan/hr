@@ -44,6 +44,7 @@ class Initiator extends \Controller_Addon {
                     $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
                     $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
                     $m->addItem(['Configuration','icon'=>'fa fa-cog fa-spin'],'xepan_hr_workingweekday');
+                    $m->addItem(['Deactivate Request','icon'=>'fa fa-user'],'xepan_hr_employee_deactivaterequest');
                 }
                 
             }

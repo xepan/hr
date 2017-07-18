@@ -6,12 +6,14 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	
 	public $status=[
 		'Active',
-		'InActive'
+		'InActive',
+		"DeactivateRequest"
 	];
 
 	public $actions=[
 		'Active'=>['view','edit','delete','deactivate','communication'],
-		'InActive'=>['view','edit','delete','activate','communication']
+		'InActive'=>['view','edit','delete','activate','communication'],
+		'DeactivateRequest'=>['view','edit','delete','deactivate']
 	];
 
 	function init(){
@@ -299,14 +301,80 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			/*if No*/
 	}
 
-	function deactivate(){
-		$this['status']='InActive';
-		$this->app->employee
-            ->addActivity("Employee : '".$this['name']."' has been deactivated", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
-            ->notifyWhoCan('activate','InActive',$this);
-		$this->save();
-		if(($user = $this->ref('user_id')) && $user->loaded()) $user->deactivate();
+	function page_deactivate($page){
+		$task = $page->add('xepan\projects\Model_Task');
+		$task->addCondition('status','<>',"Completed")
+		    	 ->addCondition($task->dsql()->orExpr()
+				     ->where('assign_to_id',$this->app->employee->id)
+				     ->where($task->dsql()->andExpr()
+							      ->where('created_by_id',$this->app->employee->id)
+							      ->where('assign_to_id',null)));
+		$total_uncomplete_task = $task->count()->getOne();    	 
+		$page->add('H1')->setHtml("<div class='pull-right'> UnComplete Task: ".$total_uncomplete_task."</div>");    	 
+
+		$assign_to_emp = $this->add('xepan\hr\Model_Employee');
+		$assign_to_emp->addCondition('id','<>',$this->id);
+		$assign_to_emp->addCondition('status',"Active");
+		$form = $page->add('Form');
+		$action_field = $form->addField('DropDown','action')
+								->setvalueList(['mark_complete'=>'AllTask Mark Complete','reasign'=>'Re-Assign Task to Another Employee'])->setEmptyText('Please Select Action')->validate('required');
+		$form->addField('xepan\base\Basic','employee')->setModel($assign_to_emp);						
+		$action_field->js(true)->univ()->bindConditionalShow([
+			'reasign'=>['employee'],
+			'*'=>['action']
+		],'div.atk-form-row');
+		
+		$form->addSubmit('Submit')->addClass('btn btn-primary');
+
+		if($form->isSubmitted()){
+			if($form['action']=='mark_complete'){
+				foreach ($task as  $complete_task) {
+					$new_task =$page->add('xepan\projects\Model_Task');
+					$new_task->load($complete_task->id);
+					$new_task['status']='Completed';
+					$new_task['updated_at']=$this->app->now;
+					$new_task['completed_at']=$this->app->now;
+					$new_task->save();
+					
+				}
+			}else{
+				if(!$form['employee'])
+					$form->displayError('employee','Employee Must be select');
+
+				foreach ($task as  $assign_task) {
+					$this->add('xepan\projects\Model_Task')
+							->load($assign_task->id)
+							->set('assign_to_id',$form['employee'])
+							->save();
+				}
+
+			}
+
+			$emp = $this->add('xepan\hr\Model_Employee');
+			$emp->addCondition('post_id',$my_emails['post_id']);
+			$post_employee=[];
+			foreach ($emp as  $employee) {
+				$post_employee[] = $employee->id;
+			}
+
+			$this['status']='InActive';
+			
+			$this->app->employee
+			->addActivity("Employee :".$this['name']." has been deactivated",$this->id,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
+			->notifyTo($post_employee,"Employee :".$this['name']." has been deactivated  by: '".$this->app->employee['name']);
+			
+			// $this->app->employee
+			//             ->addActivity("Employee :".$this['name']." has been deactivated", null Related Document ID,$this->id Related Contact ID,null,null,"xepan_hr_employeedetail&contact_id=".$this->id."")
+			//             ->notifyWhoCan('activate','InActive',$this);
+			$this->save();
+
+			if(($user = $this->ref('user_id')) && $user->loaded()) $user->deactivate();
+				
+			return $this->app->page_action_result = $this->app->js(true,$page->js()->univ()->closeDialog())->univ()->successMessage('Done');				
+		}
+
 	}
+
 
 	function activate(){
 		$this['status']='Active';
