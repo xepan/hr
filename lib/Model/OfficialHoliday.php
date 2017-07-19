@@ -8,7 +8,7 @@ class Model_OfficialHoliday extends \xepan\base\Model_Table{
 	public $status=['All'];
 	public $acl_type = "OfficialHoliday";
 	public $actions = [
-		'All'=>['edit','delete']
+		'All'=>['view','edit','delete']
 	];
 	public $month;
 	public $year;
