@@ -27,10 +27,10 @@ class Model_Salary extends \xepan\base\Model_Table{
 		
 		$this->setOrder('order','asc');
 
-		$this->is([
-			'is_reimbursement|unique',
-			'is_deduction|unique'
-			]);
+		// $this->is([
+		// 	'is_reimbursement|unique',
+		// 	'is_deduction|unique'
+		// 	]);
 
 		$this->addHook('beforeSave',$this);
 	}
