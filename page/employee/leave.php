@@ -20,7 +20,7 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 			return $q->expr('([0]-[1])',[$m->getElement('no_of_leave'),$m->getElement('consum_leave_count')]);
 		});
 
-		$allow_leave_info = $this->add('xepan\hr\CRUD',null,null,['view/employee/employee-leave-view']);
+		$allow_leave_info = $this->add('xepan\hr\Grid',null,null,['view/employee/employee-leave-view']);
 		$allow_leave_info->setModel($allow_leave_model);
 
 
