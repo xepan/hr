@@ -8,13 +8,11 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 		parent::init();
 		$allow_leave_model = $this->add('xepan\hr\Model_Employee_LeaveAllow');
 		$allow_leave_model->addCondition('employee_id',$this->app->employee->id);
-
 		
 		$allow_leave_model->addExpression('consum_leave_count')->set(function($m,$q){
 			$emp_leave = $m->add('xepan\hr\Model_Employee_Leave')
 							->addCondition('emp_leave_allow_id',$q->getField('id'))
-							->addCondition('employee_id',$q->getField('employee_id'))
-							;
+							->addCondition('employee_id',$q->getField('employee_id'));
 			return $q->expr('([0])',[$emp_leave->sum('no_of_leave')]);
 		});
 
@@ -22,23 +20,13 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 			return $q->expr('([0]-[1])',[$m->getElement('no_of_leave'),$m->getElement('consum_leave_count')]);
 		});
 
-		$allow_leave_info = $this->add('xepan\hr\Grid',null,null,['view/employee/employee-leave-view']);
+		$allow_leave_info = $this->add('xepan\hr\CRUD',null,null,['view/employee/employee-leave-view']);
 		$allow_leave_info->setModel($allow_leave_model);
-		// $allow_leave_info->addHook('formatRow',function($l){
-		// 	$l->current_row_html['available_leave_count'] = $l->model['available_leave_count'];
-		// 	$l->current_row_html['consum_leave_count'] = $l->model['consum_leave_count'];
-		// });
-		// $avail_leave_info = $this->add('CompleteLister',null,null,['view/employee/employee-leave-view']);
-		// $avail_leave_info->setModel($allow_leave_model);
-		// $consum_leave_info = $this->add('CompleteLister',null,null,['view/employee/employee-leave-view']);
-		// $consum_leave_info->setModel($allow_leave_model);
 
 
 		$tabs = $this->add('Tabs');
 		$new_leave_tab = $tabs->addTab('New Leave');
 		$avail_leave=0;
-		
-
 
 		$emp_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		// $emp_leave_m->addCondition('employee_id',$this->app->employee->id);
