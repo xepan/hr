@@ -84,6 +84,13 @@ class View_GraphicalReport_Runner extends \View{
 			if($fld->hasMethod('setEmptyText'))
                 $fld->setEmptyText('Please select');
 		}
+
+		if($this->entity_list[$filter_entity]['values']){
+			$fld->setValueList($this->entity_list[$filter_entity]['values']);
+			
+			if($fld->hasMethod('setEmptyText'))
+                $fld->setEmptyText('Please select');
+		}
 		
 		if(isset($this->$filter_entity))
 			$fld->set($this->$filter_entity);
