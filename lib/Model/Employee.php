@@ -302,12 +302,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function page_deactivate($page){
+		// $page->add('View_Error')->set($this->id);
 		$task = $page->add('xepan\projects\Model_Task');
 		$task->addCondition('status','<>',"Completed")
 		    	 ->addCondition($task->dsql()->orExpr()
-				     ->where('assign_to_id',$this->app->employee->id)
+				     ->where('assign_to_id',$this->id)
 				     ->where($task->dsql()->andExpr()
-							      ->where('created_by_id',$this->app->employee->id)
+							      ->where('created_by_id',$this->id)
 							      ->where('assign_to_id',null)));
 		$total_uncomplete_task = $task->count()->getOne();    	 
 		$page->add('H1')->setHtml("<div class='pull-right'> UnComplete Task: ".$total_uncomplete_task."</div>");    	 
