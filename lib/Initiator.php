@@ -66,6 +66,9 @@ class Initiator extends \Controller_Addon {
             $this->app->user_menu->addItem(['Analytical Reports','icon'=>'fa fa-dashboard'],'xepan_hr_graphicalreport_builder');
             // $m = $this->app->side_menu->addItem('HR');
 
+            /*Reports menu*/
+            $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
+
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
             // $post=$this->app->employee->ref('post_id');
             $this->app->layout->template->trySet('post',$this->app->employee['post']);

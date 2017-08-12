@@ -19,6 +19,8 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 		$this->addExpression('fdate')->set('DATE(from_date)');
 		$this->addExpression('tdate')->set('DATE(to_date)');
+		$this->addExpression('from_time')->set('TIME(from_date)');
+		$this->addExpression('to_time')->set('TIME(to_date)');
 
 		$this->addExpression('official_day_start')->set(function($m,$q){
 			return $q->expr('CONCAT([0]," ",[1])',[
@@ -90,7 +92,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 		$this->addExpression('working_hours')->set(function($m,$q){
 			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
-					$q->getField('from_date'),
+					$m->getElement('from_date'),
 					$m->getElement('actual_day_ending'),
 				]);
 		});
