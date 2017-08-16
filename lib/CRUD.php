@@ -4,6 +4,10 @@ namespace xepan\hr;
 class CRUD extends \xepan\base\CRUD {
 	public $status_color = [];
 	public $grid_class='xepan\base\Grid';
+
+	function noAttachment(){
+		$this->grid->removeColumn('attachement_icon');
+	}
 	
 	function setModel($model,$grid_fields=null,$form_fields=null){
 
