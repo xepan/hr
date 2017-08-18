@@ -74,13 +74,13 @@ class page_report_employeeattandance extends \xepan\base\Page{
 			if($g->model['averge_late_hours'] > 60){
 				$avg_late_hours = $avg_late_hours / 60;
 			}
-			$g->current_row_html['averge_late_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Avrage Late Hours Details',$g->api->url('./avrage_late',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.$avg_late_hours.'</a>';
+			$g->current_row_html['averge_late_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Avrage Late Hours Details',$g->api->url('./avrage_late',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.round($avg_late_hours,3).'</a>';
 
 			$total_working_hours = $g->model['total_working_hours'];
 			if($g->model['total_working_hours'] > 60){
 				$total_working_hours = $total_working_hours / 60;
 			}
-			$g->current_row_html['total_working_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Total Worknig Hours Details',$g->api->url('./total_working_hours',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.$total_working_hours.'</a>';
+			$g->current_row_html['total_working_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Total Worknig Hours Details',$g->api->url('./total_working_hours',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.round($total_working_hours,3).'</a>';
 
 		});
 
