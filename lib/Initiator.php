@@ -65,7 +65,7 @@ class Initiator extends \Controller_Addon {
             $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_leave');
             $this->app->user_menu->addItem(['Analytical Reports','icon'=>'fa fa-dashboard'],'xepan_hr_graphicalreport_builder');
             // $m = $this->app->side_menu->addItem('HR');
-            $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
+            // $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
 
             /*Reports menu*/
             $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
