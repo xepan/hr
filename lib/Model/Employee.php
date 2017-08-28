@@ -184,13 +184,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$attan_m->setOrder('id','desc');
 		$attan_m->tryLoadAny();
 		
-		if(!$attan_m->loaded()){
-			$attan_m['employee_id'] = $this->app->employee->id;
-			$attan_m['from_date']  = $this->app->now;
-			$attan_m['is_holiday']  = $attan_m->isHoliday($attan_m['fdate']);
-		}/*else{
-			$attan_m['to_date']  = null;
-		}*/
+		$attan_m['employee_id'] = $this->app->employee->id;
+		$attan_m['from_date']  = $this->app->now;
+		if(date('Y-m-d H:i:s',strtotime($attan_m['to_date'])) <= date('Y-m-d H:i:s',strtotime($this->app->today." ".$this['out_time'])) ){
+			$attan_m['to_date']  = $this->app->today." ".$this['out_time'];
+		}
+		$attan_m['total_movement_in'] = $attan_m['total_movement_in'] + 1;
+		
+		$attan_m['is_holiday']  = $attan_m->isHoliday($attan_m['fdate']);
+
+
 		$attan_m->save();
 
 

@@ -8,6 +8,8 @@ namespace xepan\hr;
 class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	public $table = "employee_attandance";
 	public $acl = false;
+	public $from_date=null;
+	public $to_date=null;
 	function init(){
 		parent::init();
 
@@ -16,9 +18,16 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addField('to_date')->type('datetime')->defaultValue(null);
 		$this->addField('is_holiday')->type('boolean');
 		$this->addField('working_unit_count')->defaultValue(1);
+		$this->addField('late_coming')->type('int')->defaultValue(0);
+		$this->addField('early_leave')->type('int')->defaultValue(0);
+		$this->addField('total_work_in_mintues')->type('int')->defaultValue(0);
+		$this->addField('total_movement_in')->type('int')->defaultValue(0);
+		$this->addField('total_movement_out')->type('int')->defaultValue(0);
 
 		$this->addExpression('fdate')->set('DATE(from_date)');
 		$this->addExpression('tdate')->set('DATE(to_date)');
+		$this->addExpression('ftime')->set('TIME(from_date)');
+		$this->addExpression('ttime')->set('TIME(to_date)');
 
 		$this->addExpression('official_day_start')->set(function($m,$q){
 			return $q->expr('CONCAT([0]," ",[1])',[
@@ -58,15 +67,15 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		// 		]);
 		// });
 
-		$this->addExpression('late_coming')->set(function($m,$q){
-			return $q->expr(
-					"IF([is_holiday]='1','0',TIMESTAMPDIFF(MINUTE,[official_day_start],[from_date]))",
-						[
-							'official_day_start'=>$m->getElement('official_day_start'),
-							'from_date'=>$m->getElement('from_date'),
-							'is_holiday'=>$m->getElement('is_holiday')
-						]);
-		});
+		// $this->addExpression('late_coming')->set(function($m,$q){
+		// 	return $q->expr(
+		// 			"IF([is_holiday]='1','0',TIMESTAMPDIFF(MINUTE,[official_day_start],[from_date]))",
+		// 				[
+		// 					'official_day_start'=>$m->getElement('official_day_start'),
+		// 					'from_date'=>$m->getElement('from_date'),
+		// 					'is_holiday'=>$m->getElement('is_holiday')
+		// 				]);
+		// });
 
 		// $this->addExpression('extra_work')->set(function($m,$q){
 		// 	return $q->expr('TIMESTAMPDIFF(MINUTE,[1],[0])',[
@@ -90,10 +99,81 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 		$this->addExpression('working_hours')->set(function($m,$q){
 			return $q->expr('TIMESTAMPDIFF(HOUR,[0],[1])',[
-					$q->getField('from_date'),
+					$m->getElement('from_date'),
 					$m->getElement('actual_day_ending'),
 				]);
 		});
+
+		$this->addExpression('total_in_time_login')->set(function($m,$q){
+			return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_intime_attan'])
+							->addCondition('employee_id',$q->getField('employee_id'))
+							->addCondition('late_coming','<=',0)
+							->addCondition('from_date','>=',$this->from_date)
+							->addCondition('to_date','<',$this->api->nextDate($this->to_date))
+							->count();
+		});
+		$this->addExpression('total_out_time_login')->set(function($m,$q){
+			return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_outtime_attan'])
+							->addCondition('employee_id',$q->getField('employee_id'))
+							->addCondition('late_coming','>',0)
+							->addCondition('from_date','>=',$this->from_date)
+							->addCondition('to_date','<',$this->api->nextDate($this->to_date))
+							->count();
+		});
+
+		$this->addExpression('averge_late_hours')->set(function($m,$q){
+			$avg_hours = $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_latehours_attan'])
+											->addCondition('employee_id',$q->getField('employee_id'))
+											->addCondition('from_date','>=',$this->from_date)
+											->addCondition('to_date','<',$this->api->nextDate($this->to_date))
+											// ->sum('late_coming')
+											;
+
+			return $avg_hours->_dsql()->del('fields')->field(
+							$q->expr('(SUM([0])) / (COUNT([1]))',
+									[
+								$avg_hours->getElement('late_coming'),
+								$avg_hours->getElement('late_coming')
+							]));		
+		});
+
+		// $this->addExpression('averge_late_hours')->set(function($m,$q){
+		// 	return $q->expr('([0] / [1])',[$m->getElement('total_late_min'),$m->getElement('total_out_time_login')]);
+		// });
+
+		$this->addExpression('total_working_hours')->set(function($m,$q){
+			return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_worknighours_attan'])
+							->addCondition('employee_id',$q->getField('employee_id'))
+							->addCondition('from_date','>=',$this->from_date)
+							->addCondition('to_date','<',$this->api->nextDate($this->to_date))
+							->sum('total_work_in_mintues');
+		});
+
+		$this->addHook('beforeSave',$this);
+	}
+	function beforeSave(){
+		
+		$intime_date_diff = $this->app->my_date_diff(
+					date('Y-m-d H:i:s',
+									strtotime($this->app->today." ".$this->ref('employee_id')->get('in_time'))),
+					date('Y-m-d H:i:s',strtotime($this['from_date'])));
+
+		$this['late_coming'] = $intime_date_diff['minutes_total'];
+		
+		$outtime_date = $this->app->my_date_diff(
+						date('Y-m-d H:i:s',
+										strtotime($this->app->today." ".$this->ref('employee_id')->get('out_time'))),
+						date('Y-m-d H:i:s',strtotime($this['to_date'])));
+		
+		$this['early_leave'] = $outtime_date['minutes_total'];
+
+		$worknig_hour_date = $this->app->my_date_diff(
+						date('Y-m-d H:i:s',
+										strtotime($this['from_date'])),
+						date('Y-m-d H:i:s',strtotime($this['to_date'])));
+	
+		$this['total_work_in_mintues'] = $worknig_hour_date['minutes_total'];
+
 	}
 
 	function isHoliday($today){
