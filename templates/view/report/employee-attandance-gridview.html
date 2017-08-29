@@ -1,0 +1,50 @@
+
+<div id="{$_name}" class="xepan-grid main-box clearfix atk-table atk-table-zebra atk-table-bordered {$class}">{Pannel}
+  <header class="main-box-header clearfix atk-actions  {$class} ">
+    <div style="100%" class="filter-block">
+      <div class="pull-right">{$grid_buttons} </div>
+      <div class="form-group pull-right xepan-filter-form"><span class="form-control pull-left">{$quick_search}<i class="fa fa-search search-icon"></i></span></div>
+    </div>
+  </header>{/Pannel}
+  <div class="main-box-body clearfix table">
+    <table style="width:100%" class="table user-list table-hover">{header}
+      <thead>{cols}{col}
+        <th><a href="#"><span>S.no</span></a></th>
+        <th><a href="#"><span>Employee Name</span></a></th>
+        <th><a href="#"><span>In Time</span></a></th>
+        <th><a href="#"><span>After Time</span></a></th>
+        <th><a href="#"><span>Averge Late Hours</span></a></th>
+        <th><a href="#"><span>Total Worknig Hours</span></a></th>
+        <th> </th>{/}{/}
+      </thead>{/}
+      {$subheader}
+      <tbody>{rows}{row}
+        <tr data-id="{$id}" class="{$odd_even}">{cols}
+          <td>{$s_no}</td>
+          <td>{$name}{$employee}</td>
+          <td>{$total_in_time_login}  </td>
+          <td>{$total_out_time_login}</td>
+          <td>{$averge_late_hours}</td>
+          <td>{$total_working_hours}</td>
+          <td style="width: 15%;">
+            {$edit}
+            {$delete}
+          </td>{/}
+        </tr>{/}{/}
+        {not_found}
+        <div class="row">
+          <div role="alert" class="col-md-12 text-center alert alert-warning"><span class="icon-attention fa fa-exclamation-triangle"> &nbsp;{$not_found_message}</span></div>
+        </div>{/}
+      </tbody>{totals}
+      <tfoot>
+        <tr class="totals">
+          {cols}{col}
+          <td {$tdparam}>
+          {$content}
+          </td>
+          {/}{/}
+        </tr>
+      </tfoot>{/}
+    </table>{$Paginator}
+  </div>
+</div>
