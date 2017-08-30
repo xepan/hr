@@ -154,24 +154,32 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	function beforeSave(){
 		
 		if(!$this->loaded()){
-
+			$official_in_time=$this->ref('employee_id')->get('in_time');
 			$intime_date_diff = $this->app->my_date_diff(
 						date('Y-m-d H:i:s',strtotime($this['from_date'])),
-						date('Y-m-d H:i:s',strtotime($this->app->today." ".$this->ref('employee_id')->get('in_time')))
+						date('Y-m-d H:i:s',strtotime($this->app->today." ".$official_in_time))
 						);
 
-			$this['late_coming'] = $intime_date_diff['minutes_total'];
-			
-		}else{
+			$factor = 1;
+			if(strtotime($this['from_date']) < strtotime($this->app->today." ".$official_in_time))
+				$factor = -1;
 
-			$outtime_date = $this->app->my_date_diff(
-							date('Y-m-d H:i:s',strtotime($this->app->today." ".$this->ref('employee_id')->get('out_time'))),
-							date('Y-m-d H:i:s',strtotime($this['to_date']))
-							);
+			$this['late_coming'] = $factor * $intime_date_diff['minutes_total'];
 			
-			$this['early_leave'] = $outtime_date['minutes_total'];
-
 		}
+
+		$official_out_time = $this->ref('employee_id')->get('out_time');
+		$outtime_date = $this->app->my_date_diff(
+						date('Y-m-d H:i:s',strtotime($this->app->today." ".$official_out_time)),
+						date('Y-m-d H:i:s',strtotime($this['to_date']))
+						);
+		
+		$factor = 1;
+		if(strtotime($this['to_date']) > strtotime($this->app->today." ".$official_out_time))
+			$factor = -1;
+
+		$this['early_leave'] = $factor * $outtime_date['minutes_total'];
+
 		$worknig_hour_date = $this->app->my_date_diff(
 						date('Y-m-d H:i:s',strtotime($this['from_date'])),
 						date('Y-m-d H:i:s',strtotime($this['to_date']))
