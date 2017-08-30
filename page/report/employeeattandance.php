@@ -69,20 +69,20 @@ class page_report_employeeattandance extends \xepan\base\Page{
 		// $grid->addFormatter('total_working_hours','template')->setTemplate('<a href="#" class="total_wh" data-employee_id="{$employee_id}" data-from_date="'.$_GET['from_date'].'" data-to_date="'.$_GET['to_date'].'">{$total_working_hours}</a>','total_working_hours');
 		// $grid->js('click')->_selector('.total_wh')->univ()->frameURL('Total Worknig Hours Details',[$this->app->url('./total_working_hours'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
 	
-		$grid->addHook('formatRow',function($g){
-			$avg_late_hours = $g->model['averge_late_hours'];
-			if($g->model['averge_late_hours'] > 60){
-				$avg_late_hours = $avg_late_hours / 60;
-			}
-			$g->current_row_html['averge_late_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Avrage Late Hours Details',$g->api->url('./avrage_late',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.round($avg_late_hours,3).'</a>';
+		// $grid->addHook('formatRow',function($g){
+		// 	$avg_late_hours = $g->model['averge_late_hours'];
+		// 	if($g->model['averge_late_hours'] > 60){
+		// 		$avg_late_hours = $avg_late_hours / 60;
+		// 	}
+		// 	$g->current_row_html['averge_late_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Avrage Late Hours Details',$g->api->url('./avrage_late',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.round($avg_late_hours,3).'</a>';
 
-			$total_working_hours = $g->model['total_working_hours'];
-			if($g->model['total_working_hours'] > 60){
-				$total_working_hours = $total_working_hours / 60;
-			}
-			$g->current_row_html['total_working_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Total Worknig Hours Details',$g->api->url('./total_working_hours',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.round($total_working_hours,3).'</a>';
+		// 	$total_working_hours = $g->model['total_working_hours'];
+		// 	if($g->model['total_working_hours'] > 60){
+		// 		$total_working_hours = $total_working_hours / 60;
+		// 	}
+		// 	$g->current_row_html['total_working_hours']= '<a href="javascript:void(0)" onclick="'.$g->js()->univ()->frameURL('Total Worknig Hours Details',$g->api->url('./total_working_hours',array('employee_id'=>$g->model['employee_id'],'from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']))).'">'.round($total_working_hours,3).'</a>';
 
-		});
+		// });
 
 	}
 
