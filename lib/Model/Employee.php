@@ -183,34 +183,32 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$attan_m->addCondition('fdate',$this->app->today);
 		$attan_m->setOrder('id','desc');
 		$attan_m->tryLoadAny();
-		
-		$attan_m['employee_id'] = $this->app->employee->id;
-		$attan_m['from_date']  = $this->app->now;
-		if(date('Y-m-d H:i:s',strtotime($attan_m['to_date'])) <= date('Y-m-d H:i:s',strtotime($this->app->today." ".$this['out_time'])) ){
+
+		if(!$attan_m->loaded()){
+			$attan_m['from_date']  = $this->app->now;
+			$attan_m['to_date']  = $this->app->today." ".$this['out_time'];
+		}elseif(date('Y-m-d H:i:s',strtotime($attan_m['to_date'])) <= date('Y-m-d H:i:s',strtotime($this->app->today." ".$this['out_time'])) ){
 			$attan_m['to_date']  = $this->app->today." ".$this['out_time'];
 		}
+
 		$attan_m['total_movement_in'] = $attan_m['total_movement_in'] + 1;
-		
 		$attan_m['is_holiday']  = $attan_m->isHoliday($attan_m['fdate']);
-
-
 		$attan_m->save();
 
 
 		$movement = $this->add('xepan\hr\Model_Employee_Movement');
 		$movement->addCondition('employee_id',$this->app->employee->id);
-		$movement->addCondition('movement_at',$this->app->today);
 		$movement->addCondition('date',$this->app->today);
 		$movement->setOrder('movement_at','desc');
 		$movement->tryLoadAny();
 
-		if($movement->loaded() && $movement['direction']=='In'){						
+		if($movement->loaded() && $movement['direction']=='In'){
+			// Already last movement is set as IN no need to do anything else
 			return;
-		}else{						
+		}else{
 			$model_movement = $this->add('xepan\hr\Model_Employee_Movement');
 			$model_movement->addCondition('employee_id',$this->id);
 			$model_movement->addCondition('movement_at',$this->app->now);
-			// $model_movement->addCondition('type','Attandance');
 			$model_movement->addCondition('direction','In');
 			$model_movement->save();	
 		}
