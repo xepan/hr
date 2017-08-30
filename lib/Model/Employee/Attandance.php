@@ -153,24 +153,29 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	}
 	function beforeSave(){
 		
-		$intime_date_diff = $this->app->my_date_diff(
-					date('Y-m-d H:i:s',
-									strtotime($this->app->today." ".$this->ref('employee_id')->get('in_time'))),
-					date('Y-m-d H:i:s',strtotime($this['from_date'])));
+		if(!$this->loaded()){
 
-		$this['late_coming'] = $intime_date_diff['minutes_total'];
-		
-		$outtime_date = $this->app->my_date_diff(
-						date('Y-m-d H:i:s',
-										strtotime($this->app->today." ".$this->ref('employee_id')->get('out_time'))),
-						date('Y-m-d H:i:s',strtotime($this['to_date'])));
-		
-		$this['early_leave'] = $outtime_date['minutes_total'];
+			$intime_date_diff = $this->app->my_date_diff(
+						date('Y-m-d H:i:s',strtotime($this['from_date'])),
+						date('Y-m-d H:i:s',strtotime($this->app->today." ".$this->ref('employee_id')->get('in_time')))
+						);
 
+			$this['late_coming'] = $intime_date_diff['minutes_total'];
+			
+		}else{
+
+			$outtime_date = $this->app->my_date_diff(
+							date('Y-m-d H:i:s',strtotime($this->app->today." ".$this->ref('employee_id')->get('out_time'))),
+							date('Y-m-d H:i:s',strtotime($this['to_date']))
+							);
+			
+			$this['early_leave'] = $outtime_date['minutes_total'];
+
+		}
 		$worknig_hour_date = $this->app->my_date_diff(
-						date('Y-m-d H:i:s',
-										strtotime($this['from_date'])),
-						date('Y-m-d H:i:s',strtotime($this['to_date'])));
+						date('Y-m-d H:i:s',strtotime($this['from_date'])),
+						date('Y-m-d H:i:s',strtotime($this['to_date']))
+						);
 	
 		$this['total_work_in_mintues'] = $worknig_hour_date['minutes_total'];
 
