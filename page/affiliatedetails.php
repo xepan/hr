@@ -49,73 +49,81 @@ class page_affiliatedetails extends \xepan\base\Page {
 					$new_affiliate_model = $form->getModel();
 
 					if($form['email_1']){
+						$new_affiliate_model->checkEmail($form['email_1'],null,'email_1');
+
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Official";
 						$email['value'] = trim($form['email_1']);
-						$this->checkEmail($email,$form['email_1'],$new_affiliate_model,$form);
 						$email->save();
 					}
 
 					if($form['email_2']){
+						$new_affiliate_model->checkEmail($form['email_2'],null,'email_2');
+
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Official";
 						$email['value'] = trim($form['email_2']);
-						$this->checkEmail($email,$form['email_2'],$new_affiliate_model,$form);
 						$email->save();
 					}
 
 					if($form['email_3']){
+						$new_affiliate_model->checkEmail($form['email_3'],null,'email_3');
+
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = trim($form['email_3']);
-						$this->checkEmail($email,$form['email_3'],$new_affiliate_model,$form);
 						$email->save();
 					}
 					if($form['email_4']){
+						$new_affiliate_model->checkEmail($form['email_4'],null,'email_4');
+
 						$email = $this->add('xepan\base\Model_Contact_Email');
 						$email['contact_id'] = $new_affiliate_model->id;
 						$email['head'] = "Personal";
 						$email['value'] = trim($form['email_4']);
-						$this->checkEmail($email,$form['email_4'],$new_affiliate_model,$form);
 						$email->save();
 					}
 
 					// Contact Form
 					if($form['contact_no_1']){
+						$new_affiliate_model->checkPhone($form['contact_no_1'],null,'contact_no_1');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone');
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_1'];
-						$this->checkPhoneNo($phone,$form['contact_no_1'],$new_affiliate_model,$form);
 						$phone->save();
 					}
 
 					if($form['contact_no_2']){
+						$new_affiliate_model->checkPhone($form['contact_no_2'],null,'contact_no_2');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone');
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Official";
 						$phone['value'] = $form['contact_no_2'];
-						$this->checkPhoneNo($phone,$form['contact_no_2'],$new_affiliate_model,$form);
 						$phone->save();
 					}
 
 					if($form['contact_no_3']){
+						$new_affiliate_model->checkPhone($form['contact_no_3'],null,'contact_no_3');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone');
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_3'];
-						$this->checkPhoneNo($phone,$form['contact_no_3'],$new_affiliate_model,$form);
 						$phone->save();
 					}
 					if($form['contact_no_4']){
+						$new_affiliate_model->checkPhone($form['contact_no_4'],null,'contact_no_4');
+
 						$phone = $this->add('xepan\base\Model_Contact_Phone');
 						$phone['contact_id'] = $new_affiliate_model->id;
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_4'];
-						$this->checkPhoneNo($phone,$form['contact_no_4'],$new_affiliate_model,$form);
 						$phone->save();
 					}				
 					$this->api->db->commit();
