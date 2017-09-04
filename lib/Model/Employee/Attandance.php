@@ -77,12 +77,12 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		// 				]);
 		// });
 
-		// $this->addExpression('extra_work')->set(function($m,$q){
-		// 	return $q->expr('TIMESTAMPDIFF(MINUTE,[1],[0])',[
-		// 			$m->getElement('actual_day_ending'),
-		// 			$m->getElement('official_day_end'),
-		// 		]);
-		// });
+		$this->addExpression('extra_work')->set(function($m,$q){
+			return $q->expr('TIMESTAMPDIFF(MINUTE,[1],[0])',[
+					$m->getElement('to_date'),
+					$m->getElement('official_day_end'),
+				]);
+		});
 
 		// $this->addExpression('extra_work')->set(function($m,$q){
 		// 	return $q->expr(
