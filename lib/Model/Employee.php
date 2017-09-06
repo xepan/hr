@@ -80,19 +80,19 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
 		$this->addHook('afterSave',[$this,'updateEmployeeSalary']);
 		$this->addHook('afterSave',[$this,'updateEmployeeLeave']);
-		$this->addHook('beforeInsert',[$this,'checkLimits']);
+		$this->addHook('beforeSave',[$this,'checkLimits']);
 	}
 
 	function checkLimits(){
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 
-        if((isset($extra_info ['specification']['employee'])) AND ($extra_info ['specification']['employee'] <> 0)){
-        	$emp_count = $this->add('xepan\hr\Model_Employee')->count()->getOne();
+        if((isset($extra_info ['specification']['Employee Limit'])) AND ($extra_info ['specification']['Employee Limit'] <> 0)){
+        	$emp_count = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active')->count()->getOne();
         	
-        	if($emp_count >= $extra_info ['specification']['employee']){
-        		throw $this->exception("Sorry ! You cannot add more employees. Your usage limit is over")
+        	if($emp_count > $extra_info ['specification']['Employee Limit']){
+        		throw $this->exception("Sorry ! You cannot add more employees. Your Employee Limit is over")
         				->addMoreInfo('Employee Count',$emp_count)
-        				->addMoreInfo('Employee Limit',$extra_info ['specification']['employee'])
+        				->addMoreInfo('Employee Limit',$extra_info ['specification']['Employee Limit'])
         			;
         	}
         }
@@ -959,4 +959,34 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		return $account;
 
 	}
+
+	function userLoggedout($app,$auth_model){
+		$movement = $this->add('xepan\hr\Model_Employee_Movement');
+		
+		$movement->addCondition('employee_id',$this->app->employee->id);
+		$movement->addCondition('movement_at',$this->app->now);
+		$movement->addCondition('direction','Out');
+		$movement->save();
+
+		$attan_m = $this->add("xepan\hr\Model_Employee_Attandance");
+		$attan_m->addCondition('employee_id',$this->app->employee->id);
+		$attan_m->addCondition('fdate',$this->app->today);
+		$attan_m->setOrder('id','desc');
+		$attan_m->tryLoadAny();
+		if($attan_m->loaded()){
+			
+
+		// initially it was considered that official outing is not actually outing, you are working
+		// for office but just out of premises... then changed.. if it is so .. just don't log out
+		// and make task what you are doing where ??
+
+		// if($movement['reason'] != 'Official Outing'){
+			$attan_m['to_date'] = $this->app->now;
+			$attan_m['total_movement_out'] = $attan_m['total_movement_out'] + 1;
+			$attan_m->save();
+		// }
+		}
+				
+	}
+
 }
