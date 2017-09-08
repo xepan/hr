@@ -22,7 +22,7 @@ class Widget_TotalLateComing extends \xepan\base\Widget{
 		$attendances->addCondition('emp_status','Active');
 		
 		$attendances->addExpression('avg_late')->set($attendances->dsql()->expr('ROUND((AVG([0])/60),2)',[$attendances->getElement('late_coming')]));
-		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('ROUND((AVG([0])/60),2)',[$attendances->getElement('extra_work')]));
+		$attendances->addExpression('avg_extra_work')->set($attendances->dsql()->expr('ROUND((AVG([0])/60),2)',[$attendances->getElement('early_leave')]));
 		$attendances->_dsql()->group('employee_id');
 
 		$total_avg_late = 0;

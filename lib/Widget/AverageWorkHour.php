@@ -6,13 +6,14 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
+		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('department');
 		$this->report->enableFilterEntity('employee');
      	$this->chart = $this->add('xepan\base\View_Chart');
 	}
 
 	function recursiveRender(){
-		$attendances = $this->add('xepan\hr\Model_Employee_Attandance');
+		$attendances = $this->add('xepan\hr\Model_Employee_Attandance',['from_date'=>$this->report->start_date,'to_date'=>$this->report->end_date]);
 		
 		$attendances->addExpression('employee_status')->set(function($m,$q){
 			return $this->add('xepan\hr\Model_Employee')
@@ -26,7 +27,7 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 		if(isset($this->report->employee))
 			$attendances->addCondition('employee_id',$this->report->employee);
 
-		$attendances->addExpression('avg_work_hours')->set($attendances->dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
+		$attendances->addExpression('avg_work_hours')->set($attendances->_dsql()->expr('AVG([0])',[$attendances->getElement('working_hours')]));
 		$attendances->_dsql()->group('employee_id');
      	
 	    $this->chart->setType('bar')
