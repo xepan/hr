@@ -8,6 +8,7 @@ class View_GraphicalReport_Runner extends \View{
 	public $filter_form;
 	public $report_id;
 	public $report_type='chart';
+	public $form_entities=[];
 
 	function init(){
 		parent::init();
@@ -49,8 +50,6 @@ class View_GraphicalReport_Runner extends \View{
 			$widget->setFilterForm($this->filter_form);
 		}
 
-		$this->filter_form->addSubmit('Filter');
-
 		if($this->filter_form->isSubmitted()){
 			$form_result = $this->filter_form->get();
 			if($this->filter_form->hasElement('date_range')){
@@ -65,43 +64,65 @@ class View_GraphicalReport_Runner extends \View{
 			$this->js(true)->_load('masonry.pkgd.min')->masonry(['itemSelector'=>'.widget'])->_selector('.widget-grid');
 	}
 
+	function recursiveRender(){
+		$layout_arr=[];
+		$i=1;
+		foreach ($this->form_entities as $ent) {
+			$layout_arr[$ent]='Filter~c'.$i.'~3~closed';
+			$i++;
+		}
+		
+		$layout_arr['FormButtons~']='c'.$i.'~12';
+
+		$this->filter_form->add('xepan\base\Controller_FLC')
+				->makePanelsCoppalsible()
+				->layout($layout_arr);
+
+		$this->filter_form->addSubmit('Filter')->addClass('btn btn-success btn-block');
+
+		
+		foreach ($this->form_entities as $ent) {
+			if($this->filter_form->hasElement($ent)) return;
+
+			$fld = $this->filter_form->addField($this->entity_list[$ent]['type'],$ent,$this->entity_list[$ent]['caption']?:null);
+			
+			if($this->entity_list[$ent]['model']){
+				$model = $fld->setModel($this->entity_list[$ent]['model']);
+				
+				if($model instanceof \xepan\hr\Model_Employee)
+					$model->addCondition('status','Active');
+
+				if($fld->hasMethod('setEmptyText'))
+	                $fld->setEmptyText('Please select');
+			}
+
+			if($this->entity_list[$ent]['values']){
+				$fld->setValueList($this->entity_list[$ent]['values']);
+				
+				if($fld->hasMethod('setEmptyText'))
+	                $fld->setEmptyText('Please select');
+			}
+			
+			if(isset($this->$ent))
+				$fld->set($this->$ent);
+
+			if($fld instanceof \Form_Field_DateRangePicker){
+				$fld->getFutureDatesSet();
+				if(!isset($this->start_date)) $this->start_date = $this->app->today;
+				if(!isset($this->end_date)) $this->end_date = $this->app->today;
+			}
+		}
+		return parent::recursiveRender();
+	}
+
 	function enableFilterEntity($filter_entity){
 		if(!in_array($filter_entity ,array_keys($this->entity_list)))
 			throw $this->exception('Required entity is not exported by any application')
 						->addMoreInfo('required_entity',$filter_entity)
 						;
 
-		if($this->filter_form->hasElement($filter_entity)) return;
-
-		$fld = $this->filter_form->addField($this->entity_list[$filter_entity]['type'],$filter_entity,$this->entity_list[$filter_entity]['caption']?:null);
-		
-		if($this->entity_list[$filter_entity]['model']){
-			$model = $fld->setModel($this->entity_list[$filter_entity]['model']);
-			
-			if($model instanceof \xepan\hr\Model_Employee)
-				$model->addCondition('status','Active');
-
-			if($fld->hasMethod('setEmptyText'))
-                $fld->setEmptyText('Please select');
-		}
-
-		if($this->entity_list[$filter_entity]['values']){
-			$fld->setValueList($this->entity_list[$filter_entity]['values']);
-			
-			if($fld->hasMethod('setEmptyText'))
-                $fld->setEmptyText('Please select');
-		}
-		
-		if(isset($this->$filter_entity))
-			$fld->set($this->$filter_entity);
-
-		if($fld instanceof \Form_Field_DateRangePicker){
-			$fld->getFutureDatesSet();
-			if(!isset($this->start_date)) $this->start_date = $this->app->today;
-			if(!isset($this->end_date)) $this->end_date = $this->app->today;
-		}
-
-		return $fld;
+		if(in_array($filter_entity, $this->form_entities)) return;
+		$this->form_entities[] = $filter_entity;
 
 	}
 
