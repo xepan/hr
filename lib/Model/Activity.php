@@ -82,6 +82,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		
 		$this->save();
 
+		return $this;
 		// $this->pushToWebSocket($employee_ids,$this['notification']?:$this['activity']);
 		
 	}
@@ -101,7 +102,7 @@ class Model_Activity extends \xepan\base\Model_Activity{
 		$this->save();
 
 		// $this->pushToWebSocket($employee_ids,$notification_msg);
-
+		return $this;
 	}
 
 	function getPost($employee_id){

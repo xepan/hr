@@ -85,7 +85,7 @@ class Initiator extends \Controller_Addon {
 
             $this->app->layout->setModel($this->app->employee);
             $this->app->layout->add('xepan\base\Controller_Avatar');
-            $this->app->addHook('user_loggedout',[$this->app->employee,'logoutHook']);
+            $this->app->addHook('user_loggedout',[$this->app->employee,'userLoggedout']);
             
             $this->app->status_icon["xepan\hr\Model_Department"] = ['All'=>' fa fa-globe','Active'=>"fa fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
             $this->app->status_icon["xepan\hr\Model_Post"] = ['All'=>'fa fa-globe','Active'=>"fa fa-circle text-success",'InActive'=>'fa fa-circle text-danger'];
@@ -99,6 +99,7 @@ class Initiator extends \Controller_Addon {
         $search_department = $this->add('xepan\hr\Model_Department');
         $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
+        $this->app->addHook('user_loggedout',[$this->app->employee,'userLoggedout']);
         
         // $this->getEmailAndMsgCount();
         $acl_m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>['access_level'=>'DropDown'],'config_key'=>'ACLMode','application'=>'hr']);
