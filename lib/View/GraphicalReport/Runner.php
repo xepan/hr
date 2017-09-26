@@ -18,7 +18,7 @@ class View_GraphicalReport_Runner extends \View{
 		$this->app->hook('entity_collection',[&$this->entity_list]);
 
 		$report_id = $this->api->stickyGET('report_id');
-
+		
 		foreach ($_GET as $get=>$value) {				
 			if($value AND !in_array($get, ['page','cut_object','cut_page'])){
                 $this->api->stickyGET($get);
@@ -48,16 +48,6 @@ class View_GraphicalReport_Runner extends \View{
 				$w->addClass('col-md-'.$widget['col_width']);
 			$widget = $w->add($widget['class_path'],['report'=>$this]);
 			$widget->setFilterForm($this->filter_form);
-		}
-
-		if($this->filter_form->isSubmitted()){
-			$form_result = $this->filter_form->get();
-			if($this->filter_form->hasElement('date_range')){
-				$form_result['start_date'] = $this->filter_form->getElement('date_range')->getStartDate();
-				$form_result['end_date'] = $this->filter_form->getElement('date_range')->getEndDate();
-			}
-
-			$this->js()->reload($form_result)->execute();
 		}
 
 		if(@$this->report_type === 'chart')
@@ -111,7 +101,19 @@ class View_GraphicalReport_Runner extends \View{
 				if(!isset($this->start_date)) $this->start_date = $this->app->today;
 				if(!isset($this->end_date)) $this->end_date = $this->app->today;
 			}
+
 		}
+
+		if($this->filter_form->isSubmitted()){
+			$form_result = $this->filter_form->get();
+			if($this->filter_form->hasElement('date_range')){
+				$form_result['start_date'] = $this->filter_form->getElement('date_range')->getStartDate();
+				$form_result['end_date'] = $this->filter_form->getElement('date_range')->getEndDate();
+			}
+			$form_result['filter']=1;
+			$this->js()->reload($form_result)->execute();
+		}
+
 		return parent::recursiveRender();
 	}
 
