@@ -215,15 +215,15 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		
 	}
 
-	function logoutHook($app, $user, $employee){
-		// $movement = $this->add('xepan\hr\Model_Employee_Movement');
-		// $movement->addCondition('employee_id',$employee->id);
-		// $movement->addCondition('movement_at',$this->app->now);
-		// $movement->addCondition('direction','Out');
-		// $movement->save();
-		// throw new \Exception($movement->id);
+	// function logoutHook($app, $user, $employee){
+	// 	// $movement = $this->add('xepan\hr\Model_Employee_Movement');
+	// 	// $movement->addCondition('employee_id',$employee->id);
+	// 	// $movement->addCondition('movement_at',$this->app->now);
+	// 	// $movement->addCondition('direction','Out');
+	// 	// $movement->save();
+	// 	// throw new \Exception($movement->id);
 
-	}
+	// }
 
 	function addActivity($activity_string, $related_document_id=null, $related_contact_id=null, $details=null,$contact_id =null,$document_url=null,$score=0){
 		if(!$contact_id) $contact_id = $this->id;
