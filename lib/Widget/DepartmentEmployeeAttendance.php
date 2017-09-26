@@ -6,7 +6,7 @@ class Widget_DepartmentEmployeeAttendance extends \xepan\base\Widget {
 	
 	function init(){
 		parent::init();
-
+		
 		$this->report->enableFilterEntity('date_range');
 		$this->report->enableFilterEntity('department');
 		$this->grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movement-mini']);
