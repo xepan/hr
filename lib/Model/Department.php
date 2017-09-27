@@ -34,6 +34,11 @@ class Model_Department extends \xepan\hr\Model_Document{
 			
 		})->sortable(true);
 
+		$this->addExpression('active_employee_count')->set(function($m,$q){
+			return $this->add('xepan\hr\Model_Employee',['table_alias'=>'dept_emp_count'])->addCondition('status','Active')->addCondition('department_id',$m->getElement('id'))->count();
+			
+		})->sortable(true)->caption('Employee Count');
+
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Department');
 
