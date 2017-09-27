@@ -31,7 +31,7 @@ class page_department extends \xepan\base\Page {
 		if(!$crud->isEditing())
 			$crud->grid->template->trySet('dept-url',$this->app->url('xepan_hr_structurechart'));
 
-		$crud->setModel($department,['name','production_level','is_outsourced','simultaneous_no_process_allowed','posts_count','employee_count']);
+		$crud->setModel($department,['name','production_level','is_outsourced','simultaneous_no_process_allowed','posts_count','active_employee_count']);
 		$crud->add('xepan\base\Controller_MultiDelete');
 
 		if($crud->form->model['is_system']){
