@@ -12,6 +12,7 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
+                th S.no.
                 th(id="{$employee_sortid}")
                     span Employee 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$employee_sort}
@@ -32,6 +33,8 @@
                 {rows}{row}
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
+                    td
+                        {$s_no}
                     td
                       {$avatar}  
                       //- a.user-link(href='{url}index.php?page=xepan_hr_movementdetail&employee_id={$id}{/}')

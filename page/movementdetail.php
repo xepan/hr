@@ -52,7 +52,7 @@ class page_movementdetail extends \xepan\base\Page{
 		
 		$employee = $this->add('xepan\hr\Model_Employee')->load($employee_id);
 		$grid->template->trySet('employee_name',$employee['name']);
-
+		$grid->addSno();
 		// $grid->addColumn('Duration');
 		// $grid->addMethod('format_timeduration',function($grid,$field){				
 		// 	$grid->current_row_html['duration'] = $grid->model['duration'];

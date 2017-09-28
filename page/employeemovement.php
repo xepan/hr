@@ -138,7 +138,7 @@ class page_employeemovement extends \xepan\base\Page{
 		$frm=$grid->addQuickSearch(['name']);
 
 		$grid->addColumn('In/Out');
-
+		$grid->addSno();
 		$grid->js('click')->_selector('.do-view-employee-movement')->univ()->frameURL('Employee Movements',[$this->api->url('xepan_hr_movementdetail'),'employee_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id'),'movement_on'=>$movement_on]);
 	}
 }
