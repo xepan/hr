@@ -45,7 +45,7 @@ class page_movementdetail extends \xepan\base\Page{
 		});
 
 		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($m,['direction','movement_at','sduration']);
+		$grid->setModel($m,['direction','movement_at','duration']);
 
 		$grid->addPaginator(50);
 		$grid->addQuickSearch(['direction']);
