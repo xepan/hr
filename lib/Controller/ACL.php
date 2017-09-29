@@ -275,7 +275,7 @@ class Controller_ACL extends \AbstractController {
 			}
 
 			$spot = null;
-			if($view->template->hasTag('action')) $spot ='action';
+			// if($view->template->hasTag('action')) $spot ='action';
 
 			if($view instanceof \Grid){
 				$spot='grid_buttons';
