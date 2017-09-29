@@ -7,7 +7,7 @@ namespace xepan\hr;
 */
 class Model_Salary extends \xepan\base\Model_Table{
 	public $table ="salary";
-	public $actions = ['*'=>['view','edit','delete']];
+	public $actions = ['All'=>['view','edit','delete']];
  	public $acl_type = "Salary";
 
 	function init(){
