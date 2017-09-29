@@ -973,9 +973,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$attan_m->addCondition('fdate',$this->app->today);
 		$attan_m->setOrder('id','desc');
 		$attan_m->tryLoadAny();
-		if($attan_m->loaded()){
-			
 
+		if($attan_m->loaded()){
 		// initially it was considered that official outing is not actually outing, you are working
 		// for office but just out of premises... then changed.. if it is so .. just don't log out
 		// and make task what you are doing where ??

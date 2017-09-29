@@ -9,7 +9,7 @@ class page_attandance extends \xepan\base\Page{
 		parent::init();
 
 		$tabs = $this->add('Tabs');
-		$tabs->addTabURL('xepan_hr_employeeattandance','Employee Attandance');
-		$tabs->addTabURL('xepan_hr_importattandance','Import Employee Attandance');
+		$tabs->addTabURL('xepan_hr_employeeattandance','Employee Attendance');
+		$tabs->addTabURL('xepan_hr_importattandance','Import Employee Attendance');
 	}
 }
