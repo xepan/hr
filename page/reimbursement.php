@@ -7,16 +7,22 @@ class page_reimbursement extends \xepan\base\Page {
 	
 	function page_index(){
 
-		$crud = $this->add('xepan\hr\CRUD',null,null,['view/reimbursement']);
-
+		$crud = $this->add('xepan\hr\CRUD');
+		
 		$model = $this->add('xepan\hr\Model_Reimbursement');
 		$model->setOrder('created_at','desc');
-		$crud->setModel($model);
+		$crud->setModel($model,
+			['employee_id','name'],
+			['employee','name','created_at','amount','attachments_count']
+			);
 		$crud->add('xepan\base\Controller_MultiDelete');
 
-		$crud->grid->addColumn('expander','Detail');
-		$crud->grid->addPaginator(5);
-		$crud->grid->addQuickSearch(['name']);
+		$crud->grid->addSno();
+		$crud->grid->addColumn('expanderPlus','Detail');
+		$crud->grid->addPaginator(50);
+		$crud->grid->addQuickSearch(['name','employee']);
+		$crud->grid->removeColumn('attachments_count');
+		// $crud->grid->removeAttachment();
 	}
 
 	function page_Detail(){
