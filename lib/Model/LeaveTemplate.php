@@ -10,9 +10,9 @@ class Model_LeaveTemplate extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
-		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id);
+		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id)->system(true);
 		$this->addField('name');
-
+		
 		$this->hasMany('xepan\hr\LeaveTemplateDetail','leave_template_id');
 	}
 }
