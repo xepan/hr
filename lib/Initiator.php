@@ -218,9 +218,9 @@ class Initiator extends \Controller_Addon {
     }
 
     function exportEntities($app,&$array){
-        $array['employee'] = ['caption'=>'Employee', 'type'=>'xepan\base\Basic','model'=>'xepan\hr\Model_Employee'];
-        $array['department'] = ['caption'=>'Department', 'type'=>'DropDown','model'=>'xepan\hr\Model_Department'];
-        $array['post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
+        $array['Employee'] = ['caption'=>'Employee', 'type'=>'xepan\base\Basic','model'=>'xepan\hr\Model_Employee'];
+        $array['Department'] = ['caption'=>'Department', 'type'=>'DropDown','model'=>'xepan\hr\Model_Department'];
+        $array['Post'] = ['caption'=>'Post', 'type'=>'DropDown','model'=>'xepan\hr\Model_Post'];
         $array['Affiliate'] =['caption'=>'Affiliate','type'=>'DropDown','model'=>'xepan\hr\Model_Affiliate'];
         // $array['ACLMode'] = ['caption'=>'ACLMode','type'=>'DropDown','model'=>'xepan\hr\Model_Affiliate'];
         $array['Deduction'] = ['caption'=>'Deduction','type'=>'DropDown','model'=>'xepan\hr\Model_Deduction'];
@@ -229,6 +229,7 @@ class Initiator extends \Controller_Addon {
         $array['Leave'] = ['caption'=>'Leave','type'=>'DropDown','model'=>'xepan\hr\Model_Leave'];
         $array['Employee_Leave'] = ['caption'=>'Employee_Leave','type'=>'DropDown','model'=>'xepan\hr\Model_Employee_Leave'];
         $array['SalarySheet'] = ['caption'=>'SalarySheet','type'=>'DropDown','model'=>'xepan\hr\Model_SalarySheet'];
+        $array['SalaryTemplate'] = ['caption'=>'SalaryTemplate','type'=>'DropDown','model'=>'xepan\hr\Model_SalaryTemplate'];
         $array['Reimbursement'] = ['caption'=>'Reimbursement','type'=>'DropDown','model'=>'xepan\hr\Model_Reimbursement'];
         $array['OfficialHoliday'] = ['caption'=>'OfficialHoliday','type'=>'DropDown','model'=>'xepan\hr\Model_OfficialHoliday'];
         $array['Report_Executor'] = ['caption'=>'Report_Executor','type'=>'DropDown','model'=>'xepan\hr\Model_ReportExecutor'];
