@@ -42,6 +42,10 @@ class Model_Reimbursement extends \xepan\hr\Model_Document{
 						->sum('paid_amount');
 		})->type('money');
 
+		$this->is([
+				'employee_id|required',
+				'name|to_trim|required'
+			]);
 	}
 
 	function newNumber(){
