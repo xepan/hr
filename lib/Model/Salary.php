@@ -13,7 +13,7 @@ class Model_Salary extends \xepan\base\Model_Table{
 	function init(){
 		parent::init();
 
-		$this->addField('name');
+		$this->addField('name')->caption('Salary');
 		$this->addField('type')->enum(['Salary','Allowance','Deduction']);
 		$this->addField('add_deduction')->enum(['add','deduction','dummy']);
 		$this->addField('unit')->enum(['Month','Leave']);

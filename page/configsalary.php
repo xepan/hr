@@ -10,15 +10,26 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 		$tabs = $this->add('Tabs');
 		$salary_tab = $tabs->addTab('Salary');
 
-
 		$salary = $this->add('xepan\hr\Model_Salary');
 		$salary->acl = 'xepan\hr\Model_SalaryTemplate';
-		$crud = $salary_tab->add('xepan\hr\CRUD',null,null,['page/config/salarydetail']);
-		$crud->setModel($salary);
 
-		$info = $crud->grid->add('View',null,'salary_view')->setElement('h2');
+		$info = $salary_tab->add('View')->setElement('h2');
+
+		$crud = $salary_tab->add('xepan\hr\CRUD');
+		$crud->form->add('xepan\base\Controller_FLC')
+			->layout([
+				'name'=>'c1~3',
+				'type'=>'c2~3',
+				'add_deduction'=>'c3~3',
+				'unit'=>'c4~3',
+				'order'=>'c5~3',
+				'default_value'=>'c6~3',
+				'is_reimbursement'=>'c7~3',
+				'is_deduction'=>'c8~3',
+			]);
+
+		$crud->setModel($salary);
 		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}';
-		
 		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 		[
 			'fields'=>[
@@ -28,7 +39,7 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 			'application'=>'hr'
 		]);
 		$reimbursement_config_model->tryLoadAny();
-
+		
 		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
 			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Reimbursement} and {your_define_salary_names}';
 
@@ -48,9 +59,12 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 		if($deduction_config_model['is_deduction_affect_salary'] === "yes" && 
 			$reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
 				$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Reimbursement}, {Deduction} and {your_define_salary_names}';
-		
 		$info->setHtml($html);
 		
+		$crud->grid->addSno();
+		$crud->grid->removeColumn('action');
+		$crud->grid->removeAttachment();
+
 		$tabs->addTabURL('xepan_hr_salarytemplate','Salary Templates');
 	}
 }
