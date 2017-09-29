@@ -269,6 +269,7 @@ class Controller_ACL extends \AbstractController {
 			$this->acl_error_vp = $this->add('VirtualPage');
 			$this->manageAclErrorVP($this->acl_error_vp);
 			$view = $this->getView();
+
 			if($view instanceof \CRUD){
 				$view= $view->grid;
 			}
@@ -327,7 +328,7 @@ class Controller_ACL extends \AbstractController {
 
 	
 	function getView(){
-		return $this->owner instanceof \xepan\base\Model_Table ? $this->owner->owner: $this->owner;
+		return $this->owner instanceof \Model ? $this->owner->owner: $this->owner;
 	}
 
 
