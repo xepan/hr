@@ -11,6 +11,7 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 		$report_executor = $this->add('xepan\hr\Model_ReportExecutor');
 		$report_executor->getElement('time_span')->caption('Report Type');
 		$report_executor->getElement('schedule_date')->caption('Next Schedule');
+		$report_executor->getElement('data_from_date')->caption('date range');
 
 
 		$crud = $this->add('xepan\hr\CRUD');
