@@ -9,18 +9,28 @@ class page_reportexecutor extends \xepan\hr\page_configurationsidebar{
 		parent::init();
 
 		$report_executor = $this->add('xepan\hr\Model_ReportExecutor');
+		$report_executor->getElement('time_span')->caption('Report Type');
+		$report_executor->getElement('schedule_date')->caption('Next Schedule');
+		$report_executor->getElement('data_from_date')->caption('date range');
 
-		$crud = $this->add('xepan\hr\CRUD',null,null,['page\reportexecutor']);
-		
+
+		$crud = $this->add('xepan\hr\CRUD');
+		// ,null,null,['page\reportexecutor']
 		if($crud->isEditing()){
 			$crud->form->setLayout('form\reportexecutor');
 		}
 
-		$crud->setModel($report_executor,['employee','post','department','widget','time_span','financial_month_start','starting_from_date','data_range'],['time_span','schedule_date','data_from_date','data_to_date','status']);		
-		
+		$crud->setModel($report_executor,['employee','post','department','widget','time_span','financial_month_start','starting_from_date','data_range'],['time_span','schedule_date','data_from_date','data_to_date','status']);
+		$crud->grid->addSno();
+		$crud->grid
+			->addFormatter('data_from_date','template')
+			->setTemplate('<span>{$data_from_date} To {$data_to_date}</span>','data_from_date');
+		$crud->grid->removeColumn('status');
+		$crud->grid->removeColumn('data_to_date');
+		$crud->grid->removeAttachment();
+
 		if($crud->isEditing()){
 			$this->bindConditionalShow($crud->form);
-
 			if($crud->model->id)
 				$this->setValuesInField($crud->model->id,$crud);
 
