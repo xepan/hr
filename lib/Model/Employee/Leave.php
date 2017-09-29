@@ -10,8 +10,8 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 	public $actions= [
 						'Draft'=>['view','edit','delete','submit'],
 						'Submitted'=>['view','edit','delete','approve','reject'],
-						'Approved'=>['view','edit','delete'],
-						'Rejected'=>['view','edit','delete'],
+						'Approved'=>['view','edit','delete','reject'],
+						'Rejected'=>['view','edit','delete','approve']
 					];
 
 	public $acl_type ="Employee_Leave";
