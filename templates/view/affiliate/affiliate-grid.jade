@@ -12,7 +12,7 @@
             {header}
             thead.xepan-hover-hand
                 {cols}{col}
-                th 
+                th S.No
                 th(id="{$name_sortid}")
                     span Name 
                     span(style= "cursor:pointer; cursor: hand; max-width:600px;"){$name_sort}
@@ -28,6 +28,7 @@
                 tr(class="{$odd_even}" data-id="{$id}")
                     {cols}
                     td
+                        {$s_no} 
                         {$selected}    
                     td
                       {avatar}
