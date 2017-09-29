@@ -146,6 +146,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			if($temp->loaded()){
 				foreach ($temp->ref('xepan\hr\LeaveTemplateDetail') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
+					$m['employee_id'] = $this->id;
 					$m['created_by_id'] = $this->id;
 					$m['leave_id'] = $row['leave_id'];
 					$m['is_yearly_carried_forward'] = $row['is_yearly_carried_forward'];
