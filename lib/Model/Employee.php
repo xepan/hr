@@ -139,7 +139,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(isset($this->app->employee_post_id_changed)){
 			$temp = $this->ref('post_id')->ref('leave_template_id');
 
-			$this->ref('EmployeeSalary')->each(function($m){
+			$this->ref('EmployeeLeaveAllow')->each(function($m){
 				$m->delete();
 			});
 			
