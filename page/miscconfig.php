@@ -15,7 +15,7 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 		**/ 
 
 		$holiday_between_leave = $tabs->addTab('Holiday Between Leave Configuration');
-		$config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		$config_model = $holiday_between_leave->add('xepan\base\Model_ConfigJsonModel',
 						[
 							'fields'=>[
 										'treat_holiday_between_leave'=>"Line",
@@ -46,7 +46,7 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 		Reimbursement Configuration
 		**/
 		$reimbursement_config = $tabs->addTab('Reimbursement Configuration');
-		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		$reimbursement_config_model = $reimbursement_config->add('xepan\base\Model_ConfigJsonModel',
 						[
 							'fields'=>[
 										'is_reimbursement_affect_salary'=>"Line",
@@ -76,7 +76,7 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 		Deduction Configuration
 		**/
 		$deduction_config = $tabs->addTab('Deduction Configuration');
-		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
+		$deduction_config_model = $deduction_config->add('xepan\base\Model_ConfigJsonModel',
 						[
 							'fields'=>[
 										'is_deduction_affect_salary'=>"Line",
@@ -106,7 +106,7 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 		Salary Due Entry Configuration 
 		**/
 		$sal_due_config = $tabs->addTab('SalaryDueEntry');
-		$sal_due_entry_config_m = $this->add('xepan\base\Model_ConfigJsonModel',
+		$sal_due_entry_config_m = $sal_due_config->add('xepan\base\Model_ConfigJsonModel',
 						[
 							'fields'=>[
 										'is_salary_due_entry_afftect_employee_ledger'=>"Line",
