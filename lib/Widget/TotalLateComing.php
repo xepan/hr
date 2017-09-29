@@ -6,7 +6,7 @@ class Widget_TotalLateComing extends \xepan\base\Widget{
 	function init(){
 		parent::init();
 
-		$this->report->enableFilterEntity('department');
+		$this->report->enableFilterEntity('Department');
 		$this->view = $this->add('View',null,null,['view\multibox']);
 	}
 
