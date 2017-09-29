@@ -24,6 +24,9 @@ class Controller_ACL extends \AbstractController {
 	public $model_class=null;
 	public $model_ns = null;
 	public $status_color = [];
+
+	public $show_spot_acl=true;
+
 	function init(){
 		parent::init();
 		
@@ -254,6 +257,56 @@ class Controller_ACL extends \AbstractController {
 			}
 			// May be you have CRUD form here
 		}
+
+		// Show error on top if ACL is not managed or exported for current model
+
+		$string_count = strpos($this->model_class, '\Model_');
+		$model_namespace = substr($this->model_class,0,$string_count);
+		$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']);
+		$entity_list=[];
+		$this->app->hook('entity_collection',[&$entity_list]);
+		if(!array_key_exists($str, $entity_list)){
+			$this->acl_error_vp = $this->add('VirtualPage');
+			$this->manageAclErrorVP($this->acl_error_vp);
+			$view = $this->getView();
+			if($view instanceof \CRUD){
+				$view= $view->grid;
+			}
+
+			$spot = null;
+			if($view->template->hasTag('action')) $spot ='action';
+
+			if($view instanceof \Grid){
+				$spot='grid_buttons';
+			}
+
+			$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-danger');
+			$btn->js('click')->univ()->frameURL($this->acl_error_vp->getURL());
+
+			$acl_error=true;
+		}
+
+		// add spot acl 
+		if($this->show_spot_acl AND !isset($acl_error)) {
+			$this->spot_vp = $this->add('VirtualPage');
+			$this->manageSpotACLVP($this->spot_vp);
+
+			$view = $this->getView();
+			if($view instanceof \CRUD){
+				$view= $view->grid;
+			}
+			$spot = null;
+
+			if($view instanceof \Grid){
+				$spot='grid_buttons';
+			}
+
+			$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
+			$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+
+		}
+
+
 	}
 
 	function getModel(){
@@ -506,4 +559,162 @@ class Controller_ACL extends \AbstractController {
 		if($text === 'Assigned To') return [$this->app->employee->id];
 		return $text;
 	}
+
+
+	function manageSpotACLVP($vp){
+		$vp->set(function($page){
+			$post = $this->api->stickyGET('post_id');
+			$ns = $this->api->stickyGET('namespace');
+			$dt = $this->api->stickyGET('type');
+
+			$post_m = $page->add('xepan\hr\Model_Post');
+			$post_m->addExpression('post_with_department')->set($post_m->dsql()->expr('CONCAT([0]," : ",[1])',[$post_m->getElement('department'),$post_m->getElement('name')]));
+			$post_m->title_field = 'post_with_department';
+
+			$form = $page->add('Form',null,null,['form/empty']);
+			// $form->setLayout('form/aclpost');
+			$form->add('xepan\base\Controller_FLC')
+				->layout([
+					'post'=>'c1~4',
+					'type'=>'c2~6',
+					'FormButtons~'=>'c3~2',
+				]);
+
+			$string_count = strpos($this->model_class, '\Model_');
+			$model_namespace = substr($this->model_class,0,$string_count);
+			$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']).'['.$this->model_ns.']';
+			$array_list[$str] = $str;
+
+			
+			$form->addField('DropDown','post')->addClass('form-control')->setModel($post_m);
+			$form->addField('DropDown','type')
+										->addClass('form-control')
+										// ->setModel($acl_m);
+										->setValueList($array_list);
+										;
+			$form->addSubmit('Go')->addClass('btn btn-success');
+
+
+
+			$af = $page->add('Form');							
+
+			if($dt){
+				$is_config= false;
+				try{
+					$m = $this->add($ns.'\\Model_'.$dt);
+				}catch(\Exception $e){
+					try{
+						$m = $this->add($ns.'\\'.$dt);
+					}catch(\Exception $e1){
+						$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+						$is_config = true;
+					}
+				}
+
+				$existing_acl = $this->add('xepan\hr\Model_ACL')
+									->addCondition('post_id',$post)
+									->addCondition('namespace',$ns)
+									->addCondition('type',$dt)
+									->tryLoadAny();
+
+				if(!$existing_acl->loaded())
+					$existing_acl->save();
+
+				if(!$is_config){
+					$af->addField('Checkbox','allow_add');
+					$af->getElement('allow_add')->set($existing_acl['allow_add']);
+				}
+				
+
+				$value_list=['Self Only'=>'Self Only','All'=>'All','None'=>'None'];
+				
+				if(isset($m->assigable_by_field) && $m->assigable_by_field !=false)
+					$value_list['Assigned To']='Assigned To Employee';
+
+				if($is_config){
+					unset($value_list['Self Only']);
+				}
+
+				foreach ($m->actions as $status => $actions) {
+					$status = $status=='*'?'All':$status;	
+					$greeting_card = $af->add('View', null, null, ['view/acllist1']);
+					foreach ($actions as $action) {
+						$greeting_card->template->set('action',$status);					
+						// $greeting_card->addField('DropDown',$status.'_'.$action,$action)
+						$tf = $greeting_card->addField('xepan\base\RadioButton',$status.'_'.$action,$action)
+							->setValueList($value_list)
+							// ->setEmptyText('Please select ACL')
+							->validate('required?Acl must be provided or will work based on global permisible setting')
+							->addClass('form-control xepan-custom-radio-btn-field')
+							->set($existing_acl['action_allowed'][$status][$action]);
+						;
+
+						$tf->template->set('row_class','xepan-radio-btn-form-field');
+					}
+				}
+
+				$af->addSubmit('Update')->addClass('btn btn-success xepan-margin-top-small');
+				$af->template->set('buttons_class','xepan-radio-btn-form-field-clear');
+			}
+
+			$af->onSubmit(function($f)use($post,$ns,$dt){
+				$is_config = false;
+				try{
+					$m = $this->add($ns.'\\Model_'.$dt);
+				}catch(\Exception $e){
+					try{
+						$m = $this->add($ns.'\\'.$dt);
+					}catch(\Exception $e1){
+						$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+						$is_config = true;
+					}
+				}
+				$acl_array=[];
+				foreach ($m->actions as $status => $actions) {
+					$status = $status=='*'?'All':$status;			
+					foreach ($actions as $action) {
+						$acl_array[$status][$action] = $f[$this->api->normalizeName($status.'_'.$action)];
+					}
+				}
+
+				$class = new \ReflectionClass($m);
+				$acl_m = $this->add('xepan\hr\Model_ACL')
+						->addCondition('namespace',isset($ns)? $ns:$class->getNamespaceName());
+				
+				if($m['type']=='Contact' || $m['type']=='Document')
+					$m['type'] = str_replace("Model_", '', $class->getShortName());
+
+				$acl_m->addCondition('type',$m['type']?:$m->acl_type);
+				$acl_m->addCondition('post_id',$post)
+						;
+				$acl_m->tryLoadAny();
+				$acl_m['action_allowed'] = json_encode($acl_array);
+				$acl_m['allow_add'] = $f['allow_add']?:false;
+				$acl_m->save();
+				return "Done";
+			});
+
+			$form->onSubmit(function($f)use($af){
+
+				$type = explode("[", $f['type']);
+				$ns	=trim($type[1],']');
+				
+				$acl_m = $this->add('xepan\hr\Model_ACL')
+						->addCondition('type',$type[0])
+						->addCondition('namespace',$ns)
+						->tryLoadAny()
+						;												
+				return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $acl_m['type']]);
+			});
+		});
+	}
+
+	function manageAclErrorVP($vp){
+		$vp->set(function($page){
+			$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']);
+			$page->add('View_Error')->set($str.' is not in export entity as key, Develoepr issue')->addClass('alert alert-danger');
+			$page->add('View_Info')->set('export entity must have type (field value) of model or Class name stripped `Model_` ')->addClass('alert alert-info');
+		});
+	}
+
 }

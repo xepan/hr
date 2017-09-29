@@ -7,7 +7,7 @@ class Widget_DepartmentLateComing extends \xepan\base\Widget{
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('department');
+		$this->report->enableFilterEntity('Department');
 		$this->view = $this->add('View',null,null,['view\multibox']);
 	}
 

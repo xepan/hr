@@ -125,8 +125,8 @@ class page_aclmanagement extends \xepan\base\Page {
 		$ns = $this->api->stickyGET('namespace');
 		$dt = $this->api->stickyGET('type');
 		
-		$acl_m = $this->add('xepan\hr\Model_ACL');
-		$acl_m->_dsql()->group('name');
+		// $acl_m = $this->add('xepan\hr\Model_ACL');
+		// $acl_m->_dsql()->group('name');
 
 		// $acl_m->add('xepan\hr\Controller_ACL');
 

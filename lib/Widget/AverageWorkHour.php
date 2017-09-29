@@ -7,8 +7,8 @@ class Widget_AverageWorkHour extends \xepan\base\Widget{
 		parent::init();
 
 		$this->report->enableFilterEntity('date_range');
-		$this->report->enableFilterEntity('department');
-		$this->report->enableFilterEntity('employee');
+		$this->report->enableFilterEntity('Department');
+		$this->report->enableFilterEntity('Employee');
      	$this->chart = $this->add('xepan\base\View_Chart');
 	}
 
