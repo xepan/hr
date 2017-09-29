@@ -287,7 +287,7 @@ class Controller_ACL extends \AbstractController {
 		}
 
 		// add spot acl 
-		if($this->show_spot_acl AND !isset($acl_error)) {
+		if($this->show_spot_acl AND !isset($acl_error) AND $this->app->auth->model->isSuperUser()) {
 			$this->spot_vp = $this->add('VirtualPage');
 			$this->manageSpotACLVP($this->spot_vp);
 
