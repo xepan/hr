@@ -8,7 +8,7 @@ class page_reimbursement extends \xepan\base\Page {
 	function page_index(){
 
 		$crud = $this->add('xepan\hr\CRUD');
-		
+
 		$model = $this->add('xepan\hr\Model_Reimbursement');
 		$model->setOrder('created_at','desc');
 		$crud->setModel($model,
@@ -31,11 +31,14 @@ class page_reimbursement extends \xepan\base\Page {
 
 		$reimbursement_detail_m = $reimbursement_m->ref('Details');
 
-		$crud = $this->add('xepan\hr\CRUD',null,null,['view/reimbursement-detail']);
+		$crud = $this->add('xepan\hr\CRUD');
 		$crud->setModel($reimbursement_detail_m,
 						['name','date','narration','amount'],
 						['name','date','narration','amount']
 					   );
+		$crud->grid->addSno();
+		$crud->grid->removeColumn('action');
+		$crud->grid->removeAttachment();
 	}
 
 }
