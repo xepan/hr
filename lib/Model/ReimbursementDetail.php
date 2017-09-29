@@ -29,6 +29,13 @@ class Model_ReimbursementDetail extends \xepan\base\Model_Table{
 		});
 		
 		$this->addHook('afterSave',$this);
+		$this->is([
+				'reimbursement_id|required',
+				'name|to_trim|required',
+				'amount|required',
+				'date|required'
+			]);
+
 	}
 
 	function afterSave(){		

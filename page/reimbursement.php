@@ -32,6 +32,17 @@ class page_reimbursement extends \xepan\base\Page {
 		$reimbursement_detail_m = $reimbursement_m->ref('Details');
 
 		$crud = $this->add('xepan\hr\CRUD');
+		$form = $crud->form;
+		$form->add('xepan\base\Controller_FLC')
+					->addContentSpot()
+					->makePanelsCoppalsible()
+					->layout([
+						'name'=>'c1~4',
+						'date'=>'c2~4',
+						'amount'=>'c3~4',
+						'narration'=>'c5~12'
+					]);
+
 		$crud->setModel($reimbursement_detail_m,
 						['name','date','narration','amount'],
 						['name','date','narration','amount']
