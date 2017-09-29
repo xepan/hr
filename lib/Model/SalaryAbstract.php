@@ -15,7 +15,7 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 		$this->addField('updated_at')->type('date')->defaultValue($this->app->now)->sortable(true);
 		
 		$this->addField('name');
-		$this->addField('month')->setValueList(['1'=>"January",'2'=>"February",'3'=>"March",'4'=>"April",'5'=>"May",'6'=>"June",'7'=>"July",'8'=>"August",'9'=>"September",'10'=>"October",'11'=>"November",'12'=>"December"]);
+		$this->addField('month')->setValueList(['1'=>"January",'2'=>"February",'3'=>"March",'4'=>"April",'5'=>"May",'6'=>"June",'7'=>"July",'8'=>"August",'9'=>"September",'10'=>"October",'11'=>"November",'12'=>"December"])->sortable(true);
 
 		$current_year = $this->app->monthFirstDate();
 		$year = [];
@@ -29,13 +29,17 @@ class Model_SalaryAbstract extends \xepan\base\Model_Table{
 			$year[$next_year] = $next_year;
 		}
 		
-		$this->addField('year')->setValueList($year)->set(date('Y',strtotime($current_year)));
+		$this->addField('year')->setValueList($year)->set(date('Y',strtotime($current_year)))->sortable(true);
 
 		$this->addField('status')->defaultValue('Draft');
 		$this->addField('type')->setValueList(['SalarySheet'=>'Salary Sheet','SalaryPayment'=>'Salary Payment'])->mandatory(true);
 		$this->hasMany('xepan\hr\EmployeeRow','salary_abstract_id');
 
-		$this->is(['name|required','month|required','year|required']);
+		$this->is([
+			'name|required',
+			'month|required',
+			'year|required'
+		]);
 
 		$this->addHook('beforeDelete',[$this,'deleteEmpRow']);
 	}

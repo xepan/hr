@@ -11,7 +11,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 					'Submitted'=>['view','edit','delete','approved','canceled'],
 					'Approved'=>['view','edit','delete','canceled'],
 					'Canceled'=>['view','edit','delete','redraft']
-					];
+				];
 	function init(){
 
 		parent::init();
