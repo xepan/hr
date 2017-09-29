@@ -26,7 +26,7 @@ class Model_SalaryTemplate extends \xepan\base\Model_Table{
 			throw new \Exception("first remove salary template from post");
 		}
 
-		$model = $this->add('xepan\hr\model_SalaryTemplateDetails');
+		$model = $this->add('xepan\hr\Model_SalaryTemplateDetails');
 		$model->addCondition('salary_template_id',$this->id)
 				->deleteAll();
 		
