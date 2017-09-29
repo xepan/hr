@@ -73,7 +73,7 @@ class page_employeeattandance extends \xepan\base\Page{
 
 			$from_time_field->set(date("H:i:s",strtotime($in_time)));
 			$from_time_field
-				->setOption('showMeridian',true)
+				->setOption('showMeridian',false)
 				->setOption('defaultTime',0)
 				->setOption('minuteStep',1)
 				->setOption('showSeconds',true)
