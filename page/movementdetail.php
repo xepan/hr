@@ -9,10 +9,12 @@ class page_movementdetail extends \xepan\base\Page{
 		parent::init();
 		
 		$employee_id = $this->app->stickyGET('employee_id');
+		$movement_on = $this->app->stickyGET('movement_on')?:$this->app->today;
+
 		$m = $this->add('xepan\hr\Model_Employee_Movement');
 		$m->addCondition('employee_id',$employee_id);
-		$m->addCondition('movement_at','>=',$this->app->today);
-		$m->addCondition('movement_at','<',$this->app->nextDate($this->app->today));
+		$m->addCondition('movement_at','>=',$movement_on);
+		$m->addCondition('movement_at','<',$this->app->nextDate($movement_on));
 
 		$m->addExpression('next_movement_time')->set(function($m,$q){
 			$next_movement = $this->add('xepan\hr\Model_Employee_Movement',['table_alias'=>'next_movement'])
@@ -42,20 +44,19 @@ class page_movementdetail extends \xepan\base\Page{
 			return $q->expr('(TIMEDIFF([0],[1]))',[$m->getElement('next_movement_time'),$m->getElement('movement_at')]);
 		});
 
-		$grid = $this->add('xepan\hr\Grid',null,null,['view\employee\movementdetail']);
-		$grid->setModel($m);
+		$grid = $this->add('xepan\hr\Grid');
+		$grid->setModel($m,['direction','movement_at','duration']);
 
-		$grid->addPaginator(10);
+		$grid->addPaginator(50);
 		$grid->addQuickSearch(['direction']);
 		
 		$employee = $this->add('xepan\hr\Model_Employee')->load($employee_id);
 		$grid->template->trySet('employee_name',$employee['name']);
-
-		$grid->addColumn('Duration');
-		$grid->addMethod('format_timeduration',function($grid,$field){				
-			$grid->current_row_html['duration'] = $grid->model['duration'];
-		});
-
-		$grid->addFormatter('Duration','timeduration');
+		$grid->addSno();
+		// $grid->addColumn('Duration');
+		// $grid->addMethod('format_timeduration',function($grid,$field){				
+		// 	$grid->current_row_html['duration'] = $grid->model['duration'];
+		// });
+		// $grid->addFormatter('Duration','timeduration');
 	}
 }

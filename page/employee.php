@@ -70,6 +70,7 @@ class page_employee extends \xepan\base\Page {
 		});
 
 		$crud->add('xepan\base\Controller_Avatar');
+		$crud->grid->addSno();
 		
 		if(!$crud->isEditing()){
 			$crud->grid->js('click')->_selector('.do-view-employee')->univ()->frameURL('Employee Details',[$this->api->url('xepan_hr_employeedetail'),'contact_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
