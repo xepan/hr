@@ -671,6 +671,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				->addCondition('year',$year)
 				->addCondition('leave_type','Unpaid')
 				->addCondition('status','Approved');
+
+		$official_holidays = $this->getOfficialHolidays($month,$year,true);
+		$official_off_day = $this->getOffWeekDay();
 		
 		$upl_count = 0;
 		foreach ($el_days as $model) {
