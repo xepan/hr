@@ -233,6 +233,11 @@ class Initiator extends \Controller_Addon {
         $array['Reimbursement'] = ['caption'=>'Reimbursement','type'=>'DropDown','model'=>'xepan\hr\Model_Reimbursement'];
         $array['OfficialHoliday'] = ['caption'=>'OfficialHoliday','type'=>'DropDown','model'=>'xepan\hr\Model_OfficialHoliday'];
         $array['Report_Executor'] = ['caption'=>'Report_Executor','type'=>'DropDown','model'=>'xepan\hr\Model_ReportExecutor'];
+        $array['HR_HOLIDAY_BETWEEN_LEAVES'] = ['caption'=>'HR_HOLIDAY_BETWEEN_LEAVES','type'=>"DropDown",'model'=>'xepan\base\Model_ConfigJsonModel'];
+        $array['HR_REIMBURSEMENT_SALARY_EFFECT'] = ['caption'=>'HR_REIMBURSEMENT_SALARY_EFFECT','type'=>"DropDown",'model'=>'xepan\base\Model_ConfigJsonModel'];
+        $array['HR_DEDUCTION_SALARY_EFFECT'] = ['caption'=>'HR_DEDUCTION_SALARY_EFFECT','type'=>"DropDown",'model'=>'xepan\base\Model_ConfigJsonModel'];
+        $array['HR_SALARY_DUE_ENTRY_AFFECT_EMPLOYEE_LEDGER'] = ['caption'=>'HR_SALARY_DUE_ENTRY_AFFECT_EMPLOYEE_LEDGER','type'=>"DropDown",'model'=>'xepan\base\Model_ConfigJsonModel'];
+        
     }
 
     // function epanDashboard($app,$page){

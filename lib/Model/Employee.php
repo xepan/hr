@@ -535,11 +535,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			return $this->app->cache[$month][$year]['OfficialHolidays']['count'];
 		}
 
-		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
+		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday',['month'=>$month,'year'=>$year]);
 
 		$official_off_day = $this->getOffWeekDay();
 
-		$total_monthly_non_working_day = $this->countDays($month, $year, $official_off_day);
+		$total_monthly_working_day = $this->countDays($month, $year, $official_off_day);
+		$total_monthly_non_working_day = date('t',strtotime($year.'-'.$month.'-01')) - $total_monthly_working_day;
+		
 		$req_start_date = date('Y-m-01',strtotime($year.'-'.$month.'-01'));
 		$req_end_date = date('Y-m-t',strtotime($year.'-'.$month.'-01'));
 
@@ -568,6 +570,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			}
 		}
 
+		// die();
 		$official_holiday_count = $official_holiday_count + $total_monthly_non_working_day;
 		
 		$this->app->cache[$month][$year]['OfficialHolidays']= [
@@ -612,7 +615,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	// paid
 	function getPaidLeaves($month,$year){
 
-		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave',['month'=>$month,'year'=>$year]);
 		$el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
@@ -622,10 +625,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$official_holidays = $this->getOfficialHolidays($month,$year,true);
 		$official_off_day = $this->getOffWeekDay();
-		
-		// echo "<pre>";
-		// print_r($official_holidays);
-		// echo "</pre>";
 
 		//for each employee paid leave
 			// for loop for from to to_date
@@ -638,9 +637,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$pl_count = 0;
 		foreach ($el_days as $model) {
-			
-			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
 
+			// echo "from_date = ".$model['month_from_date']." to date".$model['month_to_date']."<br/>";
+			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
 			for ($i=0; $i <= $return_data['days'] ; $i++) {
 				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
 
@@ -655,7 +654,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				}
 				$pl_count = $pl_count + 1;
 			}
-
 		}
 
 		// echo "PL Leaves ".$pl_count."<br/>";
@@ -664,7 +662,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function getUnPaidLeaves($month,$year){
 
-		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave',['month'=>$month,'year'=>$year]);
 		$el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
@@ -755,7 +753,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$OfficialHolidays = $this->getOfficialHolidays($month,$year);
 		
 		// $TotalWorkDays = $TotalMonthDays - $OfficialHolidays;
-
 		$PaidLeaves = $this->getPaidLeaves($month,$year);
 		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
 		$Present = $this->getPresent($month,$year);
@@ -765,8 +762,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidLeaves'=>$PaidLeaves,
 				'UnPaidLeaves'=>$UnPaidLeaves,
 				'Presents'=>$Present,
-				'PaidDays'=>$Present + $PaidLeaves,
-				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
+				'OfficialHolidays'=>$OfficialHolidays,
+				'PaidDays'=>$Present + $PaidLeaves + $OfficialHolidays,
+				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves + $OfficialHolidays),
 			];
 
 		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
@@ -827,6 +825,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidLeaves'=>$existing_m['paid_leaves'],
 				'UnPaidLeavs'=>$existing_m['unpaid_leaves'],
 				'Absents'=>$existing_m['absents'],
+				'OfficialHolidays'=>$OfficialHolidays,
 				'PaidDays'=>$existing_m['paiddays'],
 				'NetAmount'=>$existing_m['net_amount']
 			];
