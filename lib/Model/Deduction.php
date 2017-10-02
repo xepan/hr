@@ -29,6 +29,8 @@ class Model_Deduction extends \xepan\hr\Model_Document{
 			return $q->expr('IFNULL([0],0) - IFNULL([1],0)',[$m->getElement('amount'),$m->getElement('received_amount')]);
 		});
 
+		
+		$this->getElement('created_at')->system(false)->visible(true)->editable(true);
 		$this->getElement('created_by');
 		$this->getElement('created_by_id')->system(true)->visible(true);
 		$this->getElement('status')->defaultValue('Draft');
