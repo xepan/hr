@@ -777,8 +777,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		]);
 		$reimbursement_config_model->tryLoadAny();
 
-		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
-			$calculated['Reimbursement']= $this->getReimbursement($month,$year);
+		
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes"){
+			$calculated['Reimbursement'] = $this->getReimbursement($month,$year);
+		}
+
 
 		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 		[
@@ -796,6 +799,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$net_amount = 0;
 		foreach ($this->ref('EmployeeSalary') as $salary) {
+
 			$result = $this->evalSalary($salary['amount'],$calculated);
 			
 			$salary['salary'] = preg_replace('/\s+/', '',$salary['salary']);
@@ -817,6 +821,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$existing_m->addCondition('salary_abstract_id',$salary_sheet_id);
 		$existing_m->addCondition('employee_id',$this->id);
 		$existing_m->tryLoadAny();
+		
 		if(!$existing_m->loaded()) return ['calculated'=>$calculated,'loaded'=>[]];
 
 		$loaded = [
@@ -826,6 +831,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'UnPaidLeavs'=>$existing_m['unpaid_leaves'],
 				'Absents'=>$existing_m['absents'],
 				'OfficialHolidays'=>$OfficialHolidays,
+				'Reimbursement'=>$existing_m['reimbursement_amount'],
+				'Deduction'=>$existing_m['deduction_amount'],
 				'PaidDays'=>$existing_m['paiddays'],
 				'NetAmount'=>$existing_m['net_amount']
 			];
@@ -840,9 +847,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			'calculated'=>$calculated,
 			'loaded'=>$loaded
 		];
-
-		// echo "<pre>";
-		// print_r($return_array);
 
 		return $return_array;
 	}
