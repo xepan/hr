@@ -146,7 +146,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			if($temp->loaded()){
 				foreach ($temp->ref('xepan\hr\LeaveTemplateDetail') as $row) {
 					$m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
-					$m['created_by_id'] = $this->id;
+					$m['employee_id'] = $this->id;
+					// $m['created_by_id'] = $this->id;
 					$m['leave_id'] = $row['leave_id'];
 					$m['is_yearly_carried_forward'] = $row['is_yearly_carried_forward'];
 					$m['type'] = $row['type'];
@@ -534,11 +535,13 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			return $this->app->cache[$month][$year]['OfficialHolidays']['count'];
 		}
 
-		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday');
+		$oh_days = $this->add('xepan\hr\Model_OfficialHoliday',['month'=>$month,'year'=>$year]);
 
 		$official_off_day = $this->getOffWeekDay();
 
-		$total_monthly_non_working_day = $this->countDays($month, $year, $official_off_day);
+		$total_monthly_working_day = $this->countDays($month, $year, $official_off_day);
+		$total_monthly_non_working_day = date('t',strtotime($year.'-'.$month.'-01')) - $total_monthly_working_day;
+		
 		$req_start_date = date('Y-m-01',strtotime($year.'-'.$month.'-01'));
 		$req_end_date = date('Y-m-t',strtotime($year.'-'.$month.'-01'));
 
@@ -567,6 +570,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			}
 		}
 
+		// die();
 		$official_holiday_count = $official_holiday_count + $total_monthly_non_working_day;
 		
 		$this->app->cache[$month][$year]['OfficialHolidays']= [
@@ -611,7 +615,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	// paid
 	function getPaidLeaves($month,$year){
 
-		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave',['month'=>$month,'year'=>$year]);
 		$el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
@@ -621,10 +625,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$official_holidays = $this->getOfficialHolidays($month,$year,true);
 		$official_off_day = $this->getOffWeekDay();
-		
-		// echo "<pre>";
-		// print_r($official_holidays);
-		// echo "</pre>";
 
 		//for each employee paid leave
 			// for loop for from to to_date
@@ -637,9 +637,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$pl_count = 0;
 		foreach ($el_days as $model) {
-			
-			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
 
+			// echo "from_date = ".$model['month_from_date']." to date".$model['month_to_date']."<br/>";
+			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
 			for ($i=0; $i <= $return_data['days'] ; $i++) {
 				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
 
@@ -654,7 +654,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				}
 				$pl_count = $pl_count + 1;
 			}
-
 		}
 
 		// echo "PL Leaves ".$pl_count."<br/>";
@@ -663,13 +662,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function getUnPaidLeaves($month,$year){
 
-		$el_days = $this->add('xepan\hr\Model_Employee_Leave');
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave',['month'=>$month,'year'=>$year]);
 		$el_days
 				->addCondition('employee_id',$this->id)
 				->addCondition('month',$month)
 				->addCondition('year',$year)
 				->addCondition('leave_type','Unpaid')
 				->addCondition('status','Approved');
+
+		$official_holidays = $this->getOfficialHolidays($month,$year,true);
+		$official_off_day = $this->getOffWeekDay();
 		
 		$upl_count = 0;
 		foreach ($el_days as $model) {
@@ -751,7 +753,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$OfficialHolidays = $this->getOfficialHolidays($month,$year);
 		
 		// $TotalWorkDays = $TotalMonthDays - $OfficialHolidays;
-
 		$PaidLeaves = $this->getPaidLeaves($month,$year);
 		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
 		$Present = $this->getPresent($month,$year);
@@ -761,8 +762,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidLeaves'=>$PaidLeaves,
 				'UnPaidLeaves'=>$UnPaidLeaves,
 				'Presents'=>$Present,
-				'PaidDays'=>$Present + $PaidLeaves,
-				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves),
+				'OfficialHolidays'=>$OfficialHolidays,
+				'PaidDays'=>$Present + $PaidLeaves + $OfficialHolidays,
+				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves + $OfficialHolidays),
 			];
 
 		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
@@ -775,8 +777,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		]);
 		$reimbursement_config_model->tryLoadAny();
 
-		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
-			$calculated['Reimbursement']= $this->getReimbursement($month,$year);
+		
+		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes"){
+			$calculated['Reimbursement'] = $this->getReimbursement($month,$year);
+		}
+
 
 		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 		[
@@ -794,6 +799,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		$net_amount = 0;
 		foreach ($this->ref('EmployeeSalary') as $salary) {
+
 			$result = $this->evalSalary($salary['amount'],$calculated);
 			
 			$salary['salary'] = preg_replace('/\s+/', '',$salary['salary']);
@@ -815,6 +821,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$existing_m->addCondition('salary_abstract_id',$salary_sheet_id);
 		$existing_m->addCondition('employee_id',$this->id);
 		$existing_m->tryLoadAny();
+		
 		if(!$existing_m->loaded()) return ['calculated'=>$calculated,'loaded'=>[]];
 
 		$loaded = [
@@ -823,6 +830,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidLeaves'=>$existing_m['paid_leaves'],
 				'UnPaidLeavs'=>$existing_m['unpaid_leaves'],
 				'Absents'=>$existing_m['absents'],
+				'OfficialHolidays'=>$OfficialHolidays,
+				'Reimbursement'=>$existing_m['reimbursement_amount'],
+				'Deduction'=>$existing_m['deduction_amount'],
 				'PaidDays'=>$existing_m['paiddays'],
 				'NetAmount'=>$existing_m['net_amount']
 			];
@@ -837,9 +847,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			'calculated'=>$calculated,
 			'loaded'=>$loaded
 		];
-
-		// echo "<pre>";
-		// print_r($return_array);
 
 		return $return_array;
 	}

@@ -38,11 +38,12 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$all_salary_for_js[] = ['name'=>'PaidLeaves'];
 		$all_salary_for_js[] = ['name'=>'UnPaidLeaves'];
 		$all_salary_for_js[] = ['name'=>'Absents'];
+		$all_salary_for_js[] = ['name'=>'OfficialHolidays'];
 		$all_salary_for_js[] = ['name'=>'PaidDays'];
 
 		$all_salary_for_js = array_merge($all_salary_for_js,$all_salary);
 
-		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','paiddays'=>'PaidDays'];
+		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','OfficialHolidays'=>'OfficialHolidays','paiddays'=>'PaidDays'];
 		
 		foreach ($active_employee as $employee) {
 
@@ -58,9 +59,6 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$result = $employee->getSalarySlip($month,$year,$salary_sheet_id,$this->TotalWorkDays);
 			$col1->add('View')->set("Working Mode : ".$employee['salary_payment_type']);
 
-			// echo "<pre>";
-			// print_r($result);
-			// echo "</pre>";
 			//for pre defined system calculated Factor
 			foreach ($system_calculated_factor as $key => $name) {
 				// echo $name." = ";
@@ -83,7 +81,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 				// $field->setAttr('data-xepan-salarysheet-expression',"");
 				if($name === "PaidDays")
-					$field->setAttr('data-xepan-salarysheet-expression','{Presents}+{PaidLeaves}');
+					$field->setAttr('data-xepan-salarysheet-expression','{Presents}+{PaidLeaves}+{OfficialHolidays}');
 				// $salary_field_id_array[$name] = $field->name;
 			}
 			//for all company salary
