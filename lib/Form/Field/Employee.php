@@ -3,7 +3,7 @@
 namespace xepan\hr;
 
 
-class Form_Field_EmployeeDropDown extends \xepan\base\Form_Field_DropDown {
+class Form_Field_Employee extends \xepan\base\Form_Field_DropDown {
 
 	public $id_field=null;
 	public $title_field=null;
