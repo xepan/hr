@@ -302,8 +302,10 @@ class Controller_ACL extends \AbstractController {
 				$spot='grid_buttons';
 			}
 
-			$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
-			$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+			if($spot OR $view->template->hasTag('Content')){
+				$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
+				$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+			}
 
 		}
 
