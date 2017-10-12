@@ -293,6 +293,7 @@ class Controller_ACL extends \AbstractController {
 			$this->manageSpotACLVP($this->spot_vp);
 
 			$view = $this->getView();
+
 			if($view instanceof \CRUD){
 				$view= $view->grid;
 			}
@@ -303,8 +304,10 @@ class Controller_ACL extends \AbstractController {
 			}
 
 			if($spot OR $view->template->hasTag('Content')){
-				$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
-				$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+				if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
+					$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
+					$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+				}
 			}
 
 		}

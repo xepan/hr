@@ -5,6 +5,7 @@ namespace xepan\hr;
 
 class Form_Field_Employee extends \xepan\base\Form_Field_DropDown {
 
+	public $validate_values = false;
 	public $id_field=null;
 	public $title_field=null;
 	public $include_status='Active'; // all, no condition

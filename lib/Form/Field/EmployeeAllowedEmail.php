@@ -6,6 +6,7 @@ namespace xepan\hr;
 class Form_Field_EmployeeAllowedEmail extends \xepan\base\Form_Field_DropDown {
 
 	public $for_post = null;
+	public $validate_values = false;
 
 	function init(){
 		parent::init();
