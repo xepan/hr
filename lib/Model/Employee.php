@@ -83,6 +83,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeSave',[$this,'checkLimits']);
 	}
 
+	function post(){
+		return $this->ref('post_id');
+	}
+
 	function checkLimits(){
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 

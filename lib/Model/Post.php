@@ -197,4 +197,14 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 		$this['search_string'] = $search_string;
 	}
+
+	function associatedEmailSettings(){
+		$asso_email = $this->add('xepan\hr\Model_Post_Email_Association');
+		$asso_email->addCondition('post_id',$this->id);
+
+		$email_settings = $this->add('xepan\communication\Model_Communication_EmailSetting');
+		$email_settings->addCondition('id','in',$asso_email->fieldQuery('emailsetting_id'));
+
+		return $email_settings;
+	}
 }
