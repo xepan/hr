@@ -30,6 +30,7 @@ class Controller_ACL extends \AbstractController {
 	function init(){
 		parent::init();
 		
+		if(!$this->app->epan->isApplicationInstalled('xepan\hr')) return;
 		if(isset($this->app->muteACL) && $this->app->muteACL) return; 
 
 		
