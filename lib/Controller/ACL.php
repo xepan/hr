@@ -29,7 +29,7 @@ class Controller_ACL extends \AbstractController {
 
 	function init(){
 		parent::init();
-		
+
 		if(isset($this->app->muteACL) && $this->app->muteACL) return; 
 
 		
@@ -281,8 +281,10 @@ class Controller_ACL extends \AbstractController {
 				$spot='grid_buttons';
 			}
 
-			$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-danger');
-			$btn->js('click')->univ()->frameURL($this->acl_error_vp->getURL());
+			if($view->template->hasTag('Content') OR $spot){
+				$btn = $view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-danger');
+				$btn->js('click')->univ()->frameURL($this->acl_error_vp->getURL());
+			}
 
 			$acl_error=true;
 		}
@@ -302,10 +304,10 @@ class Controller_ACL extends \AbstractController {
 				$spot='grid_buttons';
 			}
 
-			if($spot OR $view->template->hasTag('Content')){
-				$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
-				$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
-			}
+			// if($spot OR $view->template->hasTag('Content')){
+			// 	$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
+			// 	$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+			// }
 
 		}
 
