@@ -305,11 +305,13 @@ class Controller_ACL extends \AbstractController {
 			if($view instanceof \Grid){
 				$spot='grid_buttons';
 			}
-
-			if($spot OR $view->template->hasTag('Content')){
-				if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
-					$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
-					$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+			
+			if(!($view instanceof \Dummy)){
+				if($spot OR $view->template->hasTag('Content')){
+					if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
+						$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
+						$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
+					}
 				}
 			}
 
