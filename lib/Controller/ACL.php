@@ -39,7 +39,7 @@ class Controller_ACL extends \AbstractController {
 		$this->model = $model = $this->getModel();
 
 		$this->model_class = new \ReflectionClass($this->model);
-		$this->model_ns = $this->model_class->getNamespaceName();
+		$this->model_ns = $this->model->namespace?:$this->model_class->getNamespaceName();
 		
 		if($this->app->immediateAppove($this->model_ns)) $this->permissive_acl = true;
 
@@ -485,7 +485,7 @@ class Controller_ACL extends \AbstractController {
 			$this->acl_m['allow_add'] = $this->permissive_acl;
 			$this->acl_m->save();
 		}
-		
+
 		/**
 		 * ACL
 		 * -  post_id  
@@ -599,6 +599,7 @@ class Controller_ACL extends \AbstractController {
 			$string_count = strpos($this->model_class, '\Model_');
 			$model_namespace = substr($this->model_class,0,$string_count);
 			$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']).'['.$this->model_ns.']';
+
 			$array_list[$str] = $str;
 
 			
@@ -632,7 +633,6 @@ class Controller_ACL extends \AbstractController {
 									->addCondition('namespace',$ns)
 									->addCondition('type',$dt)
 									->tryLoadAny();
-
 				if(!$existing_acl->loaded())
 					$existing_acl->save();
 
