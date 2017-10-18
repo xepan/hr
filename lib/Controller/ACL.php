@@ -37,6 +37,7 @@ class Controller_ACL extends \AbstractController {
 		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
 
 		$this->model = $model = $this->getModel();
+
 		$this->model_class = new \ReflectionClass($this->model);
 		$this->model_ns = $this->model_class->getNamespaceName();
 		
@@ -266,7 +267,7 @@ class Controller_ACL extends \AbstractController {
 		$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']);
 		$entity_list=[];
 		$this->app->hook('entity_collection',[&$entity_list]);
-		if(!array_key_exists($str, $entity_list)){
+		if(!array_key_exists($str, $entity_list) and $this->model->acl !== false){
 			$this->acl_error_vp = $this->add('VirtualPage');
 			$this->manageAclErrorVP($this->acl_error_vp);
 			$view = $this->getView();
@@ -282,7 +283,7 @@ class Controller_ACL extends \AbstractController {
 				$spot='grid_buttons';
 			}
 
-			if(!($view instanceof \Dummy)){
+			if(!($view instanceof \Dummy) and $this->model->acl !== false){
 				if($spot OR $view->template->hasTag('Content')){
 					if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
 						$btn = $view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-danger');
@@ -310,7 +311,7 @@ class Controller_ACL extends \AbstractController {
 				$spot='grid_buttons';
 			}
 			
-			if(!($view instanceof \Dummy)){
+			if(!($view instanceof \Dummy) and $this->model->acl !== false){
 				if($spot OR $view->template->hasTag('Content')){
 					if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
 						$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
