@@ -311,7 +311,7 @@ class Controller_ACL extends \AbstractController {
 				$spot='grid_buttons';
 			}
 			
-			if(!($view instanceof \Dummy) and $this->model->acl !== false){
+			if(!($view instanceof \Dummy) and $this->model->acl !== false and ($view instanceof \View)){
 				if($spot OR $view->template->hasTag('Content')){
 					if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
 						$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
