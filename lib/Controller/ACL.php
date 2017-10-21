@@ -21,6 +21,10 @@ class Controller_ACL extends \AbstractController {
 	public $action_btn_group=null;
 	public $view_reload_url=null;
 	public $dependent = false;
+
+	public $based_on_model=null;
+	public $based_on_view=null;
+
 	public $model_class=null;
 	public $model_ns = null;
 	public $status_color = [];
@@ -302,6 +306,7 @@ class Controller_ACL extends \AbstractController {
 
 			$view = $this->getView();
 
+
 			if($view instanceof \CRUD){
 				$view= $view->grid;
 			}
@@ -326,7 +331,11 @@ class Controller_ACL extends \AbstractController {
 	}
 
 	function getModel(){
-		$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;
+		if($this->based_on_model){
+			$model=$this->add($this->based_on_model);
+		}else{
+			$model =  $this->owner instanceof \Model ? $this->owner: $this->owner->model;
+		}
 		// model->acl property contain '\' to define namespace\model as base acl then add that 
 		if(strpos($model->acl, '\\')!==false or $model->acl instanceof \Model){
 		// if(is_string($model->acl) or $model->acl instanceof \Model){
