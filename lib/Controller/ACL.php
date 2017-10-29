@@ -644,7 +644,7 @@ class Controller_ACL extends \AbstractController {
 									->tryLoadAny();
 				if(!$existing_acl->loaded())
 					$existing_acl->save();
-
+			
 				if(!$is_config){
 					$af->addField('Checkbox','allow_add');
 					$af->getElement('allow_add')->set($existing_acl['allow_add']);
@@ -709,7 +709,7 @@ class Controller_ACL extends \AbstractController {
 				if($m['type']=='Contact' || $m['type']=='Document')
 					$m['type'] = str_replace("Model_", '', $class->getShortName());
 
-				$acl_m->addCondition('type',$m['type']?:$m->acl_type);
+				$acl_m->addCondition('type',$m->acl_type?:$m['type']);
 				$acl_m->addCondition('post_id',$post)
 						;
 				$acl_m->tryLoadAny();
