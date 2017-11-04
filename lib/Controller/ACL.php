@@ -193,9 +193,9 @@ class Controller_ACL extends \AbstractController {
 				$view->addMethod('format_action',function($g,$f){
 					$actions = $this->getActions($g->model['status']);
 
-					if(isset($actions['edit'])) unset($actions['edit']);
+					// if(isset($actions['edit'])) unset($actions['edit']);
 					if(isset($actions['view'])) unset($actions['view']);
-					if(isset($actions['delete'])) unset($actions['delete']);
+					// if(isset($actions['delete'])) unset($actions['delete']);
 					
 					$action_btn_list = [];
 					foreach ($actions as $action => $acl) {
@@ -211,10 +211,11 @@ class Controller_ACL extends \AbstractController {
 					}
 					if(!isset($g->current_row_html['action']))
 						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status'],'action_btn_group'=>$this->action_btn_group,'status_color'=>$this->status_color])->getHTML();
+
 				});
 				$view->setFormatter('action','action');
 				if(!isset($this->app->acl_action_added[$view->name])){
-					$view->on('click','.acl-action',[$this,'manageAction']);
+					$view->on('click','.acl-action:not(".pb_edit"):not(".do-delete")',[$this,'manageAction']);
 					$this->app->acl_action_added[$view->name] = true;
 				}
 
@@ -226,6 +227,9 @@ class Controller_ACL extends \AbstractController {
 						$g->current_row_html[$f]='<i class="fa fa-paperclip" style="color:grey"></i>';
 				});
 				$view->setFormatter('attachment_icon','attachment_icon');
+
+				$view->removeColumn('edit');
+				$view->removeColumn('delete');
 
 
 			}elseif($view instanceof \View){

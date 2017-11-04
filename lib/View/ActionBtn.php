@@ -15,7 +15,7 @@ class View_ActionBtn extends \CompleteLister{
 		parent::init();
 		$temp_array=[];
 		foreach ($this->actions as $value) {
-			$temp_array[] = ['action'=>$value,'action_title'=>ucwords(str_replace("_", " ", $value)),'row_id'=>$this->id];
+			$temp_array[] = ['action'=>$value,'action_title'=>ucwords(str_replace("_", " ", $value)),'row_id'=>$this->id ,'class'=>($value === 'edit'?'pb_edit':($value === 'delete'?'do-delete':''))];
 		}
 
 		$this->setSource($temp_array);

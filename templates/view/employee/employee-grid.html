@@ -13,16 +13,14 @@
           <th>S.no.</th>
           <th id="{$name_sortid}"><span>User </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$name_sort}</span></th>
           <th id="{$doj_sortid}" data-hide="phone"><span>Date Of Joining </span><span style="cursor:pointer; cursor: hand; max-width:600px;">{$doj_sort}</span></th>
-          <th data-hide="phone"><span>Email</span></th>
-          <th></th>
-          <th></th>{/}{/}    
+          <th data-hide="phone"><span>Email</span></th>{/}{/}    
         </tr>
       </thead>{/}
       {$subheader}
       <tbody>{rows}{row}
         <tr data-id="{$id}" class="{$odd_even}">{cols}
           <td>
-            {$s_no}  
+            {$s_no}
             {$selected}
           </td>
           <td>{avatar}<img alt="" src="{image}img/samples/scarlet-159.png{/}"/>{/}<a href="#" data-id="{$id}" class="user-link do-view-employee">{$name}</a><span class="user-subhead">{$department} / {$posts}</span>
@@ -31,10 +29,8 @@
           <td><a href="#">
                
               {emails_str}mila@kunis.com{/}</a></td>
-          <td>{$action}</td>
-          <td style="width: 15%;">
-            {$edit}
-            {$delete}
+          <td>
+            {$action}
             {/}
           </td>
         </tr>{/}{/}
