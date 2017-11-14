@@ -104,22 +104,22 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				]);
 		});
 
-		// $this->addExpression('total_in_time_login')->set(function($m,$q){
-		// 	return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_intime_attan'])
-		// 					->addCondition('employee_id',$q->getField('employee_id'))
-		// 					->addCondition('late_coming','<=',0)
-		// 					->addCondition('from_date','>=',$this->from_date)
-		// 					->addCondition('to_date','<',$this->api->nextDate($this->to_date))
-		// 					->count();
-		// });
-		// $this->addExpression('total_out_time_login')->set(function($m,$q){
-		// 	return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_outtime_attan'])
-		// 					->addCondition('employee_id',$q->getField('employee_id'))
-		// 					->addCondition('late_coming','>',0)
-		// 					->addCondition('from_date','>=',$this->from_date)
-		// 					->addCondition('to_date','<',$this->api->nextDate($this->to_date))
-		// 					->count();
-		// });
+		$this->addExpression('total_in_time_login')->set(function($m,$q){
+			return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_intime_attan'])
+							->addCondition('employee_id',$q->getField('employee_id'))
+							->addCondition('late_coming','<=',0)
+							->addCondition('from_date','>=',$this->from_date)
+							->addCondition('to_date','<',$this->api->nextDate($this->to_date))
+							->count();
+		});
+		$this->addExpression('total_out_time_login')->set(function($m,$q){
+			return $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_outtime_attan'])
+							->addCondition('employee_id',$q->getField('employee_id'))
+							->addCondition('late_coming','>',0)
+							->addCondition('from_date','>=',$this->from_date)
+							->addCondition('to_date','<',$this->api->nextDate($this->to_date))
+							->count();
+		});
 
 		$this->addExpression('averge_late_hours')->set(function($m,$q){
 			$avg_hours = $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_latehours_attan'])

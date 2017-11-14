@@ -24,7 +24,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 			// ->setLimit(2)
 		;
 
-		$this->add('View')->setElement('h1')->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
+		$this->add('View')->setElement('h1')
+			->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
 
 		$form = $this->add('Form');
 		$all_salary = $this->add('xepan\hr\Model_Salary')->getRows();

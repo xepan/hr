@@ -25,6 +25,8 @@ class page_report_employeeattandance extends \xepan\base\Page{
 		$emp_field->setModel('xepan\hr\Model_Employee')->addCondition('status','Active');
 		
 		$attandance_m = $this->add('xepan\hr\Model_Employee_Attandance',['from_date'=>$_GET['from_date'],'to_date'=>$_GET['to_date']]);
+		// $attandance_m->addExpression('in_time');
+
 		if($emp_id){
 			$attandance_m->addCondition('employee_id',$emp_id);
 		}
@@ -37,7 +39,7 @@ class page_report_employeeattandance extends \xepan\base\Page{
 
 		$form->addSubmit('Get Details')->addClass('btn btn-primary');
 		$attandance_m->_dsql()->group('employee_id');
-		$grid = $this->add('xepan\hr\Grid',null,null,['view/report/employee-attandance-gridview']);
+		$grid = $this->add('xepan\hr\Grid');
 		$grid->setModel($attandance_m);
 		$grid->addPaginator(50);
 		$grid->addSno('Sr.No');
@@ -53,9 +55,9 @@ class page_report_employeeattandance extends \xepan\base\Page{
 				)->execute();
 		}
 
-
 		/*In Time Formatter*/
-		$grid->addFormatter('total_in_time_login','template')->setTemplate('<a href="#" class="intime_login" data-employee_id="{$employee_id}" data-from_date="'.$_GET['from_date'].'" data-to_date="'.$_GET['to_date'].'">{$total_in_time_login}</a>','total_in_time_login');
+		$grid->addFormatter('total_in_time_login','template')
+			->setTemplate('<a href="#" class="intime_login" data-employee_id="{$employee_id}" data-from_date="'.$_GET['from_date'].'" data-to_date="'.$_GET['to_date'].'">{$total_in_time_login}</a>','total_in_time_login');
 		$grid->js('click')->_selector('.intime_login')->univ()->frameURL('In Time Login Details',[$this->app->url('./intime_login'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
 
 		/*After  Time Formatter*/
