@@ -14,7 +14,7 @@ class page_salarytemplate extends \xepan\base\Page {
 		$temp_crud->grid->addColumn('expanderPlus','Detail');
 		$temp_crud->grid->addPaginator(25);
 		$temp_crud->grid->addQuickSearch(['name']);
-		$temp_crud->grid->removeColumn('action');
+		// $temp_crud->grid->removeColumn('action');
 		$temp_crud->grid->removeAttachment();
 		$temp_crud->grid->addSno();
 	}
@@ -29,7 +29,7 @@ class page_salarytemplate extends \xepan\base\Page {
 		$crud = $this->add('xepan\hr\CRUD');
 		$crud->setModel($salary_template_detail);
 		$crud->grid->addSno();
-		$crud->grid->removeColumn('action');
+		// $crud->grid->removeColumn('action');
 		$crud->grid->removeAttachment();
 	}
 }

@@ -40,20 +40,21 @@ class page_leavemanagment extends \xepan\base\Page{
 					->addContentSpot()
 					->makePanelsCoppalsible()
 					->layout([
-						'employee_id~Employee'=>'Employee Leave~c1~3',
-						'emp_leave_allow_id~Leave'=>'c2~3',
+						'employee_id~Employee'=>'Employee Leave~c1~4',
+						'emp_leave_allow_id~Leave'=>'c2~4',
 						'from_date'=>'c3~2',
 						'to_date'=>'c4~2',
+						'narration'=>'c6~12',
 						'FormButtons~'=>'c5~2'
 					]);
 
 		if($filter_form->isSubmitted()){
 			$crud->js()->reload(['from_date'=>$filter_form['from_date'],'to_date'=>$filter_form['to_date']])->execute();
 		}
-
+		$emp_leave_m->getElement('emp_leave_allow')->caption('Leave Type');
 		$crud->setModel($emp_leave_m,
-							['created_by_id','created_by','employee_id','employee','emp_leave_allow_id','emp_leave_allow','from_date','to_date'],
-							['employee','emp_leave_allow','leave_type','from_date','to_date','status','no_of_leave']
+							['created_by_id','created_by','employee_id','employee','emp_leave_allow_id','emp_leave_allow','from_date','to_date','narration'],
+							['employee','emp_leave_allow','from_date','to_date','status','no_of_leave','narration']
 						);
 
 		$crud->add('xepan\base\Controller_MultiDelete');
@@ -81,5 +82,9 @@ class page_leavemanagment extends \xepan\base\Page{
 		$crud->grid->addSno();
 		$crud->grid->removeColumn('status');
 		$crud->grid->removeAttachment();
+
+		$crud->grid->addButton('Leave Config')
+			->addClass('btn btn-primary')
+			->js('click')->univ()->frameURL($this->app->url('xepan_hr_configleave'));
 	}
 }

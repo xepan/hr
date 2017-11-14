@@ -24,14 +24,16 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 		$this->hasOne('xepan\hr\Employee','created_by_id')->defaultValue($this->app->employee->id)->system(true);
 
 		$this->hasOne('xepan\hr\Employee','employee_id');
-		$this->hasOne('xepan\hr\Employee_LeaveAllow','emp_leave_allow_id');
+		$this->hasOne('xepan\hr\Employee_LeaveAllow','emp_leave_allow_id')->caption('Leave Type');
 		$this->addField('from_date')->type('date');
 		$this->addField('to_date')->type('date');
 		$this->addField('status')->enum(['Draft','Submitted','Approved','Rejected'])->defaultValue('Draft');
+		$this->addField('narration')->type('text');
 
 		$this->addExpression('no_of_leave')->set(function($m,$q){
 			return $q->expr('(DATEDIFF([0],[1]))  + 1',[$q->getField('to_date'),$q->getField('from_date')]);
-		});
+		})->caption('No of Days');
+
 		$this->addExpression('month')->set('MONTH(from_date)');
 		$this->addExpression('year')->set('YEAR(from_date)');
 		$this->addExpression('month_leaves')->set('DATEDIFF(to_date,from_date) + 1');

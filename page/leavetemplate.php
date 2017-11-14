@@ -14,7 +14,7 @@ class page_leavetemplate extends \xepan\base\Page {
 		$temp_crud->grid->addPaginator(25);
 		$temp_crud->grid->addQuickSearch(['name']);
 		$temp_crud->grid->addSno();
-		$temp_crud->grid->removeColumn('action');
+		// $temp_crud->grid->removeColumn('action');
 		$temp_crud->grid->removeAttachment();
 	}
 
@@ -42,7 +42,7 @@ class page_leavetemplate extends \xepan\base\Page {
 				['leave','is_yearly_carried_forward','type','is_unit_carried_forward','unit','allow_over_quota','no_of_leave']
 				);
 
-		$crud->grid->removeColumn('action');
+		// $crud->grid->removeColumn('action');
 		$crud->grid->removeAttachment();
 		$crud->grid->addPaginator(25);
 		$crud->grid->addQuickSearch(['leave']);

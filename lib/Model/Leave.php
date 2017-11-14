@@ -7,7 +7,7 @@ namespace xepan\hr;
 */
 class Model_Leave extends \xepan\base\Model_Table{
 	public $table="leaves";
-	public $actions = ['*'=>['view','edit','delete']];
+	public $actions = ['All'=>['view','edit','delete']];
  	public $acl_type = "Leave";
 	function init(){
 		parent::init();

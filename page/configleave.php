@@ -26,7 +26,6 @@ class page_configleave extends \xepan\hr\page_configurationsidebar{
 		$crud->setModel($leave,['name']);
 		// $crud->setModel($leave,['name','is_yearly_carried_forward','type','is_unit_carried_forward','no_of_leave','unit','allow_over_quota']);
 		$crud->grid->addPaginator(50);
-		$crud->grid->removeColumn('action');
 		$crud->grid->removeAttachment();
 		$crud->grid->addSno();
 		$crud->grid->addQuickSearch(['name']);

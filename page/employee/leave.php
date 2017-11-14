@@ -8,7 +8,7 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 		parent::init();
 
 		$tabs = $this->add('Tabs');
-		$new_leave_tab = $tabs->addTab('New Leave');
+		$new_leave_tab = $tabs->addTab('Apply Leave');
 		$avail_leave=0;
 
 		$emp_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
@@ -17,19 +17,37 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 		$leave_emp_m = $this->add('xepan\hr\Model_Employee_LeaveAllow');
 		$leave_emp_m->addCondition('employee_id',$this->app->employee->id);
 		$f = $new_leave_tab->add('Form');
+		$f->add('xepan\base\Controller_FLC')
+			->addContentSpot()
+			->makePanelsCoppalsible()
+			->layout([
+				'allow_leave~Leave Type'=>'Apply For Leave~c1~4',
+				'from_date'=>'c3~2',
+				'to_date'=>'c4~2',
+				'narration'=>'c6~4',
+				'FormButtons~'=>'c5~2'
+			]);
+
 		$allow_leave_f = $f->addField('Dropdown','allow_leave');
 		$allow_leave_f->setEmptytext('Please Select');
 		$allow_leave_f->setModel($leave_emp_m);
 		$f->addField('DatePicker','from_date');
 		$f->addField('DatePicker','to_date');
+		$f->addField('text','narration');
 
-		$f->addSubmit('Get Leave')->addClass('btn btn-primary');
+		$f->addSubmit('Apply')->addClass('btn btn-primary');
 
 		$draft_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
 		$draft_leave_m->addCondition('created_by_id',$this->app->employee->id);
-		$draft_leave_m->addCondition('status','<>',"Approved");
-		$draft_grid = $new_leave_tab->add('xepan\hr\CRUD',null,null,['view/employee/my-leave-management-grid']);
-		$draft_grid->setModel($draft_leave_m);
+		$draft_leave_m->addCondition('status',"Draft");
+		$draft_grid = $new_leave_tab->add('xepan\hr\CRUD');
+		// $draft_grid->add('View')->set('Draft Leave\'s');
+		$draft_leave_m->getElement('emp_leave_allow')->caption('Leave Type');
+
+		$draft_grid->setModel($draft_leave_m,['emp_leave_allow','from_date','to_date','no_of_leave','narration','status']);
+		$draft_grid->grid->addSno();
+		$draft_grid->removeAttachment();
+		$draft_grid->grid->removeColumn('status');
 		// $draft_grid->addQuickSearch(['employee']);
 		
 		if($f->isSubmitted()){
@@ -46,6 +64,7 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 			$emp_leave_m['emp_leave_allow_id']=$allow_leave_m->id;		
 			$emp_leave_m['from_date']=$f['from_date'];		
 			$emp_leave_m['to_date']=$f['to_date'];
+			$emp_leave_m['narration']=$f['narration'];
 			$emp_leave_m->save();		
 
 			$js =[
@@ -55,39 +74,35 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 			$f->js(null,$js)->reload()->execute();
 		}
 
-
-		$approved_tab = $tabs->addTab('Approved Leave');
-		$approved_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
-		$approved_leave_m->addCondition('created_by_id',$this->app->employee->id);
-		$approved_leave_m->addCondition('status',"Approved");
-		$consume_leave = $approved_leave_m->count()->getOne();
-
-		$apprved_grid = $approved_tab->add('xepan\hr\Grid',null,null,['view/employee/my-approved-leave-management-grid']);
-		$apprved_grid->setModel($approved_leave_m);
-		$apprved_grid->addQuickSearch(['employee']);
-
-		// $avail_leave = $tabs->addTab('Available Leave');
-
-		// $consume_leave = $tabs->addTab('Consume Leave');
-		
-
-		$leave_tab = $tabs->addTab('Leave Allowed to you');
+		// leave quota
+		$leave_tab = $tabs->addTab('My Leave Quota');
 		$allow_leave_model = $leave_tab->add('xepan\hr\Model_Employee_LeaveAllow');
 		$allow_leave_model->addCondition('employee_id',$this->app->employee->id);
 		
-		$allow_leave_model->addExpression('consum_leave_count')->set(function($m,$q){
+		$allow_leave_model->addExpression('leave_taken')->set(function($m,$q){
 			$emp_leave = $m->add('xepan\hr\Model_Employee_Leave')
 							->addCondition('emp_leave_allow_id',$q->getField('id'))
 							->addCondition('employee_id',$q->getField('employee_id'));
 			return $q->expr('([0])',[$emp_leave->sum('no_of_leave')]);
 		});
 
-		$allow_leave_model->addExpression('available_leave_count')->set(function($m,$q){
-			return $q->expr('([0]-[1])',[$m->getElement('no_of_leave'),$m->getElement('consum_leave_count')]);
+		$allow_leave_model->addExpression('available_leave')->set(function($m,$q){
+			return $q->expr('([0]-[1])',[$m->getElement('no_of_leave'),$m->getElement('leave_taken')]);
 		});
 
-		$allow_leave_info = $leave_tab->add('xepan\hr\Grid',null,null,['view/employee/employee-leave-view']);
-		$allow_leave_info->setModel($allow_leave_model);
+		$allow_leave_info = $leave_tab->add('xepan\hr\Grid');
+		$allow_leave_info->setModel($allow_leave_model,['leave','no_of_leave','unit','leave_taken','available_leave']);
 
+
+		// history
+		$his_tab = $tabs->addTab('Leave History/Status');
+		$his_leave_m = $this->add('xepan\hr\Model_Employee_Leave');
+		$his_leave_m->addCondition('created_by_id',$this->app->employee->id);
+		$his_leave_m->setOrder('id','desc');
+
+		$his_grid = $his_tab->add('xepan\hr\Grid');
+		$his_grid->setModel($his_leave_m,['emp_leave_allow','from_date','to_date','no_of_leave','narration','status']);
+		$his_grid->addQuickSearch(['employee']);
+		$his_grid->addPaginator($ipp=25);
 	}
 }
