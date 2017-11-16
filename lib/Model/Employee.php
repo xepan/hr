@@ -13,7 +13,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	public $actions=[
 		'Active'=>['view','edit','delete','deactivate','communication'],
 		'InActive'=>['view','edit','delete','activate','communication'],
-		'DeactivateRequest'=>['view','edit','delete','deactivate']
+		'DeactivateRequest'=>['view','edit','delete','deactivate','activate']
 	];
 
 	function init(){
@@ -308,7 +308,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function page_deactivate($page){
-		// $page->add('View_Error')->set($this->id);
+
 		$task = $page->add('xepan\projects\Model_Task');
 		$task->addCondition('status','<>',"Completed")
 		    	 ->addCondition($task->dsql()->orExpr()
@@ -316,8 +316,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				     ->where($task->dsql()->andExpr()
 							      ->where('created_by_id',$this->id)
 							      ->where('assign_to_id',null)));
-		$total_uncomplete_task = $task->count()->getOne();    	 
-		$page->add('H1')->setHtml("<div class='pull-right'> UnComplete Task: ".$total_uncomplete_task."</div>");    	 
+		$total_uncomplete_task = $task->count()->getOne();
+		$page->add('H1')->setHtml("<div class='pull-right'> UnComplete Task: ".$total_uncomplete_task."</div>"); 
 
 		$assign_to_emp = $this->add('xepan\hr\Model_Employee');
 		$assign_to_emp->addCondition('id','<>',$this->id);
@@ -359,6 +359,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 					}
 				}
 			}
+
 			$my_emails = $this->add('xepan\hr\Model_Post_Email_MyEmails');
 			$my_emails->addCondition('id',$this['to_id']);
 			$my_emails->tryLoadAny();

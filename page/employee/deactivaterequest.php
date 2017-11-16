@@ -14,9 +14,11 @@ class page_employee_deactivaterequest extends \xepan\base\Page{
 		$emp = $this->add('xepan\hr\Model_Employee')
 					->addCondition('status','DeactivateRequest');
 
-		$crud=$this->add('xepan\hr\CRUD',['action_page'=>'xepan_hr_employeedetail'],null,['view/employee/employee-grid']);
+		$crud=$this->add('xepan\hr\CRUD',['allow_add'=>false]);
 		$crud->grid->addPaginator(50);
-		$crud->setModel($emp);
-		$crud->add('xepan\base\Controller_MultiDelete');			
+		$crud->grid->addQuickSearch(['name']);
+		$crud->setModel($emp,['name','post']);
+		$crud->grid->removeAttachment();
+
 	}
 }
