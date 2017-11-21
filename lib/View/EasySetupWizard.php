@@ -18,14 +18,14 @@ class View_EasySetupWizard extends \View{
 		$isDone = false;
 		$action = $this->js()->reload([$this->name.'_add_department'=>1]);
 
-		if($this->add('xepan\hr\Model_Department')->count()->getOne() > 0){
+		if($this->add('xepan\hr\Model_Department')->addCondition('name','<>','Company')->count()->getOne() > 0){
 			$isDone = true;
 			$action = $this->js()->univ()->dialogOK("Already have Data",' You have already added department, visit page ? <a href="'. $this->app->url('xepan_hr_department')->getURL().'"> click here to go </a>');
 		}
 
 		$dept_view = $this->add('xepan\base\View_Wizard_Step')
 			->setAddOn('Application - HR')
-			->setTitle('Add Other Departments')
+			->setTitle('Add Company Departments')
 			->setMessage('Add all the departments present in your organization.')
 			->setHelpMessage('Need help ! click on the help icon')
 			->setHelpURL('#')	
@@ -48,8 +48,8 @@ class View_EasySetupWizard extends \View{
 
 		$user_view = $this->add('xepan\base\View_Wizard_Step')
 			->setAddOn('Application - HR')
-			->setTitle('Create New Users')
-			->setMessage('Create new users & assign user_id to particular employee.')
+			->setTitle('Create Users')
+			->setMessage('Create login account for user, employee and customer')
 			->setHelpMessage('Need help ! click on the help icon')
 			->setHelpURL('#')
 			->setAction('Click Here',$action,$isDone);
@@ -72,7 +72,7 @@ class View_EasySetupWizard extends \View{
 		$emp_view = $this->add('xepan\base\View_Wizard_Step')
 			->setAddOn('Application - HR')
 			->setTitle('Add New Employees')
-			->setMessage('Add new employees according specific departments.')
+			->setMessage('Add employees according specific departments.')
 			->setHelpMessage('Need help ! click on the help icon')
 			->setHelpURL('#')
 			->setAction('Click Here',$action,$isDone);
@@ -110,8 +110,8 @@ class View_EasySetupWizard extends \View{
 
 		$week_day_view = $this->add('xepan\base\View_Wizard_Step')
 			->setAddOn('Application - HR')
-			->setTitle('Add Working Days')
-			->setMessage('Add working days of week.')
+			->setTitle('Add Official Working Days')
+			->setMessage('Add Official working days of week.')
 			->setHelpMessage('Need help ! click on the help icon')
 			->setHelpURL('#')
 			->setAction('Click Here',$action,$isDone);	
@@ -127,7 +127,7 @@ class View_EasySetupWizard extends \View{
 		$action = $this->js()->reload([$this->name.'_add_officialholiday'=>1]);
 
 		$holiday_model = $this->add('xepan\hr\Model_OfficialHoliday');
-		if($holiday_model->count()->getOne() > 1){
+		if($holiday_model->count()->getOne()){
 			$isDone = true;
 			$action = $this->js()->univ()->dialogOK("Already have Data",' You have already added official holidays, visit page ? <a href="'. $this->app->url('xepan_hr_officialholiday')->getURL().'"> click here to go </a>');
 		}
@@ -227,6 +227,56 @@ class View_EasySetupWizard extends \View{
 			->setHelpURL('#')
 			->setAction('Click Here',$action,$isDone);
 
+
+		/**************************************************************************
+			Salary and Salary Templates
+		**************************************************************************/	
+		if($_GET[$this->name.'_add_salary'])
+			$this->js(true)->univ()->frameURL("Employee Salary and Salary Template ",$this->app->url('xepan_hr_configsalary'));
+
+		$isDone = false;
+		$action = $this->js()->reload([$this->name.'_add_salary'=>1]);
+
+		$salary_model = $this->add('xepan\hr\Model_Salary');
+		$salary_temp_model = $this->add('xepan\hr\Model_SalaryTemplate');
+		
+		if($salary_model->count()->getOne() && $salary_temp_model->count()->getOne()){
+			$isDone = true;
+			$action = $this->js()->univ()->dialogOK("Already have Data",' You have already added Salary and Salary Template, visit page ? <a href="'. $this->app->url('xepan_hr_configsalary')->getURL().'"> click here to go </a>');
+		}
+
+		$this->add('xepan\base\View_Wizard_Step')
+				->setAddOn('Application - HR')
+				->setTitle('Salary & Salary Template')
+				->setMessage('Add/Update Salary & Salary Templates for employees.')
+				->setHelpMessage('Need help ! click on the help icon')
+				->setHelpURL('#')
+				->setAction('Click Here',$action,$isDone);
+
+		/**************************************************************************
+			Leave and Leave Templates
+		**************************************************************************/	
+		if($_GET[$this->name.'_add_leave'])
+			$this->js(true)->univ()->frameURL("Employee Leave and Leave Template ",$this->app->url('xepan_hr_configleave'));
+
+		$isDone = false;
+		$action = $this->js()->reload([$this->name.'_add_leave'=>1]);
+
+		$l_model = $this->add('xepan\hr\Model_Leave');
+		$l_t_model = $this->add('xepan\hr\Model_LeaveTemplate');
+		
+		if($l_model->count()->getOne() && $l_t_model->count()->getOne()){
+			$isDone = true;
+			$action = $this->js()->univ()->dialogOK("Already have Data",' You have already added Leave and Leave Template, visit page ? <a href="'. $this->app->url('xepan_hr_configleave')->getURL().'"> click here to go </a>');
+		}
+
+		$this->add('xepan\base\View_Wizard_Step')
+				->setAddOn('Application - HR')
+				->setTitle('Leave & Leave Template')
+				->setMessage('Add/Update Leave & Leave Templates for employees.')
+				->setHelpMessage('Need help ! click on the help icon')
+				->setHelpURL('#')
+				->setAction('Click Here',$action,$isDone);
 
 	}
 }
