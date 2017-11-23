@@ -19,9 +19,14 @@ class View_GraphicalReport_Runner extends \View{
 
 		$report_id = $this->api->stickyGET('report_id');
 		
-		foreach ($_GET as $get=>$value) {				
+		foreach ($_GET as $get=>$value) {
 			if($value AND !in_array($get, ['page','cut_object','cut_page'])){
                 $this->api->stickyGET($get);
+                $this->$get = $value;
+
+                //setting value same in lower case for easy to access
+				$get = strtolower($get);
+				$this->api->stickyGET($get);
                 $this->$get = $value;
             }
 		}
