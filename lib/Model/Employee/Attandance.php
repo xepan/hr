@@ -84,18 +84,18 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				]);
 		});
 
-		$this->addExpression('extra_work')->set(function($m,$q){
-			return $q->expr(
-					"IF([is_holiday]='1',
-						TIMESTAMPDIFF(MINUTE,[from_date],[actual_day_ending]),
-						TIMESTAMPDIFF(MINUTE,[official_day_end],[actual_day_ending]))",
-						[
-							'official_day_end'=>$m->getElement('official_day_end'),
-							'actual_day_ending'=>$m->getElement('actual_day_ending'),
-							'from_date'=>$m->getElement('from_date'),
-							'is_holiday'=>$m->getElement('is_holiday')
-						]);
-		})->caption('Extra Work in Minute');
+		// $this->addExpression('extra_work')->set(function($m,$q){
+		// 	return $q->expr(
+		// 			"IF([is_holiday]='1',
+		// 				TIMESTAMPDIFF(MINUTE,[from_date],[actual_day_ending]),
+		// 				TIMESTAMPDIFF(MINUTE,[official_day_end],[actual_day_ending]))",
+		// 				[
+		// 					'official_day_end'=>$m->getElement('official_day_end'),
+		// 					'actual_day_ending'=>$m->getElement('actual_day_ending'),
+		// 					'from_date'=>$m->getElement('from_date'),
+		// 					'is_holiday'=>$m->getElement('is_holiday')
+		// 				]);
+		// })->caption('Extra Work in Minute');
 
 		$this->addExpression('holidays_extra_work_hours')->set(function($m,$q){
 			 $r = $m->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_extra_work_hours'])
