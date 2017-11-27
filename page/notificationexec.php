@@ -38,8 +38,8 @@ class page_notificationexec extends \xepan\base\Page{
 							$sticky = $nt['notification']['sticky']?true:false;
 							$icon = $nt['notification']['icon']?:null;
 						}catch(\Exception $e){
-							var_dump($nt->data);
-							throw $e;
+							// var_dump($nt->data);
+							// throw $e;
 						}
 					}
 
