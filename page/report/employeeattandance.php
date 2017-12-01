@@ -87,8 +87,8 @@ class page_report_employeeattandance extends \xepan\base\Page{
 		$grid->js('click')->_selector('.total_wh')->univ()->frameURL('Total Worknig Hours Details',[$this->app->url('./total_working_hours'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
 
 		// extra work
-		// $grid->addFormatter('extra_work','template')->setTemplate('<a href="#" class="extra_work" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$extra_work}</a>','extra_work');	
-		// $grid->js('click')->_selector('.extra_work')->univ()->frameURL('Extra Work Detail',[$this->app->url('./extra_work'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
+		$grid->addFormatter('extra_work','template')->setTemplate('<a href="#" class="extra_work" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$extra_work}</a>','extra_work');	
+		$grid->js('click')->_selector('.extra_work')->univ()->frameURL('Extra Work Detail',[$this->app->url('./extra_work'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
 	}
 
 	function page_extra_work(){
@@ -104,14 +104,19 @@ class page_report_employeeattandance extends \xepan\base\Page{
 	}
 
 	function page_intime_login(){
+
 		$attandance = $this->add('xepan\hr\Model_Employee_Attandance');
 		$attandance->addCondition('employee_id',$_GET['employee_id'])
 					->addCondition('late_coming','<=',0)
 					->addCondition('from_date','>=',$_GET['from_date'])
 					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));
 
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+
 		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($attandance,['from_date','to_date','official_day_start','official_day_end','working_hours','total_movement_in','total_movement_out']);
+		$grid->setModel($attandance,['fdate','official_day_start_time','ftime','official_day_end_time','ttime','working_hours','total_movement_in','total_movement_out']);
 		$grid->addPaginator(50);
 	}
 
@@ -122,8 +127,13 @@ class page_report_employeeattandance extends \xepan\base\Page{
 					->addCondition('from_date','>=',$_GET['from_date'])
 					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));
 
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('late_coming')->caption('late coming in minutes');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+
 		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($attandance,['from_date','to_date','official_day_start','official_day_end','late_coming','working_hours','total_movement_in','total_movement_out']);
+		$grid->setModel($attandance,['fdate','official_day_start_time','ftime','official_day_end_time','ttime','late_coming','working_hours','total_movement_in','total_movement_out']);
 		$grid->addPaginator(50);
 
 		$grid->addHook('formatRow',function($g){
@@ -135,19 +145,26 @@ class page_report_employeeattandance extends \xepan\base\Page{
 	}
 
 	function page_avrage_late(){
+		
 		$attandance = $this->add('xepan\hr\Model_Employee_Attandance');
 		$attandance->addCondition('employee_id',$_GET['employee_id'])
 					->addCondition('from_date','>=',$_GET['from_date'])
-					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));
+					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));		
+
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
 
 		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($attandance,['from_date','to_date','official_day_start','official_day_end','late_coming','working_hours','total_movement_in','total_movement_out']);
+		$grid->setModel($attandance,['fdate','official_day_start_time','official_day_end_time','ftime','late_coming','working_hours','total_movement_in','total_movement_out']);
 		$grid->addPaginator(50);
 
 		$grid->addHook('formatRow',function($g){
 			$late_coming = $g->model['late_coming'];
-			if($g->model['late_coming'] > 60)
-				$late_coming = $g->model['late_coming']/60; 
+			if($late_coming > 60){
+				$late_coming = $late_coming/60;
+			}
+
 			$g->current_row_html['late_coming'] = round($late_coming,3);
 		});
 	}
@@ -158,8 +175,16 @@ class page_report_employeeattandance extends \xepan\base\Page{
 					->addCondition('from_date','>=',$_GET['from_date'])
 					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));
 
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+		
 		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($attandance,['from_date','to_date','official_day_start','official_day_end','late_coming','working_hours','total_movement_in','total_movement_out']);
+		$grid->setModel($attandance,['fdate','ftime','ttime','total_work_in_mintues','working_hours']);
+		$grid->addHook('formatRow',function($g){
+			$g->current_row_html['working_hours'] = round(($g->model['total_work_in_mintues'] / 60))." hours : ".($g->model['total_work_in_mintues'] % 60)." minutes";
+		});
+
 		$grid->addPaginator(50);
 	}
 }

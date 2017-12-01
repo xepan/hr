@@ -35,6 +35,9 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 					$m->refSQL('employee_id')->fieldQuery('in_time')
 				]);
 		});
+		$this->addExpression('official_day_start_time')->set(function($m,$q){
+			return $q->expr('TIME([0])',[$m->getElement('official_day_start')]);
+		})->type('Time');
 
 		$this->addExpression('official_day_end')->set(function($m,$q){
 			return $q->expr('CONCAT([0]," ",[1])',[
@@ -42,6 +45,11 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 					$m->refSQL('employee_id')->fieldQuery('out_time')
 				]);
 		});
+
+		$this->addExpression('official_day_end_time')->set(function($m,$q){
+			return $q->expr('TIME([0])',[$m->getElement('official_day_end')]);
+		})->type('Time');
+		
 
 		// $this->addExpression('actual_day_ending')->set(function($m,$q){
 		// 	return $q->expr('IFNULL([0],[1])',[
@@ -83,7 +91,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 					$m->getElement('official_day_end'),
 				]);
 		});
-
+		
 		// $this->addExpression('extra_work')->set(function($m,$q){
 		// 	return $q->expr(
 		// 			"IF([is_holiday]='1',
@@ -176,7 +184,6 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 							->addCondition('from_date','>=',$this->from_date)
 							->addCondition('to_date','<',$this->api->nextDate($this->to_date))
 							;
-
 			return $q->expr('round(([0]/60),2)',[$model->sum('total_work_in_mintues')]);
 		});
 
