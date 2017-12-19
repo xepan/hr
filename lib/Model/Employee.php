@@ -177,9 +177,30 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	// }
 
 	function afterLoginCheck(){
-		
+
+		// Check if login is allowed for this user from out side IPs
+		// TODO
+
+
+
+		// check if attendance is allowed outside this IP
+		$ip_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'ip'=>"line"
+										],
+							'config_key'=>'HR_ALLOWED_IP_4_ATTENDANCE',
+							'application'=>'hr'
+						]);
+		$ip_model->tryLoadAny();
+			
 		$this->app->auth->model['last_login_date'] = $this->app->now;
         $this->app->auth->model->save();
+		
+		if(!in_array($_SERVER['REMOTE_ADDR'], explode(",", $ip_model['ip'])) ){
+			// throw new \Exception("Not found ". $_SERVER['REMOTE_ADDR']. ' in '. print_r(explode(",", $ip_model['ip']),true), 1);
+			return;	
+		}
 
 		if($this->app->employee['attandance_mode'] != "Web Login") return;
 
