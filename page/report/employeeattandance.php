@@ -55,7 +55,7 @@ class page_report_employeeattandance extends \xepan\base\Page{
 		$attandance_m->_dsql()->group('employee_id');
 		
 		$grid = $this->add('xepan\hr\Grid');
-		$grid->setModel($attandance_m,['employee','total_in_time_login','total_out_time_login','averge_late_minutes','total_working_hours','extra_work','holidays_extra_work_hours','total_logout_before_official_time','total_logout_after_official_time']);
+		$grid->setModel($attandance_m,['employee','total_in_time_login','total_out_time_login','averge_late_minutes','total_working_hours','extra_work_in_hour','holidays_extra_work_hours','total_logout_before_official_time','total_logout_after_official_time']);
 
 		if($form->isSubmitted()){
 			$grid->js()->reload(
@@ -87,20 +87,108 @@ class page_report_employeeattandance extends \xepan\base\Page{
 		$grid->js('click')->_selector('.total_wh')->univ()->frameURL('Total Worknig Hours Details',[$this->app->url('./total_working_hours'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
 
 		// extra work
-		$grid->addFormatter('extra_work','template')->setTemplate('<a href="#" class="extra_work" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$extra_work}</a>','extra_work');	
-		$grid->js('click')->_selector('.extra_work')->univ()->frameURL('Extra Work Detail',[$this->app->url('./extra_work'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
+		$grid->addFormatter('extra_work_in_hour','template')->setTemplate('<a href="#" class="extra_work_in_hour" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$extra_work_in_hour}</a>','extra_work_in_hour');
+		$grid->js('click')->_selector('.extra_work_in_hour')->univ()->frameURL('Extra Work Detail',[$this->app->url('./extra_work'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
+
+		// holiday extra work hours
+		$grid->addFormatter('holidays_extra_work_hours','template')->setTemplate('<a href="#" class="holidays_extra_work_hours" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$holidays_extra_work_hours}</a>','holidays_extra_work_hours');
+		$grid->js('click')->_selector('.holidays_extra_work_hours')->univ()->frameURL('Holiday Extra Work Detail',[$this->app->url('./holidays_extra_work'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
+
+		// logout before time
+		$grid->addFormatter('total_logout_before_official_time','template')
+				->setTemplate('<a href="#" class="total_logout_before_official_time" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$total_logout_before_official_time}</a>','total_logout_before_official_time');
+		$grid->js('click')->_selector('.total_logout_before_official_time')->univ()->frameURL('Total Logout Before Official Time',[$this->app->url('./logout_before_official_time'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
+
+		// logout after time
+		$grid->addFormatter('total_logout_after_official_time','template')
+				->setTemplate('<a href="#" class="total_logout_after_official_time" data-employee_id="{$employee_id}" data-from_date="'.$from_date.'" data-to_date="'.$to_date.'">{$total_logout_after_official_time}</a>','total_logout_after_official_time');
+		$grid->js('click')->_selector('.total_logout_after_official_time')->univ()->frameURL('Total Logout After Official Time',[$this->app->url('./logout_after_official_time'),'employee_id'=>$grid->js()->_selectorThis()->data('employee_id'),'from_date'=>$grid->js()->_selectorThis()->data('from_date'),'to_date'=>$grid->js()->_selectorThis()->data('to_date')]);
+	}
+
+	function page_logout_before_official_time(){
+		$attandance = $this->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_logouttime_before'])
+			->addCondition('employee_id',$_GET['employee_id'])
+			->addCondition('early_leave','>',0)
+			->addCondition('from_date','>=',$_GET['from_date'])
+			->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']))
+			;
+
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+		$attandance->getElement('early_leave')->caption('Early Leave before Minute');
+
+		$attandance->addExpression('early_leave_in_hour')->set(function($m,$q){
+			return $q->expr('CONCAT(FLOOR(ABS([0])/60),":",MOD(ABS([0]),60))',[$m->getElement('early_leave')]);
+		});
+
+		$grid = $this->add('xepan\hr\Grid');
+		$grid->setModel($attandance,['fdate','ftime','ttime','early_leave_in_hour']);
+		$grid->addPaginator(50);
+	}
+
+	function page_logout_after_official_time(){
+		$attandance = $this->add('xepan\hr\Model_Employee_Attandance',['table_alias'=>'emp_logouttime_before'])
+			->addCondition('employee_id',$_GET['employee_id'])
+			->addCondition('early_leave','<=',0)
+			->addCondition('from_date','>=',$_GET['from_date'])
+			->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']))
+			;
+
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+		$attandance->getElement('early_leave')->caption('Early Leave before Minute');
+
+		$attandance->addExpression('after_logout_in_hour')->set(function($m,$q){
+			return $q->expr('CONCAT(FLOOR(ABS([0])/60),":",MOD(ABS([0]),60))',[$m->getElement('early_leave')]);
+		});
+
+		$grid = $this->add('xepan\hr\Grid');
+		$grid->setModel($attandance,['fdate','ftime','ttime','after_logout_in_hour']);
+		$grid->addPaginator(50);
+	}
+
+	function page_holidays_extra_work(){
+
+		$attandance = $this->add('xepan\hr\Model_Employee_Attandance');
+		$attandance->addCondition('employee_id',$_GET['employee_id'])
+					->addCondition('from_date','>=',$_GET['from_date'])
+					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']))
+					->addCondition('is_holiday',true)
+					;
+
+		$attandance->addExpression('extraworkinhour')->set(function($m,$q){
+			return $q->expr('CONCAT(FLOOR(ABS([0])/60),":",MOD(ABS([0]),60))',[$m->getElement('total_work_in_mintues')]);
+		})->caption('Holiday Extra Work Hour');
+
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+
+		$grid = $this->add('xepan\hr\Grid');
+		$grid->setModel($attandance,['fdate','ftime','ttime','extraworkinhour']);
+		$grid->addPaginator(50);		
 	}
 
 	function page_extra_work(){
-		// $attandance = $this->add('xepan\hr\Model_Employee_Attandance');
-		// $attandance->addCondition('employee_id',$_GET['employee_id'])
-		// 			->addCondition('late_coming','<=',0)
-		// 			->addCondition('from_date','>=',$_GET['from_date'])
-		// 			->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));
+		$attandance = $this->add('xepan\hr\Model_Employee_Attandance');
+		$attandance->addCondition('employee_id',$_GET['employee_id'])
+					->addCondition('early_leave','<',0)
+					->addCondition('from_date','>=',$_GET['from_date'])
+					->addCondition('to_date','<',$this->api->nextDate($_GET['to_date']));
+		
+		$attandance->addExpression('extraworkinhour')->set(function($m,$q){
+			return $q->expr('CONCAT(FLOOR(ABS([0])/60),":",MOD(ABS([0]),60))',[$m->getElement('early_leave')]);
+		})->caption('Extra Work In Hour');
 
-		// $grid = $this->add('xepan\hr\Grid');
-		// $grid->setModel($attandance,['from_date','to_date','official_day_start','official_day_end','working_hours','total_movement_in','total_movement_out']);
-		// $grid->addPaginator(50);
+		$attandance->getElement('fdate')->caption('Date');
+		$attandance->getElement('ftime')->caption('Login Time');
+		$attandance->getElement('ttime')->caption('Logout Time ');
+
+		$grid = $this->add('xepan\hr\Grid');
+		$grid->setModel($attandance,['fdate','ftime','ttime','extraworkinhour']);
+		$grid->addPaginator(50);
 	}
 
 	function page_intime_login(){
