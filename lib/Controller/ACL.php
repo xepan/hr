@@ -430,7 +430,7 @@ class Controller_ACL extends \AbstractController {
 					if($page_action_result instanceof \jQuery_Chain) {
 						$js[] = $page_action_result;
 					}
-					$js[]=$this->getView()->js()->univ()->closeDialog();
+					$js[]=$p->js()->univ()->closeDialog();
 					$js[]= $this->getView()->js()->reload(null,null,$this->view_reload_url);
 					
 					$this->getView()->js(null,$js)->execute();
