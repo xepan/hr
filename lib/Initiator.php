@@ -111,6 +111,7 @@ class Initiator extends \Controller_Addon {
         $this->app->addHook('epan_dashboard_page',[$this,'epanDashboard']);
         $this->app->addHook('widget_collection',[$this,'exportWidgets']);
         $this->app->addHook('entity_collection',[$this,'exportEntities']);
+        $this->app->addHook('collect_shortcuts',[$this,'collect_shortcuts']);
         return $this;
     }
 
@@ -238,6 +239,28 @@ class Initiator extends \Controller_Addon {
         $array['HR_DEDUCTION_SALARY_EFFECT'] = ['caption'=>'HR_DEDUCTION_SALARY_EFFECT','type'=>"DropDown",'model'=>'xepan\base\Model_ConfigJsonModel'];
         $array['HR_SALARY_DUE_ENTRY_AFFECT_EMPLOYEE_LEDGER'] = ['caption'=>'HR_SALARY_DUE_ENTRY_AFFECT_EMPLOYEE_LEDGER','type'=>"DropDown",'model'=>'xepan\base\Model_ConfigJsonModel'];
         
+    }
+
+    function collect_shortcuts($app,&$shortcuts){
+        $shortcuts[]=["title"=>"Company Departments","keywords"=>"department","description"=>"Manage your company departments","normal_access"=>"HR -> Department","url"=>$this->app->url('xepan_hr_department',['status'=>'Active']),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Company Posts","keywords"=>"posts","description"=>"Manage your company posts","normal_access"=>"HR -> Post","url"=>$this->app->url('xepan_hr_post'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Employees","keywords"=>"employee staff members","description"=>"Manage your company employees","normal_access"=>"HR -> Employee","url"=>$this->app->url('xepan_hr_employee',['status'=>'Active']),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Employee Attendance","keywords"=>"attendance","description"=>"Manage Attendance","normal_access"=>"HR -> Employee Attendance","url"=>$this->app->url('xepan_hr_attandance'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Employee Leave Management","keywords"=>"leave","description"=>"Manage Employee Leaves","normal_access"=>"HR -> Leave Management","url"=>$this->app->url('xepan_hr_leavemanagment'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Employee Movement","keywords"=>"movement","description"=>"Employee movement","normal_access"=>"HR -> Employee Movement","url"=>$this->app->url('xepan_hr_employeemovement'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Employee Reimbursement Management","keywords"=>"reimbursement","description"=>"Employee reimbursement","normal_access"=>"HR -> Reimbursement Management","url"=>$this->app->url('xepan_hr_reimbursement'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Deducation Management","keywords"=>"deducation","description"=>"Employee deduction management","normal_access"=>"HR -> Deducation Management","url"=>$this->app->url('xepan_hr_deduction'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Salary Sheet","keywords"=>"salary sheet","description"=>"Employee salary sheet","normal_access"=>"HR -> Salary Sheet","url"=>$this->app->url('xepan_hr_salarysheet'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Users","keywords"=>"user login credentials password","description"=>"Manage users","normal_access"=>"HR -> User","url"=>$this->app->url('xepan_hr_user'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Affiliate","keywords"=>"affiliate","description"=>"Manage company affiliate","normal_access"=>"HR -> Affiliate","url"=>$this->app->url('xepan_hr_affiliate'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Working days in week & Attendance IP","keywords"=>"weekly work days allowed ip for attendance","description"=>"Manage your weekly working days & allowed IP for attendance","normal_access"=>"HR -> Configuration / SideBar -> Working Week Days","url"=>$this->app->url('xepan_hr_workingweekday'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Manage Official Holiday","keywords"=>"official holiday declaration","description"=>"Manage companies official holidays","normal_access"=>"HR -> Configuration / SideBar -> Official Holidays","url"=>$this->app->url('xepan_hr_officialholiday'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Leaves Configuration","keywords"=>"system leave paid CL PL Templates","description"=>"Configure companies leave templates","normal_access"=>"HR -> Configuration / SideBar -> Leave Template","url"=>$this->app->url('xepan_hr_configleave'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Salary Configuration","keywords"=>"system salary Basic HRA TA DA Templates","description"=>"Configure companies salary templates","normal_access"=>"HR -> Configuration / SideBar -> Salary Template","url"=>$this->app->url('xepan_hr_configsalary'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"HR Configurations","keywords"=>"holiday between leave reimbursement in salary deduction configuration employee ledger create","description"=>"Configure Basic rules like holiday between leaves, Reimbursement & Deduction in salary or separate or Maintain Each employee Ledger or not","normal_access"=>"HR -> Configuration / SideBar -> Misc Configuration","url"=>$this->app->url('xepan_hr_miscconfig'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Pay Slip Layout","keywords"=>"pay slip salary layout format design","description"=>"Design Salary slip layout for printable format","normal_access"=>"HR -> Configuration / SideBar -> Pay Slip Layout","url"=>$this->app->url('xepan_hr_layouts'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"ACL System","keywords"=>"acl configuration desabled allow all department base application document based","description"=>"Configure your ACL requirement, No ACL, Application base or document base","normal_access"=>"HR -> Configuration / SideBar -> ACL Level","url"=>$this->app->url('xepan_hr_aclconfig'),'mode'=>'frame'];
+        $shortcuts[]=["title"=>"Report Executor","keywords"=>"custom report execute","description"=>"Allows you to create complex reports","normal_access"=>"HR -> Configuration / SideBar -> Report Executor","url"=>$this->app->url('xepan_hr_reportexecutor'),'mode'=>'frame'];
     }
 
     // function epanDashboard($app,$page){
