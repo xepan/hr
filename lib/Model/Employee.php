@@ -197,7 +197,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->app->auth->model['last_login_date'] = $this->app->now;
         $this->app->auth->model->save();
 		
-		if(!in_array($_SERVER['REMOTE_ADDR'], explode(",", $ip_model['ip'])) ){
+		if(trim($ip_model['ip']) && !in_array($_SERVER['REMOTE_ADDR'], explode(",", $ip_model['ip'])) ){
 			// throw new \Exception("Not found ". $_SERVER['REMOTE_ADDR']. ' in '. print_r(explode(",", $ip_model['ip']),true), 1);
 			return;	
 		}
