@@ -29,6 +29,10 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 		$this->addExpression('ftime')->set('TIME(from_date)');
 		$this->addExpression('ttime')->set('TIME(to_date)');
 
+		$this->addExpression('status')->set(function($m,$q){
+			return $q->expr('[0]',[$m->refSQL('employee_id')->fieldQuery('status')]);
+		});
+
 		$this->addExpression('official_day_start')->set(function($m,$q){
 			return $q->expr('CONCAT([0]," ",[1])',[
 					$m->getElement('fdate'),
