@@ -484,7 +484,7 @@ class Controller_ACL extends \AbstractController {
 		// }
 
 
-		$this->acl_m = $this->add('xepan\hr\Model_ACL')
+		$this->acl_m = $this->add('xepan\hr\Model_ACL',['for_model'=>$this->model])
 					->addCondition('namespace',isset($this->model->namespace)? $this->model->namespace:$class->getNamespaceName());
 
 		if($this->model['type']=='Contact' || $this->model['type']=='Document')
@@ -492,7 +492,7 @@ class Controller_ACL extends \AbstractController {
 		
 		$this->acl_m->addCondition('type',isset($this->model->acl_type)?$this->model->acl_type:$this->model['type']);
 		$this->acl_m->addCondition('post_id',$this->app->employee['post_id']);
-		
+
 		$this->acl_m->tryLoadAny();
 		if(!$this->acl_m->loaded()){
 			$this->acl_m['allow_add'] = $this->permissive_acl;
