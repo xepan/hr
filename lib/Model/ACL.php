@@ -16,6 +16,8 @@ class Model_ACL extends \xepan\base\Model_Table {
 
 	public $acl=false;
 
+	public $for_model=null;
+
 	function init(){
 		parent::init();
 		
@@ -29,12 +31,27 @@ class Model_ACL extends \xepan\base\Model_Table {
 		$this->addExpression('name')->set("CONCAT(type, ' [',namespace,']')");
 
 		$this->addHook('beforeSave',function($m){
-			if(!$m['post_id'] || !$m['type'] || !$m['namespace'])
-				throw $this->exception('ACL Model does not have proper informations')
+			if(!$m['post_id'] || !$m['type'] || !$m['namespace']){
+				if(!$m['post_id']){
+					$e = $this->exception('Employee does not have post defined');
+					if($this->for_model) $e->addMoreInfo('for_model',$this->for_model);
+					throw $e;
+				}
+				if(!$m['type'] && $this->for_model){
+					$e=  $this->exception('Type is not defined for '. $this->for_model);
+					if($this->for_model) $e->addMoreInfo('for_model',$this->for_model);
+					throw $e;
+				}
+
+				$e=  $this->exception('ACL Model does not have proper informations')
 							// ->addMoreInfo('epan_id',$m['epan_id'])
 							->addMoreInfo('post_id',$m['post_id'])
 							->addMoreInfo('type',$m['type'])
 							->addMoreInfo('namespace',$m['namespace']);
+				if($this->for_model) $e->addMoreInfo('for_model',$this->for_model);
+
+				throw $e;
+			}
 		});
 
 		$this->addHook('afterLoad',function($m){
