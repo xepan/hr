@@ -35,7 +35,7 @@ class Controller_ACL extends \AbstractController {
 		parent::init();
 		
 		if(!$this->app->epan->isApplicationInstalled('xepan\hr')) return;
-		if(isset($this->app->muteACL) && $this->app->muteACL) return; 
+		if((isset($this->app->muteACL) && $this->app->muteACL) || isset($this->app->actionsWithoutACL) ) return; 
 
 		
 		if($this->app->getConfig('all_rights_to_superuser',true) && $this->app->auth->model['scope']=='SuperUser') $this->permissive_acl=true;
@@ -227,9 +227,11 @@ class Controller_ACL extends \AbstractController {
 						$g->current_row_html[$f]='<i class="fa fa-paperclip" style="color:grey"></i>';
 				});
 				$view->setFormatter('attachment_icon','attachment_icon');
-
-				$view->removeColumn('edit');
-				$view->removeColumn('delete');
+				
+				if($view->model['status']){
+					$view->removeColumn('edit');
+					$view->removeColumn('delete');	
+				}
 
 
 			}elseif($view instanceof \View){
