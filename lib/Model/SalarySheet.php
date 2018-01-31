@@ -9,7 +9,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 					'Draft'=>['view','edit','delete','submit'],
 					'Redraft'=>['view','edit','delete','submit'],
 					'Submitted'=>['view','edit','delete','approved','canceled'],
-					'Approved'=>['view','edit','delete','canceled'],
+					'Approved'=>['view','edit','delete','canceled','csvFiles'],
 					'Canceled'=>['view','edit','delete','redraft']
 				];
 	function init(){
@@ -200,5 +200,108 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 		}
 	}
 
+	function page_csvFiles($page){
+
+		$form = $page->add('Form');
+		$form->add('xepan\base\Controller_FLC')
+			->showLables(true)
+			->makePanelsCoppalsible(true)
+			->addContentSpot()
+			->layout([
+				'salary_sheet_fields'=>'Salary Sheet Fields~c1~12~closed',
+				'salary_details_fields'=>'Salary Details~c1~12~closed',
+				'emp_fields'=>'Employee Details~c1~12~closed',
+				'format'=>'Format to Export~c1~12',
+				'download'=>'c2~6',
+				'filename'=>'c3~6',
+			]);
+
+		$format_field = $form->addField('format');
+		$form->addField('Checkbox','download');
+		$form->addField('filename');
+
+		// set fields
+		// SalarySheet -> EmployeeRow -> xepan\hr\SalaryDetail (with each salary_id)
+		// salary sheet fields
+
+		$sheet_fields = ['name','month','year'];
+		$form->layout->add('View',null,'salary_sheet_fields')->set(implode(", ",$sheet_fields));
+
+		// salary details fields
+		$row_fields = ['employee','total_amount','presents','paid_leaves','unpaid_leaves','absents','paiddays','total_working_days','reimbursement_amount','deduction_amount'];
+		$form->layout->add('View',null,'salary_details_fields')->set(implode(", ",$row_fields));
+
+		// employee fields
+		$emp_fields = array_keys($this->add('xepan\hr\Model_Employee',['addOtherInfo'=>true])->tryLoadAny()->data);
+		$form->layout->add('View',null,'emp_fields')->set(implode(", ",$emp_fields));
+
+		$to_remove = ['id','name'];
+		$emp_fields = array_diff($emp_fields, $to_remove);
+
+		// salary fields
+		$salaries = [];
+		foreach ($this->add('xepan\hr\Model_Salary') as $s) {
+			$salaries[] =  $s['name'];
+		};
+		$form->layout->add('View',null,'salary_details_fields')->set(implode(", ",$salaries));
+
+
+		$form->addSubmit('Generate File');
+
+
+
+		// finally create one model with all expressions and all for set 
+		$salary_model = $page->add('xepan\hr\Model_EmployeeRow');
+		foreach ($sheet_fields as $s_fields) {
+			$salary_model->addExpression($s_fields)->set($salary_model->refSQL('salary_abstract_id')->fieldQuery($s_fields));
+		}
+		foreach ($emp_fields as $emp_fields) {
+			$salary_model->addExpression($emp_fields)->set($page->add('xepan\hr\Model_Employee',['addOtherInfo'=>true])->addCondition('id',$salary_model->getField('employee_id'))->fieldQuery($emp_fields));
+		}
+		foreach ($salaries as $s) {
+			$salary_model->addExpression($s)->set($salary_model->refSQL('SalaryDetail')->addCondition('salary',$s)->fieldQuery('amount'));
+		}
+		$salary_model->addCondition('salary_abstract_id',$this->id);
+
+		if($this->app->stickyGET('format')){
+
+			$format_field->set($_GET['format']);
+
+			$nl="<br/>";
+			if($this->app->stickyGET('download')) $nl="\n";
+			
+			$template = $page->add('GiTemplate');
+			$template->loadTemplateFromString("{rows}{row}".$_GET['format'].$nl."{/}{/}");
+			$report = $page->add('CompleteLister',null,null,$template);
+
+			$report->setModel($salary_model);
+
+			if($this->app->stickyGET('download')){				
+				$output = $report->getHTML();
+				$extension = explode(".", $_GET['filename']);
+		    	header("Content-type: text/".($extension?:'csv'));
+		        header("Content-disposition: attachment; filename=\"".$_GET['filename']."\"");
+		        header("Content-Length: " . strlen($output));
+		        header("Content-Transfer-Encoding: binary");
+		        echo $output;
+		        exit;
+			}
+			// $page->add('View')->set($report->render());
+			// $page->add('View')->setHTML(print_r($salary_model->getRows(),true));
+		}else{
+			$grid = $page->add('Grid');
+			$grid->setModel($salary_model);
+		}
+
+		if ($form->isSubmitted()){
+			if($form['download'] && !$form['filename']) $form->displayError('filename','PLease specify a filename');
+
+			if($form['download'])
+				$page->js()->univ()->newWindow($this->app->url('.',['format'=>$form['format'],'filename'=>$form['filename'],'download'=>$form['download'],'filter'=>1]))->execute();
+			else
+				$page->js()->reload(['format'=>$form['format'],'filename'=>$form['filename'],'download'=>$form['download']?:0,'filter'=>1])->execute();
+		}
+	
+	}
 	
 }

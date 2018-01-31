@@ -32,7 +32,10 @@ class page_layouts extends \xepan\hr\page_configurationsidebar{
 		$salary_name = implode(",",$all_salary);
 		// var_dump($salary_name);
 
-		$personpayslip_form->getElement('payslip')->set($personpayslip_m['payslip'])->setFieldHint('{$company_name},{$company_address},{$company_mobile_no},{$created_at}{$employee_name},{$department},{$designation}{$date_of_joining},{$date_of_birth},{$employee_code},{$location},{$presents},{$paid_leaves},{$unpaid_leaves},{$absents},{$paiddays},{$total_working_days},'.$salary_name);
+		$personpayslip_form->getElement('payslip')->set($personpayslip_m['payslip'])
+		->setFieldHint(implode(", ",$this->add('xepan\hr\Model_EmployeeRowDetailed')->available_fields));
+		;
+		// ->setFieldHint('{$company_name},{$company_address},{$company_mobile_no},{$created_at}{$employee_name},{$department},{$designation}{$date_of_joining},{$date_of_birth},{$employee_code},{$location},{$presents},{$paid_leaves},{$unpaid_leaves},{$absents},{$paiddays},{$total_working_days},'.$salary_name);
 		
 
 		$save = $personpayslip_form->addSubmit('Save')->addClass('btn btn-primary');
