@@ -10,14 +10,13 @@ class page_printpayslip extends \xepan\base\Page{
 
 		$employee_row_id = $_GET['employee_row'];
 
-		$employee_row = $this->add('xepan\hr\Model_EmployeeRow')->tryLoad($employee_row_id);
+		$employee_row = $this->add('xepan\hr\Model_EmployeeRowDetailed')->tryLoad($employee_row_id);
 		
 		if(!$employee_row->loaded()){
-			$this->add('View_Error')->set('employee not found');
+			$this->add('View_Error')->set('No record found');
 			return;
 		}
 
-		$emp = $employee_row->ref('employee_id');
 		$payslip_m = $this->add('xepan\base\Model_ConfigJsonModel',
 			[
 				'fields'=>[
@@ -50,32 +49,23 @@ class page_printpayslip extends \xepan\base\Page{
 		
 		$company_m->tryLoadAny();
 
-		$merge_model_array=[];
-		$merge_model_array = array_merge($merge_model_array,$employee_row->get());
-		$merge_model_array = array_merge($merge_model_array,$emp->get());
-		$merge_model_array = array_merge($merge_model_array,$company_m->get());	
-		
-		// var_dump($merge_model_array);
-
-
-
 		$payslip_layout=$this->add('GiTemplate');
 		$payslip_layout->loadTemplateFromString($payslip_m['payslip']);
 
 		$v = $this->add('View',null,null,$payslip_layout);
 		// $v->set($merge_model_array);
 		$v->setModel($employee_row);
-		$v->template->trySet('employee_name',$emp['name']);
-		$v->template->trySet('department',$emp['department']);
-		$v->template->trySet('designation',$emp['posts']);
-		$v->template->trySet('date_of_joining',$emp['doj']);
-		$v->template->trySet('employee_code',$emp['code']);
-		$v->template->trySet('location',$emp['state']);
-		$v->template->trySet('date_of_birth',$emp->ref('Events')->addCondition('head','DOB')->get('value'));
+		// $v->template->trySet('employee_name',$emp['name']);
+		// $v->template->trySet('department',$emp['department']);
+		// $v->template->trySet('designation',$emp['posts']);
+		// $v->template->trySet('date_of_joining',$emp['doj']);
+		// $v->template->trySet('employee_code',$emp['code']);
+		// $v->template->trySet('location',$emp['state']);
+		// $v->template->trySet('date_of_birth',$emp->ref('Events')->addCondition('head','DOB')->get('value'));
 		$v->template->trySet('company_name',$company_m['company_name']);
 		$v->template->trySet('company_address',$company_m['company_address']);
 		$v->template->trySet('company_mobile_no',$company_m['mobile_no']);
-		// $v->template->trySet('created_at',$v->model['created_at']);
+		$v->template->trySet('created_at',$v->model['created_at']);
 		// $v->template->trySet('total_amount_deduction',$v->model['total_amount_deduction']);
 		// $v->template->trySet('net_amount',$v->model['net_amount']);
 
