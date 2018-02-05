@@ -24,7 +24,7 @@ class Initiator extends \Controller_Addon {
                 $this->app->js()->execute();
             }
 
-            if($this->app->getConfig('keep_alive',false) === true)
+            if($this->app->getConfig('keep_alive_time',false) !== false)
                 $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),$this->app->getConfig('keep_alive_time'));
             
             if(!$this->app->getConfig('hidden_xepan_hr',false)){
