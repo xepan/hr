@@ -23,8 +23,10 @@ class Initiator extends \Controller_Addon {
                 echo "// keep-alive";
                 $this->app->js()->execute();
             }
-            $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),120000);
 
+            if($this->app->getConfig('keep_alive',false) === true)
+                $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),$this->app->getConfig('keep_alive_time'));
+            
             if(!$this->app->getConfig('hidden_xepan_hr',false)){
                 $m = $this->app->top_menu->addMenu('HR');
                 // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
