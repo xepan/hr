@@ -279,7 +279,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 			if($this->app->stickyGET('download')){				
 				$output = $report->getHTML();
 				$extension = explode(".", $_GET['filename']);
-		    	header("Content-type: text/".($extension?:'csv'));
+		    	header("Content-type: text/".(isset($extension[1])?$extension[1]:'plain'));
 		        header("Content-disposition: attachment; filename=\"".$_GET['filename']."\"");
 		        header("Content-Length: " . strlen($output));
 		        header("Content-Transfer-Encoding: binary");
