@@ -116,9 +116,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->app->hook('employee_update',[$this]);
 	}
 
-	function updateEmployeeSalary(){
+	function updateEmployeeSalary($force_update=0){
 
-		if(isset($this->app->employee_post_id_changed)){
+		if(isset($this->app->employee_post_id_changed) || $force_update){
 			
 			$this->ref('EmployeeSalary')->each(function($m){
 				$m->delete();
@@ -138,9 +138,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		}
 	}
 
-	function updateEmployeeLeave(){
+	function updateEmployeeLeave($force_update=0){
 		
-		if(isset($this->app->employee_post_id_changed)){
+		if(isset($this->app->employee_post_id_changed) || $force_update){
 			$temp = $this->ref('post_id')->ref('leave_template_id');
 
 			$this->ref('EmployeeLeaveAllow')->each(function($m){
@@ -832,7 +832,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$salary['salary'] = preg_replace('/\s+/', '',$salary['salary']);
 
 			$calculated[$salary['salary']] = $result;
-
 			if($salary['add_deduction'] == "add"){
 				$net_amount += $result;
 			}
@@ -849,7 +848,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$existing_m->addCondition('employee_id',$this->id);
 		$existing_m->tryLoadAny();
 		
-		if(!$existing_m->loaded()) return ['calculated'=>$calculated,'loaded'=>[]];
+		if(!$existing_m->loaded()){			
+			return ['calculated'=>$calculated,'loaded'=>[]];
+		} 
 
 		$loaded = [
 				'TotalWorkingDays'=>$existing_m['total_working_days'],

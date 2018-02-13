@@ -6,8 +6,8 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 	public $status=['Active','InActive'];
 	public $actions = [
-						'Active'=>['view','edit','associateEmail','deactivate'],
-						'InActive' => ['view','edit','delete','activate']
+						'Active'=>['view','edit','update_employee_leaveTemplate','update_employee_salaryTemplate','associateEmail','deactivate'],
+						'InActive' => ['view','edit','update_employee_leaveTemplate','update_employee_salaryTemplate','delete','activate']
 					];
 
 	public $title_field = "name_with_dept";
@@ -93,6 +93,84 @@ class Model_Post extends \xepan\hr\Model_Document{
             ->addActivity(" Post : '".$this['name']."' has been deactivated, related to Department : '".$this['department']."' ", null/* Related Document ID*/, $this->id /*Related Contact ID*/,null,null,null)
             ->notifyWhoCan('activate','InActive',$this);
 		$this->saveAndUnLoad();
+	}
+
+	function page_update_employee_leaveTemplate($page){
+		//post wise employees par leave update karni h
+		// action click pr page open hoga
+		// available leave update karenge
+		// form 
+			// post employee he 
+			//
+		// submit 
+			// update karena 
+
+		$page->add('View')->set("Leave Template : ".$this['leave_template'] );
+		$form = $page->add('Form');
+
+		$form->addField('Checkbox','select_all_employee')->set(1);
+		$multiselect_field = $form->addField('dropDown','employee');
+		$multiselect_field->addClass('multiselect-full-width')
+					->setAttr(['multiple'=>'multiple']);
+		$multiselect_field->setModel($this->employee());
+
+		$form->addSubmit('Update');
+
+		if($form->isSubmitted()){
+			
+			$emp_model = $this->add('xepan\hr\Model_Employee');
+			$emp_model->addCondition('post_id',$this->id);
+			if(!$form['select_all_employee'] AND $form['employee'])
+				$emp_model->addCondition('id',explode(",", $form['employee']));
+			
+			// foreach loop for employee 
+			foreach ($emp_model as $emp) {
+				$emp->updateEmployeeLeave($force_update = 1);
+			}
+			$this->app->page_action_result = $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Leave Template Update');
+		}
+
+	}
+
+	function employee(){
+		$ass_emp = $this->add('xepan\hr\Model_Employee');
+		$ass_emp->addCondition('post_id',$this->id);
+		return $ass_emp;
+	}
+
+	function page_update_employee_salaryTemplate($page){
+		// add view
+		// add form
+			// post employee
+				// submit
+			// update on
+				// each employee
+		$page->add('View')->set("Salary Template : ".$this['salary_template']);
+		$form = $page->add('Form');
+
+		$form->addField('checkBox','select_all_employees')->set(1);
+		$multiselect_field = $form->addField('dropDown','employee');
+		$multiselect_field->addClass('multiselect-full-width')
+					->setAttr(['multiple'=>'multiple']);
+		$multiselect_field->setModel($this->employee());
+
+		$form->addSubmit('Update');
+
+		if($form->isSubmitted()){
+
+			$emp_model = $this->add('xepan\hr\Model_Employee');
+			$emp_model->addCondition('post_id',$this->id);
+
+			if(!$form['select_all_employee'] AND $form['employee'])
+				$emp_model->addCondition('id',explode(",", $form['employee']));
+
+			
+			foreach ($emp_model as $emp) {				
+				$emp->updateEmployeeSalary($force_update = 1);
+			}
+			$this->app->page_action_result = $form->js(null,$form->js()->closest('.dialog')->dialog('close'))->univ()->successMessage('Salary Template Update');
+
+		}
 	}
 
 	function page_associateEmail($page){
