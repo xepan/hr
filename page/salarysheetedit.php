@@ -106,7 +106,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 					$applied_expression = preg_replace('/\s+/', '', $employee_applied_salary[ $salary['id'] ]['expression'])?:"";
 					$add_deduction = $employee_applied_salary[$salary['id']]['add_deduction'];
 				}
-
+				
 				$new_col->addField('Number',$field_name,$salary['name'])
 							->set($value)
 							->addClass('do-change-salarysheet-factor')
