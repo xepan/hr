@@ -32,7 +32,8 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasMany('xepan\hr\Post_Email_Association','post_id',null,'EmailPermissions');
 		$post_j->hasMany('xepan\hr\Employee','post_id',null,'Employees');
 
-		$this->addExpression('employee_count')->set($this->refSQL('Employees')->count())->sortable(true);
+		$this->addExpression('all_employee_count')->set($this->refSQL('Employees')->count())->sortable(true);
+		$this->addExpression('employee_count')->set($this->refSQL('Employees')->addCondition('status','Active')->count())->sortable(true);
 		$this->getElement('status')->defaultValue('Active');
 		$this->addCondition('type','Post');
 
