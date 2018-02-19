@@ -8,6 +8,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
+		ini_set('memory_limit', '1G');
 		set_time_limit(500);
 		
 		$salary_sheet_id = $this->api->stickyGET('sheet_id');
