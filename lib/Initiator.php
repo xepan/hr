@@ -35,7 +35,7 @@ class Initiator extends \Controller_Addon {
                 $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
                 
                 if(!$this->app->getConfig('base_hr_only',false)){   
-                    $m->addItem(['Employee Attandance','icon'=>'fa fa-check-square-o'],'xepan_hr_attandance');
+                    $m->addItem(['Employee Attendance','icon'=>'fa fa-check-square-o'],'xepan_hr_attandance');
                     $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
                     $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
                     $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
@@ -70,7 +70,7 @@ class Initiator extends \Controller_Addon {
             // $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
 
             /*Reports menu*/
-            $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
+            $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
 
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
             // $post=$this->app->employee->ref('post_id');
