@@ -78,8 +78,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeLedger']);
 		$this->addHook('beforeDelete',[$this,'deleteEmployeeMovements']);
 		$this->addHook('beforeSave',[$this,'updateSearchString']);
-		$this->addHook('afterSave',[$this,'updateEmployeeSalary']);
-		$this->addHook('afterSave',[$this,'updateEmployeeLeave']);
+		// $this->addHook('afterSave',[$this,'updateEmployeeSalary']);
+		// $this->addHook('afterSave',[$this,'updateEmployeeLeave']);
 		$this->addHook('beforeSave',[$this,'checkLimits']);
 	}
 
@@ -119,7 +119,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function updateEmployeeSalary($force_update=0){
 
 		if(isset($this->app->employee_post_id_changed) || $force_update){
-			
 			$this->ref('EmployeeSalary')->each(function($m){
 				$m->delete();
 			});
