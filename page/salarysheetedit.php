@@ -56,9 +56,16 @@ class page_salarysheetedit extends \xepan\base\Page{
 			$view = $form->add('View')->setAttr('data-employee_id',$employee->id)->addClass('xepan-row-salarysheet-'.$employee->id);
 
 			$cols = $view->add('Columns')->addClass('row panel panel-info');
+			$error_section = $cols->addColumn(12);
 			$col1 = $cols->addColumn(2)->addClass('col-md-2');
 			$col1->addField('line','f_employee_name_'.$employee->id,'name')->set($employee['name']);
-			$result = $employee->getSalarySlip($month,$year,$salary_sheet_id,$this->TotalWorkDays);
+			$result = [];
+			try{
+				$result = $employee->getSalarySlip($month,$year,$salary_sheet_id,$this->TotalWorkDays);
+			}catch(\Exception $e){
+				$error_section->add('View')->addClass('alert alert-danger')->set($e->getMessage())->setStyle('margin-top','0px;');
+			}
+
 			$col1->add('View')->set("Working Mode : ".$employee['salary_payment_type']);
 
 			//for pre defined system calculated Factor
