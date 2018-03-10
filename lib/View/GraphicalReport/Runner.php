@@ -45,12 +45,15 @@ class View_GraphicalReport_Runner extends \View{
 		
 		$this->title = $rpt['name'];
 		$report_w = $rpt->ref('xepan\base\GraphicalReport_Widget')->addCondition('is_active',true)->setOrder('order','asc');
-		
+		$active_available_widgets = array_column($this->widget_list, 0);
 		foreach ($report_w as $widget) {
 			$w = $this->add('xepan\base\Widget_Wrapper');
 			$w->addClass('widget');
 			if($this->report_type==='chart')
 				$w->addClass('col-md-'.$widget['col_width']);
+			
+			if(!in_array($widget['class_path'], $active_available_widgets)) continue;
+
 			$widget = $w->add($widget['class_path'],['report'=>$this]);
 			$widget->setFilterForm($this->filter_form);
 		}
