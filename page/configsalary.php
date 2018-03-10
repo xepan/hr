@@ -23,9 +23,9 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 				'add_deduction'=>'c3~3',
 				'unit'=>'c4~3',
 				'order'=>'c5~3',
-				'default_value'=>'c6~3',
 				'is_reimbursement'=>'c7~3',
 				'is_deduction'=>'c8~3',
+				'default_value'=>'c11~12',
 			]);
 
 		$crud->setModel($salary);
@@ -64,7 +64,8 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 		$crud->grid->addSno();
 		$crud->grid->removeColumn('action');
 		$crud->grid->removeAttachment();
-
+		$crud->grid->addFormatter('default_value','Wrap');
+		
 		$tabs->addTabURL('xepan_hr_salarytemplate','Salary Templates');
 	}
 }

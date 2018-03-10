@@ -14,7 +14,10 @@ class Model_Employee_Salary extends \xepan\base\Model_Table{
 		$this->addField('unit')->enum(['monthly']);
 		
 		$this->addExpression('add_deduction')->set($this->refSQL('salary_id')->fieldQuery('add_deduction'));
+		$this->addExpression('salary_order')
+			->set($this->refSQL('salary_id')->fieldQuery('order'));
 
+		$this->setOrder('salary_order','asc');
 		$this->addHook('beforeSave',$this);
 	}
 
