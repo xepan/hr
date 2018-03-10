@@ -49,7 +49,7 @@ namespace xepan\hr {
         		')
 				->_load('tinymce.min')
 				->_load('jquery.tinymce.min')
-				->_load('xepan-richtext-admin1')
+				->_load('xepan_richtext_admin')
 				->_library('tinymce')
 				->init([])
 				;
