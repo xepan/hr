@@ -894,7 +894,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 			$expression = str_replace("{".$key."}", $value, $expression);
 		}
 
-		if(strpos($expression, "{"))
+		if(strpos($expression, "{") !== false OR strpos($expression, "}") !== false)
 			throw new \Exception("please correct salary (".$expression.") of employee ".$this['name']);
 
 		eval('$return = '.$expression.';');
@@ -912,7 +912,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	function getApplySalary(){
 		if(!$this->loaded()) throw new \Exception("model must loaded", 1);
 		
-		$emp_salary = $this->add('xepan\hr\Model_Employee_Salary')->addCondition('employee_id',$this->id)->getRows();
+		$emp_salary = $this->add('xepan\hr\Model_Employee_Salary')
+					->addCondition('employee_id',$this->id)
+					->getRows();
 		$result_array = [];
 		foreach ($emp_salary as $key => $salary_info) {
 			$result_array[$salary_info['salary_id']] = [

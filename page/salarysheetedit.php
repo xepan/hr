@@ -83,7 +83,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 				$field = $new_col->addField('Number',"f_".$name."_".$employee->id, $name);
 				$field->set($value);
 				$field->addClass($name."_".$employee->id);
-				$field->addClass("do-change-salarysheet-factor");
+				$field->addClass("do-change-salarysheet-factor system-calculated-salary");
 				$field->setAttr('data-employee-salary',$name);
 				$field->setAttr('data-add_deduction',"dummy");
 				$field->setAttr('data-employee_id',$employee->id);
@@ -93,6 +93,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 					$field->setAttr('data-xepan-salarysheet-expression','{Presents}+{PaidLeaves}+{OfficialHolidays}');
 				// $salary_field_id_array[$name] = $field->name;
 			}
+
 			//for all company salary
 			foreach ($all_salary as $key => $salary) {
 				$value = 0;

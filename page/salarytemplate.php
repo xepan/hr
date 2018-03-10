@@ -31,5 +31,6 @@ class page_salarytemplate extends \xepan\base\Page {
 		$crud->grid->addSno();
 		// $crud->grid->removeColumn('action');
 		$crud->grid->removeAttachment();
+		$crud->grid->addFormatter('amount','Wrap');
 	}
 }
