@@ -31,6 +31,8 @@ class Controller_ACL extends \AbstractController {
 
 	public $show_spot_acl=true;
 
+	public $entity_list=[];
+
 	function init(){
 		parent::init();
 		
@@ -275,9 +277,9 @@ class Controller_ACL extends \AbstractController {
 		$string_count = strpos($this->model_class, '\Model_');
 		$model_namespace = substr($this->model_class,0,$string_count);
 		$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']);
-		$entity_list=[];
-		$this->app->hook('entity_collection',[&$entity_list]);
-		if(!array_key_exists($str, $entity_list) and $this->model->acl !== false){
+		$this->entity_list=[];
+		$this->app->hook('entity_collection',[&$this->entity_list]);
+		if(!array_key_exists($str, $this->entity_list) and $this->model->acl !== false){
 			$this->acl_error_vp = $this->add('VirtualPage');
 			$this->manageAclErrorVP($this->acl_error_vp);
 			$view = $this->getView();
@@ -594,6 +596,7 @@ class Controller_ACL extends \AbstractController {
 
 	function manageSpotACLVP($vp){
 		$vp->set(function($page){
+
 			$post = $this->api->stickyGET('post_id');
 			$ns = $this->api->stickyGET('namespace');
 			$dt = $this->api->stickyGET('type');
@@ -628,19 +631,24 @@ class Controller_ACL extends \AbstractController {
 
 
 
-			$af = $page->add('Form');							
-
+			$af = $page->add('Form');
 			if($dt){
+
 				$is_config= false;
 				try{
 					$m = $this->add($ns.'\\Model_'.$dt);
 				}catch(\Exception $e){
 					try{
-						$m = $this->add($ns.'\\'.$dt);
+						$m = $this->add($this->entity_list[$dt]['model']);
 					}catch(\Exception $e1){
-						$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
-						$is_config = true;
+						try{
+							$m = $this->add($ns.'\\'.$dt);
+						}catch(\Exception $e1){
+							$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+							$is_config = true;
+						}
 					}
+					
 				}
 
 				$existing_acl = $this->add('xepan\hr\Model_ACL')
