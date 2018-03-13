@@ -268,7 +268,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 			$format_field->set($_GET['format']);
 
 			$nl="<br/>";
-			if($this->app->stickyGET('download')) $nl="\n";
+			if($this->app->stickyGET('download')) $nl="\r\n";
 			
 			$template = $page->add('GiTemplate');
 			$template->loadTemplateFromString("{rows}{row}".$_GET['format'].$nl."{/}{/}");
