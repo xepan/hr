@@ -98,6 +98,8 @@ class Initiator extends \Controller_Addon {
             $this->app->employee = $this->add('xepan\hr\Model_Employee');
         }
 
+        $this->setUpScreenShare();
+
         $search_department = $this->add('xepan\hr\Model_Department');
         $this->app->addHook('quick_searched',[$search_department,'quickSearch']);
         $this->app->addHook('communication_created',[$this->app->employee,'communicationCreatedNotify']);
@@ -292,6 +294,19 @@ class Initiator extends \Controller_Addon {
     //     }
     // }
 
+    function setUpScreenShare(){
+        $this->app->jui->addStaticInclude('getScreenId');
+        $this->app->jui->addStaticInclude('screen');
+        $this->app->jui->addStaticInclude('firebase');
+        $vp = $this->add('VirtualPage');
+        $vp->set(function($page){
+            $page->js(true,"var screen1 = new Screen('abcd1');/*screen.onaddstream = function(e) { document.body.appendChild(e.video); };*/")->_library('screen1')->view('abcd');
+        });
+
+        $this->app->js(true,"var screen = new Screen('abcd');/*screen.onaddstream = function(e) { document.body.appendChild(e.video); };*/")->_library('screen')->share('abcd');
+        $share = $this->app->page_top_right_button_set->addButton('VIEW')->addClass('btn btn-primary');
+        $share->js('click')->univ()->frameURL('VIEW SCREEN',$vp->getURL());
+    }
 
 
 	function resetDB(){
