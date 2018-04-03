@@ -33,6 +33,8 @@ class Controller_ACL extends \AbstractController {
 
 	public $entity_list=[];
 
+	public $debug=false;
+
 	function init(){
 		parent::init();
 		
@@ -497,10 +499,17 @@ class Controller_ACL extends \AbstractController {
 		$this->acl_m->addCondition('type',isset($this->model->acl_type)?$this->model->acl_type:$this->model['type']);
 		$this->acl_m->addCondition('post_id',$this->app->employee['post_id']);
 
+		if($this->debug)
+			$this->acl_m->debug();
+
 		$this->acl_m->tryLoadAny();
 		if(!$this->acl_m->loaded()){
 			$this->acl_m['allow_add'] = $this->permissive_acl;
 			$this->acl_m->save();
+		}
+
+		if($this->debug){
+			echo '$this->acl_m->id = ' .$this->acl_m->id. '<br/>';
 		}
 
 		/**
@@ -633,13 +642,12 @@ class Controller_ACL extends \AbstractController {
 
 			$af = $page->add('Form');
 			if($dt){
-
 				$is_config= false;
 				try{
 					$m = $this->add($ns.'\\Model_'.$dt);
 				}catch(\Exception $e){
 					try{
-						$m = $this->add($this->entity_list[$dt]['model']);
+						$m = $this->add($this->entity_list[$dt]['model']);						
 					}catch(\Exception $e1){
 						try{
 							$m = $this->add($ns.'\\'.$dt);
@@ -702,10 +710,14 @@ class Controller_ACL extends \AbstractController {
 					$m = $this->add($ns.'\\Model_'.$dt);
 				}catch(\Exception $e){
 					try{
-						$m = $this->add($ns.'\\'.$dt);
-					}catch(\Exception $e1){
-						$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
-						$is_config = true;
+						$m = $this->add($this->entity_list[$dt]['model']);	
+					}catch(\Exception $e){
+						try{
+							$m = $this->add($ns.'\\'.$dt);
+						}catch(\Exception $e1){
+							$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+							$is_config = true;
+						}
 					}
 				}
 				$acl_array=[];
@@ -743,7 +755,7 @@ class Controller_ACL extends \AbstractController {
 						->addCondition('namespace',$ns)
 						->tryLoadAny()
 						;												
-				return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $acl_m['type']]);
+				return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $type[0]]);
 			});
 		});
 	}
