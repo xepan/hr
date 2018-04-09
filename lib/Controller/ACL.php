@@ -610,6 +610,11 @@ class Controller_ACL extends \AbstractController {
 	function manageSpotACLVP($vp){
 		$vp->set(function($page){
 
+			if($this->app->ACLModel === "Departmental"){
+				$page->add('View')->addClass('alert alert-danger')->set('ACL is defined as Department Base, Please configure ACL from HR -> ACL menu');
+				return;
+			}
+
 			$post = $this->api->stickyGET('post_id');
 			$ns = $this->api->stickyGET('namespace');
 			$dt = $this->api->stickyGET('type');
@@ -766,6 +771,10 @@ class Controller_ACL extends \AbstractController {
 
 	function manageAclErrorVP($vp){
 		$vp->set(function($page){
+			if($this->app->ACLModel === "Departmental"){
+				$page->add('View')->addClass('alert alert-danger')->set('ACL is defined as Department Base, Please configure ACL from HR -> ACL menu');
+				return;
+			}
 			$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']);
 			$page->add('View_Error')->set($str.' is not in export entity as key, Develoepr issue')->addClass('alert alert-danger');
 			$page->add('View_Info')->set('export entity must have type (field value) of model or Class name stripped `Model_` ')->addClass('alert alert-info');
