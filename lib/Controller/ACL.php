@@ -447,7 +447,7 @@ class Controller_ACL extends \AbstractController {
 		}elseif($this->model->hasMethod($action)){
 			try{
 					$this->api->db->beginTransaction();
-					$this->model->$action();
+					$result_js = $this->model->$action();
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
@@ -455,7 +455,11 @@ class Controller_ACL extends \AbstractController {
 					$this->api->db->rollback();
 					throw $e;
 				}
-			$this->getView()->js()->reload(null,null,$this->view_reload_url)->execute();
+				$js=[];
+				if($result_js instanceof \jQuery_Chain) {
+					$js[] = $result_js;
+				}
+			$this->getView()->js(null,$js)->reload(null,null,$this->view_reload_url)->execute();
 			// $this->getView()->js()->univ()->location()->execute();
 		}else{
 			return $js->univ()->errorMessage('Action "'.$action.'" not defined in Model');
