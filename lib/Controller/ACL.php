@@ -33,6 +33,8 @@ class Controller_ACL extends \AbstractController {
 
 	public $entity_list=[];
 
+	public $debug=false;
+
 	function init(){
 		parent::init();
 		
@@ -445,7 +447,7 @@ class Controller_ACL extends \AbstractController {
 		}elseif($this->model->hasMethod($action)){
 			try{
 					$this->api->db->beginTransaction();
-					$this->model->$action();
+					$result_js = $this->model->$action();
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
@@ -453,7 +455,11 @@ class Controller_ACL extends \AbstractController {
 					$this->api->db->rollback();
 					throw $e;
 				}
-			$this->getView()->js()->reload(null,null,$this->view_reload_url)->execute();
+				$js=[];
+				if($result_js instanceof \jQuery_Chain) {
+					$js[] = $result_js;
+				}
+			$this->getView()->js(null,$js)->reload(null,null,$this->view_reload_url)->execute();
 			// $this->getView()->js()->univ()->location()->execute();
 		}else{
 			return $js->univ()->errorMessage('Action "'.$action.'" not defined in Model');
@@ -497,10 +503,17 @@ class Controller_ACL extends \AbstractController {
 		$this->acl_m->addCondition('type',isset($this->model->acl_type)?$this->model->acl_type:$this->model['type']);
 		$this->acl_m->addCondition('post_id',$this->app->employee['post_id']);
 
+		if($this->debug)
+			$this->acl_m->debug();
+
 		$this->acl_m->tryLoadAny();
 		if(!$this->acl_m->loaded()){
 			$this->acl_m['allow_add'] = $this->permissive_acl;
 			$this->acl_m->save();
+		}
+
+		if($this->debug){
+			echo '$this->acl_m->id = ' .$this->acl_m->id. '<br/>';
 		}
 
 		/**
@@ -597,6 +610,11 @@ class Controller_ACL extends \AbstractController {
 	function manageSpotACLVP($vp){
 		$vp->set(function($page){
 
+			if($this->app->ACLModel === "Departmental"){
+				$page->add('View')->addClass('alert alert-danger')->set('ACL is defined as Department Base, Please configure ACL from HR -> ACL menu');
+				return;
+			}
+
 			$post = $this->api->stickyGET('post_id');
 			$ns = $this->api->stickyGET('namespace');
 			$dt = $this->api->stickyGET('type');
@@ -633,13 +651,12 @@ class Controller_ACL extends \AbstractController {
 
 			$af = $page->add('Form');
 			if($dt){
-
 				$is_config= false;
 				try{
 					$m = $this->add($ns.'\\Model_'.$dt);
 				}catch(\Exception $e){
 					try{
-						$m = $this->add($this->entity_list[$dt]['model']);
+						$m = $this->add($this->entity_list[$dt]['model']);						
 					}catch(\Exception $e1){
 						try{
 							$m = $this->add($ns.'\\'.$dt);
@@ -702,10 +719,14 @@ class Controller_ACL extends \AbstractController {
 					$m = $this->add($ns.'\\Model_'.$dt);
 				}catch(\Exception $e){
 					try{
-						$m = $this->add($ns.'\\'.$dt);
-					}catch(\Exception $e1){
-						$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
-						$is_config = true;
+						$m = $this->add($this->entity_list[$dt]['model']);	
+					}catch(\Exception $e){
+						try{
+							$m = $this->add($ns.'\\'.$dt);
+						}catch(\Exception $e1){
+							$m = $this->add('xepan\base\Model_ConfigJsonModel',['fields'=>[1],'config_key'=>$dt]);
+							$is_config = true;
+						}
 					}
 				}
 				$acl_array=[];
@@ -743,13 +764,17 @@ class Controller_ACL extends \AbstractController {
 						->addCondition('namespace',$ns)
 						->tryLoadAny()
 						;												
-				return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $acl_m['type']]);
+				return $af->js()->reload(['post_id'=>$f['post'],'namespace'=>$acl_m['namespace'],'type'=> $type[0]]);
 			});
 		});
 	}
 
 	function manageAclErrorVP($vp){
 		$vp->set(function($page){
+			if($this->app->ACLModel === "Departmental"){
+				$page->add('View')->addClass('alert alert-danger')->set('ACL is defined as Department Base, Please configure ACL from HR -> ACL menu');
+				return;
+			}
 			$str = ($this->model->acl_type?$this->model->acl_type:$this->model['type']);
 			$page->add('View_Error')->set($str.' is not in export entity as key, Develoepr issue')->addClass('alert alert-danger');
 			$page->add('View_Info')->set('export entity must have type (field value) of model or Class name stripped `Model_` ')->addClass('alert alert-info');

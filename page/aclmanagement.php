@@ -33,8 +33,11 @@ class page_aclmanagement extends \xepan\base\Page {
 			$this->manageAllowACL();
 		if($this->app->ACLModel === "Departmental")
 			$this->manageDepartmentalACL();
-		if($this->app->ACLModel === "Documentbase")
+		if($this->app->ACLModel === "Documentbase"){
+			$this->add('View')->addClass('alert alert-danger')->set('ACL is defined as Documentbase please go to each document with superuser rights and hit "ACL" button at the top');
+			return;
 			$this->manageDocumentbaseACL();
+		}
 
 	}
 	function manageAllowACL(){
@@ -80,6 +83,7 @@ class page_aclmanagement extends \xepan\base\Page {
 		//second form submit
 		if($form->isSubmitted()){
 			foreach ($install_app as  $app) {
+				// echo $app['name'];
 				if($form[$this->app->normalizeName($app['application_namespace'])]){
 					$emp_dept_asso_m = $this->add('xepan\hr\Model_EmployeeDepartmentalAclAssociation');
 					$emp_dept_asso_m->addCondition('employee_id', $emp_id);
