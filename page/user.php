@@ -24,7 +24,7 @@ class page_user extends \xepan\base\Page{
 			$user_m->addCondition('created_by_id',$this->app->employee->id);
 		}
 
-		$user_view->setModel($user_m,array('created_by_id','username','password','type','scope','status'),array('username','type','status','action','related_contact','related_contact_type','scope'));
+		$user_view->setModel($user_m,array('created_by_id','username','password','type','scope','status','hash'),array('username','type','status','action','related_contact','related_contact_type','scope'));
 		$user_view->grid->addSno();
 
 	}
