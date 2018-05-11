@@ -94,10 +94,12 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
 		// value zero/0 means unlimited employee add 
         if((isset($extra_info ['specification']['Employee Limit'])) AND ($extra_info ['specification']['Employee Limit'] > 0)){
-        	$emp_count = $this->add('xepan\hr\Model_Employee')
-						->count()->getOne();
-        	
-        	if($emp_count > $extra_info ['specification']['Employee Limit']){
+        	$emp_count = $this->add('xepan\hr\Model_Employee');
+        	if($this->loaded())
+        		$emp_count->addCondition('id','<>',$this->id);
+
+			$emp_count = $emp_count->count()->getOne();
+        	if($emp_count >= $extra_info ['specification']['Employee Limit']){
         		throw $this->exception("Sorry ! You cannot add more employees. Your Employee Limit is over")
         				->addMoreInfo('Employee Count',$emp_count)
         				->addMoreInfo('Employee Limit',$extra_info ['specification']['Employee Limit'])
