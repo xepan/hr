@@ -92,8 +92,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 	function checkLimits(){
 		$extra_info = $this->app->recall('epan_extra_info_array',false);
-
-        if((isset($extra_info ['specification']['Employee Limit'])) AND ($extra_info ['specification']['Employee Limit'] <> 0)){
+		// value zero/0 means unlimited employee add 
+        if((isset($extra_info ['specification']['Employee Limit'])) AND ($extra_info ['specification']['Employee Limit'] > 0)){
         	$emp_count = $this->add('xepan\hr\Model_Employee')
 						->count()->getOne();
         	
