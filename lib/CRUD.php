@@ -7,6 +7,7 @@ class CRUD extends \xepan\base\CRUD {
 	public $permissive_acl = false;
 	public $actionsWithoutACL = false;
 	public $show_spot_acl = true;
+	public $add_actions = true;
 
 	function noAttachment(){
 		$this->grid->removeColumn('attachement_icon');
@@ -21,7 +22,7 @@ class CRUD extends \xepan\base\CRUD {
 			if($this->actionsWithoutACL || isset($this->app->actionsWithoutACL)){
 				$this->add('xepan\hr\Controller_Action',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL]);
 			}else{
-				$this->add('xepan\hr\Controller_ACL',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL]);
+				$this->add('xepan\hr\Controller_ACL',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL,'add_actions'=>$this->add_actions]);
 			}
 		}
 		return $m;
