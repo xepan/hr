@@ -22,6 +22,8 @@ class Controller_ACL extends \AbstractController {
 	public $view_reload_url=null;
 	public $dependent = false;
 
+	public $add_actions=true;
+
 	public $based_on_model=null;
 	public $based_on_view=null;
 
@@ -185,7 +187,7 @@ class Controller_ACL extends \AbstractController {
 
 		// Add Actions
 		
-		if($view = $this->getView()){
+		if(($view = $this->getView()) && $this->add_actions){
 			if($view instanceof \xepan\base\CRUD){
 				if(!$view->isEditing()){
 					$view = $view->grid;
@@ -408,7 +410,7 @@ class Controller_ACL extends \AbstractController {
 
 	function manageAction($js,$data){		
 		$this->app->inAction=true;
-		$this->model = $this->model->newInstance()->load($data['id']?:$this->api->stickyGET($this->name.'_id'));
+		$this->model = $this->model->newInstance()->load($this->api->stickyGET($this->name.'_id')?:$data['id']);
 		$action=$data['action']?:$this->api->stickyGET($this->name.'_action');
 		if($this->model->hasMethod('page_'.$action)){
 			$p = $this->add('VirtualPage');
