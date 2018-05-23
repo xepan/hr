@@ -311,7 +311,7 @@ class Initiator extends \Controller_Addon {
         
         // $this->app->epan=$this->app->new_epan;
 
-        $this->createDefaultEmployee();
+        $emp = $this->createDefaultEmployee();
 
         // Do other tasks needed
         // Like empting any folder etc
@@ -328,6 +328,9 @@ class Initiator extends \Controller_Addon {
                  $import_model->importJson($json);
             }
         }   
+
+        $emp['graphical_report_id'] = $this->add('xepan\base\Model_GraphicalReport')->tryLoadBy('name','GlobalReport')->get('id');
+        $emp->save();
     }
 
     function createDefaultEmployee(){
@@ -368,6 +371,8 @@ class Initiator extends \Controller_Addon {
                 ->addCondition('user_id',$user->id)
                 ->tryLoadAny()
                 ->save();
+
+        return $emp;
     }
 
     function addAppFunctions(){
