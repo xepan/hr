@@ -354,6 +354,7 @@ class Initiator extends \Controller_Addon {
                     ->addCondition('department_id',$dept->id)
                     ->addCondition('in_time','10:00:00')
                     ->addCondition('out_time','18:00:00')
+                    ->addCondition('permission_level','Global')
                     ->tryLoadAny()
                     ->save();
 
