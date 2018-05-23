@@ -753,7 +753,7 @@ class Controller_ACL extends \AbstractController {
 				$acl_m['action_allowed'] = json_encode($acl_array);
 				$acl_m['allow_add'] = $f['allow_add']?:false;
 				$acl_m->save();
-				return $f->js(true,$f->js()->univ()->successMessage('Updated'))->univ()->closeDialog();
+				return $f->js(true,$f->js()->univ()->successMessage('Updated, Please reload page'))->univ()->closeDialog();
 			});
 
 			$form->onSubmit(function($f)use($af){
