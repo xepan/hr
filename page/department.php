@@ -18,7 +18,7 @@ class page_department extends \xepan\base\Page {
 		parent::init();
 		
 		$department=$this->add('xepan\hr\Model_Department');
-		$department->add('xepan\hr\Controller_SideBarStatusFilter');
+		$department->add('xepan\base\Controller_TopBarStatusFilter');
 		
 
 		$department->setOrder('production_level','asc');

@@ -6,7 +6,7 @@ class page_user extends \xepan\base\Page{
 		parent::init();
 
 		$user_m= $this->add('xepan\base\Model_User');
-		$user_m->add('xepan\hr\Controller_SideBarStatusFilter');
+		$user_m->add('xepan\base\Controller_TopBarStatusFilter');
 		if($status = $this->api->stickyGET('status'))
 			$user_m->addCondition('status',$status);
 			
