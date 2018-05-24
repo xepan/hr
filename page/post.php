@@ -27,7 +27,7 @@ class page_post extends \xepan\base\Page {
 		$post->getElement('in_time')->caption('Schedule Time');
 		$post->getElement('employee_count')->caption('Employee');
 
-		$post->add('xepan\hr\Controller_SideBarStatusFilter');
+		$post->add('xepan\base\Controller_TopBarStatusFilter');
 		if($status = $this->api->stickyGET('status'))
 			$post->addCondition('status',$status);
 

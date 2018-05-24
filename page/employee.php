@@ -20,7 +20,7 @@ class page_employee extends \xepan\base\Page {
 		$this->api->stickyGET('department_id');
 		
 		$employee=$this->add('xepan\hr\Model_Employee');
-		$employee->add('xepan\hr\Controller_SideBarStatusFilter');
+		$employee->add('xepan\base\Controller_TopBarStatusFilter');
 		
 		if($status = $this->api->stickyGET('status'))
 			$employee->addCondition('status',$status);	
