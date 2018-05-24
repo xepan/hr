@@ -212,12 +212,14 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 				'salary_details_fields'=>'Salary Details~c1~12~closed',
 				'emp_fields'=>'Employee Details~c1~12~closed',
 				'format'=>'Format to Export~c1~12',
-				'download'=>'c2~6',
-				'filename'=>'c3~6',
+				'download'=>'c2~4',
+				'filename'=>'c3~4',
+				'decimal_digits'=>'c4~2',
 			]);
 
 		$format_field = $form->addField('format');
 		$form->addField('Checkbox','download');
+		$form->addField('Number','decimal_digits');
 		$form->addField('filename');
 
 		// set fields
@@ -258,12 +260,16 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 		foreach ($emp_fields as $emp_fields) {
 			$salary_model->addExpression($emp_fields)->set($page->add('xepan\hr\Model_Employee',['addOtherInfo'=>true])->addCondition('id',$salary_model->getField('employee_id'))->fieldQuery($emp_fields));
 		}
+
 		foreach ($salaries as $s) {
 			$salary_model->addExpression($s)->set($salary_model->refSQL('SalaryDetail')->addCondition('salary',$s)->fieldQuery('amount'));
 		}
+
 		$salary_model->addCondition('salary_abstract_id',$this->id);
 
 		if($this->app->stickyGET('format')){
+			
+			$decimal = $this->app->stickyGET('decimal_digits');
 
 			$format_field->set($_GET['format']);
 
@@ -273,6 +279,12 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 			$template = $page->add('GiTemplate');
 			$template->loadTemplateFromString("{rows}{row}".$_GET['format'].$nl."{/}{/}");
 			$report = $page->add('CompleteLister',null,null,$template);
+
+			$report->addHook('formatRow',function($g){
+				foreach ($salaries as $s) {
+					$g->current_row[$s] = round($g->model[$s],$decimal);
+				}
+			});
 
 			$report->setModel($salary_model);
 
@@ -299,7 +311,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 			if($form['download'])
 				$page->js()->univ()->newWindow($this->app->url('.',['format'=>$form['format'],'filename'=>$form['filename'],'download'=>$form['download'],'filter'=>1]))->execute();
 			else
-				$page->js()->reload(['format'=>$form['format'],'filename'=>$form['filename'],'download'=>$form['download']?:0,'filter'=>1])->execute();
+				$page->js()->reload(['format'=>$form['format'],'filename'=>$form['filename'],'download'=>$form['download']?:0,'decimal_digits'=>$form['decimal_digits'],'filter'=>1])->execute();
 		}
 	
 	}
