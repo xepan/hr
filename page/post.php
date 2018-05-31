@@ -40,6 +40,8 @@ class page_post extends \xepan\base\Page {
 			$post->addCondition('department_id',$_GET['department_id']);
 		}
 
+		$post->setOrder('order');
+
 		$crud=$this->add('xepan\hr\CRUD');
 		$crud->grid->addPaginator(50);
 
@@ -51,6 +53,7 @@ class page_post extends \xepan\base\Page {
 				'parent_post_id~Report To'=>'c3~4',
 				'salary_template_id~Salary Template'=>'c4~4',
 				'leave_template_id~Leave Template'=>'c5~4',
+				'order'=>'o1~4',
 				'in_time'=>'Schedule~c1~6',
 				'out_time'=>'c2~6',
 				'permission_level'=>'Permission~c1~6~Graph/Report/Activity Accessibility Permission',
@@ -58,8 +61,8 @@ class page_post extends \xepan\base\Page {
 			]);
 
 		$crud->setModel($post,
-				['name','department_id','department','parent_post_id','parent_post','salary_template_id','leave_template_id','permission_level','in_time','out_time','finacial_permit_limit'],
-				['name','department','parent_post','in_time','out_time','employee_count','existing_permitted_emails']
+				['name','order','department_id','department','parent_post_id','parent_post','salary_template_id','leave_template_id','permission_level','in_time','out_time','finacial_permit_limit'],
+				['name','order','department','parent_post','in_time','out_time','employee_count','existing_permitted_emails']
 			);
 		$crud->add('xepan\base\Controller_MultiDelete');
 

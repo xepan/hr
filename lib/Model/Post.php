@@ -22,8 +22,9 @@ class Model_Post extends \xepan\hr\Model_Document{
 		$post_j->hasOne('xepan\hr\LeaveTemplate','leave_template_id');
 
 		$post_j->addField('name')->sortable(true);
-		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
+		$post_j->addField('order')->type('number')->sortable(true);
 		
+		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
 		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));
 		$post_j->addField('permission_level')->enum(['Individual','Sibling','Department','Global'])->defaultValue('Individual');
 		$post_j->addField('finacial_permit_limit');
