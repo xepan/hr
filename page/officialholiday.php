@@ -24,7 +24,7 @@ class page_officialholiday extends \xepan\hr\page_configurationsidebar{
 		$crud->grid->addQuickSearch(['name','type']);
 		$crud->grid->addSno();
 		$crud->grid->removeAttachment();
-		$crud->grid->removeColumn('action');
+		// $crud->grid->removeColumn('action');
 		$crud->grid->addPaginator($ipp=50);
 	}
 }
