@@ -45,12 +45,13 @@ class page_employeedetail extends \xepan\base\Page {
 				$post_field->getModel()->addCondition('department_id',$dept_id);
 			}
 		
-			if($cntry_id = $this->app->stickyGET('country_id')){			
-				$state_field->getModel()->addCondition('country_id',$cntry_id);
-			}
+			// if($cntry_id = $this->app->stickyGET('country_id')){			
+			// 	$state_field->getModel()->addCondition('country_id',$cntry_id);
+			// }
+			$state_field->dependsOn($country_field);
 
 			$dept_field->js('change',$post_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$post_field->name]),'dept_id'=>$dept_field->js()->val()]));
-			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
+			// $country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
 
 			$form->addField('line','contact_no_1');
 			$form->addField('line','contact_no_2');

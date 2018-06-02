@@ -28,12 +28,11 @@ class page_affiliatedetails extends \xepan\base\Page {
 
 			$country_field =  $form->getElement('country_id');
 			$state_field = $form->getElement('state_id');
-
-			if($cntry_id = $this->app->stickyGET('country_id')){			
-				$state_field->getModel()->addCondition('country_id',$cntry_id);
-			}
-
-			$country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
+			$state_field->dependsOn($country_field);
+			// if($cntry_id = $this->app->stickyGET('country_id')){			
+			// 	$state_field->getModel()->addCondition('country_id',$cntry_id);
+			// }
+			// $country_field->js('change',$state_field->js()->reload(null,null,[$this->app->url(null,['cut_object'=>$state_field->name]),'country_id'=>$country_field->js()->val()]));
 
 			$form->addField('line','contact_no_1');
 			$form->addField('line','contact_no_2');
