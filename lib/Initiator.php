@@ -12,6 +12,10 @@ class Initiator extends \Controller_Addon {
         $this->addLocation(array('template'=>'templates','js'=>'templates/js','css'=>'templates/css'))
         ->setBaseURL('../vendor/xepan/hr/');
 
+        if($this->app->inConfigurationMode)
+            $this->populateConfigurationMenus();
+        else
+            $this->populateApplicationMenus();
 
         if(!$this->app->isAjaxOutput() && !$this->app->getConfig('hidden_xepan_hr',false)){
             $this->app->side_menu->addItem(['Document','icon'=>' fa fa-folder','badge'=>["0",'swatch'=>' label label-primary pull-right']],'xepan_hr_document')->setAttr(['title'=>'Documents']);
@@ -27,29 +31,6 @@ class Initiator extends \Controller_Addon {
             if($this->app->getConfig('keep_alive_time',false) !== false)
                 $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),$this->app->getConfig('keep_alive_time'));
             
-            if(!$this->app->getConfig('hidden_xepan_hr',false)){
-                $m = $this->app->top_menu->addMenu('HR');
-                // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
-                $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
-                $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
-                $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
-                
-                if(!$this->app->getConfig('base_hr_only',false)){   
-                    $m->addItem(['Employee Attendance','icon'=>'fa fa-check-square-o'],'xepan_hr_attandance');
-                    $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
-                    $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
-                    $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
-                    $m->addItem(['Deduction Management','icon'=>'fa fa-money'],'xepan_hr_deduction');
-                    $m->addItem(['Salary Sheet','icon'=>'fa fa-money'],'xepan_hr_salarysheet');
-
-                    $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
-                    $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
-                    $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
-                    $m->addItem(['Configuration','icon'=>'fa fa-cog fa-spin'],'xepan_hr_workingweekday');
-                    $m->addItem(['Deactivate Request','icon'=>'fa fa-user'],'xepan_hr_employee_deactivaterequest');
-                }
-                
-            }
             
             if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
@@ -63,15 +44,7 @@ class Initiator extends \Controller_Addon {
                 // $this->app->redirect('.');
                 // exit;
             }
-            $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
-            $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_leave');
-            $this->app->user_menu->addItem(['Analytical Reports','icon'=>'fa fa-dashboard'],'xepan_hr_graphicalreport_builder');
-            // $m = $this->app->side_menu->addItem('HR');
-            // $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
-
-            /*Reports menu*/
-            $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
-
+            
             $this->app->layout->template->trySet('department',$this->app->employee['department']);
             // $post=$this->app->employee->ref('post_id');
             $this->app->layout->template->trySet('post',$this->app->employee['post']);
@@ -115,6 +88,54 @@ class Initiator extends \Controller_Addon {
         $this->app->addHook('entity_collection',[$this,'exportEntities']);
         $this->app->addHook('collect_shortcuts',[$this,'collect_shortcuts']);
         return $this;
+    }
+
+    function populateConfigurationMenus(){
+        $m = $this->app->top_menu->addMenu('HR');
+        $m->addItem(['Working Week Days','icon'=>'fa fa-calendar'],$this->app->url('xepan_hr_workingweekday'));
+        $m->addItem(['Official Holidays','icon'=>'fa fa-calendar'],$this->app->url('xepan_hr_officialholiday'));
+        $m->addItem(['Leave Template','icon'=>'fa fa-file-o'],$this->app->url('xepan_hr_configleave'));
+        $m->addItem(['Salary Template','icon'=>'fa fa-file-o'],$this->app->url('xepan_hr_configsalary'));
+        $m->addItem(['Misc Config','icon'=>'fa fa-cog fa-spin'],$this->app->url('xepan_hr_miscconfig'));
+        $m->addItem(['Pay Slip Layouts','icon'=>'fa fa-th'],$this->app->url('xepan_hr_layouts'));
+        $m->addItem(['ACL Level','icon'=>'fa fa-th'],$this->app->url('xepan_hr_aclconfig'));
+        $m->addItem(['Report Executor','icon'=>'fa fa-th'],$this->app->url('xepan_hr_reportexecutor'));
+    }
+
+    function populateApplicationMenus(){
+        if(!$this->app->getConfig('hidden_xepan_hr',false)){
+                $m = $this->app->top_menu->addMenu('HR');
+                // $m->addItem(['Dashboard','icon'=>'fa fa-dashboard'],$this->app->url('xepan_hr_dashboard'));
+                $m->addItem(['Department','icon'=>'fa fa-sliders'],$this->app->url('xepan_hr_department',['status'=>'Active']));
+                $m->addItem(['Post','icon'=>'fa fa-sitemap'],$this->app->url('xepan_hr_post',['status'=>'Active']));
+                $m->addItem(['Employee','icon'=>'fa fa-male'],$this->app->url('xepan_hr_employee',['status'=>'Active']));
+                
+                if(!$this->app->getConfig('base_hr_only',false)){   
+                    $m->addItem(['Employee Attendance','icon'=>'fa fa-check-square-o'],'xepan_hr_attandance');
+                    $m->addItem(['Employee Movement','icon'=>'fa fa-eye'],'xepan_hr_employeemovement');
+                    $m->addItem(['Leave Management','icon'=>'fa fa-eye'],'xepan_hr_leavemanagment');
+                    $m->addItem(['Reimbursement Management','icon'=>'fa fa-money'],'xepan_hr_reimbursement');
+                    $m->addItem(['Deduction Management','icon'=>'fa fa-money'],'xepan_hr_deduction');
+                    $m->addItem(['Salary Sheet','icon'=>'fa fa-money'],'xepan_hr_salarysheet');
+
+                    $m->addItem(['User','icon'=>'fa fa-user'],$this->app->url('xepan_hr_user',['status'=>'Active']));
+                    $m->addItem(['Affiliate','icon'=>'fa fa-user'],$this->app->url('xepan_hr_affiliate',['status'=>'Active']));
+                    $m->addItem(['ACL','icon'=>'fa fa-dashboard'],'xepan_hr_aclmanagement');
+                    // $m->addItem(['Configuration','icon'=>'fa fa-cog fa-spin'],'xepan_hr_workingweekday');
+                    $m->addItem(['Deactivate Request','icon'=>'fa fa-user'],'xepan_hr_employee_deactivaterequest');
+                }
+
+                $this->app->user_menu->addItem(['Activity','icon'=>'fa fa-cog'],'xepan_hr_activity');
+                $this->app->user_menu->addItem(['My HR','icon'=>'fa fa-cog'],'xepan_hr_employee_leave');
+                $this->app->user_menu->addItem(['Analytical Reports','icon'=>'fa fa-dashboard'],'xepan_hr_graphicalreport_builder');
+                // $m = $this->app->side_menu->addItem('HR');
+                // $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
+
+                /*Reports menu*/
+                $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
+
+                
+            }
     }
 
     function setup_pre_frontend(){
