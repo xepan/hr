@@ -67,7 +67,7 @@ install:
   - wget -P ~/Downloads https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz
   - tar -xf ~/Downloads/geckodriver-v0.10.0-linux64.tar.gz -C ~/Downloads
   - composer self-update
-  - composer install --prefer-dist --no-dev
+  - composer install --prefer-source --no-dev
   - ulimit -c unlimited || true
 
 before_script:
