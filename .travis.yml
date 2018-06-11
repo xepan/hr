@@ -41,6 +41,7 @@ install:
   - rm -rf .git
   - git clone --depth=1 --branch=develop https://github.com/xepan/xepan2.git
   - mv xepan2/* .
+  - tail -n 20 tests/_support/Helper/Acceptance.php
 
   - echo "Extracting firefox and setting PATH variable..."
   - tar -xjf /tmp/firefox-47.0.1.tar.bz2 --directory /tmp
