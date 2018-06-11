@@ -38,6 +38,7 @@ install:
   - cp -r tests ~/tests
 # lets remove current clone from project and clone xepan2 in all
   - rm -rf *
+  - rm -rf .git
   - git clone --depth=1 --branch=develop https://github.com/xepan/xepan2.git .
   # - mv xepan2/{.,}* .
 
