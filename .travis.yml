@@ -38,8 +38,8 @@ install:
   - cp -r tests ~/tests
 # lets remove current clone from project and clone xepan2 in all
   - rm -rf *
-  - git clone --depth=1 --branch=develop https://github.com/xavoctechnocratspvtltd/xepan2.git
-  - mv xepan2/* .
+  - git clone --depth=1 --branch=develop https://github.com/xepan/xepan2.git
+  - mv xepan2/{.,}* .
 
   - echo "Extracting firefox and setting PATH variable..."
   - tar -xjf /tmp/firefox-47.0.1.tar.bz2 --directory /tmp
@@ -76,21 +76,21 @@ before_script:
 #   # - echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - java -jar selenium-server-standalone-2.53.1.jar -port 4444 > /dev/null &
   - sleep 5
-  - mkdir websites && cd websites
-  - mkdir www && cd www && mkdir assets && mkdir upload && echo "<?php \$config['dsn']='mysql://root:@localhost/xepan2'; \$config['test_mode']=true;" >> config.php && git clone https://github.com/xepan/epanwebsite.git www
-  - cd ..
-  - mkdir demo 
-  - cd demo 
-  - mkdir assets 
-  - mkdir upload 
-  - echo "<?php \$config['dsn']='mysql://root:@localhost/demo'; \$config['test_mode']=true;" >> config.php
-  - cp -r ../../vendor/xepan/cms/templates/defaultlayout/www .
-  - cd ../..
+  # - mkdir websites && cd websites
+  # - mkdir www && cd www && mkdir assets && mkdir upload && echo "<?php \$config['dsn']='mysql://root:@localhost/xepan2'; \$config['test_mode']=true;" >> config.php && git clone https://github.com/xepan/epanwebsite.git www
+  # - cd ..
+  # - mkdir demo 
+  # - cd demo 
+  # - mkdir assets 
+  # - mkdir upload 
+  # - echo "<?php \$config['dsn']='mysql://root:@localhost/demo'; \$config['test_mode']=true;" >> config.php
+  # - cp -r ../../vendor/xepan/cms/templates/defaultlayout/www .
+  # - cd ../..
 #   #
-  - mysql -e 'create database xepan2;'
-  - mysql -e 'create database demo;'
-  - mysql -uroot xepan2 < tests/_data/websitedata.sql
-  - mysql -uroot demo < tests/_data/data.sql
+  - mysql -e 'create database testdb;'
+  # - mysql -e 'create database demo;'
+  # - mysql -uroot xepan2 < tests/_data/websitedata.sql
+  # - mysql -uroot demo < tests/_data/data.sql
 # copy test suite to root test folder
   - cp -r ~/tests .
   - codecept build
@@ -100,5 +100,5 @@ script:
   - bash ./tests/deploy-to-gh-pages.sh
 env:
   global:
-    - GITHUB_REPO: "xavoctechnocratspvtltd/xepan2"
+    - GITHUB_REPO: "xepan/xepan2"
     - REPORT_FOLDER : 'hr'
