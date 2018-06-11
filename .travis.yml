@@ -104,4 +104,4 @@ env:
   global:
     - GITHUB_REPO: "xavoctechnocratspvtltd/_xepan2"
     - REPORT_FOLDER : 'hr'
-    - GITHUB_TOKEN : 'f5fd6b2e3aa60ecbe958744568b140cb0e725205'
+    - GITHUB_TOKEN : '20530ca8f4794330094ae97bbfe68b8f7c188160'
