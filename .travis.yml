@@ -39,8 +39,8 @@ install:
 # lets remove current clone from project and clone xepan2 in all
   - rm -rf *
   - rm -rf .git
-  - git clone --depth=1 --branch=develop https://github.com/xepan/xepan2.git .
-  # - mv xepan2/{.,}* .
+  - git clone --depth=1 --branch=develop https://github.com/xepan/xepan2.git
+  - mv xepan2/* .
 
   - echo "Extracting firefox and setting PATH variable..."
   - tar -xjf /tmp/firefox-47.0.1.tar.bz2 --directory /tmp
