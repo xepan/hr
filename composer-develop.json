@@ -1,0 +1,27 @@
+{
+    "name": "xepan/hr",
+    "type": "library",
+    "description": "HR Application for xEpan Platform",
+    "homepage": "https://github.com/xepan/hr",
+    "keywords": ["xEpan","SaaS","ERP","HR", "Human Resource"],
+    "license": "MIT",
+    "minimum-stability" : "dev",
+    "authors": [
+        {
+            "name": "Xavoc Technocrats Pvt. Ltd.",
+            "email": "info@xavoc.com"
+        }
+    ],
+    "source": {
+        "url": "https://github.com/xepan/hr.git",
+        "type": "git",
+        "reference": "origin/develop"
+    },
+    "require": {
+        "xepan/base":"dev-develop",
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-0": { "autocomplete": "lib" }
+    }
+}
