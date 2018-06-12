@@ -18,7 +18,7 @@
         "reference": "origin/master"
     },
     "require": {
-        "xepan/base":"dev-master || dev-develop",
+        "xepan/base":"dev-master",
         "php": ">=5.3"
     },
     "autoload": {
