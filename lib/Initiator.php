@@ -37,6 +37,16 @@ class Initiator extends \Controller_Addon {
                 $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
             }
 
+            if(!($this->app->application_title = $this->app->recall('application_title'))){
+                $company = $this->add('xepan\base\Model_Config_CompanyInfo')->tryLoadAny();
+                $this->app->application_title = $this->app->employee['name']. ' ['.$this->app->employee['post'].'] - '. $company['company_name']. ' (Xavoc ERP / CRM )';
+                $this->app->memorize('application_title',$this->app->application_title);
+            }
+
+            if(@$this->app->application_title){
+                $this->app->template->trySet('app_title',$this->app->application_title);
+            }
+
             if(!isset($this->app->resetDB) && !$this->app->employee->loaded()){
                 throw new \Exception('User is not Employee', 1);
                 
