@@ -48,7 +48,7 @@ class page_post extends \xepan\base\Page {
 		$crud->form->add('xepan\base\Controller_FLC')
 			->addContentSpot()
 			->layout([
-				'name'=>'Post~c1~4',
+				'name'=>'Post~c1~4~||Intro text here',
 				'department_id~Department'=>'c2~4',
 				'parent_post_id~Report To'=>'c3~4',
 				'salary_template_id~Salary Template'=>'c4~4',
@@ -118,6 +118,19 @@ class page_post extends \xepan\base\Page {
 		$crud->noAttachment();
 		$crud->grid->removeColumn('out_time');
 		$crud->grid->removeColumn('department_id');
+
+		$crud->addIntro([
+			'name'=>'Post name',
+			'order'=>'Order for showing in this grid, Ascending order',
+			'department'=>'From which department this post belongs to, Always Create Departments first ',
+			'parent_post'=>'Parent post, usually this hirarcy defined when seeing reports, if a post is allowed to see report from all subordinates this hirarcy comes in effect',
+			'in_time'=>'Default in and out time for this post, This will automatically applies to employees, You can override this timing on each employee',
+			'employee_count'=>'Number of employees under this post, click on the number to see the list',
+			'existing_permitted_emails'=>'Permitted Email Accounts for this Post, Any employee under this post can see and send emails from these email accounts, you can configure email accounts from "Configuration Mode => System => Email Settings"',
+			'action'=>'Current Status of post, With the help of small dropdown nearby, you can perform various actions PERMITTED TO YOU BY ACL',
+			'add_button'=>'Add a new Post',
+			$crud->grid->name.'_acl'=>'If you are a super user, you will see ACL button, this will let you define what Actions a post can do on any thing on a given status'
+		]);
 	}
 
 }
