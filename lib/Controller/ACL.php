@@ -132,8 +132,10 @@ class Controller_ACL extends \AbstractController {
 		// Check add/edit/delete if CRUD/Lister
 		
 		if(($crud = $this->getView()) instanceof \xepan\base\CRUD){
-			if(!$this->canAdd() && $this->getView()->add_button)
+			if(!$this->canAdd() && $this->getView()->add_button){				
 				$this->getView()->add_button->destroy();
+				$this->getView()->add_button = null;
+			}
 			
 			if(!$crud->isEditing()){
 				$grid = $crud->grid;
@@ -331,7 +333,7 @@ class Controller_ACL extends \AbstractController {
 			if(!($view instanceof \Dummy) and $this->model->acl !== false and ($view instanceof \View)){
 				if($spot OR $view->template->hasTag('Content')){
 					if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
-						$btn=$view->add('Button',null,$spot)->set('ACL')->addClass('btn btn-primary');
+						$btn=$view->add('Button',['name'=>$view->name."_acl"],$spot)->set('ACL')->addClass('btn btn-primary');
 						$btn->js('click')->univ()->frameURL($this->spot_vp->getURL());
 					}
 				}
