@@ -18,9 +18,10 @@ class Form_Field_EmployeeAllowedEmail extends \xepan\base\Form_Field_DropDown {
 	}
 
 	function recursiveRender(){
-		if(!$this->for_post) $this->for_post = $this->app->employee->post();
-		$email_settings = $this->for_post->associatedEmailSettings();
-		$this->setModel($email_settings);
+		// if(!$this->for_post) $this->for_post = $this->app->employee->post();
+		// $email_settings = $this->for_post->associatedEmailSettings();
+		// $this->setModel($email_settings);
+		$this->setModel('xepan\hr\Post_Email_MyEmails');
 		parent::recursiveRender();
 	}
 }
