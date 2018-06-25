@@ -24,6 +24,7 @@ install:
 - rm -rf .git
 - git clone --depth=1 --branch=develop https://github.com/xepan/xepan2.git
 - mv xepan2/* .
+- echo '<?php $config["epan_api_base_path"] = "http://dummy/api/v1";' > admin/config.php
 - echo "Extracting firefox and setting PATH variable..."
 - tar -xjf /tmp/firefox-47.0.1.tar.bz2 --directory /tmp
 - export PATH="/tmp/firefox:$PATH"
@@ -50,7 +51,8 @@ install:
 - wget -P ~/Downloads https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz
 - tar -xf ~/Downloads/geckodriver-v0.10.0-linux64.tar.gz -C ~/Downloads
 - composer self-update
-- COMPOSER=composer-$TRAVIS_BRANCH.json composer install --prefer-source --no-dev
+# - COMPOSER=composer-$TRAVIS_BRANCH.json composer install --prefer-source --no-dev
+- composer install --prefer-source --no-dev
 - ulimit -c unlimited || true
 before_script:
 - export DISPLAY=:99.0

@@ -17,9 +17,8 @@ class _000_hrDespartmentCest
     
     public function test_default_non_editable_department_named_company(SuperUser $i)
     {
-        $i->install($admin_username='management@xavoc.com',$admin_password='admin',$install_as='erp',$database_host='localhost',$database_user='root',$database_password='',$database='testdb');
         $i->wantTo('Test if default "Company" named department is there and it is non editable');
-        $i->login('management@xavoc.com');
+        $i->login('testsuper@xavoc.com');
         $i->clickMenu('HR->Department');
         $i->see('Company',Locator::elementAt('//table/tbody/tr/td', 2));
         $i->dontSeeElementInDOM('table tbody tr:first-child  td:last-child a');

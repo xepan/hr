@@ -35,6 +35,8 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','email_2');
 			$form->addField('line','email_3');
 			$form->addField('line','email_4');
+			$emails_allowed_field = $form->addField('DropDown','permitted_emails')->setEmptyText('As Per Post Only')->enableMultiSelect();
+			$emails_allowed_field->setModel('xepan\communication\Model_Communication_EmailSetting');
 			
 			$dept_field = $form->getElement('department_id');
 			$post_field = $form->getElement('post_id');
@@ -177,6 +179,17 @@ class page_employeedetail extends \xepan\base\Page {
 						$phone['value'] = $form['contact_no_4'];
 						$phone->save();
 					}				
+
+					if($form['permitted_emails']){
+						foreach (explode(",",$form['permitted_emails']) as $email_setting_id) {
+							$this->add('xepan\hr\Model_Post_Email_Association')
+								->set('employee_id',$new_employee_model->id)
+								->set('emailsetting_id',$email_setting_id)
+								->save();
+						}
+						
+					}					
+
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
@@ -202,9 +215,44 @@ class page_employeedetail extends \xepan\base\Page {
 			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template'],['graphical_report_id','department_id','post_id','user_id','remark']);
 			$f=$portfolio_view->form;
 
-			if($f->isSubmitted()){
+			$permitted_emails_field = $f->addField('DropDown','permitted_emails');
+			$permitted_emails_field->enableMultiSelect();
+			$permitted_emails_field->setModel('xepan\communication\Model_Communication_EmailSetting');
+
+			$emails_alowed = array_column($this->add('xepan\hr\Model_Post_Email_Association')
+								->addCondition('employee_id',$employee->id)
+								->getRows()
+								,'emailsetting_id'
+							);
+			$permitted_emails_field->set($emails_alowed);
+
+
+			if(!($f instanceof \Dummy) && $f->isSubmitted()){
 				$f->save();
+
+				$this->add('xepan\hr\Model_Post_Email_Association')
+								->addCondition('employee_id',$employee->id)
+								->deleteAll();
+								
+				if($f['permitted_emails']){
+						foreach (explode(",",$f['permitted_emails']) as $email_setting_id) {
+							$this->add('xepan\hr\Model_Post_Email_Association')
+								->set('employee_id',$employee->id)
+								->set('emailsetting_id',$email_setting_id)
+								->save();
+						}
+						
+					}
+
 				$f->js(null,$f->js()->univ()->successMessage('Updated'))->reload()->execute();				
+			}else{
+			
+			$emails_alowed_names = array_column($this->add('xepan\hr\Model_Post_Email_Association')
+								->addCondition('employee_id',$employee->id)
+								->getRows()
+								,'emailsetting'
+							);
+			$portfolio_view->template->trySet('permitted_emails',implode(", ", $emails_alowed_names));	
 			}
 
 			$q = $portfolio_view->addMany('Qualification',['no_records_message'=>'No qualifications found'],'Qualification',['view/employee/qualification-grid']);
