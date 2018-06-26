@@ -16,6 +16,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		'DeactivateRequest'=>['view','edit','delete','deactivate','activate']
 	];
 
+	public $contact_type = "Employee";
+	
 	function init(){
 		parent::init();
 		$this->getElement('post')->destroy();

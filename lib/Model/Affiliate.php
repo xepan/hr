@@ -9,7 +9,8 @@ class Model_Affiliate extends \xepan\base\Model_Contact{
 					'Active'=>['view','edit','delete','deactivate','communication'],
 					'InActive'=>['view','edit','delete','activate','communication']
 					];
-
+	public $contact_type = "Affiliate";
+	
 	function init(){
 		parent::init();
 		
