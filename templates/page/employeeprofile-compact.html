@@ -11,19 +11,33 @@
           <div class="panel-body"></div>
           <div class="row">
             <div class="col-xs-6">
-              <div class="form-group atk-form-row atk-form-field">{$first_name}</div>
-              <div class="form-group atk-form-row atk-form-field">{$last_name}</div>
-              <div class="form-group atk-form-row atk-form-field">{$website}</div>
+              <div class="form-group atk-form-row atk-form-field">
+                <div><span class="text-muted">First Name</span>
+                  {$first_name}
+                </div>
+              </div>
+              <!-- <div class="form-group atk-form-row atk-form-field">{$website}</div> -->
             </div>
             <div class="col-xs-6">
-              <div class="form-group atk-form-row atk-form-field">{$organization}</div>
+              <div class="form-group atk-form-row atk-form-field">
+                <div><span class="text-muted">Last Name</span>
+                  {$last_name}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <!-- <div class="form-group atk-form-row atk-form-field">{$organization}</div> -->
               <div class="form-group atk-form-row atk-form-field">
                 <div><span class="text-muted">Department</span>{$department_id}</div>
               </div>
+            </div>
+            <div class="col-xs-6">
               <div class="form-group atk-form-row atk-form-field">
-                <div><span class="text-muted">
-                    Post
-                    {$post_id}</span></div>
+                <div><span class="text-muted">Post</span>
+                  {$post_id}
+                </div>
               </div>
             </div>
           </div>
@@ -32,7 +46,7 @@
           <div class="panel panel-heading panle-primary">Address</div>
           <div class="panel-body">
             <div class="row">
-              <div class="form-group col-xs-6 atk-form-row atk-form-field">{$address}</div>
+              <div class="form-group col-xs-6 atk-form-row atk-form-field"><div><span class="text-muted">Address</span>{$address}</div></div>
               <div class="col-xs-6">
                 <div class="form-group atk-form-row atk-form-field">
                   Country
@@ -42,8 +56,13 @@
                   State
                   {$state_id}
                 </div>
-                <div class="form-group atk-form-row atk-form-field">{$city}</div>
-                <div class="form-group atk-form-row atk-form-field">{$pin_code}</div>
+                <div class="form-group atk-form-row atk-form-field">
+                  <div><span class="text-muted">City</span>
+                    {$city}
+                  </div>
+                </div>
+                <div class="form-group atk-form-row atk-form-field">
+                  <div><span class="text-muted">Pin Code</span>{$pin_code}</div></div>
               </div>
             </div>
           </div>
@@ -77,10 +96,13 @@
         <div style="margin-bottom:0px;" class="panel panel-default">
           <div class="panel panel-heading panle-primary">User Panel</div>
           <div class="panel-body">
-            <div class="form-group atk-form-row atk-form-field">{$user_id}
+            <div class="form-group atk-form-row atk-form-field">
+              <div><span class="text-muted">User ID</span>{$user_id}</div>
               <div class="small text-muted">Hint : User id must be a email address</div>
             </div>
-            <div class="form-group atk-form-row atk-form-field">{$password}</div>
+            <div class="form-group atk-form-row atk-form-field">
+              <div><span class="text-muted">Password</span>{$password}</div>
+            </div>
           </div>
         </div>
         <div style="margin-bottom:0px;" class="panel panel-default">
@@ -111,6 +133,13 @@
             <div class="form-group col-xs-12 atk-form-row atk-form-field">{$contact_no_4}</div>
           </div>
         </div>
+        <div style="margin-bottom:0px;" class="panel panel-default">
+          <div class="panel panel-heading panle-primary">Employee Other Info</div>
+          <div class="panel-body">
+            {$Content}
+          </div>
+        </div>
+
       </div>
     </div>
     <div class="row">
