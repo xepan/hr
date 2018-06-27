@@ -37,6 +37,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','email_4');
 			$emails_allowed_field = $form->addField('DropDown','permitted_emails')->setEmptyText('As Per Post Only')->enableMultiSelect();
 			$emails_allowed_field->setModel('xepan\communication\Model_Communication_EmailSetting');
+			$emails_allowed_field = $form->addField('Checkbox','allow_login_from_anywhere');
 			
 			$dept_field = $form->getElement('department_id');
 			$post_field = $form->getElement('post_id');
