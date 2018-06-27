@@ -213,7 +213,7 @@ class page_employeedetail extends \xepan\base\Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template'],['graphical_report_id','department_id','post_id','user_id','remark']);
+			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template','allow_login_from_anywhere'],['graphical_report_id','department_id','post_id','user_id','remark','allow_login_from_anywhere']);
 			$f=$portfolio_view->form;
 
 			$permitted_emails_field = $f->addField('DropDown','permitted_emails');
