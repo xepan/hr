@@ -28,7 +28,7 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$base_validator = $this->add('xepan\base\Controller_Validator');
 
-			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
+			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width');
 			$form->setLayout(['page/employeeprofile-compact']);			
 			$form->setModel($employee,['graphical_report_id','first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
 			$form->addField('line','email_1')->validate('email');
@@ -42,7 +42,9 @@ class page_employeedetail extends \xepan\base\Page {
 			$dept_field = $form->getElement('department_id');
 			$post_field = $form->getElement('post_id');
 			$country_field =  $form->getElement('country_id');
+			$country_field->getModel()->addCondition('status','Active');
 			$state_field = $form->getElement('state_id');
+			$state_field->getModel()->addCondition('status','Active')->addCondition('country_status','Active');
 
 			if($dept_id = $this->app->stickyGET('dept_id')){			
 				$post_field->getModel()->addCondition('department_id',$dept_id);
@@ -65,6 +67,9 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('line','user_id')->validate('email');
 			$form->addField('password','password');
 			
+			// add other info
+			$this->employee->addOtherInfoToForm($form);
+
 			$form->addSubmit('Add');
 			if($form->isSubmitted()){			
 				try{
@@ -191,6 +196,23 @@ class page_employeedetail extends \xepan\base\Page {
 						
 					}					
 
+					// add contact other info
+					$contact_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+					$contact_other_info_config_m->addCondition('for','Employee');
+
+					foreach($contact_other_info_config_m->config_data as $of) {
+						if($of['for'] != "Employee" ) continue;
+
+						if(!$of['name']) continue;
+						$field_name = $this->app->normalizeName($of['name']);
+
+						$existing = $this->add('xepan\base\Model_Contact_Other')
+							->addCondition('contact_id',$new_employee_model->id)
+							->addCondition('head',$of['name'])
+							->tryLoadAny();
+						$existing['value'] = $form[$field_name];
+						$existing->save();
+					}
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
@@ -467,4 +489,41 @@ class page_employeedetail extends \xepan\base\Page {
 	        	}
 		}	
     }
+
+
+  //   function addOtherInfo($form){
+  //   	// load contact other info configuration model for employee only
+  //   	// loop for all fields
+  //   		// check field type
+  //   			// if dropdown then add dropdown
+  //   			// if line then add line type field
+  //   			// if datePicker then add datepicker type field
+  //   			// if mandatory apply validation
+
+ 	// 	$contact_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+		// $contact_other_info_config_m->addCondition('for','Employee');
+
+		// foreach($contact_other_info_config_m->config_data as $of) {
+		// 	if($of['for'] != "Employee" ) continue;
+
+		// 	if(!$of['name']) continue;
+
+		// 	$field_name = $this->app->normalizeName($of['name']);
+		// 	$field = $form->addField($of['type'],$field_name,$of['name']);
+		// 	if($of['type']== 'DropDown'){
+		// 		$field->setValueList(array_combine(explode(",", $of['possible_values']), explode(",", $of['possible_values'])))->setEmptyText('Please Select');
+		// 	}
+
+		// 	if($of['conditional_binding']){
+		// 		$field->js(true)->univ()->bindConditionalShow(json_decode($of['conditional_binding'],true),'div.atk-form-row');
+		// 	}
+
+		// 	if($of['is_mandatory']){
+		// 		$field->validate('required');
+		// 	}
+
+		// }
+
+  //   }
+
 }

@@ -18,8 +18,8 @@ class page_affiliatedetails extends \xepan\base\Page {
 			$this->template->tryDel('details');
 			$base_validator = $this->add('xepan\base\Controller_Validator');
 			
-			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width',['form/empty']);
-			$form->setLayout(['page/affiliate-compact']);			
+			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width');
+			$form->setLayout(['page/affiliate-compact']);
 			$form->setModel($affiliate,['first_name','last_name','address','city','country_id','state_id','pin_code','organization','post','website','narration']);
 			$form->addField('line','email_1')->validate('email');
 			$form->addField('line','email_2');
@@ -39,6 +39,8 @@ class page_affiliatedetails extends \xepan\base\Page {
 			$form->addField('line','contact_no_3');
 			$form->addField('line','contact_no_4');
 			$form->addField('Checkbox','want_to_add_next_affiliate')->set(true);
+
+			$affiliate->addOtherInfoToForm($form);
 
 			$form->addSubmit('Add')->addClass('btn btn-primary');
 			if($form->isSubmitted()){			
@@ -124,7 +126,24 @@ class page_affiliatedetails extends \xepan\base\Page {
 						$phone['head'] = "Personal";
 						$phone['value'] = $form['contact_no_4'];
 						$phone->save();
-					}				
+					}
+
+					// add contact other info
+					$contact_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+					$contact_other_info_config_m->addCondition('for','Affiliate');
+					foreach($contact_other_info_config_m->config_data as $of) {
+						if($of['for'] != "Affiliate" ) continue;
+
+						if(!$of['name']) continue;
+						$field_name = $this->app->normalizeName($of['name']);
+
+						$existing = $this->add('xepan\base\Model_Contact_Other')
+							->addCondition('contact_id',$new_affiliate_model->id)
+							->addCondition('head',$of['name'])
+							->tryLoadAny();
+						$existing['value'] = $form[$field_name];
+						$existing->save();
+					}
 					$this->api->db->commit();
 				}catch(\Exception_StopInit $e){
 
