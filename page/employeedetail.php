@@ -67,7 +67,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$form->addField('password','password');
 			
 			// add other info
-			$this->addOtherInfo($form);
+			$this->employee->addOtherInfoToForm($form);
 
 			$form->addSubmit('Add');
 			if($form->isSubmitted()){			
@@ -490,39 +490,39 @@ class page_employeedetail extends \xepan\base\Page {
     }
 
 
-    function addOtherInfo($form){
-    	// load contact other info configuration model for employee only
-    	// loop for all fields
-    		// check field type
-    			// if dropdown then add dropdown
-    			// if line then add line type field
-    			// if datePicker then add datepicker type field
-    			// if mandatory apply validation
+  //   function addOtherInfo($form){
+  //   	// load contact other info configuration model for employee only
+  //   	// loop for all fields
+  //   		// check field type
+  //   			// if dropdown then add dropdown
+  //   			// if line then add line type field
+  //   			// if datePicker then add datepicker type field
+  //   			// if mandatory apply validation
 
- 		$contact_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
-		$contact_other_info_config_m->addCondition('for','Employee');
+ 	// 	$contact_other_info_config_m = $this->add('xepan\base\Model_Config_ContactOtherInfo');
+		// $contact_other_info_config_m->addCondition('for','Employee');
 
-		foreach($contact_other_info_config_m->config_data as $of) {
-			if($of['for'] != "Employee" ) continue;
+		// foreach($contact_other_info_config_m->config_data as $of) {
+		// 	if($of['for'] != "Employee" ) continue;
 
-			if(!$of['name']) continue;
+		// 	if(!$of['name']) continue;
 
-			$field_name = $this->app->normalizeName($of['name']);
-			$field = $form->addField($of['type'],$field_name,$of['name']);
-			if($of['type']== 'DropDown'){
-				$field->setValueList(array_combine(explode(",", $of['possible_values']), explode(",", $of['possible_values'])))->setEmptyText('Please Select');
-			}
+		// 	$field_name = $this->app->normalizeName($of['name']);
+		// 	$field = $form->addField($of['type'],$field_name,$of['name']);
+		// 	if($of['type']== 'DropDown'){
+		// 		$field->setValueList(array_combine(explode(",", $of['possible_values']), explode(",", $of['possible_values'])))->setEmptyText('Please Select');
+		// 	}
 
-			if($of['conditional_binding']){
-				$field->js(true)->univ()->bindConditionalShow(json_decode($of['conditional_binding'],true),'div.atk-form-row');
-			}
+		// 	if($of['conditional_binding']){
+		// 		$field->js(true)->univ()->bindConditionalShow(json_decode($of['conditional_binding'],true),'div.atk-form-row');
+		// 	}
 
-			if($of['is_mandatory']){
-				$field->validate('required');
-			}
+		// 	if($of['is_mandatory']){
+		// 		$field->validate('required');
+		// 	}
 
-		}
+		// }
 
-    }
+  //   }
 
 }
