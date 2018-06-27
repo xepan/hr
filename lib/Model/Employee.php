@@ -34,6 +34,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('doj')->caption('Date of Joining')->type('date')->defaultValue(@$this->app->now)->sortable(true);
 		$emp_j->addField('contract_date')->type('date');
 		$emp_j->addField('leaving_date')->type('date');
+		$emp_j->addField('allow_login_from_anywhere')->type('boolean')->defaultValue(false);
 		$emp_j->addField('attandance_mode')->enum(['Web Login','Mannual'])->defaultValue('Web Login');
 		$emp_j->addField('in_time')->display(array('form' => 'TimePicker'));
 		$emp_j->addField('out_time')->display(array('form' => 'TimePicker'));
