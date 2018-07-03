@@ -23,6 +23,7 @@ class Controller_ACL extends \AbstractController {
 	public $dependent = false;
 
 	public $add_actions=true;
+	public $skip_allow_add=false;
 
 	public $based_on_model=null;
 	public $based_on_view=null;
@@ -329,7 +330,7 @@ class Controller_ACL extends \AbstractController {
 			if($view instanceof \Grid){
 				$spot='grid_buttons';
 			}
-			
+
 			if(!($view instanceof \Dummy) and $this->model->acl !== false and ($view instanceof \View)){
 				if($spot OR $view->template->hasTag('Content')){
 					if(!($view instanceof \xepan\base\View_Document) OR $view->effective_template->hasTag('Content')){
@@ -680,7 +681,7 @@ class Controller_ACL extends \AbstractController {
 				if(!$existing_acl->loaded())
 					$existing_acl->save();
 			
-				if(!$is_config){
+				if(!$is_config && !$this->skip_allow_add){
 					$af->addField('Checkbox','allow_add');
 					$af->getElement('allow_add')->set($existing_acl['allow_add']);
 				}
