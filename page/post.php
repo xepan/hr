@@ -57,12 +57,13 @@ class page_post extends \xepan\base\Page {
 				'in_time'=>'Schedule~c1~6',
 				'out_time'=>'c2~6',
 				'permission_level'=>'Permission~c1~6~Graph/Report/Activity Accessibility Permission',
-				'finacial_permit_limit'=>'c2~6~not implemented yet! credit of amount given to post'
+				'finacial_permit_limit'=>'c2~6~not implemented yet! credit of amount given to post',
+				'allowed_menus'=>'c3~12~Menus visible to this post, leave blank for default one'
 			]);
 
 		$crud->setModel($post,
-				['name','order','department_id','department','parent_post_id','parent_post','salary_template_id','leave_template_id','permission_level','in_time','out_time','finacial_permit_limit'],
-				['name','order','department','parent_post','in_time','out_time','employee_count','existing_permitted_emails']
+				['name','order','department_id','department','parent_post_id','parent_post','salary_template_id','leave_template_id','permission_level','in_time','out_time','finacial_permit_limit','allowed_menus'],
+				['name','order','department','parent_post','in_time','out_time','employee_count','existing_permitted_emails','allowed_menus']
 			);
 		$crud->add('xepan\base\Controller_MultiDelete');
 
@@ -75,7 +76,11 @@ class page_post extends \xepan\base\Page {
 			$crud->form->getElement('out_time')
 					   ->setOption('showMeridian',false)
 					   ->setOption('minuteStep',5)
-					   ->setOption('showSeconds',false);		   
+					   ->setOption('showSeconds',false);
+
+			$crud->form->getElement('allowed_menus')
+						->enableMultiSelect()
+						->setEmptyText('Default');	   
 		}
 
 		if(!$crud->isEditing()){
@@ -103,6 +108,7 @@ class page_post extends \xepan\base\Page {
 				]);
 		
 		}
+		
 		if(!$crud->isEditing()){
 			$crud->grid->js('click')->_selector('.do-view-post-employees')->univ()->frameURL('Post Employees',[$this->api->url('xepan_hr_employee'),'post_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		}

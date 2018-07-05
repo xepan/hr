@@ -152,9 +152,9 @@ class Initiator extends \Controller_Addon {
     }
 
     function setupXECTopMenus(){
-        if($this->recall('top_menu_array',false)){
-            $this->app->top_menu_array = $this->recall('top_menu_array');
-        }
+        // if($this->recall('top_menu_array',false)){
+        //     $this->app->top_menu_array = $this->recall('top_menu_array');
+        // }
         
         $menu_config = $this->add('xepan\base\Model_Config_Menus')
                         ->addCondition('related_with_id',$this->app->employee['post_id'])
