@@ -20,7 +20,7 @@ class CRUD extends \xepan\base\CRUD {
 
 		$m = parent::setModel($model,$grid_fields,$form_fields);
 		
-		if(($m instanceof \xepan\base\Model_Table) && !$this->pass_acl){
+		if(($m instanceof \Model) && !$this->pass_acl){
 			if($this->actionsWithoutACL || isset($this->app->actionsWithoutACL)){
 				$this->acl_controller = $this->add('xepan\hr\Controller_Action',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL]);
 			}else{
