@@ -78,9 +78,22 @@ class page_post extends \xepan\base\Page {
 					   ->setOption('minuteStep',5)
 					   ->setOption('showSeconds',false);
 
+			$model = $this->add("xepan\base\Model_Config_Menus");
+			$model->tryLoadAny();
+
+			$menu_names=[];
+			foreach ($model as $m) {
+				$menu_names[] = $m['name'];
+			}
+
 			$crud->form->getElement('allowed_menus')
 						->enableMultiSelect()
-						->setEmptyText('Default');	   
+						->setValueList(array_combine($menu_names, $menu_names))
+						->setEmptyText('Default');
+			if($crud->isEditing('edit')){
+				$crud->form->getElement('allowed_menus')
+							->set(explode(",",$crud->form->model['allowed_menus']));
+			}
 		}
 
 		if(!$crud->isEditing()){
@@ -108,7 +121,7 @@ class page_post extends \xepan\base\Page {
 				]);
 		
 		}
-		
+
 		if(!$crud->isEditing()){
 			$crud->grid->js('click')->_selector('.do-view-post-employees')->univ()->frameURL('Post Employees',[$this->api->url('xepan_hr_employee'),'post_id'=>$this->js()->_selectorThis()->closest('[data-id]')->data('id')]);
 		}

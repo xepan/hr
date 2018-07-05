@@ -30,8 +30,13 @@ class Initiator extends \Controller_Addon {
             
             if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
+                $this->app->employee_post = $this->app->employee->ref('post_id');
                 $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
+                $this->app->memorize($this->app->epan->id.'_employee_post', $this->app->employee_post);
             }
+
+            $this->app->employee_post = $this->app->recall($this->app->epan->id.'_employee_post');
+            $this->app->employee_post = $this->app->employee->ref('post_id');
 
             if($this->app->inConfigurationMode)
                 $this->populateConfigurationMenus();
@@ -155,15 +160,24 @@ class Initiator extends \Controller_Addon {
         // if($this->recall('top_menu_array',false)){
         //     $this->app->top_menu_array = $this->recall('top_menu_array');
         // }
-        
-        $menu_config = $this->add('xepan\base\Model_Config_Menus')
-                        ->addCondition('related_with_id',$this->app->employee['post_id'])
-                        ->tryLoadAny();
-        if($menu_config->loaded()){
-            $this->app->top_menu_array = json_decode($menu_config['value'],true);
+
+        if($post_menus = $this->app->employee_post['allowed_menus']){
+            foreach (explode(",", $post_menus) as $post_menu) {
+                $menu_config = $this->add('xepan\base\Model_Config_Menus')
+                                ->addCondition('name',$post_menu)
+                                ->tryLoadAny();
+                
+                if($menu_config->loaded()){
+                    $arr = json_decode($menu_config['value'],true);
+                    if(is_array($arr))
+                        $this->app->top_menu_array = array_merge($this->app->top_menu_array, json_decode($menu_config['value'],true));
+                }
+            }
+
             $this->memorize('top_menu_array',$this->app->top_menu_array);
             return;
         }
+        
 
         $menu_config = $this->add('xepan\base\Model_Config_Menus')
                         ->addCondition('name','DEFAULT')
