@@ -170,7 +170,7 @@ class Initiator extends \Controller_Addon {
                 if($menu_config->loaded()){
                     $arr = json_decode($menu_config['value'],true);
                     if(is_array($arr))
-                        $this->app->top_menu_array = array_merge($this->app->top_menu_array, json_decode($menu_config['value'],true));
+                        $this->app->top_menu_array = array_merge($this->app->top_menu_array, $arr);
                 }
             }
 
