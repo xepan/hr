@@ -6,8 +6,8 @@ namespace xepan\hr;
 class Form_Field_Employee extends \xepan\base\Form_Field_DropDown {
 
 	public $validate_values = false;
-	public $id_field=null;
-	public $title_field=null;
+	public $id_field='id';
+	public $title_field='name';
 	public $include_status='Active'; // all, no condition
 	public $contact_class = 'xepan\hr\Model_Employee';
 	public $setCurrent=false;
@@ -54,9 +54,13 @@ class Form_Field_Employee extends \xepan\base\Form_Field_DropDown {
 
 
 	function recursiveRender(){
-		$contact = $this->add($this->contact_class);
-		if($this->include_status) $contact->addCondition('status',$this->include_status);
-		$this->setModel($contact,$this->id_field, $this->title_field);
+		if(!($employee_list=$this->app->recall('Form_Field_Employee_Model_'.$this->include_status,false))){
+			$contact = $this->add($this->contact_class);
+			if($this->include_status) $contact->addCondition('status',$this->include_status);
+			$employee_list = $contact->getRows();
+			$this->app->memorize('Form_Field_Employee_Model_'.$this->include_status, $employee_list);
+		}
+		$this->setValueList(array_combine(array_column($employee_list, $this->id_field), array_column($employee_list,$this->title_field)));
 		if($this->setCurrent) $this->set($this->app->employee->id);
 		parent::recursiveRender();
 	}

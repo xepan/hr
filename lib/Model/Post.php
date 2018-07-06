@@ -23,6 +23,7 @@ class Model_Post extends \xepan\hr\Model_Document{
 
 		$post_j->addField('name')->sortable(true);
 		$post_j->addField('order')->type('number')->sortable(true);
+		$post_j->addField('allowed_menus')->display(['form'=>'xepan\base\NoValidateDropDown']);
 		
 		$post_j->addField('in_time')->display(array('form' => 'TimePicker'));
 		$post_j->addField('out_time')->display(array('form' => 'TimePicker'));

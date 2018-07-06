@@ -9,6 +9,8 @@ class CRUD extends \xepan\base\CRUD {
 	public $show_spot_acl = true;
 	public $add_actions = true;
 
+	public $acl_controller=null;
+
 	function noAttachment(){
 		$this->grid->removeColumn('attachement_icon');
 		$this->grid->removeColumn('attachment_icon');
@@ -18,11 +20,11 @@ class CRUD extends \xepan\base\CRUD {
 
 		$m = parent::setModel($model,$grid_fields,$form_fields);
 		
-		if(($m instanceof \xepan\base\Model_Table) && !$this->pass_acl){
+		if(($m instanceof \Model) && !$this->pass_acl){
 			if($this->actionsWithoutACL || isset($this->app->actionsWithoutACL)){
-				$this->add('xepan\hr\Controller_Action',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL]);
+				$this->acl_controller = $this->add('xepan\hr\Controller_Action',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL]);
 			}else{
-				$this->add('xepan\hr\Controller_ACL',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL,'add_actions'=>$this->add_actions]);
+				$this->acl_controller = $this->add('xepan\hr\Controller_ACL',['status_color'=>$this->status_color,'permissive_acl'=>$this->permissive_acl,'show_spot_acl'=>$this->show_spot_acl,'actionsWithoutACL'=>$this->actionsWithoutACL,'add_actions'=>$this->add_actions]);
 			}
 		}
 		return $m;
