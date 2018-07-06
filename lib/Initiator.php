@@ -192,7 +192,7 @@ class Initiator extends \Controller_Addon {
         // used for custom menu
     function getTopApplicationMenu(){
 
-        return ['Hr'=>[
+        return ['HR'=>[
                     [   'name'=>'Department',
                         'icon'=>'fa fa-sliders',
                         'url'=>'xepan_hr_department',
@@ -255,11 +255,13 @@ class Initiator extends \Controller_Addon {
                     ],
                     [   'name'=>'Company Activity',
                         'icon'=>'fa fa-cog',
-                        'url'=>'xepan_hr_activity'
+                        'url'=>'xepan_hr_activity',
+                        'skip_default'=>true
                     ],
                     [   'name'=>'My HR',
                         'icon'=>'fa fa-cog',
-                        'url'=>'xepan_hr_employee_leave'
+                        'url'=>'xepan_hr_employee_leave',
+                        'skip_default'=>true
                     ]
                 ]
             ];
