@@ -280,7 +280,7 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 			$template->loadTemplateFromString("{rows}{row}".$_GET['format'].$nl."{/}{/}");
 			$report = $page->add('CompleteLister',null,null,$template);
 
-			$report->addHook('formatRow',function($g){
+			$report->addHook('formatRow',function($g)use($salaries,$decimal){
 				foreach ($salaries as $s) {
 					$g->current_row[$s] = round($g->model[$s],$decimal);
 				}
