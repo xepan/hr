@@ -249,6 +249,31 @@ class page_employeedetail extends \xepan\base\Page {
 							);
 			$permitted_emails_field->set($emails_alowed);
 
+			$portfolio_view->add('Button',null,'user_edit_btn')
+				->set('Edit')
+				->add('VirtualPage')
+					->bindEvent('Edit Selected User','click')
+					->set(function($page)use($employee){
+						if(!$employee['user_id']){
+							$page->add('View_Error')->set('No User setted, please set any user, save and reload page');
+							return;
+						}
+
+						$user_m = $employee->ref('user_id');
+						$auth= $this->add('Auth');
+						$auth->usePasswordEncryption('md5');
+						$auth->addEncryptionHook($user_m);
+
+						$form = $page->add('Form');
+						$form->setModel($user_m,['username','password','scope']);
+						$form->addSubmit('Save');
+
+						if($form->isSubmitted()){
+							$form->save();
+							$form->js()->univ()->successMessage('User Saved')->closeDialog()->execute();
+						}
+				});
+
 
 			if(!($f instanceof \Dummy) && $f->isSubmitted()){
 				$f->save();
