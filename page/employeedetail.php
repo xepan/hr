@@ -238,7 +238,7 @@ class page_employeedetail extends \xepan\base\Page {
 			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template','allow_login_from_anywhere'],['graphical_report_id','department_id','post_id','user_id','remark','allow_login_from_anywhere']);
 			$f=$portfolio_view->form;
 
-			$permitted_emails_field = $f->addField('DropDown','permitted_emails');
+			$permitted_emails_field = $f->addField('xepan/base/DropDown','permitted_emails');
 			$permitted_emails_field->enableMultiSelect();
 			$permitted_emails_field->setModel('xepan\communication\Model_Communication_EmailSetting');
 
