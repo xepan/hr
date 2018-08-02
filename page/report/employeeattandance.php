@@ -58,6 +58,7 @@ class page_report_employeeattandance extends \xepan\base\Page{
 		$grid = $this->add('xepan\hr\Grid');
 		$grid->setModel($attandance_m,['employee','total_in_time_login','total_out_time_login','averge_late_minutes','total_working_hours','extra_work_in_hour','holidays_extra_work_hours','total_logout_before_official_time','total_logout_after_official_time']);
 		$grid->addPaginator($ipp=50);
+		$grid->add("misc\Export");
 		
 		if($form->isSubmitted()){
 			$grid->js()->reload(
