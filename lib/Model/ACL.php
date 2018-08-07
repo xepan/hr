@@ -27,6 +27,7 @@ class Model_ACL extends \xepan\base\Model_Table {
 		$this->addField('type');
 		$this->addField('action_allowed')->type('text')->defaultValue(json_encode([]));
 		$this->addField('allow_add')->type('boolean')->defaultValue(true);
+		$this->addField('is_branch_restricted')->type('boolean')->defaultValue(true);
 
 		$this->addExpression('name')->set("CONCAT(type, ' [',namespace,']')");
 

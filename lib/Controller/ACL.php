@@ -38,6 +38,8 @@ class Controller_ACL extends \AbstractController {
 
 	public $debug=false;
 
+	public $skip_branch = false;
+
 	function init(){
 		parent::init();
 		
@@ -61,9 +63,13 @@ class Controller_ACL extends \AbstractController {
 		// Put Model View Conditions 
 
 		if($model instanceof \Model){
-			$view_array = $this->canView();	
+			$view_array = $this->canView();
 
-			$where_condition=[];
+			if($this->isBranchRestricted()){
+				$model->addCondition('branch_id',@$this->app->branch->id);
+			}
+
+			$a=[];
 			foreach ($view_array as $status => $acl) { // acl can be true(for all, false for none and [] for employee created_by_ids)
 
 				if($status=='All' || $status=='*'){
@@ -219,7 +225,7 @@ class Controller_ACL extends \AbstractController {
 						}
 					}
 					if(!isset($g->current_row_html['action']))
-						$g->current_row_html['action']= $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status'],'action_btn_group'=>$this->action_btn_group,'status_color'=>$this->status_color])->getHTML();
+						$g->current_row_html['action'] = $this->add('xepan\hr\View_ActionBtn',['actions'=>$action_btn_list,'id'=>$g->model->id,'status'=>$g->model['status']?:"All",'action_btn_group'=>$this->action_btn_group,'status_color'=>$this->status_color])->getHTML();
 
 				});
 				$view->setFormatter('action','action');
@@ -370,6 +376,14 @@ class Controller_ACL extends \AbstractController {
 		return $this->owner instanceof \Model ? $this->owner->owner: $this->owner;
 	}
 
+	function isBranchRestricted(){
+		return (($this->acl_m['is_branch_restricted']?:false) AND $this->model->hasElement('branch_id'));
+		// return (
+		// 	($this->app->ACLModel === 'Departmental' &&  $this->app->immediateAppove($this->model_ns))
+		// 	||
+		// 	$this->app->ACLModel ==='none'
+		// )?true:($this->acl_m['is_branch_restricted']===null?$this->permissive_acl:$this->acl_m['is_branch_restricted']);
+	}
 
 	function canView(){
 		$view_array=[];
@@ -685,6 +699,12 @@ class Controller_ACL extends \AbstractController {
 					$af->addField('Checkbox','allow_add');
 					$af->getElement('allow_add')->set($existing_acl['allow_add']);
 				}
+
+				if(!$is_config && !$this->skip_branch){
+					$af->addField('Checkbox','is_branch_restricted');
+					$af->getElement('is_branch_restricted')->set($existing_acl['is_branch_restricted']);
+				}
+
 				
 
 				$value_list=['Self Only'=>'Self Only','All'=>'All','None'=>'None'];
@@ -753,9 +773,12 @@ class Controller_ACL extends \AbstractController {
 				$acl_m->addCondition('post_id',$post)
 						;
 				$acl_m->tryLoadAny();
+
 				$acl_m['action_allowed'] = json_encode($acl_array);
 				$acl_m['allow_add'] = $f['allow_add']?:false;
+				$acl_m['is_branch_restricted'] = $f['is_branch_restricted']?:false;
 				$acl_m->save();
+				
 				return $f->js(true,$f->js()->univ()->successMessage('Updated, Please reload page'))->univ()->closeDialog();
 			});
 

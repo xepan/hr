@@ -28,15 +28,22 @@ class Initiator extends \Controller_Addon {
                 $this->app->js(true)->univ()->setInterval($this->app->js()->univ()->ajaxec($this->api->url('.',['keep_alive_signal'=>true]))->_enclose(),$this->app->getConfig('keep_alive_time'));
             
             
-            if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){                
+            if(!($this->app->employee = $this->app->recall($this->app->epan->id.'_employee',false))){
+                
                 $this->app->employee = $this->add('xepan\hr\Model_Employee')->tryLoadBy('user_id',$this->app->auth->model->id);
                 $this->app->employee_post = $this->app->employee->ref('post_id');
+                $this->app->branch = $this->app->employee->ref('branch_id');
+
                 $this->app->memorize($this->app->epan->id.'_employee', $this->app->employee);
                 $this->app->memorize($this->app->epan->id.'_employee_post', $this->app->employee_post);
+                $this->app->memorize($this->app->epan->id.'_branch', $this->app->branch);
             }
 
             $this->app->employee_post = $this->app->recall($this->app->epan->id.'_employee_post');
             $this->app->employee_post = $this->app->employee->ref('post_id');
+            
+            $this->app->branch = $this->app->recall($this->app->epan->id.'_branch');
+            
 
             if($this->app->inConfigurationMode)
                 $this->populateConfigurationMenus();

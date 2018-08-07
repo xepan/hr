@@ -30,7 +30,7 @@ class page_employeedetail extends \xepan\base\Page {
 
 			$form = $this->add('Form',['validator'=>$base_validator],'contact_view_full_width');
 			$form->setLayout(['page/employeeprofile-compact']);			
-			$form->setModel($employee,['graphical_report_id','first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
+			$form->setModel($employee,['graphical_report_id','branch_id','first_name','last_name','address','city','country_id','state_id','pin_code','organization','post_id','website','remark','department_id']);
 			$form->addField('line','email_1')->validate('email');
 			$form->addField('line','email_2');
 			$form->addField('line','email_3');
@@ -235,7 +235,7 @@ class page_employeedetail extends \xepan\base\Page {
 		if($employee->loaded()){
 			$portfolio_view = $this->add('xepan\hr\View_Document',['action'=> $action],'portfolio_view',['page/employee/portfolio']);
 			$portfolio_view->setIdField('contact_id');
-			$portfolio_view->setModel($employee,['graphical_report_id','department','post','user','remark','salary_template','allow_login_from_anywhere'],['graphical_report_id','department_id','post_id','user_id','remark','allow_login_from_anywhere']);
+			$portfolio_view->setModel($employee,['graphical_report_id','branch_id','department','post','user','remark','salary_template','allow_login_from_anywhere'],['graphical_report_id','department_id','post_id','user_id','remark','allow_login_from_anywhere','branch_id']);
 			$f=$portfolio_view->form;
 
 			$permitted_emails_field = $f->addField('xepan/base/DropDown','permitted_emails');
