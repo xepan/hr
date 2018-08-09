@@ -700,7 +700,7 @@ class Controller_ACL extends \AbstractController {
 					$af->getElement('allow_add')->set($existing_acl['allow_add']);
 				}
 
-				if(!$is_config && !$this->skip_branch){
+				if(!$is_config && !$this->skip_branch && $this->model->hasElement('branch_id')){
 					$af->addField('Checkbox','is_branch_restricted');
 					$af->getElement('is_branch_restricted')->set($existing_acl['is_branch_restricted']);
 				}
