@@ -3,7 +3,7 @@
 namespace xepan\hr;
 
 class page_attandance extends \xepan\base\Page{
-	public $title ="Employee Attandance";
+	public $title ="Employee Attendance";
 
 	function init(){
 		parent::init();
