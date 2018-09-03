@@ -44,6 +44,9 @@ class Initiator extends \Controller_Addon {
             
             $this->app->branch = $this->app->recall($this->app->epan->id.'_branch');
             
+            if($this->app->employee['track_geolocation']){
+                $this->app->js(true)->_load('track_geolocation')->univ()->xepan_track_geolocation(10000);
+            }
 
             if($this->app->inConfigurationMode)
                 $this->populateConfigurationMenus();
