@@ -5,8 +5,7 @@ namespace xepan\hr;
 class page_trackgeolocation extends \xepan\base\Page{
 	public $title = "Track Geolocation";
 	
-	function init(){
-		parent::init();
+	function page_index(){
 
 		$long = isset($_POST['geodata']['coords']['longitude'])? $_POST['geodata']['coords']['longitude']: false;
 		$late = isset($_POST['geodata']['coords']['latitude'])? $_POST['geodata']['coords']['latitude']: false;
@@ -22,5 +21,9 @@ class page_trackgeolocation extends \xepan\base\Page{
 			exit;
 		}
 		exit;
+	}
+
+	function page_api(){
+		file_put_contents('temp.txt', print_r($_POST,true));
 	}
 }
