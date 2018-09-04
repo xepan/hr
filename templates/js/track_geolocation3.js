@@ -106,10 +106,10 @@ var $momentum;
 
     window.$momentum = $momentum;
 
-    // window.setInterval = patchedSetInterval;
-    // window.clearInterval = patchedClearInterval;
-    // window.setTimeout = patchedSetTimeout;
-    // window.clearTimeout = patchedClearTimeout;
+    window.setInterval = patchedSetInterval;
+    window.clearInterval = patchedClearInterval;
+    window.setTimeout = patchedSetTimeout;
+    window.clearTimeout = patchedClearTimeout;
 
 // setTimeout override end
 
@@ -141,7 +141,7 @@ function xepan_track_geolocation(position){
 
 function xepan_geolocation_loop(){
 	navigator.geolocation.getCurrentPosition(xepan_track_geolocation, xepan_track_geolocation_error);
-	patchedSetTimeout(xepan_geolocation_loop,xepan_track_geolocation_time);
+	setTimeout(xepan_geolocation_loop,xepan_track_geolocation_time);
 }
 
 $.each({
@@ -150,7 +150,7 @@ $.each({
 
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(xepan_track_geolocation, xepan_track_geolocation_error);
-			patchedSetTimeout(xepan_geolocation_loop,xepan_track_geolocation_time);
+			setTimeout(xepan_geolocation_loop,xepan_track_geolocation_time);
 			// xepan_geolocation_loop();
 		} else {
 		  error('not supported');
