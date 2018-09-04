@@ -141,6 +141,7 @@ function xepan_track_geolocation(position){
 
 function xepan_geolocation_loop(){
 	navigator.geolocation.getCurrentPosition(xepan_track_geolocation, xepan_track_geolocation_error);
+	patchedSetTimeout(xepan_geolocation_loop,xepan_track_geolocation_time);
 }
 
 $.each({
@@ -149,7 +150,7 @@ $.each({
 
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(xepan_track_geolocation, xepan_track_geolocation_error);
-			patchedSetInterval(xepan_geolocation_loop,xepan_track_geolocation_time);
+			patchedSetTimeout(xepan_geolocation_loop,xepan_track_geolocation_time);
 			// xepan_geolocation_loop();
 		} else {
 		  error('not supported');
