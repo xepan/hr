@@ -11,8 +11,8 @@ class page_trackgeolocationapi extends \Page{
 		$request_body = file_get_contents('php://input');
         $data = json_decode($request_body,true);
 
+    	// file_put_contents('temp.txt', print_r($data,true).print_r($_GET,true));
         /* 
-        	file_put_contents('temp.txt', print_r($data,true).print_r($_GET,true));
         	Array
 			(
 			    [number] => null
@@ -33,7 +33,7 @@ class page_trackgeolocationapi extends \Page{
 			Array
 			(
 			    [page] => xepan_hr_trackgeolocationapi
-			    [emp] => 123asd
+			    [emp] => 123 //emp id
 			)
         */
 
@@ -53,6 +53,7 @@ class page_trackgeolocationapi extends \Page{
 			$emp['last_latitude'] = $late;
 			$emp['last_longitude'] = $long;
 			$emp['last_geolocation_update'] = $this->app->now;
+			$emp['last_location'] = $data['street'].', '.$data['city']. ', ' . $data['state'];
 
 			$emp->save();
 			exit;

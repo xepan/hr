@@ -45,6 +45,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$emp_j->addField('last_latitude')->defaultValue(NUll);
 		$emp_j->addField('last_longitude')->defaultValue(NUll);
 		$emp_j->addField('last_geolocation_update')->type('datetime')->defaultValue(NUll);
+		$emp_j->addField('last_location');
 
 		$emp_j->hasMany('xepan\hr\Employee_Attandance','employee_id',null,'Attendances');
 		$emp_j->hasMany('xepan\hr\Employee_Qualification','employee_id',null,'Qualifications');
