@@ -22,8 +22,4 @@ class page_trackgeolocation extends \xepan\base\Page{
 		}
 		exit;
 	}
-
-	function page_api(){
-		file_put_contents('temp.txt', print_r($_POST,true));
-	}
 }
