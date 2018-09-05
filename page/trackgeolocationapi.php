@@ -50,12 +50,15 @@ class page_trackgeolocationapi extends \Page{
 			$emp = $this->add('xepan\hr\Model_Employee');
 			$emp->load($emp_id);
 
-			$emp['last_latitude'] = $late;
-			$emp['last_longitude'] = $long;
-			$emp['last_geolocation_update'] = $this->app->now;
-			$emp['last_location'] = $data['street'].', '.$data['city']. ', ' . $data['state'];
+			if($data['time'] > strtotime($emp['last_geolocation_update']) ){
 
-			$emp->save();
+				$emp['last_latitude'] = $late;
+				$emp['last_longitude'] = $long;
+				$emp['last_geolocation_update'] = $this->app->now;
+				$emp['last_location'] = $data['street'].', '.$data['city']. ', ' . $data['state'];
+				$emp->save();
+
+			}
 			exit;
 		}
 
