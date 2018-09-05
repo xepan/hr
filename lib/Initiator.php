@@ -44,6 +44,29 @@ class Initiator extends \Controller_Addon {
             
             $this->app->branch = $this->app->recall($this->app->epan->id.'_branch');
             
+            // branch dropdown
+            $branch_model = $this->add('xepan\base\Model_Branch');
+            if(!$this->app->employee['branch_id'] AND $branch_model->count()->getOne()){
+                $form = $this->app->page_top_right_button_set->add('Form');
+                $branch_field = $form->addField('DropDown','set_branch');
+                $branch_field->setModel($branch_model);
+                $branch_field->setEmptyText('Select Branch');
+                if($this->app->branch){
+                    $branch_field->set($this->app->branch->id);
+                }
+                $branch_field->js('change',$form->js()->submit());
+                
+                if($form->isSubmitted()){
+                    if(!$form['set_branch']){
+                        $this->app->forget($this->app->epan->id.'_employee');
+                        $this->app->forget($this->app->epan->id.'_branch');
+                    }else{
+                        $this->app->branch = $branch_model->load($form['set_branch']);
+                        $this->app->memorize($this->app->epan->id.'_branch', $branch_model);
+                    }
+                    $form->js(null,$this->app->redirect($this->app->url()))->univ()->successMessage('Your current working branch is updated')->execute();
+                }
+            }
             // if($this->app->employee['track_geolocation']){
             //     $this->app->js(true)->_load('track_geolocation3')->univ()->xepan_track_geolocation(18000000); // 5 minutes
             // }
@@ -160,7 +183,7 @@ class Initiator extends \Controller_Addon {
                 // $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
 
                 /*Reports menu*/
-                $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
+                // $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
 
                 
             }
@@ -201,9 +224,10 @@ class Initiator extends \Controller_Addon {
 
         // used for custom menu
     function getTopApplicationMenu(){
+        if($this->app->getConfig('hidden_xepan_hr',false)){return [];}
 
         return ['HR'=>[
-                    [   'name'=>'Department',
+                    ['name'=>'Department',
                         'icon'=>'fa fa-sliders',
                         'url'=>'xepan_hr_department',
                         'url_param'=>['status'=>'Active']
@@ -273,11 +297,21 @@ class Initiator extends \Controller_Addon {
                         'url'=>'xepan_hr_employee_leave',
                         'skip_default'=>true
                     ]
+                ],
+                'Reports'=>[
+                    [
+                        'name'=>'Employee Attendance Report',
+                        'icon'=>'fa fa-users',
+                        'url'=>'xepan_hr_report_employeeattandance'
+                    ]
                 ]
+
             ];
     }
 
     function getConfigTopApplicationMenu(){
+        if($this->app->getConfig('hidden_xepan_hr',false)){return [];}
+
         return [
                 'Hr_Config'=>[
                     [
