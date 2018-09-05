@@ -157,7 +157,7 @@ class Initiator extends \Controller_Addon {
                 // $this->app->report_menu->addItem(['Employee Attandance Report','icon'=>'fa fa-users'],'xepan_hr_report_employeeattandance');
 
                 /*Reports menu*/
-                $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
+                // $this->app->report_menu->addItem(['Employee Attendance Report','icon'=>'fa fa-users'],$this->app->url('xepan_hr_report_employeeattandance'));
 
                 
             }
@@ -200,7 +200,7 @@ class Initiator extends \Controller_Addon {
     function getTopApplicationMenu(){
 
         return ['HR'=>[
-                    [   'name'=>'Department',
+                    ['name'=>'Department',
                         'icon'=>'fa fa-sliders',
                         'url'=>'xepan_hr_department',
                         'url_param'=>['status'=>'Active']
@@ -270,7 +270,15 @@ class Initiator extends \Controller_Addon {
                         'url'=>'xepan_hr_employee_leave',
                         'skip_default'=>true
                     ]
+                ],
+                'Reports'=>[
+                    [
+                        'name'=>'Employee Attendance Report',
+                        'icon'=>'fa fa-users',
+                        'url'=>'xepan_hr_report_employeeattandance'
+                    ]
                 ]
+
             ];
     }
 
