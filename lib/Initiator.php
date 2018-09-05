@@ -224,6 +224,7 @@ class Initiator extends \Controller_Addon {
 
         // used for custom menu
     function getTopApplicationMenu(){
+        if($this->app->getConfig('hidden_xepan_hr',false)){return [];}
 
         return ['HR'=>[
                     ['name'=>'Department',
@@ -309,6 +310,8 @@ class Initiator extends \Controller_Addon {
     }
 
     function getConfigTopApplicationMenu(){
+        if($this->app->getConfig('hidden_xepan_hr',false)){return [];}
+
         return [
                 'Hr_Config'=>[
                     [
