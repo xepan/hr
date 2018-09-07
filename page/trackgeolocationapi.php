@@ -45,7 +45,7 @@ class page_trackgeolocationapi extends \Page{
 		if($long && $late){
 			$emp = $this->getEmployee();
 			echo $emp['name'];
-			if($geodata['time'] > strtotime($emp['last_geolocation_update']) ){
+			if(!$geodata['time'] || ($geodata['time'] > strtotime($emp['last_geolocation_update'])) ){
 
 				$emp['last_latitude'] = $late;
 				$emp['last_longitude'] = $long;
