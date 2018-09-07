@@ -8,8 +8,7 @@ class page_trackgeolocationapi extends \Page{
 	function init(){
 		parent::init();
 
-		$request_body = file_get_contents('php://input');
-        $data = json_decode($request_body,true);
+		
 
     	// file_put_contents('temp.txt', print_r($data,true).print_r($_GET,true));
         /* 
@@ -37,32 +36,74 @@ class page_trackgeolocationapi extends \Page{
 			)
         */
 
-		$emp = $_GET['emp'];
-		$emp = explode("-", $emp);
+		$geodata = $this->getGeoData();
 		
-		$emp_id= $emp[0];
-		$emp_hash = $emp[1];
 
-		$long = isset($data['longitude'])? $data['longitude']: false;
-		$late = isset($data['latitude']) ? $data['latitude']: false;
+		$long = isset($geodata['longitude'])? $geodata['longitude']: false;
+		$late = isset($geodata['latitude']) ? $geodata['latitude']: false;
 		
 		if($long && $late){
-			$emp = $this->add('xepan\hr\Model_Employee');
-			$emp->load($emp_id);
-
-			if($data['time'] > strtotime($emp['last_geolocation_update']) ){
+			$emp = $this->getEmployee();
+			echo $emp['name'];
+			if($geodata['time'] > strtotime($emp['last_geolocation_update']) ){
 
 				$emp['last_latitude'] = $late;
 				$emp['last_longitude'] = $long;
 				$emp['last_geolocation_update'] = $this->app->now;
-				$emp['last_location'] = $data['street'].', '.$data['city']. ', ' . $data['state'];
+				$emp['last_location'] = $geodata['street'].', '.$geodata['city']. ', ' . $geodata['state'];
 				$emp->save();
 
 			}
 			exit;
 		}
 
-
 		exit;
+	}
+
+	function getGeoData(){
+		$config = $this->app->getConfig('geolocationtrack',[]);
+		switch (strtolower($config['location_mode'])) {
+			case 'payload':
+				$request_body = file_get_contents('php://input');
+		        $data = json_decode($request_body,true);
+				break;
+			case 'get':
+				$data=$_GET;
+				break;
+			case 'post':
+				$data=$_POST;
+				break;
+			default:
+				$data=[];
+				break;
+		}
+
+		$senitised_data=$data;
+		$senitised_data['longitude'] = $data[$config['longitude_field']];
+		$senitised_data['latitude'] = $data[$config['latitude_field']];
+		$senitised_data['time'] = $data[$config['time_field']];
+	
+		return $senitised_data;
+	}
+
+	function getEmployee(){
+		$config = $this->app->getConfig('geolocationtrack',[]);
+		switch (strtolower($config['employee_mode'])) {
+			case 'payload':
+				$request_body = file_get_contents('php://input');
+		        $data = json_decode($request_body,true);
+				break;
+			case 'get':
+				$data=$_GET;
+				break;
+			case 'post':
+				$data=$_POST;
+				break;
+			default:
+				$data=[];
+				break;
+		}
+		$emp = $this->add('xepan\hr\Model_Employee')->tryLoad($data[$config['employee_field']]);
+		return $emp;
 	}
 }
