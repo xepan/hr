@@ -47,7 +47,9 @@ class Initiator extends \Controller_Addon {
             // branch dropdown
             $branch_model = $this->add('xepan\base\Model_Branch');
             if(!$this->app->employee['branch_id'] AND $branch_model->count()->getOne()){
-                $form = $this->app->page_top_right_button_set->add('Form');
+
+                $view = $this->app->page_top_right_button_set->add('View')->addClass("btn");
+                $form = $view->add('Form',null,null,['form/horizontal']);
                 $branch_field = $form->addField('DropDown','set_branch');
                 $branch_field->setModel($branch_model);
                 $branch_field->setEmptyText('Select Branch');
