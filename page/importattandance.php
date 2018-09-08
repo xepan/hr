@@ -58,16 +58,21 @@ class page_importattandance extends \xepan\base\Page{
 			}
 
 			$header = ['id','name','department','post','working_type_unit','unit_count'];
+			$output = implode(",", $header);
 
-		    $fp = fopen("php://output", "w");
-		    fputcsv ($fp, $header, "\t");
+		    // $fp = fopen("php://output", "w");
+		    // fputcsv ($fp, $header, "\t");
 		    foreach($emp_arr as $row){
-		        fputcsv($fp, $row, "\t");
+		        // fputcsv($fp, $row, "\t");
+		         $output .= implode(",", $row) . "\r\n";
 		    }
-		    fclose($fp);
+		    // fclose($fp);
 			header("Content-type: text/csv");
-		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import.csv\"");
-		    exit;
+		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import_for_week.csv\"");
+		    header("Content-Length: " . strlen($output));
+	        header("Content-Transfer-Encoding: binary");
+	        print $output;
+	        exit;
 		}
 
 		if($day_attendance_form->isSubmitted()){
@@ -170,16 +175,21 @@ class page_importattandance extends \xepan\base\Page{
 
 			//merging array of days and header
 			$header = array_merge($header,$this->days_array);
+			$output = implode(",", $header);
 
-		    $fp = fopen("php://output", "w");
-		    fputcsv ($fp, $header, "\t");
+		    // $fp = fopen("php://output", "w");
+		    // fputcsv ($fp, $header, "\t");
 		    foreach($emp_arr as $row){
-		        fputcsv($fp, $row, "\t");
+		        // fputcsv($fp, $row, "\t");
+		         $output .= implode(",", $row) . "\r\n";
 		    }
-		    fclose($fp);
+		    // fclose($fp);
 			header("Content-type: text/csv");
 		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import_for_week.csv\"");
-		    exit;
+		    header("Content-Length: " . strlen($output));
+	        header("Content-Transfer-Encoding: binary");
+	        print $output;
+	        exit;
 		}
 
 		if($week_attendance_form->isSubmitted()){
@@ -296,16 +306,21 @@ class page_importattandance extends \xepan\base\Page{
 
 			//merging array of days and header
 			$header = array_merge($header,$dates);
+			$output = implode(",", $header);
+		    // $fp = fopen("php://output", "w");
+		    // fputcsv ($fp, $header, "\t");
 
-		    $fp = fopen("php://output", "w");
-		    fputcsv ($fp, $header, "\t");
 		    foreach($emp_arr as $row){
-		        fputcsv($fp, $row, "\t");
+		        // fputcsv($fp, $row, "\t");
+		        $output .= implode(",", $row) . "\r\n";
 		    }
-		    fclose($fp);
+		    // fclose($fp);
 			header("Content-type: text/csv");
 		    header("Content-disposition: attachment; filename=\"sample_xepan_attandance_import_for_month.csv\"");
-		    exit;
+	        header("Content-Length: " . strlen($output));
+	        header("Content-Transfer-Encoding: binary");
+	        print $output;
+	        exit;
 		}
 
 		if($month_attendance_form->isSubmitted()){
