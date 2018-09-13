@@ -58,7 +58,7 @@ class page_importattandance extends \xepan\base\Page{
 			}
 
 			$header = ['id','name','department','post','working_type_unit','unit_count'];
-			$output = implode(",", $header);
+			$output = implode(",", $header)."\r\n";
 
 		    // $fp = fopen("php://output", "w");
 		    // fputcsv ($fp, $header, "\t");
@@ -175,7 +175,7 @@ class page_importattandance extends \xepan\base\Page{
 
 			//merging array of days and header
 			$header = array_merge($header,$this->days_array);
-			$output = implode(",", $header);
+			$output = implode(",", $header)."\r\n";
 
 		    // $fp = fopen("php://output", "w");
 		    // fputcsv ($fp, $header, "\t");
@@ -306,10 +306,9 @@ class page_importattandance extends \xepan\base\Page{
 
 			//merging array of days and header
 			$header = array_merge($header,$dates);
-			$output = implode(",", $header);
+			$output = implode(",", $header)."\r\n";
 		    // $fp = fopen("php://output", "w");
 		    // fputcsv ($fp, $header, "\t");
-
 		    foreach($emp_arr as $row){
 		        // fputcsv($fp, $row, "\t");
 		        $output .= implode(",", $row) . "\r\n";
