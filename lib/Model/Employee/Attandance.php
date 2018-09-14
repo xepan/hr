@@ -241,9 +241,9 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 	function isHoliday($today){
 		$holiday_model = $this->add('xepan\hr\Model_OfficialHoliday');
-		$holiday_model->addCondition('from_date','>=',$today);
-		$holiday_model->addCondition('to_date','<=',$today);
-
+		$holiday_model->addCondition('from_date','<=',$today);
+		$holiday_model->addCondition('to_date','>=',$today);
+		
 		if($holiday_model->tryLoadAny()->loaded())
 			return 1;
 
