@@ -3,40 +3,61 @@
 namespace xepan\hr;
 
 class page_employeeattandancereport extends \xepan\base\Page{
-	public $title ="Employee Attandance Report";
 
 	function init(){
 		parent::init();
 
-		$emp_id= $this->api->stickyGET('employee_id');
+		$date = $this->app->today;
+		if($_GET['selecteddate']){
+			$date = $_GET['selecteddate'];
+		}
 
-		$employee = $this->add('xepan\hr\Model_Employee');
-		$employee->addCondition('status','Active');
+		$form = $this->add('Form');
+		$form->add('xepan\base\Controller_FLC')
+			->makePanelsCoppalsible(true)
+			->layout([
+				'month'=>'Filter~c1~4',
+				'FormButtons~&nbsp;'=>'c2~4'
+			]);
 
+		$date_field = $form->addField('DatePicker','month')->validate('required');
+		$date_field->options = [
+						'format'=> "yyyy-MM",
+						'startView'=>"months",
+						'minViewMode'=>"months"
+					];
+		$date_field->set($date);
+		$form->addSubmit('Filter')->addClass('btn btn-primary');
 
-		$form=$this->add('Form',null,null,['form/empty']);
-		
-		$grid = $this->add('Grid');
-		$grid->setModel($employee,['name']);
+		$field_array = ['name','post','in_time','out_time'];
+		$remove_field = [];
+		for ($i=1; $i <= $this->app->getDaysInMonth($date); $i++){
+			$field_array[] = 'attendance_of_'.$i;
+			$field_array[] = 'in_time_of_'.$i;
+			$field_array[] = 'out_time_of_'.$i;
+			$remove_field[] = 'in_time_of_'.$i;
+			$remove_field[] = 'out_time_of_'.$i;
+		}
+		$field_array[] = 'total_attendance';
+				
+		$att_model = $this->add('xepan\hr\Model_Employee_AttandanceData',['curr_date'=>$date]);
+		$grid = $this->add('xepan\hr\Grid');
+		$grid->setModel($att_model,$field_array);
+		$grid->addHook('formatRow',function($g)use($date){
+			for ($i=1; $i <= $this->app->getDaysInMonth($date); $i++) { 
+				$g->current_row_html['attendance_of_'.$i] = $g->model['attendance_of_'.$i].'<br/> In - '.$g->model['in_time_of_'.$i].'<br/> Out - '.$g->model['out_time_of_'.$i];
+			}
+		});
 
-		$view = $this->add('View');
-		$view->set($grid);
+		foreach ($remove_field as $key => $value) {
+			$grid->removeColumn($value);
+		}
 
-		$emp = $form->addField('DropDown','employee');
-		$emp->setModel($employee);
-
-		$last_seven_days = date("Y-m-d H:i:s", strtotime('- 1 Weeks', strtotime($this->app->now)));
-		$date_range = $form->addField('DateRangePicker','date_range')
-						->setStartDate($last_seven_days)
-						->setEndDate($this->app->now);
-
-		$form->addSubmit('Show Attandance')->addClass('btn btn-info');
+		$grid->add('misc/Export',['export_fields'=>$field_array]);
 
 		if($form->isSubmitted()){
-			return $form->js(null,$view->js()->reload([
-													'employee_id'=>$form['employee']
-													]
-													))->execute();
+			$form->js(null,$grid->js()->reload(['selecteddate'=>$form['month']]))->execute();
 		}
+
 	}
 }
