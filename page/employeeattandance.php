@@ -105,9 +105,10 @@ class page_employeeattandance extends \xepan\base\Page{
 					$emp_attandance->addCondition('employee_id' , $emp->id);
 					$emp_attandance->addCondition('fdate', $attandance_on);
 					$emp_attandance->tryLoadAny();
-
+					
 					$emp_attandance['from_date']  = $attandance_on." ".$form['in_time_'.$emp->id];
 					$emp_attandance['to_date']  = $attandance_on." ".$form['out_time_'.$emp->id];
+					$emp_attandance['is_holiday'] = $emp_attandance->isHoliday($attandance_on);
 					$emp_attandance->save();
 					
 				}else{
