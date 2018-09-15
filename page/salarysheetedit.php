@@ -8,8 +8,8 @@ class page_salarysheetedit extends \xepan\base\Page{
 	function init(){
 		parent::init();
 
-		ini_set('memory_limit', '1G');
-		set_time_limit(500);
+		ini_set('memory_limit', '-1');
+		set_time_limit(0);
 		
 		$salary_sheet_id = $this->api->stickyGET('sheet_id');
 		$model_sheet = $this->add('xepan\hr\Model_SalaryAbstract')->load($salary_sheet_id);
@@ -41,12 +41,14 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$all_salary_for_js[] = ['name'=>'UnPaidLeaves'];
 		$all_salary_for_js[] = ['name'=>'Absents'];
 		$all_salary_for_js[] = ['name'=>'OfficialHolidays'];
+		$all_salary_for_js[] = ['name'=>'ExtraWorkingDays'];
+		$all_salary_for_js[] = ['name'=>'ExtraWorkingHours'];
 		$all_salary_for_js[] = ['name'=>'PaidDays'];
 
 		$all_salary_for_js = array_merge($all_salary_for_js,$all_salary);
 
-		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','OfficialHolidays'=>'OfficialHolidays','paiddays'=>'PaidDays'];
-		
+		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','OfficialHolidays'=>'OfficialHolidays','ExtraWorkingDays'=>'ExtraWorkingDays','ExtraWorkingHours'=>'ExtraWorkingHours','paiddays'=>'PaidDays'];
+
 		foreach ($active_employee as $employee) {
 
 			// echo $employee['name']."<br/>";

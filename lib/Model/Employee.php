@@ -617,7 +617,6 @@ class Model_Employee extends \xepan\base\Model_Contact{
 																'count' => $official_holiday_count,
 																'dates' => $official_holiday_date
 															];
-
 		if($return_holiday_date_array) return $official_holiday_date;
 		return $official_holiday_count;
 	}
@@ -751,6 +750,27 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				->sum('working_unit_count')->getOne();
 	}
 
+	function getExtraWorking($month,$year){
+
+		$startdate = date('Y-m-01',strtotime($year."-".$month."-01"));
+		$enddate = date('Y-m-t',strtotime($startdate));
+		
+		$el_days = $this->add('xepan\hr\Model_Employee_Attandance',['from_date'=>$startdate,'to_date'=>$enddate]);
+		$el_days->addExpression('month','MONTH(from_date)');
+		$el_days->addExpression('year','YEAR(from_date)');
+
+		$el_days
+				->addCondition('employee_id',$this->id)
+				->addCondition('month',$month)
+				->addCondition('year',$year)
+				->addCondition('is_holiday',true);
+
+		$data = [];
+		$data['days'] = $el_days->sum('working_unit_count')->getOne();
+		$data['hours'] = $el_days->sum('holidays_extra_work_hours')->getOne();
+		return $data;
+	}
+
 	function getPresenceInTime($date,$emp_id,$present_value,$present_type){
 
 		$emp_m = $this->add('xepan\hr\Model_Employee');
@@ -796,13 +816,16 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$PaidLeaves = $this->getPaidLeaves($month,$year);
 		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
 		$Present = $this->getPresent($month,$year);
-		
+		$extraWorking = $this->getExtraWorking($month,$year);
+
 		$calculated = [
 				'TotalWorkingDays'=>$TotalWorkDays,
 				'PaidLeaves'=>$PaidLeaves,
 				'UnPaidLeaves'=>$UnPaidLeaves,
 				'Presents'=>$Present,
 				'OfficialHolidays'=>$OfficialHolidays,
+				'ExtraWorkingDays'=>$extraWorking['days'],
+				'ExtraWorkingHours'=>$extraWorking['hours'],
 				'PaidDays'=>$Present + $PaidLeaves + $OfficialHolidays,
 				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves + $OfficialHolidays),
 			];

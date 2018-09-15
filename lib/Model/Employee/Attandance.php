@@ -326,7 +326,7 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	function insertAttendanceFromCSV($present_employee_list){
 		if(!is_array($present_employee_list) or !count($present_employee_list)) throw new \Exception("must pass array with present employee", 1);
 		
-		$att_query = "INSERT IGNORE into employee_attandance (employee_id,from_date,to_date,working_unit_count,is_holiday) VALUES ";
+		$att_query = "INSERT IGNORE into employee_attandance (employee_id,from_date,to_date,working_unit_count,is_holiday,total_work_in_mintues) VALUES ";
 		$del_query = "DELETE FROM employee_attandance where ";
 
 		$official_holiday = 0;
@@ -376,8 +376,13 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 					$in_date = date("Y-m-d", strtotime($in_date_time));
 
 					if(isset($official_holiday[$in_date])) $is_holiday = 1;
-					$att_query .= "('".$emp_m->id."', '".$in_date_time."','". $out_date_time."', '".$unit_count."','".$is_holiday."'),";
 
+					$worknig_hour_date = $this->app->my_date_diff(
+							date('Y-m-d H:i:s',strtotime($in_date_time)),
+							date('Y-m-d H:i:s',strtotime($out_date_time))
+						);
+					$att_query .= "('".$emp_m->id."', '".$in_date_time."','". $out_date_time."', '".$unit_count."','".$is_holiday."','".$worknig_hour_date['minutes_total']."'),";
+					
 					$del_query .= '(employee_id = '.$emp_m->id.' and date(from_date)="'.$in_date.'") OR ';
 				}
 		}
