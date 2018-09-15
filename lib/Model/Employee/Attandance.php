@@ -239,6 +239,58 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 
 	}
 
+	function getOfficialHoliday($date){
+		$data = [];
+
+		$start_date = date('Y-m-01',strtotime($date));
+		$last_date = date('Y-m-t',strtotime($date));
+
+		$holiday_model = $this->add('xepan\hr\Model_OfficialHoliday');
+		$holiday_model->addCondition('from_date','>=',$start_date);
+		$holiday_model->addCondition('to_date','<=',$last_date);
+
+		foreach($holiday_model->getRows() as $m){
+			$begin = strtotime($m['from_date']);
+			$end = strtotime($m['to_date']);
+			for($i=$begin; $i<=$end; $i+=86400){
+ 			   $data[date("Y-m-d", $i)] = date("Y-m-d", $i);
+			}
+		}
+
+		$week_day_model = $this->add('xepan\base\Model_ConfigJsonModel',
+						[
+							'fields'=>[
+										'monday'=>"checkbox",
+										'tuesday'=>"checkbox",
+										'wednesday'=>"checkbox",
+										'thursday'=>"checkbox",
+										'friday'=>"checkbox",
+										'saturday'=>"checkbox",
+										'sunday'=>"checkbox"
+										],
+							'config_key'=>'HR_WORKING_WEEK_DAY',
+							'application'=>'hr'
+						]);
+		$week_day_model->tryLoadAny();
+
+		$off_day = [];
+		foreach ($week_day_model->data as $day => $value) {
+			if(!$value) $off_day[$day] = $day;
+		}
+
+		$start = new \DateTime($start_date);
+		$end = new \DateTime($last_date);
+
+		while ($start <= $end){
+		    if(in_array(strtolower($start->format('l')), $off_day)){
+		       $data[$start->format('Y-m-d')] = $start->format('Y-m-d');
+		    }
+		    $start->modify('+1 day');
+		}
+		
+		return $data;
+	}
+
 	function isHoliday($today){
 		$holiday_model = $this->add('xepan\hr\Model_OfficialHoliday');
 		$holiday_model->addCondition('from_date','<=',$today);
@@ -274,8 +326,10 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 	function insertAttendanceFromCSV($present_employee_list){
 		if(!is_array($present_employee_list) or !count($present_employee_list)) throw new \Exception("must pass array with present employee", 1);
 		
-		$att_query = "INSERT IGNORE into employee_attandance (employee_id,from_date,to_date,working_unit_count) VALUES ";
+		$att_query = "INSERT IGNORE into employee_attandance (employee_id,from_date,to_date,working_unit_count,is_holiday) VALUES ";
 		$del_query = "DELETE FROM employee_attandance where ";
+
+		$official_holiday = 0;
 
 		foreach ($present_employee_list as $employee_id => $data) {	
 				$emp_m = $this->add('xepan\hr\Model_Employee')
@@ -288,6 +342,9 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 				$emp_out_time = $emp_m['out_time'];
 
 				foreach ($data as $date => $value) {
+
+					if(!$official_holiday) $official_holiday = $this->getOfficialHoliday($date);
+
 					$working_type = $value['working_type_unit'];
 					$unit_count = $value['unit_count'];
 									
@@ -315,8 +372,12 @@ class Model_Employee_Attandance extends \xepan\base\Model_Table{
 					}
 
 					// $emp_att_m = $this->add('xepan\hr\Model_Employee_Attandance');
+					$is_holiday = 0;
 					$in_date = date("Y-m-d", strtotime($in_date_time));
-					$att_query .= "('".$emp_m->id."', '".$in_date_time."','". $out_date_time."', '".$unit_count."'),";
+
+					if(isset($official_holiday[$in_date])) $is_holiday = 1;
+					$att_query .= "('".$emp_m->id."', '".$in_date_time."','". $out_date_time."', '".$unit_count."','".$is_holiday."'),";
+
 					$del_query .= '(employee_id = '.$emp_m->id.' and date(from_date)="'.$in_date.'") OR ';
 				}
 		}
