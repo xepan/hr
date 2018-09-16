@@ -19,7 +19,7 @@ class Model_LeaveTemplateDetail extends \xepan\base\Model_Table{
 		$this->addField('is_yearly_carried_forward')->type('boolean')->defaultValue(false);
 		$this->addField('type')->enum(['Paid','Unpaid']);
 		$this->addField('is_unit_carried_forward')->type('boolean')->defaultValue(true);
-		$this->addField('unit')->enum(['Monthly','Weekly','Quaterly','Yearly']);
+		$this->addField('unit')->enum(['Monthly','Yearly']);
 		$this->addField('allow_over_quota')->type('boolean')->defaultValue(false);
 		$this->addField('no_of_leave');
 

@@ -1121,4 +1121,47 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				
 	}
 
+
+	function getAvailableLeave($on_date,$leave_id){
+
+		$leaveallowed_model = $this->add('xepan\hr\Model_Employee_LeaveAllow');
+		$leaveallowed_model->addCondition('employee_id',$this->id);
+		$leaveallowed_model->addCondition('leave_id',$leave_id);
+		$leaveallowed_model->tryLoadAny();
+
+		if(!$leaveallowed_model->loaded()) return 0;
+
+
+		$startdate =  date('Y-m-01',strtotime($leaveallowed_model['effective_date']));
+		$enddate =  date('Y-m-t',strtotime($on_date));
+
+		$date_diff = $this->app->my_date_diff($startdate,$enddate);
+		$month_total = $date_diff['months_total'] + ($date_diff['days']?1:0);
+		$year_total = $date_diff['years'] + ($date_diff['months']?1:0);
+
+		$total_leaves = $leaveallowed_model['no_of_leave'];
+
+		if($leaveallowed_model['is_unit_carried_forward']){
+			switch ($leaveallowed_model['unit']) {
+				case 'Monthly':	
+					$total_leaves = $total_leaves * $month_total;
+					break;
+				case 'Yearly':	
+					$total_leaves = $total_leaves * $year_total;
+					break;
+				
+			}
+		}
+		$total_leaves += $leaveallowed_model['previously_carried_leaves']?:0;
+
+		$leave_taken = $this->add('xepan\hr\Model_Employee_Leave')
+						->addCondition('emp_leave_allow_id',$leaveallowed_model->id)
+						->addCondition('employee_id',$this->id)
+						->addCondition('from_date','>=',$leaveallowed_model['effective_date'])
+						->addCondition('status','Approved')
+						->sum('no_of_leave')->getOne();
+		return ($total_leaves - $leave_taken);
+	}
+
+
 }

@@ -29,7 +29,7 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 			]);
 
 		$crud->setModel($salary);
-		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays} and {your_define_salary_names}';
+		$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {ExtraWorkingDays}, {ExtraWorkingHours}, {PaidLeavesOnHoliday}, {UnPaidLeavesOnHoliday}, {PaidDays} and {your_define_salary_names}';
 		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 		[
 			'fields'=>[
@@ -41,7 +41,7 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 		$reimbursement_config_model->tryLoadAny();
 		
 		if($reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
-			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Reimbursement} and {your_define_salary_names}';
+			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents},{ExtraWorkingDays}, {ExtraWorkingHours}, {PaidLeavesOnHoliday}, {UnPaidLeavesOnHoliday}, {PaidDays}, {Reimbursement} and {your_define_salary_names}';
 
 		$deduction_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
 		[
@@ -54,11 +54,11 @@ class page_configsalary extends \xepan\hr\page_configurationsidebar{
 		$deduction_config_model->tryLoadAny();
 
 		if($deduction_config_model['is_deduction_affect_salary'] === "yes")
-			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Deduction} and {your_define_salary_names}';
+			$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {ExtraWorkingDays}, {ExtraWorkingHours}, {PaidLeavesOnHoliday}, {UnPaidLeavesOnHoliday},{PaidDays}, {Deduction} and {your_define_salary_names}';
 
 		if($deduction_config_model['is_deduction_affect_salary'] === "yes" && 
 			$reimbursement_config_model['is_reimbursement_affect_salary'] === "yes")
-				$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {PaidDays}, {Reimbursement}, {Deduction} and {your_define_salary_names}';
+				$html = 'Please Use: {TotalWorkingDays}, {PaidLeaves}, {UnPaidLeaves}, {Absents}, {ExtraWorkingDays}, {ExtraWorkingHours}, {PaidLeavesOnHoliday}, {UnPaidLeavesOnHoliday},{PaidDays}, {Reimbursement}, {Deduction} and {your_define_salary_names}';
 		$info->setHtml($html);
 		
 		$crud->grid->addSno();
