@@ -20,10 +20,17 @@ class page_salarysheetedit extends \xepan\base\Page{
 		// total work days
 		$this->TotalWorkDays  = $model_sheet->getTotalWorkingDays($month,$year);
 
-		$active_employee = $this->add('xepan\hr\Model_Employee')->addCondition('status','Active');
-			// ->addCondition('id','29776');
-			// ->setLimit(2)
-		;
+		$active_employee = $this->add('xepan\hr\Model_Employee');
+
+		$last_date = date('Y-m-t',strtotime($year."-".$month."-01"));
+		$start_date = date('Y-m-01',strtotime($year."-".$month."-01"));
+		$active_employee->addExpression('attendane_count')->set(function($m,$q)use($start_date,$last_date){
+			return $m->add('xepan\hr\Model_Employee_Attandance')
+				->addCondition('from_date','>=',$start_date)
+				->addCondition('to_date','<=',$last_date)
+				->count();
+		});
+		$active_employee->addCondition([['attendane_count','>',0],['status','Active']]);
 
 		$this->add('View')->setElement('h1')
 			->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
@@ -43,11 +50,13 @@ class page_salarysheetedit extends \xepan\base\Page{
 		$all_salary_for_js[] = ['name'=>'OfficialHolidays'];
 		$all_salary_for_js[] = ['name'=>'ExtraWorkingDays'];
 		$all_salary_for_js[] = ['name'=>'ExtraWorkingHours'];
+		$all_salary_for_js[] = ['name'=>'PaidLeavesOnHoliday'];
+		$all_salary_for_js[] = ['name'=>'UnPaidLeavesOnHoliday'];
 		$all_salary_for_js[] = ['name'=>'PaidDays'];
 
 		$all_salary_for_js = array_merge($all_salary_for_js,$all_salary);
 
-		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','OfficialHolidays'=>'OfficialHolidays','ExtraWorkingDays'=>'ExtraWorkingDays','ExtraWorkingHours'=>'ExtraWorkingHours','paiddays'=>'PaidDays'];
+		$system_calculated_factor = ['presents'=>'Presents','paid_leaves'=>'PaidLeaves','unpaid_leaves'=>'UnPaidLeaves','absents'=>'Absents','OfficialHolidays'=>'OfficialHolidays','ExtraWorkingDays'=>'ExtraWorkingDays','ExtraWorkingHours'=>'ExtraWorkingHours','PaidLeavesOnHoliday'=>'PaidLeavesOnHoliday','UnPaidLeavesOnHoliday'=>'UnPaidLeavesOnHoliday','paiddays'=>'PaidDays'];
 
 		foreach ($active_employee as $employee) {
 
@@ -95,7 +104,7 @@ class page_salarysheetedit extends \xepan\base\Page{
 					$field->setAttr('data-xepan-salarysheet-expression','{Presents}+{PaidLeaves}+{OfficialHolidays}');
 				// $salary_field_id_array[$name] = $field->name;
 			}
-
+			$cols->addColumn(12)->addClass('col-md-12')->add('HR');
 			//for all company salary
 			foreach ($all_salary as $key => $salary) {
 				$value = 0;

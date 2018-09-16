@@ -650,7 +650,56 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		return false;
 	}
+	function getLeavesOnHoliday($month,$year){
 
+		$el_days = $this->add('xepan\hr\Model_Employee_Leave',['month'=>$month,'year'=>$year]);
+		$el_days
+				->addCondition('employee_id',$this->id)
+				->addCondition('month',$month)
+				->addCondition('year',$year)
+				->addCondition('status','Approved');
+
+		$official_holidays = $this->getOfficialHolidays($month,$year,true);
+		$official_off_day = $this->getOffWeekDay();
+
+		//for each employee paid leave
+			// for loop for from to to_date
+				// if treat leave as holiday
+					// if date exists in offcial holiday
+						//	continue;
+					// if date day number is in offcial off day
+						// continue;
+			//count ++;
+
+		$pl_count = 0;
+		$upl_count = 0;
+
+		foreach ($el_days as $model) {
+
+			// echo "from_date = ".$model['month_from_date']." to date".$model['month_to_date']."<br/>";
+			$return_data = $this->app->my_date_diff($model['month_from_date'],$model['month_to_date']);
+			for ($i=0; $i <= $return_data['days'] ; $i++) {
+				$leave_date = date('Y-m-d', strtotime($model['month_from_date'] . ' +'.$i.' day'));
+
+				// echo $this['name']." = ".$leave_date;
+				// echo " Holiday = ".$this->treatLeaveAsHoliday();
+				// if($this->treatLeaveAsHoliday()){
+					$day_sequence = date('w',strtotime($leave_date));
+					if(in_array($leave_date, $official_holidays) OR in_array($day_sequence, $official_off_day)){
+						if($model['leave_type'] == "Unpaid")
+							$upl_count = $upl_count + 1;
+
+						if($model['leave_type'] == "Paid")
+							$pl_count = $pl_count + 1;
+					}
+				// }
+			
+			}
+		}
+
+		// echo "PL Leaves ".$pl_count."<br/>";
+		return ['paid'=>$pl_count,'unpaid'=>$upl_count];
+	}
 	// paid
 	function getPaidLeaves($month,$year){
 
@@ -817,6 +866,10 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$UnPaidLeaves = $this->getUnPaidLeaves($month,$year);
 		$Present = $this->getPresent($month,$year);
 		$extraWorking = $this->getExtraWorking($month,$year);
+		$leave_on_holiday = $this->getLeavesOnHoliday($month,$year);
+
+		if(!$this->treatLeaveAsHoliday())
+			$OfficialHolidays -= ($leave_on_holiday['paid'] + $leave_on_holiday['unpaid']); 
 
 		$calculated = [
 				'TotalWorkingDays'=>$TotalWorkDays,
@@ -826,6 +879,8 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'OfficialHolidays'=>$OfficialHolidays,
 				'ExtraWorkingDays'=>$extraWorking['days'],
 				'ExtraWorkingHours'=>$extraWorking['hours'],
+				'PaidLeavesOnHoliday'=>$leave_on_holiday['paid'],
+				'UnPaidLeavesOnHoliday'=>$leave_on_holiday['unpaid'],
 				'PaidDays'=>$Present + $PaidLeaves + $OfficialHolidays,
 				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves + $OfficialHolidays),
 			];
