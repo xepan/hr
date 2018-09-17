@@ -24,14 +24,15 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 		$last_date = date('Y-m-t',strtotime($year."-".$month."-01"));
 		$start_date = date('Y-m-01',strtotime($year."-".$month."-01"));
+
 		$active_employee->addExpression('attendane_count')->set(function($m,$q)use($start_date,$last_date){
 			return $m->add('xepan\hr\Model_Employee_Attandance')
+				->addCondition('employee_id',$m->getElement('id'))
 				->addCondition('from_date','>=',$start_date)
 				->addCondition('to_date','<=',$last_date)
 				->count();
 		});
 		$active_employee->addCondition([['attendane_count','>',0],['status','Active']]);
-
 		$this->add('View')->setElement('h1')
 			->set("Total Working Day Of ".$month." - ".$year." = ".$this->TotalWorkDays);
 
