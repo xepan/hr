@@ -47,7 +47,7 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		$sal = $this->add('xepan\hr\Model_Salary');
 		foreach ($sal->getRows() as $s) {
 			$this->addExpression($this->app->normalizeName($s['name']))->set(function($m,$q)use($s){
-				return $m->refSQL('SalaryDetail')->addCondition('salary_id',$s['id'])->fieldQuery('amount');
+				return $q->expr('ROUND([0],2)',[$m->refSQL('SalaryDetail')->addCondition('salary_id',$s['id'])->fieldQuery('amount')]);
 			});
 		}
 
@@ -62,7 +62,7 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		})->type('money');
 		
 		$this->addExpression('net_amount')->set(function($m,$q){
-			return $q->expr('[0]-[1]',[$m->getElement('total_amout_add'),$m->getElement('total_amount_deduction')]);
+			return $q->expr('round(([0]-[1]),2)',[$m->getElement('total_amout_add'),$m->getElement('total_amount_deduction')]);
 		})->type('money');
 
 

@@ -17,6 +17,8 @@ class page_printpayslip extends \xepan\base\Page{
 			return;
 		}
 
+		$emp_model = $this->add('xepan\hr\Model_Employee')->load($employee_row['employee_id']);
+
 		$payslip_m = $this->add('xepan\base\Model_ConfigJsonModel',
 			[
 				'fields'=>[
@@ -30,12 +32,52 @@ class page_printpayslip extends \xepan\base\Page{
 		$company_m = $this->add('xepan\base\Model_Config_CompanyInfo');
 		$company_m->tryLoadAny();
 
+		$emp_data = $employee_row->data;
+
+		$allow_leave_model = $this->add('xepan\hr\Model_Employee_LeaveAllow');
+		$allow_leave_model->addCondition('employee_id',$employee_row['employee_id']);
+		$allow_leave_model->addExpression('leave_taken')->set(function($m,$q){
+			$emp_leave = $m->add('xepan\hr\Model_Employee_Leave')
+							->addCondition('emp_leave_allow_id',$q->getField('id'))
+							->addCondition('employee_id',$q->getField('employee_id'))
+							->addCondition('from_date','>=',$q->getField('effective_date'))
+							->addCondition('status','Approved')
+							;
+			return $q->expr('([0])',[$emp_leave->sum('no_of_leave')]);
+		});
+
+		foreach($allow_leave_model as $m){
+			$ex1 = "Total_".trim($m['leave'])."_Leave";
+			$ex2 = "Total_".trim($m['leave'])."_Taken";
+			$ex3 = "Total_".trim($m['leave'])."_Available";
+			$ex4 = trim($m['leave'])."_Effective_Date";
+			$ex5 = trim($m['leave'])."_Previously_Carried_Leaves";
+
+			$ex2_value = $m['leave_taken'];
+			$ex3_value = $emp_model->getAvailableLeave($this->app->now,$m['leave_id']);
+
+			$emp_data[$ex1] = $ex2_value + $ex3_value;
+			$emp_data[$ex2] = $ex2_value;
+			$emp_data[$ex3] = $ex3_value;
+			$emp_data[$ex4] = $m['effective_date'];
+			$emp_data[$ex5] = $m['previously_carried_leaves']?:0;
+			$emp_data[trim($m['leave']).'_leave_per_unit'] = $m['no_of_leave'];
+			$emp_data[trim($m['leave']).'_unit'] = $m['unit'];
+			
+			// $employee_row->addExpression($ex1)->set('"'.$ex1_value.'"');
+			// $employee_row->addExpression($ex2)->set('"'.$ex2_value.'"');
+			// $employee_row->addExpression($ex3)->set('"'.$ex3_value.'"');
+		}
+
+		// $this->app->print_r($allow_leave_model->getRows(),true);
+		// $this->app->print_r($emp_data,true);
+
 		$payslip_layout=$this->add('GiTemplate');
 		$payslip_layout->loadTemplateFromString($payslip_m['payslip']);
-
+		
 		$v = $this->add('View',null,null,$payslip_layout);
 		// $v->set($merge_model_array);
-		$v->setModel($employee_row);
+		$v->template->set($emp_data);
 		// $v->template->trySet('employee_name',$emp['name']);
 		// $v->template->trySet('department',$emp['department']);
 		// $v->template->trySet('designation',$emp['posts']);
@@ -47,6 +89,7 @@ class page_printpayslip extends \xepan\base\Page{
 		$v->template->trySet('company_address',$company_m['company_address']);
 		$v->template->trySet('company_mobile_no',$company_m['mobile_no']);
 		$v->template->trySet('created_at',$v->model['created_at']);
+		$v->template->trySet('net_amount_in_words',$this->add('xepan\base\Model_Document')->amountInWords($emp_data['net_amount']));
 		// $v->template->trySet('total_amount_deduction',$v->model['total_amount_deduction']);
 		// $v->template->trySet('net_amount',$v->model['net_amount']);
 
