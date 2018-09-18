@@ -335,9 +335,11 @@ class page_employeedetail extends \xepan\base\Page {
 			// $emp_leave_view->setIdField('contact_id');
 			$o = $official_view->addMany('EmployeeLeaveAllow',['no_records_message'=>'No document found'],'EmployeeLeaveAllow');
 			$o->setModel($employee->ref('EmployeeLeaveAllow'));
-			$o->grid->removeAttachment();
-			$o->grid->removeColumn('action');
-			$o->grid->removeColumn('employee');
+			if($o instanceof \CRUD){
+				$o->grid->removeAttachment();
+				$o->grid->removeColumn('action');
+				$o->grid->removeColumn('employee');
+			}
 
 			$document_view = $this->add('xepan\hr\View_Document',['action'=> $action],'document_view',['page/employee/emp-document']);
 			$document_view->setIdField('contact_id');
