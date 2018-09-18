@@ -20,6 +20,13 @@ class Model_EmployeeRow extends \xepan\base\Model_Table{
 		$this->addField('absents');
 		$this->addField('paiddays');
 		$this->addField('total_working_days');
+		$this->addField('officialholidays');
+		$this->addField('extraworkingdays');
+		$this->addField('extraworkinghours');
+		$this->addField('paidleavesonholiday');
+		$this->addField('unpaidleavesonholiday');
+
+		// end of system calculated fields
 
 		$this->addExpression('reimbursement_amount',function($m,$q){
 			return $m->add('xepan\hr\Model_SalaryDetail')
