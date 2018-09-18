@@ -160,6 +160,11 @@ class page_salarysheetedit extends \xepan\base\Page{
 											'unpaid_leaves'=>$form['f_UnPaidLeaves_'.$employee->id],
 											'absents'=>$form['f_Absents_'.$employee->id],
 											'paiddays'=>$form['f_PaidDays_'.$employee->id],
+											'officialholidays'=>$form['f_OfficialHolidays_'.$employee->id],
+											'extraworkingdays'=>$form['f_ExtraWorkingDays_'.$employee->id],
+											'extraworkinghours'=>$form['f_ExtraWorkingHours_'.$employee->id],
+											'paidleavesonholiday'=>$form['f_PaidLeavesOnHoliday_'.$employee->id],
+											'unpaidleavesonholiday'=>$form['f_UnPaidLeavesOnHoliday_'.$employee->id],
 											'total_working_days'=>$this->TotalWorkDays
 										];
 
@@ -184,7 +189,6 @@ class page_salarysheetedit extends \xepan\base\Page{
 
 			$form->js()->univ()->successMessage('saved successfully')->execute();
 		}
-
 
 
 		// js change on field
