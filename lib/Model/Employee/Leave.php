@@ -72,22 +72,22 @@ class Model_Employee_Leave extends \xepan\base\Model_Table{
 	function submit(){
 		$this['status']='Submitted';
 		$this->app->employee
-            ->addActivity("Employee '".$this->app->employee['name']."' Submitted Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
+            ->addActivity("Employee '".$this->app->employee['name']."' Submitted/ Applied ".$this['no_of_leave']." ".$this['leave_type']." Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this['employee_id']."")
             ->notifyWhoCan('approve,reject','Submitted',$this);
 		$this->save();
 	}
 	function approve(){
 		$this['status']='Approved';
 		$this->app->employee
-            ->addActivity("Employee '".$this->app->employee['name']."' Approved Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
-            ->notifyWhoCan(' ','Approved',$this);
+            ->addActivity("Employee '".$this->app->employee['name']." ".$this['no_of_leave']." ".$this['leave_type']."' Leave Approved", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employeedetail&contact_id=".$this['employee_id']."")
+            ->notifyWhoCan('view,reject','Approved',$this);
 		$this->save();
 	}
 	function reject(){
 		$this['status']='Rejected';
 		$this->app->employee
-            ->addActivity("Employee '".$this->app->employee['name']."' Rejected Leave", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
-            ->notifyWhoCan(' ','Rejected',$this);
+            ->addActivity("Employee '".$this->app->employee['name']." ".$this['no_of_leave']." ".$this['leave_type']."' Leave Rejected", null/* Related Document ID*/, $this['employee_id'] /*Related Contact ID*/,null,null,"xepan_hr_employee_hr&contact_id=".$this['employee_id']."")
+            ->notifyWhoCan('view,approve','Rejected',$this);
 		$this->save();
 	}
 

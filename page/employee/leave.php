@@ -41,7 +41,6 @@ class page_employee_leave extends \xepan\hr\page_employee_myhr{
 		$draft_leave_m->addCondition('created_by_id',$this->app->employee->id);
 		$draft_leave_m->addCondition('status',"Draft");
 		$draft_grid = $new_leave_tab->add('xepan\hr\CRUD',['allow_add'=>false]);
-		// $draft_grid->add('View')->set('Draft Leave\'s');
 		$draft_leave_m->getElement('emp_leave_allow')->caption('Leave Type');
 
 		$draft_grid->setModel($draft_leave_m,['emp_leave_allow','from_date','to_date','no_of_leave','narration','status']);
