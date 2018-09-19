@@ -88,7 +88,7 @@ class page_printpayslip extends \xepan\base\Page{
 		$v->template->trySet('company_name',$company_m['company_name']);
 		$v->template->trySet('company_address',$company_m['company_address']);
 		$v->template->trySet('company_mobile_no',$company_m['mobile_no']);
-		$v->template->trySet('created_at',$v->model['created_at']);
+		$v->template->trySet('created_at',$employee_row['created_at']);
 		$v->template->trySet('net_amount_in_words',$this->add('xepan\base\Model_Document')->amountInWords($emp_data['net_amount']));
 		// $v->template->trySet('total_amount_deduction',$v->model['total_amount_deduction']);
 		// $v->template->trySet('net_amount',$v->model['net_amount']);
