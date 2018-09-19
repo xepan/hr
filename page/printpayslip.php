@@ -33,6 +33,7 @@ class page_printpayslip extends \xepan\base\Page{
 		$company_m->tryLoadAny();
 
 		$emp_data = $employee_row->data;
+		// $this->app->print_r($emp_data);
 
 		$allow_leave_model = $this->add('xepan\hr\Model_Employee_LeaveAllow');
 		$allow_leave_model->addCondition('employee_id',$employee_row['employee_id']);
