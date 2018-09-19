@@ -343,7 +343,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	}
 
 	function page_deactivate($page){
-
+		ini_set('memory_limit', '-1');
+		set_time_limit(0);
+		
 		$task = $page->add('xepan\projects\Model_Task');
 		$task->addCondition('status','<>',"Completed")
 		    	 ->addCondition($task->dsql()->orExpr()
