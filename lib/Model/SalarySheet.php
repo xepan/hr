@@ -280,15 +280,14 @@ class Model_SalarySheet extends \xepan\hr\Model_SalaryAbstract{
 			$template->loadTemplateFromString("{rows}{row}".$_GET['format'].$nl."{/}{/}");
 			$report = $page->add('CompleteLister',null,null,$template);
 
+			$report->setModel($salary_model);
 			$report->addHook('formatRow',function($g)use($salaries,$decimal){
 				foreach ($salaries as $s) {
 					$g->current_row[$s] = round($g->model[$s],$decimal);
+					$g->current_row[$this->app->normalizeName($s)] = round($g->model[$this->app->normalizeName($s)],$decimal);
 				}
 			});
-
-			$report->setModel($salary_model);
-
-			if($this->app->stickyGET('download')){				
+			if($this->app->stickyGET('download')){
 				$output = $report->getHTML();
 				$extension = explode(".", $_GET['filename']);
 		    	header("Content-type: text/".(isset($extension[1])?$extension[1]:'plain'));
