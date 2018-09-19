@@ -53,15 +53,15 @@ class page_printpayslip extends \xepan\base\Page{
 			$ex4 = trim($m['leave'])."_Effective_Date";
 			$ex5 = trim($m['leave'])."_Previously_Carried_Leaves";
 
-			$ex2_value = $m['leave_taken'];
-			$ex3_value = $emp_model->getAvailableLeave($this->app->now,$m['leave_id']);
+			$ex2_value = $m['leave_taken']?:0;
+			$ex3_value = $emp_model->getAvailableLeave($this->app->now,$m['leave_id'])?:0;
 
 			$emp_data[$ex1] = $ex2_value + $ex3_value;
 			$emp_data[$ex2] = $ex2_value;
 			$emp_data[$ex3] = $ex3_value;
 			$emp_data[$ex4] = $m['effective_date'];
 			$emp_data[$ex5] = $m['previously_carried_leaves']?:0;
-			$emp_data[trim($m['leave']).'_leave_per_unit'] = $m['no_of_leave'];
+			$emp_data[trim($m['leave']).'_leave_per_unit'] = $m['no_of_leave']?:0;
 			$emp_data[trim($m['leave']).'_unit'] = $m['unit'];
 			
 			// $employee_row->addExpression($ex1)->set('"'.$ex1_value.'"');
