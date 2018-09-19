@@ -882,7 +882,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 				'PaidLeavesOnHoliday'=>$leave_on_holiday['paid'],
 				'UnPaidLeavesOnHoliday'=>$leave_on_holiday['unpaid'],
 				'PaidDays'=>$Present + $PaidLeaves + $OfficialHolidays,
-				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves + $OfficialHolidays),
+				'Absents'=>$TotalWorkDays - ($Present + $PaidLeaves + $OfficialHolidays + $UnPaidLeaves),
 			];
 
 		$reimbursement_config_model = $this->add('xepan\base\Model_ConfigJsonModel',
