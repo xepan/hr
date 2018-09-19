@@ -17,7 +17,7 @@ class page_printpayslip extends \xepan\base\Page{
 			return;
 		}
 
-		$emp_model = $this->add('xepan\hr\Model_Employee')->load($employee_row['employee_id']);
+		$emp_model = $this->add('xepan\hr\Model_Employee',['addOtherInfo'=>true])->load($employee_row['employee_id']);
 
 		$payslip_m = $this->add('xepan\base\Model_ConfigJsonModel',
 			[
@@ -33,7 +33,7 @@ class page_printpayslip extends \xepan\base\Page{
 		$company_m->tryLoadAny();
 
 		$emp_data = $employee_row->data;
-		// $this->app->print_r($emp_data);
+		$emp_data['month_name'] = date("F", strtotime($emp_data['year'].'-'.$emp_data['month'].'-01'));
 
 		$allow_leave_model = $this->add('xepan\hr\Model_Employee_LeaveAllow');
 		$allow_leave_model->addCondition('employee_id',$employee_row['employee_id']);
@@ -78,6 +78,7 @@ class page_printpayslip extends \xepan\base\Page{
 		
 		$v = $this->add('View',null,null,$payslip_layout);
 		// $v->set($merge_model_array);
+		// $this->app->print_r($emp_model->data,true);
 		$v->template->set($emp_data);
 		// $v->template->trySet('employee_name',$emp['name']);
 		// $v->template->trySet('department',$emp['department']);
