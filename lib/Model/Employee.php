@@ -921,7 +921,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 
 		foreach ($this->ref('EmployeeSalary') as $salary) {
 
-			$result = $this->evalSalary($salary['amount'],$calculated);
+			try{
+				$result = $this->evalSalary($salary['amount'],$calculated);
+			}catch(\Exception $e){
+				throw new \Exception("Salary wrong ".$salary['salary']." amount= ".$salary['amount']);
+			}
 			
 			$salary['salary'] = preg_replace('/\s+/', '',$salary['salary']);
 
