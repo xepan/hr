@@ -920,13 +920,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		$net_amount = 0;
 
 		foreach ($this->ref('EmployeeSalary') as $salary) {
-
-			try{
-				$result = $this->evalSalary($salary['amount'],$calculated);
-			}catch(\Exception $e){
-				throw new \Exception("Salary wrong ".$salary['salary']." amount= ".$salary['amount']);
-			}
-			
+			$result = $this->evalSalary($salary['amount'],$calculated);
 			$salary['salary'] = preg_replace('/\s+/', '',$salary['salary']);
 
 			$calculated[$salary['salary']] = $result;
@@ -996,7 +990,11 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(strpos($expression, "{") !== false OR strpos($expression, "}") !== false)
 			throw new \Exception("please correct salary (".$expression.") of employee ".$this['name']);
 
-		eval('$return = '.$expression.';');
+		try{
+			eval('$return = '.$expression.';');
+		}catch(\Exception $e){
+			throw new \Exception("Salary wrong ".$salary['salary']." amount= ".$salary['amount']);
+		}
 		// echo "returning ".$return . " for expression '$expression' <br/>";
 		return $return;
 
