@@ -33,7 +33,7 @@ class page_layouts extends \xepan\hr\page_configurationsidebar{
 		// var_dump($salary_name);
 
 		$personpayslip_form->getElement('payslip')->set($personpayslip_m['payslip'])
-		->setFieldHint(implode(", ",$this->add('xepan\hr\Model_EmployeeRowDetailed')->available_fields)." Note. for Leave Record use: Total_{leave_name}_Leave,Total_{leave_name}_Taken,Total_{leave_name}_Available,{leave_name}_Effective_Date,{leave_name}_Previously_Carried_Leaves,{leave_name}_leave_per_unit,{leave_name}_unit, {net_amount_in_words} |   Note. use any value indside {\$} ex. {\$month}");
+		->setFieldHint(implode(", ",$this->add('xepan\hr\Model_EmployeeRowDetailed')->available_fields)." Note. for Leave Record use: Total_{leave_name}_Leave,Total_{leave_name}_Taken,Total_{leave_name}_Available,{leave_name}_Effective_Date,{leave_name}_Previously_Carried_Leaves,{leave_name}_leave_per_unit,{leave_name}_unit, {net_amount_in_words}, employee_total_paid_leave, employee_total_paid_leave_taken, employee_total_paid_leave_available, employee_total_unpaid_leave, employee_total_unpaid_leave_taken, employee_total_unpaid_leave_available, employee_total_leave, employee_total_leave_taken, employee_total_leave_available |   Note. use any value indside {\$} ex. {\$month}");
 		;
 		// ->setFieldHint('{$company_name},{$company_address},{$company_mobile_no},{$created_at}{$employee_name},{$department},{$designation}{$date_of_joining},{$date_of_birth},{$employee_code},{$location},{$presents},{$paid_leaves},{$unpaid_leaves},{$absents},{$paiddays},{$total_working_days},'.$salary_name);
 		

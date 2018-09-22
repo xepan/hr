@@ -47,6 +47,16 @@ class page_printpayslip extends \xepan\base\Page{
 			return $q->expr('([0])',[$emp_leave->sum('no_of_leave')]);
 		});
 
+		$emp_data['employee_total_paid_leave'] = 0;
+		$emp_data['employee_total_paid_leave_taken'] = 0;
+		$emp_data['employee_total_paid_leave_available'] = 0;
+		$emp_data['employee_total_unpaid_leave'] = 0;
+		$emp_data['employee_total_unpaid_leave_taken'] = 0;
+		$emp_data['employee_total_unpaid_leave_available'] = 0;
+		$emp_data['employee_total_leave'] = 0;
+		$emp_data['employee_total_leave_taken'] = 0;
+		$emp_data['employee_total_leave_available'] = 0;
+
 		foreach($allow_leave_model as $m){
 			$ex1 = "Total_".trim($m['leave'])."_Leave";
 			$ex2 = "Total_".trim($m['leave'])."_Taken";
@@ -65,13 +75,22 @@ class page_printpayslip extends \xepan\base\Page{
 			$emp_data[trim($m['leave']).'_leave_per_unit'] = $m['no_of_leave']?:0;
 			$emp_data[trim($m['leave']).'_unit'] = $m['unit'];
 			
-			// $employee_row->addExpression($ex1)->set('"'.$ex1_value.'"');
-			// $employee_row->addExpression($ex2)->set('"'.$ex2_value.'"');
-			// $employee_row->addExpression($ex3)->set('"'.$ex3_value.'"');
+			if($m['type'] == "Paid"){
+				$emp_data['employee_total_paid_leave'] += $emp_data[$ex1];
+				$emp_data['employee_total_paid_leave_taken'] += $emp_data[$ex2];
+				$emp_data['employee_total_paid_leave_available'] += $emp_data[$ex3];
+			}
+			if($m['type'] == "Unpaid"){
+				$emp_data['employee_total_unpaid_leave'] += $emp_data[$ex1];
+				$emp_data['employee_total_unpaid_leave_taken'] += $emp_data[$ex2];
+				$emp_data['employee_total_unpaid_leave_available'] += $emp_data[$ex3];
+			}
+
 		}
 
-		// $this->app->print_r($allow_leave_model->getRows(),true);
-		// $this->app->print_r($emp_data,true);
+		$emp_data['employee_total_leave'] = $emp_data['employee_total_paid_leave'] + $emp_data['employee_total_unpaid_leave'];
+		$emp_data['employee_total_leave_taken'] = $emp_data['employee_total_paid_leave_taken'] + $emp_data['employee_total_unpaid_leave_taken'];
+		$emp_data['employee_total_leave_available'] = $emp_data['employee_total_paid_leave_available'] + $emp_data['employee_total_unpaid_leave_available'];
 
 		$payslip_layout=$this->add('GiTemplate');
 		$payslip_layout->loadTemplateFromString($payslip_m['payslip']);
