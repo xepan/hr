@@ -37,8 +37,11 @@ class Model_Activity extends \xepan\base\Model_Activity{
 			}
 		}
 
+		$document_branch_id = 0;
+		if(isset($model['branch_id']) && $model['branch_id'])$document_branch_id = $model['branch_id'];
+
 		foreach ($acl_m as $acl) {
-			// echo $acl['namespace'].' '. $acl['post']. ' ';
+			// echo $acl['namespace'].' '. $acl['post']. ' '.$acl['is_branch_restricted']."<br>";
 			foreach ($current_statuses as $current_status) {
 				$actions = $acl['action_allowed'][$current_status];
 				foreach ($list_of_actions as $req_act) {
@@ -56,7 +59,20 @@ class Model_Activity extends \xepan\base\Model_Activity{
 							# code...
 							# include all employees under $acl->post_id
 							if($acl->ref('post_id')->count()->getOne() && $acl->ref('post_id')->ref('Employees')){
-								foreach ($acl->ref('post_id')->ref('Employees')->addCondition('status','Active') as $emp) {
+								$emps = $acl->ref('post_id')->ref('Employees')->addCondition('status','Active');
+
+								// branch condition
+								if($document_branch_id)
+									$emps->addCondition([['branch_id',null],['branch_id',$document_branch_id]]);
+								// end of branch condition
+
+								foreach ($emps as $emp) {
+									// branch restricted based on acl condition applied
+									if($acl['is_branch_restricted'] && $emp['branch_id'] != $document_branch_id){
+										continue;
+									}
+									//end of branch restricted based on acl condition applied
+
 									$employee_ids [] = $emp->id;
 								}
 							}
@@ -73,9 +89,8 @@ class Model_Activity extends \xepan\base\Model_Activity{
 			// echo ' <br/>';
 		}
 
-
+		// throw new \Exception(print_r($employee_ids));
 		$employee_ids = array_unique($employee_ids, SORT_REGULAR);
-		// throw new \Exception(print_r($employee_ids,true), 1);
 		
 		$this['notify_to'] = json_encode($employee_ids);
 		if($msg) $this['notification'] = $msg;
