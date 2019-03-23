@@ -60,6 +60,7 @@ class View_ActionBtn extends \CompleteLister{
 					'InProgress'=>'warning',
 					'Due'=>'danger',
 					'Paid'=>'success',
+					'PartialPaid'=>'danger',
 					'ToReceived'=>'default',
 					'Received'=>'info',
 					'Dispatch'=>'warning',
