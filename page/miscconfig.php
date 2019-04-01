@@ -131,5 +131,12 @@ class page_miscconfig extends \xepan\hr\page_configurationsidebar{
 			$sal_due_entry_config_m->save();
 			$sal_due_entry_form->js(null,$sal_due_entry_form->js()->univ()->successMessage('Information successfully updated'))->reload()->execute();
 		}
+
+
+		$mute_notification = $tabs->addTab('Mute Notification');
+		$mute_crud = $mute_notification->add('xepan\base\CRUD');
+		$model = $this->add('xepan\hr\Model_Config_MuteNotificationForEmployee');
+		$mute_crud->setModel($model,['employee_id'],['employee']);
+
 	}
 }

@@ -9,6 +9,10 @@ class page_notificationexec extends \xepan\base\Page{
 		if($this->app->recall('mute_all_notification',false)){
 			$p->js(null)->execute();
 		}
+
+		$mute_model = $this->add('xepan\hr\Model_Config_MuteNotificationForEmployee');
+		$mute_model->addCondition('employee_id',$this->app->employee->id);
+		if($mute_model->count()) $p->js(null)->execute();
 			
 			$new_notificagions = $this->add('xepan\hr\Model_Activity')
 									->addCondition('id','>',$this->app->employee['notified_till']?:0)
