@@ -993,6 +993,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(strpos($expression, "{") !== false OR strpos($expression, "}") !== false)
 			throw new \Exception("please correct salary (".$expression.") of employee ".$this['name']);
 
+		echo $expression;
 		try{
 			eval('$return = '.$expression.';');
 		}catch(\Exception $e){
