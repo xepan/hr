@@ -977,9 +977,9 @@ class Model_Employee extends \xepan\base\Model_Contact{
 	// base_array = $calculated_array .. updated in each loop in getSalarySlip function
 	function evalSalary($expression, $base_array){
 		// solve expression by base array
-		// var_dump($expression);
-		// var_dump($base_array);
-		// echo "<br/>";
+		var_dump($expression);
+		var_dump($base_array);
+		echo "<br/>";
 
 		if(!$expression) return 0;
 		$expression = preg_replace('/\s+/', '',$expression);
@@ -993,7 +993,7 @@ class Model_Employee extends \xepan\base\Model_Contact{
 		if(strpos($expression, "{") !== false OR strpos($expression, "}") !== false)
 			throw new \Exception("please correct salary (".$expression.") of employee ".$this['name']);
 
-		echo $expression;
+		// echo $expression;
 		try{
 			eval('$return = '.$expression.';');
 		}catch(\Exception $e){
